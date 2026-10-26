@@ -14,7 +14,7 @@
   La BD, la cache y el ZIP son artefactos de release (ADR 0005 y 0104): estan en .gitignore y NO se suben al repo, solo a la release.
 #>
 param(
-    [string]$Version = '',   # por defecto, la de src\PokekeepVersion.props (la misma que el APK y «Acerca de»)
+    [string]$Version = '1.0.1',
     [string]$Salida,
     [string]$BD,
     [string]$Soluciones,
@@ -29,7 +29,6 @@ param(
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'entorno.ps1')
 $Utf8 = New-Object System.Text.UTF8Encoding($false)
-if (-not $Version) { $Version = (Select-String -Path (Join-Path $PSScriptRoot '..\src\PokekeepVersion.props') -Pattern '<PokekeepVersion>([^<]+)</PokekeepVersion>').Matches[0].Groups[1].Value }
 if (-not $Salida) { $Salida = Join-Path $RepoRaiz $(if ($ParaRegistro) { 'distribucion\_registro' } else { 'distribucion\PKHeX-Pokekeep' }) }
 if (-not $BD) { $BD = Join-Path $RepoRaiz 'datos\portable\autolegalidad.sqlite' }   # BD construida con EL Core del paquete (el catalogo enlaza el hash del Core): distinta de la de desarrollo
 if (-not $Soluciones) { $Soluciones = Join-Path $RepoRaiz 'datos\portable\soluciones.sqlite' }
