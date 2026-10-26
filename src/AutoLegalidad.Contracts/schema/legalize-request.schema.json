@@ -1,0 +1,241 @@
+{
+  "type": [
+    "object",
+    "null"
+  ],
+  "properties": {
+    "protocolVersion": {
+      "type": "integer"
+    },
+    "requestId": {
+      "type": "string"
+    },
+    "releaseId": {
+      "type": "string"
+    },
+    "action": {
+      "enum": [
+        "Legalize",
+        "Optimize",
+        "Adjust"
+      ]
+    },
+    "originalEntityBase64": {
+      "type": "string"
+    },
+    "originalEntitySha256": {
+      "type": "string"
+    },
+    "entityContext": {
+      "type": "string"
+    },
+    "entityRuntimeType": {
+      "type": "string"
+    },
+    "target": {
+      "type": "object",
+      "properties": {
+        "gameVersion": {
+          "type": "string"
+        },
+        "saveRuntimeType": {
+          "type": "string"
+        },
+        "context": {
+          "type": "string"
+        },
+        "slotType": {
+          "type": "string"
+        },
+        "isRealSave": {
+          "type": "boolean"
+        },
+        "trainer": {
+          "type": "object",
+          "properties": {
+            "ot": {
+              "type": "string"
+            },
+            "tid16": {
+              "type": "integer"
+            },
+            "sid16": {
+              "type": "integer"
+            },
+            "language": {
+              "type": "integer"
+            },
+            "gender": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "ot",
+            "tid16",
+            "sid16",
+            "language",
+            "gender"
+          ],
+          "additionalProperties": false
+        },
+        "personalTableKey": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "saveFlags": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "required": [
+        "gameVersion",
+        "saveRuntimeType",
+        "context",
+        "trainer"
+      ],
+      "additionalProperties": false
+    },
+    "selection": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string"
+        },
+        "box": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "slot": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "policyVersion": {
+      "type": "string"
+    },
+    "datasetSnapshotId": {
+      "type": "string"
+    },
+    "deadlineUtc": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "originEventKey": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "options": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "optimizeStats": {
+          "type": "boolean"
+        },
+        "maxAttemptsPerEncounter": {
+          "type": "integer"
+        },
+        "includeReport": {
+          "type": "boolean"
+        },
+        "allowHomeTrackerless": {
+          "type": "boolean"
+        },
+        "maxLevel": {
+          "type": "boolean"
+        },
+        "newPokemon": {
+          "type": "boolean"
+        },
+        "adjust": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "legalizeIfIllegal": {
+              "type": "boolean"
+            },
+            "maxLevel": {
+              "type": "boolean"
+            },
+            "optimize": {
+              "type": "boolean"
+            },
+            "maxFriendship": {
+              "type": "boolean"
+            },
+            "spanishLanguage": {
+              "type": "boolean"
+            },
+            "maxPP": {
+              "type": "boolean"
+            },
+            "healParty": {
+              "type": "boolean"
+            },
+            "curePokerus": {
+              "type": "boolean"
+            },
+            "any": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "optimizeBudgetSeconds": {
+          "type": "integer"
+        },
+        "coherentHistory": {
+          "type": "boolean"
+        },
+        "requestedLanguage": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "protocolVersion",
+    "requestId",
+    "releaseId",
+    "action",
+    "originalEntityBase64",
+    "originalEntitySha256",
+    "entityContext",
+    "entityRuntimeType",
+    "target",
+    "policyVersion",
+    "datasetSnapshotId"
+  ],
+  "additionalProperties": false
+}

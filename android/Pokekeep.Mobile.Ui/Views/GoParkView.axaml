@@ -1,0 +1,67 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.GoParkView"
+             x:DataType="vm:GoParkViewModel">
+  <Grid RowDefinitions="*,Auto" Margin="16,0,16,0">
+    <ListBox Classes="limpia" ItemsSource="{Binding Elementos}" AutomationProperties.Name="{DynamicResource Loc.GoPark.ParqueGO}" Padding="0,0,0,8">
+      <ListBox.DataTemplates>
+        <DataTemplate x:DataType="vm:EncabezadoGoPark">
+          <StackPanel Spacing="8" DataContext="{Binding Vm}" x:DataType="vm:GoParkViewModel">
+            <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" AutomationProperties.Name="{DynamicResource Loc.Form.Vista.EditorPartidaView.0}" AutomationProperties.HelpText="{DynamicResource Loc.Form.Vista.EditorPartidaView.1}">
+              <StackPanel Orientation="Horizontal" Spacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Form.Vista.EditorPartidaView.0}" /></StackPanel>
+            </Button>
+            <StackPanel Spacing="2">
+              <TextBlock Classes="titulo" Text="{DynamicResource Loc.Partida.Editor.gopark.Titulo}" AutomationProperties.HeadingLevel="1" />
+              <TextBlock Classes="sec" Text="{Binding Resumen}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+            </StackPanel>
+            <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
+              <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding ImportarPrimeroCommand}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.GoPark.ImportarPokemonGO}" AutomationProperties.HelpText="{DynamicResource Loc.GoPark.EligeArchivoGp1Coloca}">
+                <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center"><d:Icono Glifo="FileUp" Width="18" Height="18" /><TextBlock Text="{DynamicResource Loc.Form.Fama3.Importar}" /></StackPanel>
+              </Button>
+              <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CopiarResumenCommand}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Eventos.CopiarResumen}" AutomationProperties.HelpText="{DynamicResource Loc.GoPark.CopiaLineaPokemonGO}">
+                <TextBlock Text="{DynamicResource Loc.Eventos.CopiarResumen2}" TextAlignment="Center" TextWrapping="Wrap" />
+              </Button>
+            </d:RejillaSinPartir>
+            <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding VaciarTodoCommand}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.GoPark.VaciarTodoParqueGO}" AutomationProperties.HelpText="{DynamicResource Loc.GoPark.VaciaHuecosConfirmacion}">
+              <TextBlock Text="{DynamicResource Loc.GoPark.VaciarTodo}" TextAlignment="Center" />
+            </Button>
+            <Grid ColumnDefinitions="Auto,*">
+              <d:Icono Glifo="Search" Width="20" Height="20" Margin="0,0,10,0" Foreground="{DynamicResource TextoSecundario}" VerticalAlignment="Center" />
+              <TextBox Grid.Column="1" Classes="campo" Text="{Binding Filtro}" PlaceholderText="{DynamicResource Loc.GoPark.EspecieHueco}" AutomationProperties.Name="{DynamicResource Loc.GoPark.BuscarEspecieHueco}" />
+            </Grid>
+            <ToggleButton Classes="chip" HorizontalAlignment="Left" IsChecked="{Binding SoloOcupados, Mode=TwoWay}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.GoPark.SoloHuecosOcupados}"><TextBlock Text="{DynamicResource Loc.GoPark.SoloOcupados}" /></ToggleButton>
+          </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:DataType="vm:FilaGoVm">
+          <Border Classes="tarjeta" Padding="10,6">
+            <StackPanel Spacing="4">
+              <StackPanel Spacing="1" AutomationProperties.Name="{Binding Accesible}">
+                <TextBlock Classes="sec" Text="{Binding Etiqueta}" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+                <TextBlock Classes="sec" Text="{Binding Detalle}" IsVisible="{Binding Ocupado}" TextWrapping="Wrap" />
+              </StackPanel>
+              <WrapPanel IsVisible="{Binding Ocupado}">
+                <Button Classes="chip" Command="{Binding ExportarCommand}" Margin="0,0,8,0" AutomationProperties.Name="{DynamicResource Loc.GoPark.ExportarPokemon}" AutomationProperties.HelpText="{DynamicResource Loc.GoPark.GuardaPokemonGOArchivo}"><TextBlock Text="{DynamicResource Loc.Editor.Exportar}" /></Button>
+                <Button Classes="chip" Command="{Binding VaciarCommand}" AutomationProperties.Name="{DynamicResource Loc.GoPark.VaciarHueco}" AutomationProperties.HelpText="{DynamicResource Loc.GoPark.DejaHuecoLibre}"><TextBlock Text="{DynamicResource Loc.GoPark.Vaciar}" /></Button>
+              </WrapPanel>
+              <Button Classes="secundario" Command="{Binding ImportarCommand}" IsVisible="{Binding Vacio}" HorizontalAlignment="Stretch" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.GoPark.ImportarHueco}" AutomationProperties.HelpText="{DynamicResource Loc.GoPark.EligeArchivoGp1Hueco}">
+                <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center"><d:Icono Glifo="FileUp" Width="18" Height="18" /><TextBlock Text="{DynamicResource Loc.GoPark.ImportarAqui}" /></StackPanel>
+              </Button>
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+      </ListBox.DataTemplates>
+    </ListBox>
+    <Border Grid.Row="1" Name="BarraAcciones" Classes="tarjeta-pendiente" Padding="12" Margin="0,4,0,0" IsVisible="{Binding HayCambios}">
+      <StackPanel Spacing="8">
+        <TextBlock Text="{Binding TextoCambios}" FontWeight="Bold" TextWrapping="Wrap" />
+        <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
+          <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding DescartarCommand}" AutomationProperties.Name="{DynamicResource Loc.GoPark.DescartarCambiosParqueGO}"><TextBlock Text="{DynamicResource Loc.CompletarJuego.Descartar}" TextAlignment="Center" /></Button>
+          <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding AplicarCommand}" AutomationProperties.Name="{DynamicResource Loc.GoPark.AplicarParqueGOPartida}"><TextBlock Text="{DynamicResource Loc.Editor.Aplicar}" TextAlignment="Center" /></Button>
+        </d:RejillaSinPartir>
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

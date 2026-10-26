@@ -1,0 +1,243 @@
+From a090e911ceb61479eaa10453b1e0cfc736d59087 Mon Sep 17 00:00:00 2001
+From: Pokekeep <pokekeep@invalid>
+Date: Sun, 4 Oct 2026 11:40:47 +0200
+Subject: [PATCH 06/11] Pokekeep Hito 4b: operaciones masivas (Herramientas,
+ clic derecho de caja y de casilla) y cadenas es/es-419/en
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Entradas de menú que llaman a AutoLegalidad.Ui: «Completar el juego…» y «Edición masiva…» en Herramientas, el grupo Pokekeep en el menú de la caja y «Edición masiva de este Pokémon…» en el de la casilla.
+---
+ .../Controls/SAV Editor/BoxMenuStrip.cs       | 32 +++++++++++++++++++
+ .../Controls/SAV Editor/ContextMenuSAV.cs     | 14 +++++---
+ PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs      | 23 ++++++++++++-
+ .../Pokekeep/PokekeepIntegration.cs           | 11 +++++++
+ PKHeX.WinForms/Resources/text/lang_en.txt     |  3 ++
+ PKHeX.WinForms/Resources/text/lang_es-419.txt |  3 ++
+ PKHeX.WinForms/Resources/text/lang_es.txt     |  3 ++
+ 7 files changed, 84 insertions(+), 5 deletions(-)
+
+diff --git a/PKHeX.WinForms/Controls/SAV Editor/BoxMenuStrip.cs b/PKHeX.WinForms/Controls/SAV Editor/BoxMenuStrip.cs
+index 8f43af8f1..16d83e599 100644
+--- a/PKHeX.WinForms/Controls/SAV Editor/BoxMenuStrip.cs	
++++ b/PKHeX.WinForms/Controls/SAV Editor/BoxMenuStrip.cs	
+@@ -1,6 +1,8 @@
+ using System.Collections.Generic;
+ using System.Drawing;
+ using System.Windows.Forms;
++using AutoLegalidad.Ui;
++using AutoLegalidad.Ui.Bulk;
+ using PKHeX.Core;
+ using PKHeX.WinForms.Properties;
+ 
+@@ -28,6 +30,36 @@ public BoxMenuStrip(SAVEditor sav)
+                 AddItem(sav, parent, item);
+             Items.Add(parent);
+         }
++        AddPokekeepItems();
++    }
++
++    // Pokekeep (Hito 4b): operaciones masivas sobre la caja con clic derecho. Se distinguen de «Modificar > Nivel máximo / Amistad máxima» de PKHeX (que no comprueban la legalidad) por el nombre «Pokekeep».
++    private readonly ToolStripMenuItem mnuPokekeepBox = new() { Name = "mnu_PokekeepEdicionCaja", Text = Textos.EdicionMasiva + " de esta caja…" };
++    private readonly ToolStripMenuItem mnuPokekeepAllBoxes = new() { Name = "mnu_PokekeepEdicionTodas", Text = Textos.EdicionMasiva + " de todas las cajas…" };
++    private readonly ToolStripMenuItem mnuPokekeepComplete = new() { Name = "mnu_PokekeepCompletar", Text = Textos.CompletarElJuego + "…" };
++
++    private void AddPokekeepItems()
++    {
++        var parent = new ToolStripMenuItem { Name = "mnu_Pokekeep", Text = Textos.MenuPokekeep, Image = Resources.wand };
++        mnuPokekeepBox.Click += (_, _) => Pokekeep.RunBulkEdit(BulkScopeKind.Boxes, null, SAV.CurrentBox);
++        mnuPokekeepAllBoxes.Click += (_, _) => Pokekeep.RunBulkEdit(BulkScopeKind.All);
++        mnuPokekeepComplete.Click += (_, _) => Pokekeep.RunLivingDex();
++        parent.DropDownItems.AddRange([mnuPokekeepBox, mnuPokekeepAllBoxes, mnuPokekeepComplete]);
++        Items.Add(parent);
++        Opening += (_, _) => UpdatePokekeepItems();
++    }
++
++    private void UpdatePokekeepItems()
++    {
++        var bulk = Pokekeep.BulkEditAvailability();
++        foreach (var item in new[] { mnuPokekeepBox, mnuPokekeepAllBoxes })
++        {
++            item.Enabled = bulk.Enabled;
++            item.ToolTipText = bulk.Enabled ? string.Empty : bulk.Reason;
++        }
++        var complete = Pokekeep.LivingDexAvailability();
++        mnuPokekeepComplete.Enabled = complete.Enabled;
++        mnuPokekeepComplete.ToolTipText = complete.Enabled ? string.Empty : complete.Reason;
+     }
+ 
+     private void AddItem(ISaveFileProvider sav, ToolStripDropDownItem parent, IBoxManip item)
+diff --git a/PKHeX.WinForms/Controls/SAV Editor/ContextMenuSAV.cs b/PKHeX.WinForms/Controls/SAV Editor/ContextMenuSAV.cs
+index 55ac4ca21..5e45151f3 100644
+--- a/PKHeX.WinForms/Controls/SAV Editor/ContextMenuSAV.cs	
++++ b/PKHeX.WinForms/Controls/SAV Editor/ContextMenuSAV.cs	
+@@ -15,6 +15,7 @@ public partial class ContextMenuSAV : UserControl
+     private readonly ToolStripSeparator mnuPokekeepSep = new() { Name = "mnuPokekeepSep" };
+     private readonly ToolStripMenuItem mnuPokekeepLegalize = new() { Name = "mnuPokekeepLegalize", Text = Textos.LegalizarAutomaticamente, Image = Resources.wand };
+     private readonly ToolStripMenuItem mnuPokekeepOptimize = new() { Name = "mnuPokekeepOptimize", Text = Textos.OptimizarStats, Image = Resources.vallohi };
++    private readonly ToolStripMenuItem mnuPokekeepBulk = new() { Name = "mnuPokekeepBulk", Text = Textos.EdicionMasiva + " de este Pokémon…", Image = Resources.settings };
+     private ISlotInfo? _pokekeepSlot;
+ 
+     public ContextMenuSAV()
+@@ -22,7 +23,12 @@ public ContextMenuSAV()
+         InitializeComponent();
+         mnuPokekeepLegalize.Click += (_, _) => RunPokekeep(PokekeepAction.Legalize);
+         mnuPokekeepOptimize.Click += (_, _) => RunPokekeep(PokekeepAction.Optimize);
+-        mnuVSD.Items.AddRange([mnuPokekeepSep, mnuPokekeepLegalize, mnuPokekeepOptimize]);
++        mnuPokekeepBulk.Click += (_, _) =>
++        {
++            if (_pokekeepSlot is { } slot)
++                Pokekeep.RunBulkEdit(AutoLegalidad.Ui.Bulk.BulkScopeKind.Single, slot);
++        };
++        mnuVSD.Items.AddRange([mnuPokekeepSep, mnuPokekeepLegalize, mnuPokekeepOptimize, mnuPokekeepBulk]);
+         if (Application.IsDarkModeEnabled)
+             WinFormsUtil.InvertToolStripIcons(mnuVSD.Items);
+     }
+@@ -157,12 +163,12 @@ private void MenuOpening(object sender, CancelEventArgs e)
+         // Pokekeep: la casilla queda fijada AQUI. Desactivadas (con el motivo como ayuda) si esta vacia, bloqueada o el destino es desconocido.
+         _pokekeepSlot = info.Slot;
+         var pokekeep = Pokekeep.SlotAvailability(info.Slot);
+-        foreach (var item in new[] { mnuPokekeepLegalize, mnuPokekeepOptimize })
++        foreach (var item in new[] { mnuPokekeepLegalize, mnuPokekeepOptimize, mnuPokekeepBulk })
+         {
+             item.Enabled = pokekeep.Enabled;
+-            item.ToolTipText = pokekeep.Enabled ? (item == mnuPokekeepLegalize ? Textos.LegalizarTooltip : Textos.OptimizarTooltip) : pokekeep.Reason;
++            item.ToolTipText = pokekeep.Enabled ? (item == mnuPokekeepLegalize ? Textos.LegalizarTooltip : item == mnuPokekeepOptimize ? Textos.OptimizarTooltip : "Elige qué mejorar de este Pokémon: stats, nivel, amistad, idioma, PP... (comprobado con PKHeX y con un único Deshacer).") : pokekeep.Reason;
+         }
+-        mnuPokekeepSep.Visible = mnuPokekeepLegalize.Visible = mnuPokekeepOptimize.Visible = canView || canSet;
++        mnuPokekeepSep.Visible = mnuPokekeepLegalize.Visible = mnuPokekeepOptimize.Visible = mnuPokekeepBulk.Visible = canView || canSet;
+ 
+         if (!canView && !canSet && !canDelete)
+             e.Cancel = true;
+diff --git a/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs b/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs
+index 8ca749776..be8b2c8f9 100644
+--- a/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs
++++ b/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs
+@@ -19,6 +19,8 @@ public partial class Main
+     private ToolStripMenuItem? _pkMenuLegalize;
+     private ToolStripMenuItem? _pkMenuOptimize;
+     private ToolStripMenuItem? _pkMenuLibrary;
++    private ToolStripMenuItem? _pkMenuComplete;
++    private ToolStripMenuItem? _pkMenuBulk;
+     private ToolTip? _pkTip;
+     private int _pkBarAdded;            // alto que la ventana ha crecido por la barra (la barra cambia de alto según el texto del resumen)
+ 
+@@ -55,7 +57,13 @@ private void InitializePokekeep()
+         _pkMenuLegalize.Click += (_, _) => Pokekeep.RunOnEditor(PokekeepAction.Legalize);
+         _pkMenuOptimize.Click += (_, _) => Pokekeep.RunOnEditor(PokekeepAction.Optimize);
+         _pkMenuLibrary.Click += (_, _) => app.OpenLibraryWindow(this);
+-        Menu_Tools.DropDownItems.AddRange([_pkMenuLegalize, _pkMenuOptimize, _pkMenuLibrary]);
++        // Hito 4b: operaciones masivas (R-006 «Completar el juego», R-007 «Edición masiva»; ámbito por defecto: Todo).
++        _pkMenuComplete = new ToolStripMenuItem(Textos.CompletarElJuego + "…") { Name = "Menu_PokekeepCompletar", Image = Resources.database };
++        _pkMenuBulk = new ToolStripMenuItem(Textos.EdicionMasiva + "…") { Name = "Menu_PokekeepEdicionMasiva", Image = Resources.settings };
++        _pkMenuComplete.Click += (_, _) => Pokekeep.RunLivingDex();
++        _pkMenuBulk.Click += (_, _) => Pokekeep.RunBulkEdit(AutoLegalidad.Ui.Bulk.BulkScopeKind.All);
++        Menu_Tools.DropDownItems.AddRange([_pkMenuLegalize, _pkMenuOptimize, _pkMenuLibrary, _pkMenuComplete, _pkMenuBulk]);
++        Menu_Tools.DropDownOpening += (_, _) => UpdatePokekeepBulkAvailability();
+ 
+         // ---- Pestaña «Librería» junto a Caja, Equipo, Otro y SAV ----
+         Pokekeep.AddLibraryTab(C_SAV.AddExtraTab);
+@@ -78,6 +86,19 @@ private void UpdatePokekeepAvailability()
+         if (_pkMenuOptimize is not null) { _pkMenuOptimize.Enabled = av.Enabled; _pkMenuOptimize.ToolTipText = tipOptimize; }
+     }
+ 
++    /// <summary>Hito 4b: activa o desactiva «Completar el juego…» y «Edición masiva…» con el motivo como ayuda (Colosseum, sin partida, operación en curso...).</summary>
++    private void UpdatePokekeepBulkAvailability()
++    {
++        if (_pkMenuComplete is null || _pkMenuBulk is null)
++            return;
++        var complete = Pokekeep.LivingDexAvailability();
++        _pkMenuComplete.Enabled = complete.Enabled;
++        _pkMenuComplete.ToolTipText = complete.Enabled ? "Genera todos los Pokémon de este juego, legales, al nivel máximo y en español, solo en casillas libres. Se puede deshacer de una vez." : complete.Reason ?? string.Empty;
++        var bulk = Pokekeep.BulkEditAvailability();
++        _pkMenuBulk.Enabled = bulk.Enabled;
++        _pkMenuBulk.ToolTipText = bulk.Enabled ? "Mejora stats, nivel, amistad, idioma y más de todas las cajas, de las que elijas o de los Pokémon que marques, comprobando cada uno con PKHeX." : bulk.Reason ?? string.Empty;
++    }
++
+     /// <summary>La barra ocupa su propia franja: la ventana crece lo que mide para que el resto no se encoja (y vuelve a su tamaño al ocultarla).</summary>
+     private void AdjustForPokekeepBar(Control bar)
+     {
+diff --git a/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs b/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs
+index 62a954f68..a963ac46d 100644
+--- a/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs
++++ b/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs
+@@ -2,6 +2,7 @@
+ using System.Drawing;
+ using System.Windows.Forms;
+ using AutoLegalidad.Ui;
++using AutoLegalidad.Ui.Bulk;
+ using AutoLegalidad.Ui.Library;
+ using AutoLegalidad.Ui.Operation;
+ using PKHeX.Core;
+@@ -17,6 +18,8 @@ namespace PKHeX.WinForms;
+ internal static class Pokekeep
+ {
+     public static PokekeepApp? App { get; private set; }
++    private static Main? _main;
++    private static IWin32Window? MainWindow => _main;
+     private static SAVEditor? _sav;
+     private static Action? _availabilityChanged;
+ 
+@@ -24,10 +27,12 @@ internal static class Pokekeep
+     public static PokekeepApp Initialize(Main main, SAVEditor sav, Action availabilityChanged)
+     {
+         _sav = sav;
++        _main = main;
+         _availabilityChanged = availabilityChanged;
+         App = new PokekeepApp(new MainHost(main, sav), Program.Settings.Pokekeep);
+         App.Coordinator.ProgressChanged += (_, _) => availabilityChanged();
+         App.Coordinator.Completed += (_, _) => availabilityChanged();
++        App.Bulk.Completed += (_, _) => availabilityChanged();
+         return App;
+     }
+ 
+@@ -64,6 +69,12 @@ private static System.Collections.Generic.IEnumerable<LibraryView> FindLibraryVi
+     public static void RunOnEditor(PokekeepAction action) => Fire(App?.Coordinator.RunOnEditorAsync(action));
+     public static void RunOnSlot(PokekeepAction action, ISlotInfo slot) => Fire(App?.Coordinator.RunOnSlotAsync(action, slot));
+ 
++    // ---- Hito 4b: operaciones masivas ----
++    public static void RunLivingDex() => Fire(App?.Dialogs.OpenLivingDexAsync(MainWindow));
++    public static void RunBulkEdit(BulkScopeKind scope, ISlotInfo? slot = null, int? box = null) => Fire(App?.Dialogs.OpenEditAsync(MainWindow, scope, slot, box));
++    public static Availability LivingDexAvailability() => App?.Bulk.GetLivingDexAvailability() ?? Availability.No("Pokekeep no está disponible.");
++    public static Availability BulkEditAvailability() => App?.Bulk.GetEditAvailability() ?? Availability.No("Pokekeep no está disponible.");
++
+     public static Availability EditorAvailability() => App?.Coordinator.GetEditorAvailability() ?? Availability.No("Pokekeep no está disponible.");
+     public static Availability SlotAvailability(ISlotInfo slot) => App?.Coordinator.GetSlotAvailability(slot) ?? Availability.No("Pokekeep no está disponible.");
+ 
+diff --git a/PKHeX.WinForms/Resources/text/lang_en.txt b/PKHeX.WinForms/Resources/text/lang_en.txt
+index 76f9484a8..38ca874c6 100644
+--- a/PKHeX.WinForms/Resources/text/lang_en.txt
++++ b/PKHeX.WinForms/Resources/text/lang_en.txt
+@@ -3411,3 +3411,6 @@ Main.Menu_PokekeepLibreria=Pokekeep Library
+ Main.mnuPokekeepLegalize=Auto-legalize
+ Main.mnuPokekeepOptimize=Optimize stats
+ Main.Tab_Libreria=Library
++Main.Menu_PokekeepCompletar=Complete the game...
++Main.Menu_PokekeepEdicionMasiva=Bulk edit...
++Main.mnuPokekeepBulk=Bulk edit of this Pokémon...
+diff --git a/PKHeX.WinForms/Resources/text/lang_es-419.txt b/PKHeX.WinForms/Resources/text/lang_es-419.txt
+index 0e5dcafd3..e9a1cf0f2 100644
+--- a/PKHeX.WinForms/Resources/text/lang_es-419.txt
++++ b/PKHeX.WinForms/Resources/text/lang_es-419.txt
+@@ -3411,3 +3411,6 @@ Main.Menu_PokekeepLibreria=Librería de Pokekeep
+ Main.mnuPokekeepLegalize=Legalizar automáticamente
+ Main.mnuPokekeepOptimize=Optimizar stats
+ Main.Tab_Libreria=Librería
++Main.Menu_PokekeepCompletar=Completar el juego…
++Main.Menu_PokekeepEdicionMasiva=Edición masiva…
++Main.mnuPokekeepBulk=Edición masiva de este Pokémon…
+diff --git a/PKHeX.WinForms/Resources/text/lang_es.txt b/PKHeX.WinForms/Resources/text/lang_es.txt
+index 1a003fbbd..db3de1fb5 100644
+--- a/PKHeX.WinForms/Resources/text/lang_es.txt
++++ b/PKHeX.WinForms/Resources/text/lang_es.txt
+@@ -3411,3 +3411,6 @@ Main.Menu_PokekeepLibreria=Librería de Pokekeep
+ Main.mnuPokekeepLegalize=Legalizar automáticamente
+ Main.mnuPokekeepOptimize=Optimizar stats
+ Main.Tab_Libreria=Librería
++Main.Menu_PokekeepCompletar=Completar el juego…
++Main.Menu_PokekeepEdicionMasiva=Edición masiva…
++Main.mnuPokekeepBulk=Edición masiva de este Pokémon…
+-- 
+2.55.0.windows.5
+

@@ -1,0 +1,573 @@
+# Textos del motor (castellano) y su plantilla inglesa. Columnas: archivo, clase (usuario | campo | interno), plantilla en castellano, plantilla inglesa.
+src/AutoLegalidad.ALMAdapter/AlmGenerationStrategy.cs	usuario	ALM lanzó 	ALM threw
+src/AutoLegalidad.ALMAdapter/AlmGenerationStrategy.cs	usuario	 en este intento.	 in this attempt.
+src/AutoLegalidad.ALMAdapter/AlmGenerationStrategy.cs	usuario	ALM agotó su tiempo en este paso.	ALM ran out of time in this step.
+src/AutoLegalidad.ALMAdapter/AlmGenerationStrategy.cs	usuario	ALM informa de VersionMismatch.	ALM reports VersionMismatch.
+src/AutoLegalidad.Contracts/BinaryIdentity.cs	interno	{0}: se esperaban 64 dígitos hexadecimales (SHA-256) y llegó «{1}».	
+src/AutoLegalidad.Contracts/Json.cs	interno	El documento JSON es null.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	options.adjust es obligatorio y debe pedir al menos una operación cuando la acción es Adjust.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	la acción Adjust no admite originEventKey (no genera un origen nuevo).	
+src/AutoLegalidad.Contracts/Validation.cs	interno	options.newPokemon y options.maxLevel solo valen con la acción Legalize (Adjust usa options.adjust).	
+src/AutoLegalidad.Contracts/Validation.cs	interno	options.adjust solo vale con la acción Adjust.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	options.newPokemon y options.maxLevel solo valen con la acción Legalize (Optimizar stats nunca cambia el nivel).	
+src/AutoLegalidad.Contracts/Validation.cs	interno	protocolVersion {0} no soportado (el Worker habla {1}).	
+src/AutoLegalidad.Contracts/Validation.cs	interno	requestId no es un GUID.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	releaseId vacío.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	datasetSnapshotId vacío.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	action no válida (Legalize | Optimize | Adjust).	
+src/AutoLegalidad.Contracts/Validation.cs	interno	entityContext vacío.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	entityRuntimeType vacío.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	target.gameVersion vacío.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	target.context vacío.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	target.trainer.ot vacío.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	target.trainer.tid16 fuera de rango.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	target.trainer.sid16 fuera de rango.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	target.trainer.gender debe ser 0 o 1.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	target.trainer.language fuera de rango.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	originalEntityBase64 vacío.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	la entidad supera el máximo de {0} bytes.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	originalEntityBase64 no es base64 válido.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	la entidad está vacía.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	originalEntitySha256 no coincide con los bytes recibidos.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	el estado {0} no puede llevar candidato.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	el estado {0} exige candidato y su SHA-256.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	candidateSha256 no coincide con los bytes del candidato.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	candidateEntityBase64 no es base64.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	el estado {0} exige una prueba de validación.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	una prueba de éxito debe tener oficial, destino, ida y vuelta (guardar y releer) y especie en verde.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	solo la acción Adjust lleva resultados por operación.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	un Success de Adjust exige que al menos una operación haya cambiado algo.	
+src/AutoLegalidad.Contracts/Validation.cs	interno	el Worker nunca decide TargetChanged (lo decide la interfaz).	
+src/AutoLegalidad.Contracts/Validation.cs	interno	un Timeout no puede declararse searchComplete=true.	
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	Un huevo no tiene amistad (ese valor es el contador de eclosión).	An egg has no friendship (that value is the hatch counter).
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	La primera generación no guarda la amistad.	The first generation doesn’t store friendship.
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	La amistad ya está al máximo.	Friendship is already at maximum.
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	Amistad al máximo (255).	Friendship at maximum (255).
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	PKHeX no admite la amistad máxima en este Pokémon; no se ha tocado.	PKHeX doesn’t allow maximum friendship on this Pokémon; it wasn’t touched.
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	Esta generación no guarda el idioma del Pokémon.	This generation doesn’t store the Pokémon’s language.
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	Este juego no admite el español.	This game doesn’t support Spanish.
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	Ya está en español.	It is already Spanish.
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	Idioma cambiado a español.	Language changed to Spanish.
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	PKHeX no admite el español para el origen de este Pokémon (por ejemplo, un evento que solo existe en otro idioma); no se ha tocado.	PKHeX doesn’t allow Spanish for this Pokémon’s origin (for example, an event that only exists in another language); it wasn’t touched.
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	Este formato no tiene Más PP.	This format has no PP Ups.
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	Los PP ya están al máximo.	PP are already at maximum.
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	Más PP al máximo y PP restaurados.	PP Ups at maximum and PP restored.
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	PKHeX no admite ese cambio de PP en este Pokémon; no se ha tocado.	PKHeX doesn’t allow that PP change on this Pokémon; it wasn’t touched.
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	Solo aplica a los Pokémon del equipo: en la caja este juego no guarda los PS ni el estado.	Only applies to party Pokémon: in the box this game doesn’t store HP or status.
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	Ya tiene todos los PS y ningún estado alterado.	It already has full HP and no status condition.
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	Este formato de casilla no guarda los PS ni el estado alterado.	This slot format doesn’t store HP or status condition.
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	PS al máximo y sin estado alterado.	HP at maximum and no status condition.
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	PKHeX no admite ese cambio de PS o de estado en este Pokémon; no se ha tocado.	PKHeX doesn’t allow that HP or status change on this Pokémon; it wasn’t touched.
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	No tiene el Pokérus activo: no hay nada que curar (y nunca se vacuna).	It doesn’t have active Pokérus: there is nothing to cure (and it is never vaccinated).
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	Pokérus curado (se conserva la cepa).	Pokérus cured (the strain is kept).
+src/AutoLegalidad.Engine/Adjust/AdjustOperations.cs	usuario	PKHeX no admite curar el Pokérus de este Pokémon; no se ha tocado.	PKHeX doesn’t allow curing this Pokémon’s Pokérus; it wasn’t touched.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	Los huevos no se editan.	Eggs aren’t edited.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	No hay nada que cambiar: los huevos no se editan.	There is nothing to change: eggs aren’t edited.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	Primero hay que legalizarlo.	It has to be legalized first.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	La entidad no es del formato del destino: conviértela primero.	The entity isn’t of the target format: convert it first.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	{0} no es {1}; la edición masiva no transfiere entre formatos.	{0} isn’t {1}; bulk editing doesn’t transfer between formats.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	Primero hay que legalizarlo: usa «Legalizar automáticamente» o marca «Legalizar los ilegales primero».	It has to be legalized first: use “Legalize automatically” or tick “Legalize the illegal ones first”.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	El Pokémon no es legal tal cual está ({0}); las operaciones de edición no legalizan.	The Pokémon isn’t legal as it is ({0}); edit operations don’t legalize.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	No se ha podido legalizar primero.	It couldn’t be legalized first.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	Se agotó el tiempo antes de terminar la búsqueda.	Time ran out before the search finished.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	El tiempo límite se alcanzó durante la búsqueda; esto NO prueba que no exista solución.	The time limit was reached during the search; this does NOT prove that no solution exists.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	Pokémon legalizado: se ha reconstruido un origen válido.	Pokémon legalized: a valid origin was rebuilt.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	Pokémon legalizado con una reparación mínima.	Pokémon legalized with a minimal repair.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	Ya era legal: no ha hecho falta legalizarlo.	It was already legal: it didn’t need to be legalized.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	Se agotó el tiempo antes de llegar a esta operación.	Time ran out before reaching this operation.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	El tiempo límite se alcanzó; esto no prueba que la operación sea imposible.	The time limit was reached; this doesn’t prove that the operation is impossible.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	Operación desconocida.	Unknown operation.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	Se agotó el tiempo antes de terminar esta operación.	Time ran out before finishing this operation.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	Se agotó el tiempo antes de terminar las operaciones.	Time ran out before finishing the operations.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	El tiempo límite se alcanzó; esto NO prueba que no se pueda aplicar ninguna.	The time limit was reached; this does NOT prove that none can be applied.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	No había nada que cambiar con las operaciones elegidas.	There was nothing to change with the chosen operations.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	El resultado no superó la revalidación independiente: se descarta.	The result did not pass the independent revalidation: it is discarded.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	Se ha aplicado 1 operación.	1 operation was applied.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	Se han aplicado {0} operaciones.	{0} operations were applied.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	La única mejora posible exigía cambiar el origen del Pokémon: no se ha aplicado.	The only possible improvement required changing the Pokémon’s origin: it wasn’t applied.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	Este tipo de encuentro aún no se puede optimizar.	This kind of encounter can’t be optimized yet.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	No se ha encontrado una mejora de stats en el tiempo disponible (la búsqueda no es exhaustiva).	No stat improvement was found in the time available (the search isn’t exhaustive).
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	Sin margen de mejora: los stats de este Pokémon ya son los mejores posibles para su encuentro.	No room for improvement: this Pokémon’s stats are already the best possible for its encounter.
+src/AutoLegalidad.Engine/Adjust/LegalizationService.Adjust.cs	usuario	La optimización dejaba el Pokémon inválido: se ha descartado.	The optimization left the Pokémon invalid: it was discarded.
+src/AutoLegalidad.Engine/Caching/GenerationCache.cs	interno	 (resultado en caché, revalidado)	
+src/AutoLegalidad.Engine/Catalog/CatalogReader.cs	interno	No existe la base de datos del catálogo.	
+src/AutoLegalidad.Engine/Catalog/CatalogReader.cs	interno	El catálogo no tiene ninguna instantánea verificada (Verified).	
+src/AutoLegalidad.Engine/Catalog/CatalogReader.cs	interno	La instantánea no tiene manifiesto (manifest).	
+src/AutoLegalidad.Engine/Catalog/CatalogReader.cs	interno	La instantánea activa del catálogo es {0}, no {1}.	
+src/AutoLegalidad.Engine/Catalog/CatalogReader.cs	interno	El PKHeX.Core.dll cargado no es el que se usó al construir el catálogo.	
+src/AutoLegalidad.Engine/Catalog/CatalogReader.cs	interno	no such table	
+src/AutoLegalidad.Engine/Catalog/CatalogReader.cs	interno	SELECT display_name_es FROM game WHERE version_name=$v AND is_group=0 LIMIT 1	
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	usuario	El origen del Pokémon se reconstruyó para que sea legal.	The Pokémon’s origin was rebuilt so that it is legal.
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	campo	Constante de cifrado	Encryption constant
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	campo	Género del entrenador original	Original trainer gender
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	campo	Juego de origen	Origin game
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	campo	Lugar de captura	Met location
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	campo	Nivel de captura	Met level
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	campo	Fecha de captura	Met date
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	campo	Fecha de eclosión del huevo	Egg hatch date
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	campo	Lugar del huevo	Egg location
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	campo	Es huevo	Is an egg
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	campo	Más PP	PP Ups
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	campo	Días de Pokérus	Pokérus days
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	campo	Tamaño (escala)	Size (scale)
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	usuario	{0} conservados ({1}) con una semilla legal del encuentro: cambian {2}.	{0} kept ({1}) with a legal encounter seed: {2} change.
+src/AutoLegalidad.Engine/Changes/OriginExplainer.cs	usuario	Entrenador original conservado: «{0}». El Pokémon ya era de otro entrenador y su origen lo exige; no se ha pasado a tu entrenador.	Original trainer kept: “{0}”. The Pokémon already belonged to another trainer and its origin requires it; it was not moved to your trainer.
+src/AutoLegalidad.Engine/Changes/OriginExplainer.cs	usuario	Origen propio: capturado o criado en este juego con tu entrenador.	Own origin: caught or bred in this game with your trainer.
+src/AutoLegalidad.Engine/Changes/OriginExplainer.cs	interno	Pokémon GO	
+src/AutoLegalidad.Engine/Changes/OriginExplainer.cs	usuario	intercambio del juego	in-game trade
+src/AutoLegalidad.Engine/Changes/OriginExplainer.cs	usuario	Origen con otro entrenador: {0}. No hay ruta propia en este juego.	Origin with another trainer: {0}. There is no route of its own in this game.
+src/AutoLegalidad.Engine/Changes/OriginExplainer.cs	usuario	Entrenador actual: eres tú; el Pokémon es de otro entrenador y el juego te registra como quien lo maneja ahora.	Current trainer: it’s you; the Pokémon belongs to another trainer and the game registers you as the one handling it now.
+src/AutoLegalidad.Engine/Changes/OriginExplainer.cs	usuario	Entrenador anterior: necesario por evolución por intercambio.	Previous trainer: needed because of the trade evolution.
+src/AutoLegalidad.Engine/Changes/OriginExplainer.cs	usuario	Entrenador anterior: eres tú; la evolución por intercambio lo exige.	Previous trainer: it’s you; the trade evolution requires it.
+src/AutoLegalidad.Engine/Changes/OriginExplainer.cs	usuario	Entrenador anterior: lo exige el Core para este origen.	Previous trainer: required by the Core for this origin.
+src/AutoLegalidad.Engine/Changes/OriginExplainer.cs	usuario	no cabe	doesn’t fit
+src/AutoLegalidad.Engine/Changes/OriginExplainer.cs	usuario	un juego de la generación {0}	a generation {0} game
+src/AutoLegalidad.Engine/Changes/RelaxationExplainer.cs	usuario	Se cambió la habilidad porque este origen no permite la que tenía.	The ability was changed because this origin doesn’t allow the one it had.
+src/AutoLegalidad.Engine/Changes/RelaxationExplainer.cs	usuario	Se sustituyeron movimientos que este origen no permite.	Moves that this origin doesn’t allow were replaced.
+src/AutoLegalidad.Engine/Changes/RelaxationExplainer.cs	usuario	Se cambió la naturaleza porque este origen no permite la que tenía.	The nature was changed because this origin doesn’t allow the one it had.
+src/AutoLegalidad.Engine/Changes/RelaxationExplainer.cs	usuario	Se cambió el sexo porque este origen no permite el que tenía.	The gender was changed because this origin doesn’t allow the one it had.
+src/AutoLegalidad.Engine/Changes/RelaxationExplainer.cs	usuario	Se quitó el variocolor porque este origen no lo permite.	The shiny status was removed because this origin doesn’t allow it.
+src/AutoLegalidad.Engine/Changes/RelaxationExplainer.cs	usuario	Se subió el nivel porque la forma pedida solo se obtiene a un nivel mayor (evolución).	The level was raised because the requested form is only obtained at a higher level (evolution).
+src/AutoLegalidad.Engine/Changes/RelaxationExplainer.cs	usuario	Se usó otra forma porque la que tenía no se puede obtener con este origen.	Another form was used because the one it had can’t be obtained with this origin.
+src/AutoLegalidad.Engine/Changes/RelaxationExplainer.cs	usuario	Se ajustaron el nivel, el objeto o el apodo a los valores que permite este origen.	The level, item or nickname were adjusted to the values this origin allows.
+src/AutoLegalidad.Engine/Changes/RelaxationExplainer.cs	usuario	este origen fija la naturaleza {0}	this origin fixes the nature {0}
+src/AutoLegalidad.Engine/Changes/RelaxationExplainer.cs	usuario	ningún origen legal hallado para este Pokémon conserva la que tenía	no legal origin found for this Pokémon keeps the one it had
+src/AutoLegalidad.Engine/Changes/RelaxationExplainer.cs	usuario	se conserva su origen con el entrenador original (evento o intercambio), y ese origen no admite la que tenía	its origin with the original trainer (event or trade) is kept, and that origin doesn’t allow the one it had
+src/AutoLegalidad.Engine/Changes/RelaxationExplainer.cs	usuario	el origen legal hallado no admite la que tenía	the legal origin found doesn’t allow the one it had
+src/AutoLegalidad.Engine/Changes/RelaxationExplainer.cs	usuario	Se cambió la naturaleza ({0} → {1}): {2}.	The nature was changed ({0} → {1}): {2}.
+src/AutoLegalidad.Engine/Context/Destination.cs	usuario	El juego de destino '{0}' no es un juego concreto reconocido por PKHeX.	The target game '{0}' isn’t a specific game recognized by PKHeX.
+src/AutoLegalidad.Engine/Context/Destination.cs	usuario	El contexto de destino '{0}' no es válido.	The target context '{0}' isn’t valid.
+src/AutoLegalidad.Engine/Context/Destination.cs	usuario	El tipo de casilla '{0}' no es válido.	The slot type '{0}' isn’t valid.
+src/AutoLegalidad.Engine/Context/Destination.cs	usuario	El juego {0} no pertenece al contexto {1} (es {2}).	Game {0} doesn’t belong to context {1} (it is {2}).
+src/AutoLegalidad.Engine/Context/Destination.cs	usuario	No se pudo construir un destino virtual para {0}: {1}	A virtual target couldn’t be built for {0}: {1}
+src/AutoLegalidad.Engine/Context/Destination.cs	usuario	PKHeX no sabe construir un destino virtual para {0} (devolvió {1}).	PKHeX doesn’t know how to build a virtual target for {0} (it returned {1}).
+src/AutoLegalidad.Engine/Context/Destination.cs	usuario	El destino {0} guarda {1}, pero la solicitud dice {2}.	The target {0} stores {1}, but the request says {2}.
+src/AutoLegalidad.Engine/Generation/EvolutionProof.cs	usuario	Desde la plantilla {0}-{1} el árbol de evoluciones del destino solo llega a la especie {2} con la(s) forma(s) {3}, nunca con la forma {4}, y esa forma no se puede cambiar (FormInfo.IsFormChangeable). Referencia técnica: {5}.	From template {0}-{1} the target’s evolution tree only reaches species {2} with form(s) {3}, never with form {4}, and that form can’t be changed (FormInfo.IsFormChangeable). Technical reference: {5}.
+src/AutoLegalidad.Engine/Generation/EvolutionProof.cs	usuario	La especie {0} no está en la línea evolutiva de la plantilla {1}-{2} según el árbol de evoluciones del destino. Referencia técnica: {3}.	Species {0} isn’t in the evolution line of template {1}-{2} according to the target’s evolution tree. Technical reference: {3}.
+src/AutoLegalidad.Engine/Generation/EvolveOnTradeProof.cs	usuario	El intercambio {0} evoluciona al Pokémon al recibirlo (EvolveOnTrade) y PKHeX rechaza la especie sin evolucionar. Referencia técnica: PKHeX.Core {1} (if (EvolveOnTrade && pk.Species == Species) return false).	The trade {0} evolves the Pokémon when it is received (EvolveOnTrade) and PKHeX rejects the unevolved species. Technical reference: PKHeX.Core {1} (if (EvolveOnTrade && pk.Species == Species) return false).
+src/AutoLegalidad.Engine/Generation/FixedGenderProof.cs	usuario	sin sexo	genderless
+src/AutoLegalidad.Engine/Generation/FixedGenderProof.cs	usuario	La plantilla {0}-{1} fija el sexo ({2}) y la especie pedida {3}-{4} es {5} en la tabla personal de {6}; 	Template {0}-{1} fixes the gender ({2}) and the requested species {3}-{4} is {5} in {6}’s personal table;
+src/AutoLegalidad.Engine/Generation/FixedGenderProof.cs	usuario	el sexo del encuentro se exige igual en la entidad y la evolución no lo cambia. Referencia técnica: {0}; PersonalInfo.cs:67-69.	the encounter’s gender is required the same in the entity and evolution doesn’t change it. Technical reference: {0}; PersonalInfo.cs:67-69.
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	La forma {0} no se puede guardar en {1} ({2}): se pide la forma {3}, que sí existe.	Form {0} can’t be stored in {1} ({2}): form {3}, which does exist, is requested.
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	Ninguna forma de la especie {0} se puede guardar en {1}.	No form of species {0} can be stored in {1}.
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	no existe en ese juego	doesn’t exist in that game
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	fuera de la tabla del juego	outside the game’s table
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	fuera del rango de formas de la tabla personal ({0} formas)	outside the personal table’s form range ({0} forms)
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	el formato {0} no guarda esa forma	the format {0} doesn’t store that form
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	ausente en el catálogo de disponibilidad	absent from the availability catalog
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	forma solo de combate ({0})	battle-only form ({0})
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	Referencia técnica: PKHeX.Core, Legality/Restrictions/HomeTrackerUtil.cs:34-43 (IsRequired: EncounterSlot8GO y regalos HOME siempre, y cualquier origen distinto del contexto actual), 	Technical reference: PKHeX.Core, Legality/Restrictions/HomeTrackerUtil.cs:34-43 (IsRequired: EncounterSlot8GO and HOME gifts always, and any origin different from the current context),
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	Legality/Verifiers/TransferVerifier.cs:167-173 (VerifyHOMETracker: matrícula 0 => TransferTrackerMissing con la severidad configurada) y 	Legality/Verifiers/TransferVerifier.cs:167-173 (VerifyHOMETracker: tracker 0 => TransferTrackerMissing with the configured severity) and
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	Legality/Settings/Specialized/HOMETransferSettings.cs:9 (valor por defecto del PKHeX oficial: «inválido»).	Legality/Settings/Specialized/HOMETransferSettings.cs:9 (default value of the official PKHeX: “invalid”).
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	inválido	invalid
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	válido	valid
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	La plantilla no es convertible: se apoya solo en la regla estática de PKHeX.	The template isn’t convertible: it relies only on PKHeX’s static rule.
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	PKHeX no produjo un Pokémon de esa plantilla: se apoya solo en la regla estática de PKHeX.	PKHeX didn’t produce a Pokémon from that template: it relies only on PKHeX’s static rule.
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	PKHeX no convierte el Pokémon al formato del destino: se apoya solo en la regla estática de PKHeX.	PKHeX doesn’t convert the Pokémon to the target format: it relies only on PKHeX’s static rule.
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	Comprobado con PKHeX: el Pokémon generado desde la plantilla es legal en todo salvo la matrícula (rastreador) de HOME (único fallo: TransferTrackerMissing, severidad {0}).	Checked with PKHeX: the Pokémon generated from the template is legal in everything except the HOME tracker (the only failure: TransferTrackerMissing, severity {0}).
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	El candidato de la plantilla falla por algo más que la matrícula (rastreador) de HOME: no es una prueba plena.	The template candidate fails for more than the HOME tracker: it isn’t a full proof.
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	No se pudo comprobar con PKHeX (	Couldn’t be checked with PKHeX (
+src/AutoLegalidad.Engine/Generation/FormGuard.cs	usuario	): se apoya solo en la regla estática de PKHeX.	): it relies only on PKHeX’s static rule.
+src/AutoLegalidad.Engine/Generation/FormReachability.cs	usuario	{0}: la especie {1} (forma {2}) no evoluciona a {3} forma {4} según el árbol de evolución de PKHeX	{0}: species {1} (form {2}) doesn’t evolve to {3} form {4} according to PKHeX’s evolution tree
+src/AutoLegalidad.Engine/Generation/FormReachability.cs	usuario	{0}: PKHeX rechaza la forma {1} (comprobación «Form») y solo valida la entidad con otra forma	{0}: PKHeX rejects form {1} (“Form” check) and only validates the entity with another form
+src/AutoLegalidad.Engine/Generation/FormReachability.cs	usuario	Alcanzable: {0} ({1}) produce una entidad válida con esa especie y forma.	Reachable: {0} ({1}) produces a valid entity with that species and form.
+src/AutoLegalidad.Engine/Generation/FormReachability.cs	usuario	PKHeX enumera {0} encuentros para la especie {1} forma {2} en {3}: {4} exigen la matrícula (rastreador de HOME) (regla 6) y {5} candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): {6}.	PKHeX lists {0} encounters for species {1} form {2} in {3}: {4} require the HOME tracker (rule 6) and {5} candidates created from the others ALL fail for structural reasons (no valid encounter, form or evolution): {6}.
+src/AutoLegalidad.Engine/Generation/FormReachability.cs	usuario	No se demuestra: {0} encuentros, {1} bloqueados por la matrícula de HOME, {2} candidatos, {3} fallos no estructurales. {4}	Not proven: {0} encounters, {1} blocked by the HOME tracker, {2} candidates, {3} non-structural failures. {4}
+src/AutoLegalidad.Engine/Generation/FormReachability.cs	usuario	Demostracion de alcanzabilidad de la forma	Form reachability proof
+src/AutoLegalidad.Engine/Generation/FormStorageProof.cs	usuario	el formato {0} deriva la forma de Unown de los DV (máximo 25) y no admite la forma {1} (referencia técnica: GBPKM.cs:151-178)	the format {0} derives Unown’s form from the DVs (maximum 25) and doesn’t support form {1} (technical reference: GBPKM.cs:151-178)
+src/AutoLegalidad.Engine/Generation/FormStorageProof.cs	usuario	el formato {0} guarda la forma {1} al asignarle la {2} de la especie {3}: no tiene campo para esa forma (referencia técnica, p. ej.: PKM/Shared/G3PKM.cs:64-76, PKM/Shared/GBPKM.cs:151-170)	the format {0} stores form {1} when assigned {2} of species {3}: it has no field for that form (technical reference, e.g.: PKM/Shared/G3PKM.cs:64-76, PKM/Shared/GBPKM.cs:151-170)
+src/AutoLegalidad.Engine/Generation/GbLanguageProof.cs	usuario	El regalo exige idioma {0} y la partida de destino es {1}: PKHeX lo rechaza siempre. Referencia técnica: PKHeX.Core Legality/Encounters/Templates/Gen1/EncounterGift1.cs:210 (IsMatchExact: pk.Japanese != (Language == Japanese)) y Saves/SAV1.cs:18 (Japanese es propiedad de la partida).	The gift requires language {0} and the target save is {1}: PKHeX always rejects it. Technical reference: PKHeX.Core Legality/Encounters/Templates/Gen1/EncounterGift1.cs:210 (IsMatchExact: pk.Japanese != (Language == Japanese)) and Saves/SAV1.cs:18 (Japanese is a property of the save).
+src/AutoLegalidad.Engine/Generation/GbLanguageProof.cs	usuario	El regalo exige idioma {0} y la partida de destino es {1}: solo un Pokémon japonés puede venir de un regalo japonés. Referencia técnica: PKHeX.Core Legality/Encounters/Templates/Gen2/EncounterGift2.cs:201 y 222-226 (IsLanguageValid) y Saves/SAV2.cs:18.	The gift requires language {0} and the target save is {1}: only a Japanese Pokémon can come from a Japanese gift. Technical reference: PKHeX.Core Legality/Encounters/Templates/Gen2/EncounterGift2.cs:201 and 222-226 (IsLanguageValid) and Saves/SAV2.cs:18.
+src/AutoLegalidad.Engine/Generation/Gen1TradeNicknameProof.cs	usuario	El intercambio de Gen1 de la especie {0} no existe en una partida {1}: la tabla de motes de PKHeX para ese idioma está vacía, 	The Gen 1 trade of species {0} doesn’t exist in a {1} save: PKHeX’s nickname table for that language is empty,
+src/AutoLegalidad.Engine/Generation/Gen1TradeNicknameProof.cs	usuario	así que la plantilla sale con el mote vacío, que siempre es inválido, 	so the template comes out with an empty nickname, which is always invalid,
+src/AutoLegalidad.Engine/Generation/Gen1TradeNicknameProof.cs	usuario	y en esa partida el mote tiene que coincidir exactamente con la tabla. No se puede usar una entidad del otro grupo en esa partida. 	and in that save the nickname has to match the table exactly. An entity of the other group can’t be used in that save.
+src/AutoLegalidad.Engine/Generation/Gen1TradeNicknameProof.cs	usuario	Ese intercambio solo existe en las partidas 	That trade only exists in the saves
+src/AutoLegalidad.Engine/Generation/Gen1TradeNicknameProof.cs	usuario	Referencia técnica: Resources/legality/gen1/text_traderby_{0}.txt, NickLengthShort (NicknameVerifier.cs:23-27), EncounterTrade1.cs:56-68, SAV1.cs:219 y 225.	Technical reference: Resources/legality/gen1/text_traderby_{0}.txt, NickLengthShort (NicknameVerifier.cs:23-27), EncounterTrade1.cs:56-68, SAV1.cs:219 and 225.
+src/AutoLegalidad.Engine/Generation/KoreanGtsProof.cs	usuario	Una tarjeta coreana de Gen4 que reparte la Cinta Clásica no puede existir en una partida de Gen4 no coreana: el Pokémon coreano solo llega por el GTS 	A Gen 4 Korean card that hands out the Classic Ribbon can’t exist in a non-Korean Gen 4 save: the Korean Pokémon only arrives through the GTS
+src/AutoLegalidad.Engine/Generation/KoreanGtsProof.cs	usuario	y PKHeX prohíbe la Cinta Clásica en el GTS entre juegos coreanos e internacionales. 	and PKHeX forbids the Classic Ribbon in the GTS between Korean and international games.
+src/AutoLegalidad.Engine/Generation/KoreanGtsProof.cs	usuario	Referencia técnica: PKHeX.Core Legality/Verifiers/Misc/Gen4GlobalTradeRules.cs:10-19 (IsRequiredGTS) y 	Technical reference: PKHeX.Core Legality/Verifiers/Misc/Gen4GlobalTradeRules.cs:10-19 (IsRequiredGTS) and
+src/AutoLegalidad.Engine/Generation/LanguagePolicy.cs	usuario	Se cambió el idioma a español (ESP) porque el idioma que tenía no es legal para este origen.	The language was changed to Spanish (ESP) because the language it had isn’t legal for this origin.
+src/AutoLegalidad.Engine/Generation/LanguagePolicy.cs	usuario	El idioma es {0} porque este evento solo existe en ese idioma (no se fuerza el español).	The language is {0} because this event only exists in that language (Spanish isn’t forced).
+src/AutoLegalidad.Engine/Generation/LanguagePolicy.cs	usuario	El idioma es {0} porque este origen fija el idioma del Pokémon recibido (PKHeX lo reparte así) y no se fuerza el español.	The language is {0} because this origin fixes the language of the received Pokémon (PKHeX distributes it that way) and Spanish isn’t forced.
+src/AutoLegalidad.Engine/Generation/LanguagePolicy.cs	usuario	Se conserva el idioma {0} del Pokémon.	The Pokémon’s language {0} is kept.
+src/AutoLegalidad.Engine/Generation/LanguagePolicy.cs	usuario	El idioma es {0} porque el español no es legal para este origen en este juego.	The language is {0} because Spanish isn’t legal for this origin in this game.
+src/AutoLegalidad.Engine/Generation/LanguagePolicy.cs	usuario	japonés	Japanese
+src/AutoLegalidad.Engine/Generation/LanguagePolicy.cs	usuario	inglés	English
+src/AutoLegalidad.Engine/Generation/LanguagePolicy.cs	usuario	francés	French
+src/AutoLegalidad.Engine/Generation/LanguagePolicy.cs	usuario	alemán	German
+src/AutoLegalidad.Engine/Generation/LanguagePolicy.cs	usuario	español	Spanish
+src/AutoLegalidad.Engine/Generation/LanguagePolicy.cs	usuario	español latinoamericano	Latin American Spanish
+src/AutoLegalidad.Engine/Generation/OriginPreference.cs	usuario	intercambio del juego	in-game trade
+src/AutoLegalidad.Engine/Generation/PokewalkerWurmpleProof.cs	usuario	Los {0} PID posibles del Wurmple del Pokéwalker con los TID/SID de la partida (25 naturalezas x 2 sexos) dan todos la otra rama de Wurmple: la especie {1} es imposible para esta partida. Referencia técnica: PokewalkerRNG.GetPID, EncounterStatic4Pokewalker.cs:109; WurmpleUtil.IsWurmpleEvoValid, WurmpleUtil.cs:13-18.	The {0} possible PIDs of the Pokéwalker Wurmple with the save’s TID/SID (25 natures x 2 genders) all give the other Wurmple branch: species {1} is impossible for this save. Technical reference: PokewalkerRNG.GetPID, EncounterStatic4Pokewalker.cs:109; WurmpleUtil.IsWurmpleEvoValid, WurmpleUtil.cs:13-18.
+src/AutoLegalidad.Engine/Generation/Relaxation.cs	usuario	Regenerar dentro del mismo encuentro (se conserva su identidad)	Regenerate within the same encounter (its identity is kept)
+src/AutoLegalidad.Engine/Generation/Relaxation.cs	usuario	Todos los rasgos del usuario que siguen siendo legales	All of the user’s traits that are still legal
+src/AutoLegalidad.Engine/Generation/Relaxation.cs	usuario	Sin exigir habilidad	Without requiring ability
+src/AutoLegalidad.Engine/Generation/Relaxation.cs	usuario	Movimientos libres (los del encuentro)	Free moves (the encounter’s)
+src/AutoLegalidad.Engine/Generation/Relaxation.cs	usuario	Sin exigir naturaleza	Without requiring nature
+src/AutoLegalidad.Engine/Generation/Relaxation.cs	usuario	Sin exigir sexo	Without requiring gender
+src/AutoLegalidad.Engine/Generation/Relaxation.cs	usuario	Sin variocolor	Without shiny
+src/AutoLegalidad.Engine/Generation/Relaxation.cs	usuario	Nivel 100, sin apodo ni objeto	Level 100, no nickname or item
+src/AutoLegalidad.Engine/Generation/TrainerNameFit.cs	usuario	El nombre de tu entrenador («{0}») no cabe en un Pokémon de la generación {1} (máximo {2} caracteres): no se ha usado ese origen.	Your trainer’s name (“{0}”) doesn’t fit in a generation {1} Pokémon (maximum {2} characters): that origin wasn’t used.
+src/AutoLegalidad.Engine/Generation/TrainerNameFit.cs	usuario	El nombre de tu entrenador («{0}») no se puede escribir con los caracteres de un Pokémon de la generación {1}: no se ha usado ese origen.	Your trainer’s name (“{0}”) can’t be written with the characters of a generation {1} Pokémon: that origin wasn’t used.
+src/AutoLegalidad.Engine/Generation/TransferRoutes.cs	usuario	PKHeX no enumera ninguna ruta (encuentro, transferencia o evento) para la especie {0} con la forma {1} en {2} (EncounterMovesetGenerator.GenerateEncounters devuelve 0 encuentros).	PKHeX lists no route (encounter, transfer or event) for species {0} with form {1} in {2} (EncounterMovesetGenerator.GenerateEncounters returns 0 encounters).
+src/AutoLegalidad.Engine/Generation/TransferRoutes.cs	usuario	Se agotó el tiempo antes de recorrer todas las rutas.	Time ran out before going through all the routes.
+src/AutoLegalidad.Engine/Generation/TransferRoutes.cs	usuario	{0}: la plantilla no es convertible	{0}: the template isn’t convertible
+src/AutoLegalidad.Engine/Generation/TransferRoutes.cs	usuario	{0}: válido pero con otra especie o forma	{0}: valid but with another species or form
+src/AutoLegalidad.Engine/Generation/TransferRoutes.cs	usuario	{0} rutas enumeradas por PKHeX: {1} exigen una matrícula (rastreador de HOME) (regla 6), {2} no pueden dar la forma {3} (la plantilla no la trae y FormInfo.IsFormChangeable no admite el cambio), {4} las invalida una norma de forma de PKHeX (FormVerifier)	{0} routes listed by PKHeX: {1} require a HOME tracker (rule 6), {2} can’t give form {3} (the template doesn’t bring it and FormInfo.IsFormChangeable doesn’t allow the change), {4} are invalidated by a PKHeX form rule (FormVerifier)
+src/AutoLegalidad.Engine/Generation/TransferRoutes.cs	usuario	. Ninguna ruta produce la especie 	. No route produces species
+src/AutoLegalidad.Engine/Generation/TransferRoutes.cs	usuario	 con la forma 	 with form
+src/AutoLegalidad.Engine/Generation/TransferRoutes.cs	usuario	, {0} fallan por otro motivo (p. ej. {1}).	, {0} fail for another reason (e.g. {1}).
+src/AutoLegalidad.Engine/Generation/VivillonFormProof.cs	usuario	En Gen9 la forma {0} de {1} (Poké Ball) exige que la forma del encuentro sea la misma y la plantilla es de forma {2}. Referencia técnica: PKHeX.Core Legality/Verifiers/FormVerifier.cs:91-93 (form > 18 && enc.Form != form => FormVivillonEventPre).	In Gen 9 form {0} of {1} (Poké Ball) requires the encounter’s form to be the same and the template is form {2}. Technical reference: PKHeX.Core Legality/Verifiers/FormVerifier.cs:91-93 (form > 18 && enc.Form != form => FormVivillonEventPre).
+src/AutoLegalidad.Engine/Generation/VivillonFormProof.cs	usuario	La forma {0} de {1} (Fancy/Poké Ball) es inválida salvo en un regalo misterioso y la plantilla es un {2}. Referencia técnica: PKHeX.Core Legality/Verifiers/FormVerifier.cs:96-111 (form > Vivillon3DS.MaxWildFormID = 17 => FormVivillonEventPre / FormVivillonInvalid si el encuentro no es un MysteryGift).	Form {0} of {1} (Fancy/Poké Ball) is invalid except in a Mystery Gift and the template is a {2}. Technical reference: PKHeX.Core Legality/Verifiers/FormVerifier.cs:96-111 (form > Vivillon3DS.MaxWildFormID = 17 => FormVivillonEventPre / FormVivillonInvalid if the encounter isn’t a MysteryGift).
+src/AutoLegalidad.Engine/History/DatePolicy.cs	usuario	ventana de distribución de las hojas de seguimiento de EventsGallery (Extras/Tracking)	distribution window from EventsGallery’s tracking sheets (Extras/Tracking)
+src/AutoLegalidad.Engine/History/DatePolicy.cs	usuario	inicio de la distribución según las hojas de seguimiento de EventsGallery + {0} días (fin desconocido)	distribution start according to EventsGallery’s tracking sheets + {0} days (end unknown)
+src/AutoLegalidad.Engine/History/DatePolicy.cs	usuario	fecha de inicio de la tarjeta (o del juego) + {0} días (mediana de las distribuciones del Core)	start date of the card (or of the game) + {0} days (median of the Core’s distributions)
+src/AutoLegalidad.Engine/History/DatePolicy.cs	usuario	entre el lanzamiento del juego y ayer	between the game’s release and yesterday
+src/AutoLegalidad.Engine/History/EncounterWindows.cs	usuario	ventana de distribución del Core (EncounterServerDate.cs, WB7)	distribution window of the Core (EncounterServerDate.cs, WB7)
+src/AutoLegalidad.Engine/History/EncounterWindows.cs	usuario	ventana de distribución del Core (EncounterServerDate.cs, WC8)	distribution window of the Core (EncounterServerDate.cs, WC8)
+src/AutoLegalidad.Engine/History/EncounterWindows.cs	usuario	ventana de distribución del Core (EncounterServerDate.cs, WA8)	distribution window of the Core (EncounterServerDate.cs, WA8)
+src/AutoLegalidad.Engine/History/EncounterWindows.cs	usuario	ventana de distribución del Core (EncounterServerDate.cs, WB8)	distribution window of the Core (EncounterServerDate.cs, WB8)
+src/AutoLegalidad.Engine/History/EncounterWindows.cs	usuario	ventana de distribución del Core (EncounterServerDate.cs, WC9)	distribution window of the Core (EncounterServerDate.cs, WC9)
+src/AutoLegalidad.Engine/History/EncounterWindows.cs	usuario	ventana de distribución del Core (EncounterServerDate.cs, WA9)	distribution window of the Core (EncounterServerDate.cs, WA9)
+src/AutoLegalidad.Engine/History/EncounterWindows.cs	usuario	ventana de GO del Core (IPogoDateRange, datos de PoGoEncTool)	GO window of the Core (IPogoDateRange, PoGoEncTool data)
+src/AutoLegalidad.Engine/History/HistoryPhase.cs	interno	Cuenta las cintas por reflexion (RibbonInfo.GetRibbonInfo).	
+src/AutoLegalidad.Engine/History/HistoryPhase.cs	usuario	se quitaron {0} {1}.	{0} {1} were removed.
+src/AutoLegalidad.Engine/History/HistoryPhase.cs	usuario	Historia: fecha de captura dentro de la ventana real del encuentro y anterior a hoy.	History: met date within the encounter’s real window and before today.
+src/AutoLegalidad.Engine/History/HistoryPhase.cs	usuario	Historia: el huevo se recogió unos días antes de eclosionar.	History: the egg was picked up a few days before hatching.
+src/AutoLegalidad.Engine/History/HistoryPhase.cs	interno	[historia] paso «{0}» rechazado: {1} :: {2}	
+src/AutoLegalidad.Engine/History/MemoryHistory.cs	campo	Recuerdo del entrenador original	Original trainer memory
+src/AutoLegalidad.Engine/History/MemoryHistory.cs	usuario	recuerdo propio de un Pokémon capturado por su entrenador, como lo habría dado el juego (no vacío ni el mismo para todos).	an own memory of a Pokémon caught by its trainer, as the game would have given it (not empty nor the same for all).
+src/AutoLegalidad.Engine/History/MemoryHistory.cs	campo	Recuerdo del entrenador anterior	Previous trainer memory
+src/AutoLegalidad.Engine/History/MemoryHistory.cs	usuario	recuerdo con el entrenador actual, del tipo que el juego da con el tiempo (al entrar en la partida de otro entrenador el juego lo deja vacío y lo asigna después, por azar).	a memory with the current trainer, of the kind the game gives over time (when entering another trainer’s save the game leaves it empty and assigns it later, at random).
+src/AutoLegalidad.Engine/History/MemoryHistory.cs	usuario	recuerdo del entrenador original vacío en un Pokémon que el juego habría capturado con recuerdo	original trainer memory empty on a Pokémon that the game would have caught with a memory
+src/AutoLegalidad.Engine/History/MemoryHistory.cs	usuario	recuerdo del entrenador anterior vacío con un entrenador anterior que ya convive con el Pokémon	previous trainer memory empty with a previous trainer who already lives with the Pokémon
+src/AutoLegalidad.Engine/History/MiscHistory.cs	usuario	se quitaron las marcas de aspecto (círculo, triángulo...): un Pokémon recién obtenido no las lleva.	appearance marks (circle, triangle...) were removed: a freshly obtained Pokémon doesn’t carry them.
+src/AutoLegalidad.Engine/History/MiscHistory.cs	usuario	amistad y afecto de un Pokémon recién obtenido (la amistad base de su especie, no el máximo).	friendship and affection of a freshly obtained Pokémon (the species’ base friendship, not the maximum).
+src/AutoLegalidad.Engine/History/MiscHistory.cs	campo	Tamaño (escala)	Size (scale)
+src/AutoLegalidad.Engine/History/MiscHistory.cs	usuario	escala {0} dentro del rango que fija su brote ({1}-{2}), como lo genera el juego.	scale {0} within the range set by its outbreak ({1}-{2}), as the game generates it.
+src/AutoLegalidad.Engine/History/MiscHistory.cs	campo	Altura y peso	Height and weight
+src/AutoLegalidad.Engine/History/MiscHistory.cs	usuario	altura y peso generados como los genera el juego (suma de dos tiradas, 0-255), no a 0.	height and weight generated as the game generates them (sum of two rolls, 0-255), not 0.
+src/AutoLegalidad.Engine/History/MiscHistory.cs	usuario	nivel Dynamax {0} (el menor que PKHeX admite en su encuentro: nadie lo ha subido con caramelos Dynamax).	Dynamax level {0} (the lowest PKHeX allows in its encounter: nobody raised it with Dynamax Candies).
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	interno	FECHA_ANTES_DEL_LANZAMIENTO	
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	interno	FECHA_NO_ANTERIOR_A_HOY	
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	interno	FECHA_FUERA_DE_VENTANA	
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	interno	FECHA_ANTES_DEL_INICIO_DE_LA_TARJETA	
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	interno	HUEVO_POSTERIOR_A_LA_ECLOSION	
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	interno	NIVEL_MENOR_QUE_EL_DE_ENCUENTRO	
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	interno	AMISTAD_SIN_MOTIVO	
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	interno	POKERUS_SIN_MOTIVO	
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	interno	CONCURSO_AL_MAXIMO	
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	interno	DYNAMAX_SIN_MOTIVO	
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	interno	Cuenta las cintas por reflexion (RibbonInfo.GetRibbonInfo).	
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	interno	NO_ANALIZABLE	
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	usuario	El analisis oficial no pudo procesar la entidad.	The official analysis couldn’t process the entity.
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	usuario	{0} cintas o marcas que el origen no otorga	{0} ribbons or marks that the origin doesn’t grant
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	usuario	{0} {1:yyyy-MM-dd} no es anterior a hoy ({2:yyyy-MM-dd})	{0} {1:yyyy-MM-dd} isn’t before today ({2:yyyy-MM-dd})
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	usuario	{0} {1:yyyy-MM-dd} fuera de la ventana {2:yyyy-MM-dd}..{3:yyyy-MM-dd}	{0} {1:yyyy-MM-dd} outside the window {2:yyyy-MM-dd}..{3:yyyy-MM-dd}
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	usuario	{0} {1:yyyy-MM-dd} anterior al inicio de la tarjeta {2:yyyy-MM-dd}	{0} {1:yyyy-MM-dd} before the card’s start {2:yyyy-MM-dd}
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	usuario	{0} {1:yyyy-MM-dd} posterior al fin de la distribución {2:yyyy-MM-dd} (hojas de seguimiento)	{0} {1:yyyy-MM-dd} after the end of the distribution {2:yyyy-MM-dd} (tracking sheets)
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	usuario	huevo {0:yyyy-MM-dd} posterior a la eclosión {1:yyyy-MM-dd}	egg {0:yyyy-MM-dd} after hatching {1:yyyy-MM-dd}
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	usuario	nivel {0} < nivel de encuentro {1}	level {0} < encounter level {1}
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	usuario	{0} marcas de aspecto aplicadas	{0} appearance marks applied
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	usuario	amistad {0}/{1} (la creíble es {2}/{3}) o afecto de Gen6/7 distinto de 0	friendship {0}/{1} (the believable one is {2}/{3}) or Gen 6/7 affection other than 0
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	usuario	Pokérus cepa {0} días {1}	Pokérus strain {0} days {1}
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	usuario	estadísticas de concurso al máximo	contest stats at maximum
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	usuario	escala {0} fuera del rango {1}-{2} que fija su brote	scale {0} outside the range {1}-{2} set by its outbreak
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	usuario	altura y peso a 0 (el juego los genera con la distribución triangular de 0 a 255)	height and weight at 0 (the game generates them with the triangular distribution from 0 to 255)
+src/AutoLegalidad.Engine/History/RibbonHistory.cs	interno	Enumera por reflexion las propiedades de cintas del formato (RibbonInfo.GetRibbonInfo).	
+src/AutoLegalidad.Engine/History/TrainerHistory.cs	usuario	memoria de entrenador anterior sin entrenador anterior	previous trainer memory without a previous trainer
+src/AutoLegalidad.Engine/History/TrainerHistory.cs	usuario	memoria de HT «estilo Banco» sin haber pasado por el Banco	“Bank-style” HT memory without having gone through the Bank
+src/AutoLegalidad.Engine/History/TrainerHistory.cs	usuario	el entrenador anterior («{0}») es el propio entrenador original	the previous trainer (“{0}”) is the original trainer himself
+src/AutoLegalidad.Engine/History/TrainerHistory.cs	usuario	entrenador anterior («{0}») sin intercambio, transferencia ni evolución que lo exija	previous trainer (“{0}”) with no trade, transfer or evolution that requires it
+src/AutoLegalidad.Engine/History/TrainerHistory.cs	usuario	se quitó el entrenador anterior y sus memorias: este Pokémon no se ha intercambiado ni transferido, ni necesita un intercambio para evolucionar.	the previous trainer and its memories were removed: this Pokémon hasn’t been traded or transferred, nor needs a trade to evolve.
+src/AutoLegalidad.Engine/History/TrainerHistory.cs	usuario	tu entrenador figura también como entrenador anterior: la evolución por intercambio exige que el Pokémon haya pasado por un entrenador anterior y, como es tuyo, ese entrenador eres tú.	your trainer also appears as previous trainer: the trade evolution requires the Pokémon to have passed through a previous trainer and, since it is yours, that trainer is you.
+src/AutoLegalidad.Engine/History/TrainerHistory.cs	usuario	el Core no admite aquí que el entrenador anterior sea el propio entrenador original; ahora es «{0}», como tras evolucionarlo por intercambio con un amigo y recuperarlo.	the Core doesn’t allow here that the previous trainer is the original trainer himself; it is now “{0}”, as after trade-evolving it with a friend and getting it back.
+src/AutoLegalidad.Engine/History/TrainerHistory.cs	campo	Memoria del entrenador anterior	Previous trainer memory
+src/AutoLegalidad.Engine/History/TrainerHistory.cs	usuario	memoria de intercambio normal (no la del Banco Pokémon, por el que este Pokémon no ha pasado).	normal trade memory (not the Pokémon Bank’s, which this Pokémon hasn’t gone through).
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Sin matrícula de HOME: PKHeX lo considera inválido hasta que pase por HOME. Llévalo a HOME desde este juego para que el servidor le asigne su matrícula. Riesgo no verificable en los servidores de Nintendo.	Without a HOME tracker: PKHeX considers it invalid until it passes through HOME. Take it to HOME from this game so that the server assigns its tracker. The risk can’t be verified on Nintendo’s servers.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	No se ha podido conservar el origen del Pokémon sin matrícula de HOME (por ejemplo, el de Pokémon GO): se ha reconstruido con un origen que PKHeX acepta sin pasar por HOME.	The Pokémon’s origin couldn’t be kept without a HOME tracker (for example, the Pokémon GO one): it was rebuilt with an origin that PKHeX accepts without passing through HOME.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Operación cancelada.	Operation canceled.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Se agotó el tiempo antes de terminar la búsqueda.	Time ran out before the search finished.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	El tiempo límite se alcanzó durante la búsqueda; esto NO prueba que no exista solución.	The time limit was reached during the search; this does NOT prove that no solution exists.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Error interno del motor.	Internal engine error.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Sin margen de mejora: los stats de este Pokémon ya son los mejores posibles para su encuentro.	No room for improvement: this Pokémon’s stats are already the best possible for its encounter.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	La versión del protocolo no coincide.	The protocol version doesn’t match.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	La política de legalización no coincide.	The legalization policy doesn’t match.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	La release de la solicitud no es la del Worker.	The request’s release isn’t the Worker’s.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	La instantánea del catálogo no coincide: no se genera nada.	The catalog snapshot doesn’t match: nothing is generated.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	La solicitud no es válida.	The request isn’t valid.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	El contexto de la entidad no es válido.	The entity’s context isn’t valid.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Los bytes no son una entidad legible.	The bytes aren’t a readable entity.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	{0} bytes no corresponden a ningún formato de entidad.	{0} bytes don’t correspond to any entity format.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	El tipo o el contexto de la entidad no coinciden con los bytes.	The entity’s type or context doesn’t match the bytes.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	La casilla está vacía.	The slot is empty.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	La especie está fuera del catálogo (1-1025).	The species is outside the catalog (1-1025).
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	El juego o formato de destino no está soportado.	The target game or format isn’t supported.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Esta especie no existe en el juego de destino.	This species doesn’t exist in the target game.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	La especie {0} no está en {1}: no hay ninguna corrección que conserve la especie; el Pokémon queda intacto.	Species {0} isn’t in {1}: there is no correction that keeps the species; the Pokémon is left untouched.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Esa forma de Unown no existe en Gen1/2.	That Unown form doesn’t exist in Gen 1/2.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Unown forma {0} no existe en {1}.	Unown form {0} doesn’t exist in {1}.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	No existe una ruta de transferencia hacia el formato del destino.	There is no transfer route to the target format.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	{0} no se puede convertir a {1} con las reglas de PKHeX.	{0} can’t be converted to {1} with PKHeX’s rules.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	PKHeX no puede convertir esta entidad al formato del destino.	PKHeX can’t convert this entity to the target format.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Resultado de la conversión: {0}.	Conversion result: {0}.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Convertido de {0} a {1} (transferencia).	Converted from {0} to {1} (transfer).
+src/AutoLegalidad.Engine/LegalizationService.cs	interno	[t] destino y formato listos {0} ms	
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	El Pokémon ya es legal: no se ha cambiado nada.	The Pokémon is already legal: nothing was changed.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Nivel subido al máximo legal; el Pokémon ya era legal.	Level raised to the legal maximum; the Pokémon was already legal.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Origen elegido por mejores stats: otro origen legal permite más IV (suma {0} -> {1}).	Origin chosen for better stats: another legal origin allows more IVs (total {0} -> {1}).
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	No se ha podido terminar: 	Couldn’t be finished:
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	No se ha aplicado: 	Wasn’t applied:
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	El origen pedido no está aprobado para generar.	The requested origin isn’t approved for generation.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	La clave '{0}' no está entre los orígenes aprobados del catálogo (v_encounter_generable; regla 8: se excluyen los encuentros no lanzados, de origen desconocido o solo de investigación).	The key '{0}' isn’t among the catalog’s approved origins (v_encounter_generable; rule 8: unreleased encounters, those of unknown origin or research-only ones are excluded).
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Ninguna forma de esta especie se puede guardar en el destino.	No form of this species can be stored in the target.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	PKHeX no ofrece ninguna cría de esta especie en este juego.	PKHeX doesn’t offer any bred Pokémon of this species in this game.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	El Core no enumera ningún huevo para la especie {0} (forma {1}) en {2}: no hay origen de cría que fijar y Pokekeep no lo sustituye por otro origen.	The Core lists no egg for species {0} (form {1}) in {2}: there is no breeding origin to fix and Pokekeep doesn’t replace it with another origin.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	El sexo de Meowstic se corresponde con su forma. Referencia técnica: FormVerifier.cs:121.	Meowstic’s gender corresponds to its form. Technical reference: FormVerifier.cs:121.
+src/AutoLegalidad.Engine/LegalizationService.cs	interno	[t] validacion de lo reparado {0} ms (valido={1}) fallos={2} {3}	
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	El origen pedido no existe para esta especie en este destino.	The requested origin doesn’t exist for this species in this target.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	PKHeX no enumera la entrada '{0}' para la especie {1} (forma {2}) en {3}.	PKHeX doesn’t list the entry '{0}' for species {1} (form {2}) in {3}.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Se ha elegido la tarjeta en español (ESP) del mismo evento en lugar de la de {0}.	The Spanish (ESP) card of the same event was chosen instead of the {0} one.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Este origen exige una matrícula (rastreador) de HOME que el producto no puede crear.	This origin requires a HOME tracker that the product can’t create.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Imposible sin servidor de HOME: el origen pedido exige la matrícula (rastreador) de transferencia de Pokémon HOME y el PKHeX oficial la marca como inválida por defecto. Regla 6: nunca se inventa un identificador de servidor; solo se conserva el de una entidad que ya lo trae. 	Impossible without a HOME server: the requested origin requires the Pokémon HOME transfer tracker and the official PKHeX marks it invalid by default. Rule 6: a server identifier is never made up; only that of an entity that already has it is kept.
+src/AutoLegalidad.Engine/LegalizationService.cs	interno	[origen-propio] la pista del analisis ({0}) fija el EO: se prefiere un origen propio	
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Origen equivalente: se creó desde la plantilla pedida y PKHeX lo valida, aunque lo identifica con otro encuentro indistinguible (el formato o el propio encuentro repiten los mismos datos).	Equivalent origin: it was created from the requested template and PKHeX validates it, although it identifies it with another indistinguishable encounter (the format or the encounter itself repeats the same data).
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Se ha conservado el mismo encuentro (su identidad de origen).	The same encounter (its origin identity) was kept.
+src/AutoLegalidad.Engine/LegalizationService.cs	interno	[{0}/{1}] huevo no restaurable: especie={2} forma={3}	
+src/AutoLegalidad.Engine/LegalizationService.cs	interno	[{0}/{1}] candidato valido descartado: no es de origen propio ({2})	
+src/AutoLegalidad.Engine/LegalizationService.cs	interno	[{0}/{1}] candidato valido descartado: el nombre del entrenador saldria recortado ('{2}')	
+src/AutoLegalidad.Engine/LegalizationService.cs	interno	[naturaleza] {0}: candidato valido con {1} en vez de {2}: queda de reserva	
+src/AutoLegalidad.Engine/LegalizationService.cs	interno	[respaldo] pistas del Core={0} (bloqueadas por HOME={1})	
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	La forma pedida no puede salir de un encuentro de sexo fijo distinto.	The requested form can’t come from an encounter of a different fixed gender.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Imposible, demostrado con PKHeX: 	Impossible, proven with PKHeX:
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	La especie pedida no es alcanzable por evolución desde el origen fijado.	The requested species isn’t reachable by evolution from the fixed origin.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Ese patrón de Vivillon no se obtiene de este origen.	That Vivillon pattern isn’t obtained from this origin.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Ese intercambio no existe en una partida de este idioma.	That trade doesn’t exist in a save of this language.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Esa tarjeta coreana con la Cinta Clásica no puede existir en una partida de Gen4 no coreana.	That Korean card with the Classic Ribbon can’t exist in a non-Korean Gen 4 save.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Esa rama de Wurmple no sale del Pokéwalker con los datos de esta partida.	That Wurmple branch doesn’t come from the Pokéwalker with this save’s data.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	La especie pedida no puede salir de un encuentro de sexo fijo distinto.	The requested species can’t come from an encounter of a different fixed gender.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Imposible sin servidor de HOME: TODAS las rutas que PKHeX enumera hacia este destino exigen la matrícula (rastreador) de transferencia de Pokémon HOME y el PKHeX oficial la marca como inválida por defecto. Regla 6: nunca se inventa un identificador de servidor; solo se conserva el de una entidad que ya lo trae. 	Impossible without a HOME server: ALL the routes that PKHeX lists to this target require the Pokémon HOME transfer tracker and the official PKHeX marks it invalid by default. Rule 6: a server identifier is never made up; only that of an entity that already has it is kept.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Sin una matrícula (rastreador) de HOME que el producto no puede crear, esta especie no tiene ningún origen legal en este destino.	Without a HOME tracker that the product can’t create, this species has no legal origin in this target.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Imposible sin servidor de HOME (regla 6: nunca se inventa un identificador de servidor): 	Impossible without a HOME server (rule 6: a server identifier is never made up):
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Los candidatos hallados exigen una matrícula (rastreador) de HOME que el producto no puede crear.	The candidates found require a HOME tracker that the product can’t create.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Los candidatos que PKHeX acepta en todo salvo la matrícula (rastreador) de HOME (regla 6: no se inventa) son los únicos hallados; no se ha enumerado todo el dominio, así que no se declara imposible. 	The candidates that PKHeX accepts in everything except the HOME tracker (rule 6: it is not made up) are the only ones found; the whole domain hasn’t been enumerated, so it isn’t declared impossible.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	No existe ninguna ruta legal que produzca esta especie con esta forma en el destino.	There is no legal route that produces this species with this form in the target.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Demostrado con PKHeX: 	Proven with PKHeX:
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	No se ha encontrado un origen que pueda llevar el nombre de tu entrenador.	No origin that can carry your trainer’s name was found.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	 Con los demás orígenes posibles no se ha encontrado una forma de hacerlo legal. Pokekeep no recorta ni inventa el nombre del entrenador; no se ha cambiado nada.	 With the other possible origins no way to make it legal was found. Pokekeep doesn’t trim or make up the trainer’s name; nothing was changed.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	No hay ningún origen legal para esta especie en el destino.	There is no legal origin for this species in the target.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	PKHeX no enumera ningún encuentro de la especie {0} (forma {1}) alcanzable en {2}.	PKHeX lists no encounter for species {0} (form {1}) reachable in {2}.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	No se ha encontrado una forma de hacer legal este Pokémon.	No way to make this Pokémon legal was found.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Se probaron {0} candidatos en todos los pasos de relajación y ninguno pasó la validación oficial. El generador no puede demostrar que sea imposible (muestreo, no recorrido completo).	{0} candidates were tried in all the relaxation steps and none passed the official validation. The generator can’t prove that it is impossible (sampling, not a full traversal).
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	La optimización dejaba el candidato inválido: se conserva el mejor candidato válido. 	The optimization left the candidate invalid: the best valid candidate is kept.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Se ha fijado al jugador como entrenador actual: el Pokémon es de otro entrenador y el guardado lo exige.	The player was set as the current trainer: the Pokémon belongs to another trainer and the save requires it.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	El candidato no superó la revalidación independiente: se descarta.	The candidate did not pass the independent revalidation: it is discarded.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Pokémon legalizado: se ha reconstruido un origen válido.	Pokémon legalized: a valid origin was rebuilt.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Pokémon legalizado con una reparación mínima.	Pokémon legalized with a minimal repair.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	La forma {0} no se puede obtener legalmente en {1}: {2}	Form {0} can’t be obtained legally in {1}: {2}
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	La entidad no es del formato del destino: conviértela primero.	The entity isn’t of the target format: convert it first.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	{0} no es {1}; Optimizar stats no transfiere entre formatos.	{0} isn’t {1}; Optimize stats doesn’t transfer between formats.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Primero hay que legalizarlo: usa «Legalizar automáticamente».	It has to be legalized first: use “Legalize automatically”.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	El Pokémon no es legal tal cual está ({0}); «Optimizar stats» no legaliza.	The Pokémon isn’t legal as it is ({0}); “Optimize stats” doesn’t legalize.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	La única mejora posible exigía cambiar el origen del Pokémon: no se ha aplicado.	The only possible improvement required changing the Pokémon’s origin: it wasn’t applied.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Este tipo de encuentro aún no se puede optimizar.	This kind of encounter can’t be optimized yet.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	No se ha encontrado una mejora de stats (búsqueda no exhaustiva).	No stat improvement was found (non-exhaustive search).
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	La optimización dejaba el Pokémon inválido: se descarta.	The optimization left the Pokémon invalid: it is discarded.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Stats optimizados conservando todo el origen.	Stats optimized keeping the whole origin.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	El único fallo que PKHeX marcaría es la matrícula (rastreador) de HOME ausente (severidad por defecto «inválido»; aquí «sospechoso» por tu ajuste explícito). Referencia técnica: PKHeX.Core TransferVerifier.cs:174-176 (TransferTrackerMissing), «transfiere un pk de rastreador 0 a HOME para que se le asigne un rastreador válido a través del juego del que procede; no te inventes uno».	The only failure PKHeX would flag is the missing HOME tracker (default severity “invalid”; here “suspicious” because of your explicit setting). Technical reference: PKHeX.Core TransferVerifier.cs:174-176 (TransferTrackerMissing), “transfers a pk with tracker 0 to HOME so that a valid tracker is assigned through the game it comes from; don’t make one up”.
+src/AutoLegalidad.Engine/Optimization/ClassicLcrngSearch.cs	usuario	Se agotó el presupuesto de búsqueda tras {0:N0} combinaciones de IV sin hallar una semilla del mismo método que conserve naturaleza, sexo, variocolor y habilidad.	The search budget ran out after {0:N0} IV combinations without finding a seed of the same method that keeps nature, gender, shininess and ability.
+src/AutoLegalidad.Engine/Optimization/CriteriaRegenOptimizer.cs	usuario	Este encuentro ({0}) define IV fijos: no hay margen de mejora.	This encounter ({0}) defines fixed IVs: there is no room for improvement.
+src/AutoLegalidad.Engine/Optimization/CriteriaRegenOptimizer.cs	usuario	El encuentro no admite regeneración por criterios.	The encounter doesn’t support regeneration by criteria.
+src/AutoLegalidad.Engine/Optimization/CriteriaRegenOptimizer.cs	usuario	Se agotó el presupuesto del generador de PKHeX ({0:N0} vectores de IV) sin hallar una mejora que conserve naturaleza, sexo, variocolor y habilidad dentro del mismo método.	The PKHeX generator’s budget ran out ({0:N0} IV vectors) without finding an improvement that keeps nature, gender, shininess and ability within the same method.
+src/AutoLegalidad.Engine/Optimization/CriteriaRegenOptimizer.cs	usuario	El generador de PKHeX no termina para este encuentro ({0}) con IV pedidos: este método no admite esa combinación; no se pudo optimizar.	PKHeX’s generator doesn’t finish for this encounter ({0}) with the requested IVs: this method doesn’t support that combination; it couldn’t be optimized.
+src/AutoLegalidad.Engine/Optimization/GameCubeSearch.cs	usuario	Las tarjetas e-Reader de Colosseum tienen los IV fijados a 0 por el juego: no hay margen de mejora. Referencia técnica: EncounterShadow3Colo.cs:103-104.	Colosseum’s e-Reader cards have their IVs fixed at 0 by the game: there is no room for improvement. Technical reference: EncounterShadow3Colo.cs:103-104.
+src/AutoLegalidad.Engine/Optimization/GameCubeSearch.cs	usuario	Recorridos todos los vectores de IV por encima de los actuales y sus semillas del XDRNG: ninguno conserva naturaleza, sexo, variocolor y habilidad	All the IV vectors above the current ones and their XDRNG seeds were traversed: none keeps nature, gender, shininess and ability
+src/AutoLegalidad.Engine/Optimization/GameCubeSearch.cs	usuario	 y cumple los bloqueos de equipo del entrenador (referencia técnica: TeamLockResult.cs).	 and meets the trainer’s team locks (technical reference: TeamLockResult.cs).
+src/AutoLegalidad.Engine/Optimization/GameCubeSearch.cs	usuario	No se pudo iniciar la búsqueda por semillas del XDRNG.	The XDRNG seed search couldn’t be started.
+src/AutoLegalidad.Engine/Optimization/GameCubeSearch.cs	usuario	Recorridos todos los vectores de IV por encima de los actuales y sus semillas: ninguno cuadra con la animación y el nivel de captura del PokéSpot (referencia técnica: MethodPokeSpot.TryGetOriginSeedIVs).	All the IV vectors above the current ones and their seeds were traversed: none fits the PokéSpot animation and the catch level (technical reference: MethodPokeSpot.TryGetOriginSeedIVs).
+src/AutoLegalidad.Engine/Optimization/GameCubeSearch.cs	usuario	No se pudo iniciar la búsqueda por semillas del PokéSpot.	The PokéSpot seed search couldn’t be started.
+src/AutoLegalidad.Engine/Optimization/GameCubeSearch.cs	usuario	Los IV y el PID del inicial salen de la semilla que genera el TID/SID del entrenador: 	The starter’s IVs and PID come from the seed that generates the trainer’s TID/SID:
+src/AutoLegalidad.Engine/Optimization/GameCubeSearch.cs	usuario	hay {0} semilla(s) posible(s) y cambiar de semilla exigiría cambiar el TID/SID, es decir, el origen del Pokémon. 	there are {0} possible seed(s) and changing the seed would require changing the TID/SID, that is, the Pokémon’s origin.
+src/AutoLegalidad.Engine/Optimization/GameCubeSearch.cs	usuario	Referencia técnica: MethodCXD.TryGetSeedStarter{0}, MethodCXD.cs:{1}.	Technical reference: MethodCXD.TryGetSeedStarter{0}, MethodCXD.cs:{1}.
+src/AutoLegalidad.Engine/Optimization/GameCubeSearch.cs	usuario	Se agotó el presupuesto de búsqueda tras {0:N0} vectores de IV sin hallar uno con semilla del MRNG del Rancho.	The search budget ran out after {0:N0} IV vectors without finding one with a Ranch MRNG seed.
+src/AutoLegalidad.Engine/Optimization/GameCubeSearch.cs	usuario	Ningún vector de IV por encima de los actuales tiene semilla del MRNG del Rancho: los actuales ya son los mejores posibles. Referencia técnica: IndividualValueVerifier.cs:95-105, MRNGReversal.HasSeeds.	No IV vector above the current ones has a Ranch MRNG seed: the current ones are already the best possible. Technical reference: IndividualValueVerifier.cs:95-105, MRNGReversal.HasSeeds.
+src/AutoLegalidad.Engine/Optimization/GbDvOptimizer.cs	usuario	El formato no es de Game Boy.	The format isn’t a Game Boy one.
+src/AutoLegalidad.Engine/Optimization/GbDvOptimizer.cs	usuario	Este encuentro ({0}) define IV fijos: no hay margen de mejora.	This encounter ({0}) defines fixed IVs: there is no room for improvement.
+src/AutoLegalidad.Engine/Optimization/GbDvOptimizer.cs	usuario	Se agotó el plazo tras validar parte de las {0:N0} combinaciones de DV que conservan sexo, variocolor y Poder Oculto sin hallar una que acepte PKHeX.	The deadline ran out after validating part of the {0:N0} DV combinations that keep gender, shininess and Hidden Power without finding one PKHeX accepts.
+src/AutoLegalidad.Engine/Optimization/GbDvOptimizer.cs	usuario	Estos DV ya son los mejores que permiten su sexo, su variocolor y, si lo conoce, su Poder Oculto (cada combinación superior cambia alguno o no es legal para el encuentro).	These DVs are already the best their gender, shininess and, if it knows it, Hidden Power allow (every higher combination changes one of them or isn’t legal for the encounter).
+src/AutoLegalidad.Engine/Optimization/MaxLevelStep.cs	usuario	Un huevo no tiene nivel que subir.	An egg has no level to raise.
+src/AutoLegalidad.Engine/Optimization/MaxLevelStep.cs	usuario	Nivel máximo legal: 100.	Maximum legal level: 100.
+src/AutoLegalidad.Engine/Optimization/MaxLevelStep.cs	usuario	Nivel {0}: PKHeX no admite más para este origen ({1}).	Level {0}: PKHeX allows no more for this origin ({1}).
+src/AutoLegalidad.Engine/Optimization/MaxLevelStep.cs	usuario	Nivel {0}: el máximo hallado antes de agotar el tiempo (PKHeX no admite el 100: {1}).	Level {0}: the maximum found before time ran out (PKHeX doesn’t allow 100: {1}).
+src/AutoLegalidad.Engine/Optimization/MaxLevelStep.cs	usuario	 En Let's Go también suben los valores de despertar al mínimo que PKHeX exige para ese nivel.	 In Let’s Go the awakening values are also raised to the minimum PKHeX requires for that level.
+src/AutoLegalidad.Engine/Optimization/MaxLevelStep.cs	usuario	 En Leyendas Z-A las marcas de Movimiento + se completan con las de los movimientos que ya se aprenden de forma natural a ese nivel.	 In Legends Z-A the Move+ marks are completed with those of the moves that are already learned naturally at that level.
+src/AutoLegalidad.Engine/Optimization/MaxLevelStep.cs	usuario	 Los movimientos son los que PKHeX sugiere para ese encuentro a ese nivel.	 The moves are those PKHeX suggests for that encounter at that level.
+src/AutoLegalidad.Engine/Optimization/MaxLevelStep.cs	interno	nválid	
+src/AutoLegalidad.Engine/Optimization/MaxLevelStep.cs	usuario	el Core no lo da por válido	the Core doesn’t consider it valid
+src/AutoLegalidad.Engine/Optimization/OracleOptimizer.cs	usuario	Los IV ya están al máximo permitido.	The IVs are already at the maximum allowed.
+src/AutoLegalidad.Engine/Optimization/SeedSpaceSearch.SolutionCache.cs	usuario	Recorridas las 2^32 semillas posibles de este encuentro: ninguna mejora los IV conservando naturaleza, sexo, variocolor y habilidad.	All 2^32 possible seeds of this encounter were traversed: none improves the IVs while keeping nature, gender, shininess and ability.
+src/AutoLegalidad.Engine/Optimization/SeedSpaceSearch.SolutionCache.cs	usuario	Se recorrieron {0:N0} de las 2^32 semillas sin hallar una mejora que conserve naturaleza, sexo, variocolor y habilidad (búsqueda acotada por tiempo).	{0:N0} of the 2^32 seeds were traversed without finding an improvement that keeps nature, gender, shininess and ability (search bounded by time).
+src/AutoLegalidad.Engine/Optimization/SeedSpaceSearch.SolutionCache.cs	usuario	Recorridas las 2^32 semillas del encuentro: la mejor combinación legal que conserva naturaleza, sexo, variocolor y habilidad suma {0}.	All 2^32 seeds of the encounter were traversed: the best legal combination that keeps nature, gender, shininess and ability totals {0}.
+src/AutoLegalidad.Engine/Optimization/SeedSpaceSearch.SolutionCache.cs	usuario	Mejor combinación hallada en {0:N0} semillas ({1:0.#} % del dominio de 32 bits); puede existir una mejor.	Best combination found in {0:N0} seeds ({1:0.#} % of the 32-bit domain); a better one may exist.
+src/AutoLegalidad.Engine/Optimization/SeedSpaceSearch.Universe.cs	interno	El precalculo universal exige una cache en modo registro.	
+src/AutoLegalidad.Engine/Optimization/SeedSpaceSearch.cs	usuario	Los IV ya están al máximo posible: no hay nada que buscar.	The IVs are already at the maximum possible: there is nothing to search.
+src/AutoLegalidad.Engine/Optimization/SeedSpaceSearch.cs	usuario	El recorrido halló {0} combinaciones de IV mejores por semilla, pero el análisis oficial de PKHeX no acepta ninguna (reglas del encuentro que la semilla no resume).	The traversal found {0} better IV combinations by seed, but PKHeX’s official analysis accepts none (encounter rules that the seed doesn’t summarize).
+src/AutoLegalidad.Engine/Optimization/StatOptimizer.cs	interno	[opt] GameCubeSearch no aplica: entidad={0} pidiv={1} encuentro={2}	
+src/AutoLegalidad.Engine/Optimization/StatOptimizer.cs	interno	[opt] generador por criterios del Core	
+src/AutoLegalidad.Engine/Optimization/StatOptimizer.cs	usuario	 (el tamaño, el PID y la constante de cifrado salen de la semilla y cambian con ella)	 (the size, the PID and the encryption constant come from the seed and change with it)
+src/AutoLegalidad.Engine/Optimization/StatOptimizer.cs	usuario	PKHeX no admite IV más altos para este encuentro: el vector completo y cada IV por separado invalidan el Pokémon.	PKHeX doesn’t allow higher IVs for this encounter: the full vector and each IV separately invalidate the Pokémon.
+src/AutoLegalidad.Engine/Optimization/StatOptimizer.cs	usuario	La mejora cambiaba campos de origen (	The improvement changed origin fields (
+src/AutoLegalidad.Engine/Optimization/StatOptimizer.cs	usuario	{0} maximizados dentro de lo que permite el encuentro.	{0} maximized within what the encounter allows.
+src/AutoLegalidad.Engine/Optimization/StatOptimizer.cs	usuario	PID de la misma semilla y método que da los IV mejorados.	PID from the same seed and method that gives the improved IVs.
+src/AutoLegalidad.Engine/Optimization/StatOptimizer.cs	usuario	Constante de cifrado de la misma semilla y método.	Encryption constant from the same seed and method.
+src/AutoLegalidad.Engine/Optimization/StatOptimizer.cs	usuario	El tamaño sale de la misma semilla que los IV y cambia con ella.	The size comes from the same seed as the IVs and changes with it.
+src/AutoLegalidad.Engine/Optimization/StatOptimizer.cs	usuario	Cambia junto con los IV (misma semilla y método del mismo encuentro).	Changes together with the IVs (same seed and method of the same encounter).
+src/AutoLegalidad.Engine/Optimization/StatOptimizer.cs	usuario	No todos los {0} pueden ser {1} en este encuentro: se aplica la mejor combinación legal.	Not all {0} can be {1} in this encounter: the best legal combination is applied.
+src/AutoLegalidad.Engine/Optimization/StatOptimizer.cs	usuario	Este encuentro ({0}) define IV fijos: no hay margen de mejora.	This encounter ({0}) defines fixed IVs: there is no room for improvement.
+src/AutoLegalidad.Engine/Optimization/StatOptimizer.cs	usuario	Entrenamiento extremo aplicado donde PKHeX lo da por legal.	Extreme training applied where PKHeX considers it legal.
+src/AutoLegalidad.Engine/Optimization/StatOptimizer.cs	usuario	Entrenamiento extremo en las estadísticas con IV inferiores a 31 (legal en este nivel y formato).	Extreme training on the stats with IVs below 31 (legal at this level and format).
+src/AutoLegalidad.Engine/Optimization/TeraUniversePrecompute.cs	interno	El Core no tiene Encounters9.	
+src/AutoLegalidad.Engine/Optimization/TeraUniversePrecompute.cs	interno	Encounters9.{0} no existe en este Core.	
+src/AutoLegalidad.Engine/Optimization/TeraUniversePrecompute.cs	interno	[aviso] {0}: sin selector compartido ({1}); se barre plantilla a plantilla.	
+src/AutoLegalidad.Engine/Optimization/TeraUniversePrecompute.cs	interno	El grupo tiene {0} plantillas y el selector admite {1}.	
+src/AutoLegalidad.Engine/Optimization/TeraUniversePrecompute.cs	interno	Tipo de plantilla sin selector.	
+src/AutoLegalidad.Engine/Optimization/UniverseSelector.cs	interno	El selector de {0} no coincide con el Core en la semilla {1}: esperado [{2}], obtenido [{3}].	
+src/AutoLegalidad.Engine/Optimization/UniverseSelector.cs	interno	El grupo mezcla dificultades o mapas.	
+src/AutoLegalidad.Engine/Optimization/UniverseSelector.cs	interno	El grupo mezcla tiradas distintas.	
+src/AutoLegalidad.Engine/Repair/MinimalRepair.cs	usuario	EV normalizados a los límites del formato y de lo que PKHeX admite, conservando su reparto relativo.	EVs normalized to the limits of the format and of what PKHeX allows, keeping their relative split.
+src/AutoLegalidad.Engine/Repair/MinimalRepair.cs	usuario	Fecha de encuentro vaciada: el lugar de encuentro es «ninguno» (huevo aún sin eclosionar).	Met date emptied: the met location is “none” (egg not yet hatched).
+src/AutoLegalidad.Engine/Repair/MinimalRepair.cs	usuario	Bit de habilidad ajustado al bit 0 del PID (regla de Gen3 para esta especie).	Ability bit adjusted to bit 0 of the PID (Gen 3 rule for this species).
+src/AutoLegalidad.Engine/Repair/MinimalRepair.cs	usuario	Habilidad de nacimiento conservada: en Leyendas Pokémon Z-A el juego exige la de la especie del encuentro, no la de la evolución.	Birth ability kept: in Pokémon Legends: Z-A the game requires that of the encounter’s species, not of the evolution.
+src/AutoLegalidad.Engine/Repair/MinimalRepair.cs	usuario	Movimientos recordables ajustados a los que permite el encuentro.	Relearnable moves adjusted to those the encounter allows.
+src/AutoLegalidad.Engine/Repair/MinimalRepair.cs	usuario	Poké Ball cambiada por una legal para este encuentro.	Poké Ball changed to one that is legal for this encounter.
+src/AutoLegalidad.Engine/Repair/MinimalRepair.cs	usuario	Nivel ajustado al nivel de captura.	Level adjusted to the met level.
+src/AutoLegalidad.Engine/Repair/MinimalRepair.cs	usuario	Objeto de la forma puesto: la forma de esta especie la determina el objeto que lleva.	Form item set: this species’ form is determined by the item it holds.
+src/AutoLegalidad.Engine/Repair/MinimalRepair.cs	usuario	Forma no almacenable en este formato: se usa la forma base.	Form that can’t be stored in this format: the base form is used.
+src/AutoLegalidad.Engine/Repair/MinimalRepair.cs	usuario	Sexo ajustado al que admite la especie.	Gender adjusted to what the species allows.
+src/AutoLegalidad.Engine/Repair/MinimalRepair.cs	usuario	Variocolor no permitido para este encuentro.	Shiny isn’t allowed for this encounter.
+src/AutoLegalidad.Engine/Repair/MinimalRepair.cs	usuario	PID recalculado al quitar el variocolor no permitido.	PID recalculated when removing the disallowed shiny.
+src/AutoLegalidad.Engine/Repair/MinimalRepair.cs	usuario	Espada sagrada quitada: el Keldeo de forma normal no puede conocerla (la forma Brío se activa al conocerla).	Sacred Sword removed: a normal-form Keldeo can’t know it (the Resolute form activates on knowing it).
+src/AutoLegalidad.Engine/Repair/MinimalRepair.cs	usuario	Espada sagrada añadida: la forma Brío de Keldeo exige conocerla.	Sacred Sword added: Keldeo’s Resolute form requires knowing it.
+src/AutoLegalidad.Engine/Repair/MinimalRepair.cs	usuario	Movimientos ilegales sustituidos por movimientos que el Pokémon puede aprender.	Illegal moves were replaced with moves that the Pokémon can learn.
+src/AutoLegalidad.Engine/Repair/MinimalRepair.cs	usuario	Huevo normalizado: sin EV, nivel y nombre propios de un huevo (sigue siendo un huevo).	Egg normalized: with the EVs, level and name of an egg (it is still an egg).
+src/AutoLegalidad.Engine/SolutionCache/SolutionCacheConverter.cs	interno	El destino no puede ser el origen: la conversion no toca el original.	
+src/AutoLegalidad.Engine/SolutionCache/SolutionCacheConverter.cs	interno	No existe el origen.	
+src/AutoLegalidad.Engine/SolutionCache/SolutionCacheConverter.cs	interno	El destino ya existe; borralo antes (la conversion no sobrescribe).	
+src/AutoLegalidad.Engine/SolutionCache/SolutionCacheConverter.cs	interno	La tabla meta (identidad) difiere entre los dos ficheros.	
+src/AutoLegalidad.Engine/SolutionCache/SolutionCacheConverter.cs	interno	Distinto numero de filas (una acaba tras {0}).	
+src/AutoLegalidad.Engine/SolutionCache/SolutionCacheConverter.cs	interno	Fila {0}: difieren los campos escalares.	
+src/AutoLegalidad.Engine/SolutionCache/SolutionCacheConverter.cs	interno	Fila {0}: difiere el contenido (semillas, IV o binario).	
+src/AutoLegalidad.Engine/SolutionCache/SolutionCacheConverter.cs	interno	El fichero no tiene identidad (tabla meta vacia).	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido v1 (JSON) vacío	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	versión desconocida del contenido JSON: {0}	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido v1: el campo bin no es base 64 válido	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	versión desconocida del contenido binario: {0} (este motor lee la 2)	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido v2 con banderas desconocidas (0x{0:X2})	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido v2 incoherente: universal por columnas y en bruto a la vez	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido v2 incoherente: bandera de semillas con cero semillas	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido v2: IV fuera de rango	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido v2 truncado (contenido en bruto)	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido v2 con {0} bytes sobrantes	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido vacío (NULL)	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	tipo de contenido no soportado: 	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido v2: número de casillas fuera de rango ({0})	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido v2: claves de casilla no crecientes	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido v2: clave de casilla fuera de rango	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido v2 truncado (cuentas de semillas)	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido v2: cuenta de semillas inválida	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido v2: relleno de cuentas distinto de cero	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido v2 truncado (semillas de las casillas)	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido v2: entero fuera de rango	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido v2: entero no canónico (ceros sobrantes)	
+src/AutoLegalidad.Engine/SolutionCache/SolutionPayloadCodec.cs	interno	contenido v2 truncado o con un contador imposible ({0})	
+src/AutoLegalidad.Engine/SolutionCache/SqliteSolutionCache.cs	interno	activa con filas ilegibles ({0}; la primera, {1})	
+src/AutoLegalidad.Engine/SolutionCache/SqliteSolutionCache.cs	interno	desactivada: no existe 	
+src/AutoLegalidad.Engine/SolutionCache/SqliteSolutionCache.cs	interno	invalidada: cambió {0}	
+src/AutoLegalidad.Engine/SolutionCache/SqliteSolutionCache.cs	interno	error al abrir: {0}: {1}	
+src/AutoLegalidad.Engine/SolutionCache/SqliteSolutionCache.cs	interno	falta la tabla de soluciones o su esquema no es el esperado (	
+src/AutoLegalidad.Engine/SolutionCache/SqliteSolutionCache.cs	interno	No se pudo activar WAL (journal_mode={0}).	
+src/AutoLegalidad.Engine/SolutionCache/SqliteSolutionCache.cs	interno	invalidada: cambió {0} (el fichero se precalculó con otra versión; no se mezcla)	
+src/AutoLegalidad.Engine/SolutionCache/SqliteSolutionCache.cs	interno	error al abrir en registro: {0}: {1}	
+src/AutoLegalidad.Engine/SolutionCache/SqliteSolutionCache.cs	interno	El fichero no tiene identidad (tabla meta vacia).	
+src/AutoLegalidad.Engine/SolutionCache/SqliteSolutionCache.cs	interno	activa (registro) con errores de escritura: {0}: {1}	
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	usuario	{0}/{1} no existe en {2}	{0}/{1} doesn’t exist in {2}
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	usuario	el análisis oficial de PKHeX (LegalityAnalysis) no lo da por válido	PKHeX’s official analysis (LegalityAnalysis) doesn’t consider it valid
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	usuario	con la severidad por defecto PKHeX marca algo más que la matrícula (rastreador) de HOME: 	with the default severity PKHeX flags more than the HOME tracker:
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	interno	nválid	
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	usuario	{0} no está entre los orígenes aprobados del catálogo (v_encounter_generable)	{0} isn’t among the catalog’s approved origins (v_encounter_generable)
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	usuario	informativo (entidad del usuario)	informative (user’s entity)
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	usuario	los bytes exportados no se pueden volver a leer	the exported bytes can’t be read again
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	usuario	el tipo cambia: {0} -> {1}	the type changes: {0} -> {1}
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	usuario	la firma cambia: 	the signature changes:
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	usuario	la entidad releída deja de ser válida	the re-read entity is no longer valid
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	usuario	excepción: 	exception:
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	usuario	el tipo cambia al guardarlo: {0}	the type changes when saving: {0}
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	usuario	el guardado altera la entidad: 	saving alters the entity:
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	usuario	PKHeX adapta la entidad al guardarla (	PKHeX adapts the entity when saving it (
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	usuario	) y sigue siendo legal	) and it is still legal
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	usuario	el guardado la adapta (	saving adapts it (
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	usuario	) y la deja ilegal	) and leaves it illegal
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	usuario	la entidad leída de la casilla deja de ser válida (Parsed=	the entity read from the slot is no longer valid (Parsed=
+src/AutoLegalidad.WorkerHost/WorkerHost.cs	interno	No se pudo escribir el manifiesto del Worker.	
+src/AutoLegalidad.WorkerHost/WorkerHost.cs	usuario	La solicitud supera el tamaño máximo.	The request exceeds the maximum size.
+src/AutoLegalidad.WorkerHost/WorkerHost.cs	usuario	Más de {0} bytes.	More than {0} bytes.
+src/AutoLegalidad.WorkerHost/WorkerHost.cs	usuario	Solicitud rechazada: no es un JSON válido del contrato.	Request rejected: it isn’t a valid JSON of the contract.
+src/AutoLegalidad.WorkerHost/WorkerHost.cs	usuario	La solicitud no es un JSON válido del contrato.	The request isn’t a valid JSON of the contract.
+src/AutoLegalidad.WorkerHost/WorkerHost.cs	interno	[worker] catalogo no disponible: {0}	
+src/AutoLegalidad.WorkerHost/WorkerHost.cs	usuario	No se pudo abrir el catálogo de datos.	The data catalog couldn’t be opened.
+src/AutoLegalidad.WorkerHost/WorkerHost.cs	interno	excepción de prueba del registro de fallos	
+src/AutoLegalidad.WorkerHost/WorkerHost.cs	interno	Vigilante duro: el generador no devolvió el control a tiempo (plazo {0:O} + margen); el Worker responde Timeout y se termina.	
+src/AutoLegalidad.WorkerHost/WorkerHost.cs	usuario	Se agotó el tiempo antes de terminar la búsqueda.	Time ran out before the search finished.
+src/AutoLegalidad.WorkerHost/WorkerHost.cs	usuario	El generador no devolvió el control antes del plazo; esto NO prueba que no exista solución.	The generator did not return control before the deadline; this does NOT prove that no solution exists.
+src/AutoLegalidad.WorkerHost/WorkerHost.cs	usuario	Excepción del motor durante la solicitud.	Engine exception during the request.
+src/AutoLegalidad.WorkerHost/WorkerHost.cs	usuario	Error interno del motor.	Internal engine error.
+src/AutoLegalidad.WorkerHost/WorkerHost.cs	usuario	El motor produjo una respuesta incoherente y se descartó: 	The engine produced an inconsistent response and it was discarded:
+src/AutoLegalidad.WorkerHost/WorkerHost.cs	usuario	El motor produjo una respuesta incoherente y se descartó.	The engine produced an inconsistent response and it was discarded.
+src/AutoLegalidad.WorkerHost/WorkerHost.cs	usuario	El motor respondió {0}: {1} {2}	The engine responded {0}: {1} {2}
+src/AutoLegalidad.WorkerHost/WorkerHost.cs	interno	solicitud {0} · acción {1} · destino {2} ({3}, {4})	
+src/AutoLegalidad.WorkerHost/WorkerPrecompute.cs	interno	[teratipo] {0} plantillas (especie y forma) en los grupos {1}.	
+src/AutoLegalidad.WorkerHost/WorkerPrecompute.cs	interno	[teratipo] falta {0} (fichero de soluciones del registro).	
+src/AutoLegalidad.WorkerHost/WorkerPrecompute.cs	interno	[teratipo] la cache no esta en modo registro: 	
+src/AutoLegalidad.WorkerHost/WorkerPrecompute.cs	interno	[teratipo] FIN plantillas={0} registradas={1} ya-estaban={2} no-elegibles={3} incompletas={4} sin-casillas={5} bytes={6} barrido-ms={7} total={8:0.0} min	
+src/AutoLegalidad.WorkerHost/WorkerSolutions.cs	interno	POKEKEEP-CACHE aciertos={0} sin-entrada={1} rechazadas={2}	
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	usuario	Historia: 	History:
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	campo	Origen	Origin
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	usuario	Ataque	Attack
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	usuario	Defensa	Defense
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	usuario	Velocidad	Speed
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	campo	Especie	Species
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	campo	Forma	Form
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	campo	Nivel	Level
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	campo	Amistad	Friendship
+src/AutoLegalidad.Engine/Changes/ChangeLog.cs	usuario	Origen reconstruido: 	Rebuilt origin:
+src/AutoLegalidad.Engine/Changes/OriginExplainer.cs	usuario	Transferido desde {0}: tu entrenador figura como original.	Transferred from {0}: your trainer appears as the original.
+src/AutoLegalidad.Engine/Changes/OriginExplainer.cs	usuario	otro entrenador	another trainer
+src/AutoLegalidad.Engine/Changes/OriginExplainer.cs	usuario	otro juego	another game
+src/AutoLegalidad.Engine/Generation/FixedGenderProof.cs	usuario	solo macho	male only
+src/AutoLegalidad.Engine/Generation/FixedGenderProof.cs	usuario	solo hembra	female only
+src/AutoLegalidad.Engine/Generation/FormReachability.cs	usuario	Prueba	Proof
+src/AutoLegalidad.Engine/Generation/Relaxation.cs	usuario	Forma conservada, nivel libre (nivel 100)	Form kept, free level (level 100)
+src/AutoLegalidad.Engine/Generation/Relaxation.cs	usuario	Forma base	Base form
+src/AutoLegalidad.Engine/Generation/TransferRoutes.cs	usuario	Ruta {0} (Gen{1}, {2}).	Route {0} (Gen{1}, {2}).
+src/AutoLegalidad.Engine/History/HistoryPhase.cs	campo	Cintas	Ribbons
+src/AutoLegalidad.Engine/History/HistoryPhase.cs	interno	[historia] fechas rechazadas (intento {0}): {1} :: {2}	
+src/AutoLegalidad.Engine/History/HistoryPhase.cs	usuario	Historia: fechas elegidas {0}.	History: dates chosen {0}.
+src/AutoLegalidad.Engine/History/MemoryHistory.cs	usuario	recuerdo {0}	memory {0}
+src/AutoLegalidad.Engine/History/MiscHistory.cs	campo	Marcas aplicadas	Marks applied
+src/AutoLegalidad.Engine/History/MiscHistory.cs	campo	Amistad	Friendship
+src/AutoLegalidad.Engine/History/MiscHistory.cs	campo	Nivel Dynamax	Dynamax level
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	interno	CINTAS_EXTRA	
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	interno	MARCAS_APLICADAS	
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	usuario	{0} {1:yyyy-MM-dd} anterior a {2:yyyy-MM-dd}	{0} {1:yyyy-MM-dd} before {2:yyyy-MM-dd}
+src/AutoLegalidad.Engine/History/PlausibilityAnalyzer.cs	usuario	nivel Dynamax {0} cuando PKHeX admite {1}	Dynamax level {0} when PKHeX allows {1}
+src/AutoLegalidad.Engine/History/TrainerHistory.cs	campo	Entrenador anterior	Previous trainer
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Especie 0.	Species 0.
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Especie {0}.	Species {0}.
+src/AutoLegalidad.Engine/LegalizationService.cs	interno	[origen-propio] pistas preferidas={0} ({1})	
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Rasgos relajados hasta '{0}': {1}.	Traits relaxed up to '{0}': {1}.
+src/AutoLegalidad.Engine/LegalizationService.cs	interno	[{0}/{1}] candidato valido descartado: forma {2} != pedida {3}	
+src/AutoLegalidad.Engine/LegalizationService.cs	usuario	Este intercambio solo existe evolucionado.	This trade only exists evolved.
+src/AutoLegalidad.Engine/Optimization/TeraUniversePrecompute.cs	interno	solo|	
+src/AutoLegalidad.Engine/SolutionCache/SqliteSolutionCache.cs	interno	activa (solo lectura)	
+src/AutoLegalidad.Engine/Validation/OfficialValidator.cs	usuario	especie {0} -> {1}	species {0} -> {1}
+

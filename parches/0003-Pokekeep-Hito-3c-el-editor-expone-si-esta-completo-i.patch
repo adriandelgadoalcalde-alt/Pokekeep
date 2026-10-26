@@ -1,0 +1,55 @@
+From df118cc47812b744d5adcd56658522fb7bda53fe Mon Sep 17 00:00:00 2001
+From: Pokekeep <pokekeep@invalid>
+Date: Sun, 4 Oct 2026 08:56:54 +0200
+Subject: [PATCH 03/11] Pokekeep Hito 3c: el editor expone si esta completo
+ ignorando los EV imposibles (sin sonido)
+
+---
+ .../Controls/PKM Editor/PKMEditor.cs          | 19 +++++++++++++++++++
+ .../Pokekeep/PokekeepIntegration.cs           |  1 +
+ 2 files changed, 20 insertions(+)
+
+diff --git a/PKHeX.WinForms/Controls/PKM Editor/PKMEditor.cs b/PKHeX.WinForms/Controls/PKM Editor/PKMEditor.cs
+index 9de35e525..f58ff4858 100644
+--- a/PKHeX.WinForms/Controls/PKM Editor/PKMEditor.cs	
++++ b/PKHeX.WinForms/Controls/PKM Editor/PKMEditor.cs	
+@@ -248,6 +248,25 @@ public bool EditsComplete
+         }
+     }
+ 
++    /// <summary>
++    /// Pokekeep: como <see cref="EditsComplete"/> pero SIN sonido y sin exigir que los EV sumen como mucho 510 ni que los AV de Let's Go sean validos: «Legalizar automaticamente»
++    /// corrige esos valores. Todo lo demas (especie, campos validados) se sigue exigiendo.
++    /// </summary>
++    public bool EditsCompleteIgnoringStats
++    {
++        get
++        {
++            if (WinFormsUtil.GetIndex(CB_Species) == 0 && !HaX)
++                return false;
++            foreach (var type in ValidatedControls)
++            {
++                if (type.IsNotValid(Entity) is not null)
++                    return false;
++            }
++            return true;
++        }
++    }
++
+     private TabPage? GetInvalidParentTab()
+     {
+         if (!Stats.Valid)
+diff --git a/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs b/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs
+index 3477d82c1..dfc90a831 100644
+--- a/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs
++++ b/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs
+@@ -102,5 +102,6 @@ private sealed class MainHost(Main main, SAVEditor sav) : IPokekeepHost
+         public SaveDataEditor<PictureBox> Env => sav.EditEnv;
+         public int CurrentBox => sav.CurrentBox;
+         public void NotifyUndoRedoChanged() => sav.UpdateUndoRedo();
++        public bool EditorIsCompleteIgnoringStats => main.PKME_Tabs.EditsCompleteIgnoringStats;
+     }
+ }
+-- 
+2.55.0.windows.5
+

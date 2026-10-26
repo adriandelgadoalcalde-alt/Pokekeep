@@ -1,0 +1,160 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Version UNICA del producto: src\PokekeepVersion.props (la misma que AutoLegalidad.App/Ui y que lee «Acerca de»). ApplicationDisplayVersion sale de aqui; AcercaDeVersionTests falla si divergen. -->
+  <Import Project="..\..\src\PokekeepVersion.props" />
+  <!-- Cabecera de la app de Android (Avalonia 12): actividad, tema, assets de datos y arranque. La interfaz vive en Pokekeep.Mobile.Ui (net10.0, probada en el PC con Avalonia.Headless).
+       Compilar SIEMPRE con herramientas\compilar-apk.ps1 (fija -p:PokekeepAndroid=true y la ruta corta contra XARLP7000). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-android</TargetFramework>
+    <SupportedOSPlatformVersion>29</SupportedOSPlatformVersion>
+    <RootNamespace>Pokekeep.Mobile</RootNamespace>
+    <AssemblyName>Pokekeep.Mobile</AssemblyName>
+    <ApplicationId>com.incredibad.pokekeep</ApplicationId>
+    <ApplicationVersion>101</ApplicationVersion>
+    <ApplicationDisplayVersion>$(PokekeepVersion)</ApplicationDisplayVersion>
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
+    <!-- compilar-apk.ps1 elige UNA arquitectura con PokekeepRid. No se pasa -p:RuntimeIdentifiers en la línea de órdenes: como propiedad global llega también a PKHeX.Core y a los
+         ensamblados del motor, que salían compilados para x64/arm64 en vez de AnyCPU, con otra huella que la del catálogo ("El motor no coincide con esta versión", uso5). -->
+    <RuntimeIdentifiers Condition="'$(PokekeepRid)' == ''">android-arm64;android-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers Condition="'$(PokekeepRid)' != ''">$(PokekeepRid)</RuntimeIdentifiers>
+    <TrimMode>partial</TrimMode>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <!-- X26/X40: SQLite comprimido en el APK; AlmacenDatos verifica los bytes extraídos. Los pkpack siguen SIN comprimir: GritosAndroid requiere OpenFd/acceso por rango.
+         extractNativeLibs=false en el manifiesto hace que el SDK alinee y almacene las .so sin comprimir: Android las carga desde el APK sin una segunda copia instalada. -->
+    <AndroidStoreUncompressedFileExtensions>$(AndroidStoreUncompressedFileExtensions);.pkpack</AndroidStoreUncompressedFileExtensions>
+    <!-- Release: nunca rutas del PC dentro del APK (hallazgo de KeepQA, 8-oct): sin simbolos de depuracion ni rutas de compilacion. -->
+    <PathMap>$(MSBuildThisFileDirectory)=/pokekeep/android/</PathMap>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Android" />
+    <ProjectReference Include="..\Pokekeep.Mobile.Ui\Pokekeep.Mobile.Ui.csproj" />
+    <ProjectReference Include="..\Pokekeep.Mobile.Platform\Pokekeep.Mobile.Platform.csproj" />
+    <ProjectReference Include="..\Pokekeep.Mobile.Engine\Pokekeep.Mobile.Engine.csproj" />
+  </ItemGroup>
+
+  <!-- Builds de PRUEBA del motor (-p:PokekeepPruebas=true): receptor que recorre las pruebas de aislamiento con el proceso :motor real y variables de prueba. Nunca en el producto. -->
+  <PropertyGroup Condition="'$(PokekeepPruebas)' == 'true'">
+    <DefineConstants>$(DefineConstants);POKEKEEP_PRUEBAS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(PokekeepPruebas)' == 'true'">
+    <Compile Include="..\Pokekeep.Android.Bench\EdicionSaf.cs" Link="Pruebas\EdicionSaf.cs" />
+    <AndroidAsset Include="Pruebas\fix-slot8.b64" Link="Assets\fix-slot8.b64" />
+    <AndroidAsset Include="Pruebas\fix-starly-ilegal.b64" Link="Assets\fix-starly-ilegal.b64" />
+  </ItemGroup>
+
+  <!-- Datos del producto -->
+  <PropertyGroup>
+    <DatosProducto Condition="'$(DatosProducto)' == '' And Exists('$(ProyectoRaiz)datos\android\autolegalidad.sqlite')">$(ProyectoRaiz)datos\android\</DatosProducto>
+    <DatosProducto Condition="'$(DatosProducto)' == ''">$(ProyectoRaiz)datos\</DatosProducto>
+    <IncluirDatos Condition="'$(IncluirDatos)' == ''">true</IncluirDatos>
+  </PropertyGroup>
+
+  <!-- Guardado de demostracion (SOLO builds de comprobacion de diseno, una COPIA de RoC's PC; nunca en el producto) -->
+  <ItemGroup Condition="'$(PokekeepDemo)' == 'true'">
+    <AndroidAsset Include="$(ProyectoRaiz)saves-prueba\RoCs-PC\09 - Gen IV - DPPt Collection\Save Data\Pokemon Platinum.sav" Link="Assets\demo\Pokemon Platinum.sav" />
+  </ItemGroup>
+
+  <UsingTask TaskName="GenerarManifiestoDatos" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <Ficheros ParameterType="System.String[]" Required="true" />
+      <Salida ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Security.Cryptography" />
+      <Code Type="Fragment" Language="cs"><![CDATA[
+        var sb = new System.Text.StringBuilder("{\"version\":1,\"ficheros\":[");
+        for (var i = 0; i < Ficheros.Length; i++)
+        {
+            var f = Ficheros[i];
+            string hex;
+            using (var s = File.OpenRead(f)) hex = BitConverter.ToString(SHA256.Create().ComputeHash(s)).Replace("-", "");
+            if (i > 0) sb.Append(',');
+            sb.Append("{\"nombre\":\"").Append(Path.GetFileName(f)).Append("\",\"bytes\":").Append(new FileInfo(f).Length).Append(",\"sha256\":\"").Append(hex).Append("\"}");
+        }
+        sb.Append("]}");
+        Directory.CreateDirectory(Path.GetDirectoryName(Salida));
+        File.WriteAllText(Salida, sb.ToString());
+      ]]></Code>
+    </Task>
+  </UsingTask>
+
+  <!-- Sprites de PKHeX (F3, ADR 0057): paquetes por familia + manifest.json, generados por herramientas\generar-sprites-android.ps1. Sin ellos la app no compila para producto. -->
+  <PropertyGroup>
+    <SpritesProducto Condition="'$(SpritesProducto)' == ''">$(ProyectoRaiz)datos/android/sprites/</SpritesProducto>
+  </PropertyGroup>
+  <ItemGroup Condition="Exists('$(SpritesProducto)manifest.json')">
+    <AndroidAsset Include="$(SpritesProducto)manifest.json" Link="Assets\sprites\manifest.json" />
+    <!-- Los suplementos de investigación se conservan localmente; el producto usa la colección de PKHeX elegida por el propietario. -->
+    <AndroidAsset Include="$(SpritesProducto)*.pkpack" Exclude="$(SpritesProducto)pixel-extra.pkpack" Link="Assets\sprites\%(Filename)%(Extension)" />
+  </ItemGroup>
+  <!-- X51: sprites propios de cada juego (Gen. 1 a 5), generados por herramientas\generar-sprites-juego.ps1 desde la entrega X47: vista-<juego>.pkpack + manifest.json (y los manifest-*.json de X49). Sin ellos la app compila y usa los de PKHeX. Arte (c) The Pokemon Company, igual que los sprites de PKHeX; ver NOTICE.md. -->
+  <PropertyGroup>
+    <SpritesJuegoProducto Condition="'$(SpritesJuegoProducto)' == ''">$(ProyectoRaiz)datos/android/sprites-juego/</SpritesJuegoProducto>
+  </PropertyGroup>
+  <ItemGroup Condition="Exists('$(SpritesJuegoProducto)manifest.json')">
+    <AndroidAsset Include="$(SpritesJuegoProducto)manifest*.json" Link="Assets\sprites-juego\%(Filename)%(Extension)" />
+    <AndroidAsset Include="$(SpritesJuegoProducto)*.pkpack" Link="Assets\sprites-juego\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+    <!-- Gritos de serie (X11): gritos.pkpack + manifest.json, generados por herramientas\generar-gritos-android.ps1 desde PokeAPI/cries (revisión fijada; procedencia en docs\android\gritos-procedencia.tsv).
+       Audio (c) The Pokémon Company, igual que los sprites de PKHeX; ver NOTICE.md. Sin el paquete la app compila y funciona, pero sin gritos propios (solo suenan los de la carpeta del usuario). -->
+  <PropertyGroup>
+    <GritosProducto Condition="'$(GritosProducto)' == '' And Exists('$(ProyectoRaiz)datos/android/gritos/manifest.json')">$(ProyectoRaiz)datos/android/gritos/</GritosProducto>
+    <GritosProducto Condition="'$(GritosProducto)' == ''">$(ProyectoRaiz)compilacion/android/gritos/</GritosProducto>
+  </PropertyGroup>
+  <ItemGroup Condition="Exists('$(GritosProducto)manifest.json')">
+    <AndroidAsset Include="$(GritosProducto)manifest.json" Link="Assets\gritos\manifest.json" />
+    <AndroidAsset Include="$(GritosProducto)gritos.pkpack" Link="Assets\gritos\gritos.pkpack" />
+  </ItemGroup>
+  <Target Name="AvisoSinGritos" BeforeTargets="CoreCompile" Condition="!Exists('$(GritosProducto)manifest.json')">
+    <Warning Text="Sin paquete de gritos en $(GritosProducto): genera con herramientas\generar-gritos-android.ps1. El APK saldrá sin gritos propios." />
+  </Target>
+
+  <!-- Objetos adicionales (X14): objetos.pkpack + manifest.json, generados por herramientas\generar-objetos-android.ps1 desde PokeAPI/sprites (revisión fijada; procedencia en docs\android\sprites-objetos-procedencia.tsv).
+       MT/MO/DR con el icono de su tipo y los objetos que PKHeX no dibuja. Arte (c) The Pokémon Company, igual que los sprites de PKHeX; ver NOTICE.md. Sin el paquete la app compila y funciona solo con los de PKHeX. -->
+  <PropertyGroup>
+    <ObjetosProducto Condition="'$(ObjetosProducto)' == '' And Exists('$(ProyectoRaiz)datos/android/objetos/manifest.json')">$(ProyectoRaiz)datos/android/objetos/</ObjetosProducto>
+    <ObjetosProducto Condition="'$(ObjetosProducto)' == ''">$(ProyectoRaiz)compilacion/android/objetos/</ObjetosProducto>
+  </PropertyGroup>
+  <ItemGroup Condition="Exists('$(ObjetosProducto)manifest.json')">
+    <AndroidAsset Include="$(ObjetosProducto)manifest.json" Link="Assets\objetos\manifest.json" />
+    <AndroidAsset Include="$(ObjetosProducto)objetos.pkpack" Link="Assets\objetos\objetos.pkpack" />
+  </ItemGroup>
+  <Target Name="AvisoSinObjetos" BeforeTargets="CoreCompile" Condition="!Exists('$(ObjetosProducto)manifest.json')">
+    <Warning Text="Sin paquete de objetos adicionales en $(ObjetosProducto): genera con herramientas\generar-objetos-android.ps1. El APK saldrá sin MT/MO por tipo ni los objetos que PKHeX no dibuja." />
+  </Target>
+
+  <!-- «Acerca de PKHeX»: el registro de cambios original de PKHeX (texto, ~28 KB) viaja como asset; el «Acerca de» de PKHeX lo muestra dentro del de Pokekeep. -->
+  <ItemGroup Condition="Exists('$(PKHeXRaiz)PKHeX.WinForms\Resources\text\changelog.txt')">
+    <AndroidAsset Include="$(PKHeXRaiz)PKHeX.WinForms\Resources\text\changelog.txt" Link="Assets\pkhex\changelog.txt" />
+  </ItemGroup>
+
+  <Target Name="IncluirDatosDelProducto" BeforeTargets="PrepareForBuild" Condition="'$(IncluirDatos)' == 'true' And Exists('$(DatosProducto)autolegalidad.sqlite')">
+    <ItemGroup>
+      <DatoProducto Include="$(DatosProducto)autolegalidad.sqlite" />
+      <DatoProducto Include="$(DatosProducto)soluciones.sqlite" Condition="Exists('$(DatosProducto)soluciones.sqlite')" />
+    </ItemGroup>
+    <GenerarManifiestoDatos Ficheros="@(DatoProducto)" Salida="$(IntermediateOutputPath)datos-manifiesto.json" />
+    <ItemGroup>
+      <AndroidAsset Include="@(DatoProducto)" Link="Assets\%(Filename)%(Extension)" />
+      <AndroidAsset Include="$(IntermediateOutputPath)datos-manifiesto.json" Link="Assets\datos-manifiesto.json" />
+    </ItemGroup>
+  </Target>
+  <!-- C17: iconos oficiales del menú de cada título, conservados a resolución nativa. Los instala el coordinador. -->
+  <PropertyGroup>
+    <LogosJuegoProducto Condition="'$(LogosJuegoProducto)' == ''">$(ProyectoRaiz)datos/android/logos-juegos/</LogosJuegoProducto>
+  </PropertyGroup>
+  <ItemGroup Condition="Exists('$(LogosJuegoProducto)manifest.json')">
+    <AndroidAsset Include="$(LogosJuegoProducto)manifest.json" Link="Assets\logos-juegos\manifest.json" />
+    <AndroidAsset Include="$(LogosJuegoProducto)*.png;$(LogosJuegoProducto)*.jpg" Link="Assets\logos-juegos\%(Filename)%(Extension)" />
+    <!-- uso9: logos de título por idioma (titulos/<versión>-<es|en>.png), del mismo manifiesto. -->
+    <AndroidAsset Include="$(LogosJuegoProducto)titulos/*.png" Link="Assets\logos-juegos\titulos\%(Filename)%(Extension)" />
+    <!-- uso10: carátulas de los juegos para las listas de partidas (caratulas/<versión>.png), del mismo manifiesto. -->
+    <AndroidAsset Include="$(LogosJuegoProducto)caratulas/*.png" Link="Assets\logos-juegos\caratulas\%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

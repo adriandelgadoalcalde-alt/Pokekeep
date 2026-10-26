@@ -1,0 +1,93 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             xmlns:mas="clr-namespace:Pokekeep.Mobile.Ui.Mas"
+             x:Class="Pokekeep.Mobile.Ui.Views.AcercaDeView"
+             x:DataType="vm:AcercaDeViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="16,0,16,24" Spacing="10">
+      <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" AutomationProperties.Name="{DynamicResource Loc.Comun.VolverMas}">
+        <StackPanel Orientation="Horizontal" Spacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Comun.VolverMas}" /></StackPanel>
+      </Button>
+      <Grid ColumnDefinitions="Auto,*" Margin="0,4,0,4">
+        <Image Width="56" Height="56" Source="avares://Pokekeep.Mobile.Ui/Assets/Imagenes/icono-pokekeep-192.png" Margin="0,0,12,0" AutomationProperties.AccessibilityView="Raw" />
+        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+          <TextBlock Classes="titulo" Text="{Binding Contenido.Nombre}" />
+          <TextBlock Name="TextoVersion" Text="{Binding Contenido.LineaVersion}" FontWeight="Medium" TextWrapping="Wrap" />
+        </StackPanel>
+      </Grid>
+      <TextBlock Classes="sec" Text="{Binding Contenido.Lema}" TextWrapping="Wrap" />
+      <Button Classes="secundario" Command="{Binding VerGestos}" HorizontalAlignment="Stretch" AutomationProperties.Name="{DynamicResource Loc.AcercaDe.GestosEquivalenciasEscritorio}"><TextBlock Text="{DynamicResource Loc.AcercaDe.GestosEquivalencias}" TextWrapping="Wrap" /></Button>
+
+      <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.AcercaDe.AUTORIA}" Margin="0,6,0,0" />
+      <Border Classes="tarjeta" Padding="14,10"><TextBlock Text="{Binding Contenido.Autoria}" TextWrapping="Wrap" /></Border>
+
+      <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.AcercaDe.CREDITOSLICENCIAS}" Margin="0,6,0,0" />
+      <Border Classes="tarjeta" Padding="14,6">
+        <ItemsControl ItemsSource="{Binding Contenido.Creditos}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="mas:CreditoAcerca">
+              <StackPanel Spacing="2" Margin="0,8" AutomationProperties.Name="{Binding Accesible}">
+                <TextBlock Text="{Binding Componente}" FontWeight="Medium" TextWrapping="Wrap" />
+                <TextBlock Classes="sec" Text="{Binding Licencia}" FontWeight="Bold" />
+                <TextBlock Classes="sec" Text="{Binding Uso}" TextWrapping="Wrap" />
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
+
+      <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.AcercaDe.LicenciaAvisos}" Margin="0,6,0,0" />
+      <Border Classes="tarjeta" Padding="14,10"><StackPanel Spacing="10">
+        <TextBlock Text="{Binding Contenido.Licencia}" TextWrapping="Wrap" />
+        <TextBlock Text="{Binding Contenido.AvisoEventos}" TextWrapping="Wrap" />
+        <TextBlock Text="{Binding Contenido.AvisoMarcas}" TextWrapping="Wrap" />
+        <TextBlock Text="{Binding Contenido.AvisoPrivacidad}" TextWrapping="Wrap" />
+      </StackPanel></Border>
+
+      <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.AcercaDe.INSTALACION}" Margin="0,6,0,0" IsVisible="{Binding HayPaquete}" />
+      <Border Classes="tarjeta" Padding="14,6" IsVisible="{Binding HayPaquete}"><StackPanel>
+        <ItemsControl ItemsSource="{Binding Contenido.Paquete}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="mas:DatoPaquete">
+              <StackPanel Spacing="1" Margin="0,6"><TextBlock Classes="etiqueta" Text="{Binding Etiqueta}" /><TextBlock Text="{Binding Valor}" TextWrapping="Wrap" FontSize="{DynamicResource TamPequeno}" /></StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Button Classes="secundario" HorizontalAlignment="Stretch" Margin="0,6" Command="{Binding CopiarDatosCommand}" AutomationProperties.Name="{DynamicResource Loc.AcercaDe.CopiarDatosInstalacion}">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="ClipboardCopy" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Seleccion.Copiar}" /></StackPanel>
+        </Button>
+      </StackPanel></Border>
+
+      <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.AcercaDe.Novedades}" Margin="0,6,0,0" />
+      <ItemsControl ItemsSource="{Binding Contenido.Novedades}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="mas:NovedadAcerca">
+            <Border Classes="tarjeta" Padding="14,10" Margin="0,0,0,8">
+              <StackPanel Spacing="4">
+                <TextBlock Text="{Binding Cabecera}" FontWeight="Bold" TextWrapping="Wrap" />
+                <TextBlock Classes="sec" Text="{Binding Resumen}" TextWrapping="Wrap" />
+                <ItemsControl ItemsSource="{Binding Novedades}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="x:String"><Grid ColumnDefinitions="Auto,*" Margin="0,2"><TextBlock Text="•" Margin="0,0,8,0" /><TextBlock Grid.Column="1" Text="{Binding}" TextWrapping="Wrap" FontSize="{DynamicResource TamPequeno}" /></Grid></DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+
+      <TextBlock Classes="etiqueta" Text="{Binding Contenido.PkhexTitulo}" Margin="0,6,0,0" />
+      <Border Classes="tarjeta" Padding="14,10"><StackPanel Spacing="8">
+        <TextBlock Text="{DynamicResource Loc.AcercaDe.PKHeXKurtKwschColaboradores}" TextWrapping="Wrap" />
+        <TextBlock Name="AgradecimientoPkhex" Classes="sec" Text="{Binding Contenido.PkhexAgradecimiento}" TextWrapping="Wrap" />
+        <Button Name="BotonCambiosPkhex" Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding AlternarCambiosPkhexCommand}" IsVisible="{Binding HayCambiosPkhex}" AutomationProperties.Name="{Binding TextoAlternarPkhex}">
+          <TextBlock Text="{Binding TextoAlternarPkhex}" TextAlignment="Center" TextWrapping="Wrap" />
+        </Button>
+        <TextBlock Name="CambiosPkhex" Text="{Binding TextoCambiosPkhex}" FontFamily="monospace" FontSize="{DynamicResource TamMini}" TextWrapping="Wrap" IsVisible="{Binding VerCambiosPkhex}" />
+      </StackPanel></Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

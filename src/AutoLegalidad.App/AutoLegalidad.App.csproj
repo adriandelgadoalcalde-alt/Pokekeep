@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\PokekeepVersion.props" />
+  <PropertyGroup>
+    <!-- Fase 1 de Android (ADR 0054): la logica de Pokekeep que NO es WinForms (coordinadores, operaciones masivas, datos de la Libreria, textos, ajustes).
+         Sin referencia a System.Windows.Forms ni a PKHeX.Drawing: la comparten el adaptador de escritorio (AutoLegalidad.Ui) y, en Android, la interfaz movil. -->
+    <RootNamespace>AutoLegalidad.Ui</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <NeutralLanguage>es-ES</NeutralLanguage>
+    <Version>$(PokekeepVersion)</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(PKHeXCoreProject)" />
+    <ProjectReference Include="..\AutoLegalidad.Contracts\AutoLegalidad.Contracts.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.Registro\AutoLegalidad.Registro.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.Catalog\AutoLegalidad.Catalog.csproj" />
+    <!-- WorkerGateway (el Worker como proceso hijo) es el gateway del ESCRITORIO; no usa WinForms y asi las pruebas del coordinador corren sin interfaz. Android no lo instancia. -->
+    <ProjectReference Include="..\AutoLegalidad.WorkerClient\AutoLegalidad.WorkerClient.csproj" />
+    <!-- InProcessEngineGateway: el motor hospedado en el proceso (WorkerHost.Run sobre flujos en memoria). En Android es la base del servicio :motor. Se referencia la BIBLIOTECA WorkerHost, no el ejecutable pokekeep-worker (un ejecutable arrastra su runtimeconfig a quien lo referencia). -->
+    <ProjectReference Include="..\AutoLegalidad.WorkerHost\AutoLegalidad.WorkerHost.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.Engine\AutoLegalidad.Engine.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Operation\Recursos\motor-textos-x36e.tsv" LogicalName="motor-textos-x36e.tsv" />
+    <InternalsVisibleTo Include="AutoLegalidad.UiTests" />
+    <InternalsVisibleTo Include="AutoLegalidad.AppTests" />
+  </ItemGroup>
+</Project>

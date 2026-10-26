@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.NumeroHojaView"
+             x:DataType="vm:NumeroHojaViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="12" Margin="20,4,20,24">
+      <TextBlock Text="{Binding Descripcion}" TextWrapping="Wrap" />
+      <StackPanel Spacing="4">
+        <TextBlock Classes="etiqueta" Text="{Binding Etiqueta}" />
+        <TextBox Classes="campo numero" Text="{Binding Valor}" MaxLength="5" TextInputOptions.ContentType="Digits" AutomationProperties.Name="{Binding Etiqueta}" AutomationProperties.HelpText="{Binding Rango}" />
+        <TextBlock Classes="sec" Text="{Binding Rango}" />
+        <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding Error}" IsVisible="{Binding HayError}" TextWrapping="Wrap" />
+      </StackPanel>
+      <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
+        <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CerrarCommand}" AutomationProperties.Name="{DynamicResource Loc.Comun.Cancelar}">
+          <TextBlock Text="{DynamicResource Loc.Comun.Cancelar}" TextAlignment="Center" />
+        </Button>
+        <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding ConfirmarCommand}" AutomationProperties.Name="{Binding TextoBoton}">
+          <TextBlock Text="{Binding TextoBoton}" TextAlignment="Center" TextWrapping="Wrap" />
+        </Button>
+      </d:RejillaSinPartir>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

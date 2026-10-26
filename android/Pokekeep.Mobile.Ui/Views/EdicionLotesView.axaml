@@ -1,0 +1,91 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:lz="clr-namespace:Pokekeep.Mobile.Ui.Localizacion"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:l="clr-namespace:Pokekeep.Mobile.Ui.Herramientas.EdicionLotes"
+             x:Class="Pokekeep.Mobile.Ui.Views.EdicionLotesView"
+             x:DataType="l:EdicionLotesViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="16,0,16,24" Spacing="10">
+      <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" AutomationProperties.Name="{DynamicResource Loc.ImportarHex.VolverHerramientas}">
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.ImportarHex.VolverHerramientas}" TextWrapping="Wrap" VerticalAlignment="Center" /></Grid>
+      </Button>
+      <StackPanel Spacing="2" Margin="0,4,0,4">
+        <TextBlock Classes="titulo" Text="{Binding Titulo}" />
+        <TextBlock Classes="sec" TextWrapping="Wrap" Text="{Binding Subtitulo}" />
+      </StackPanel>
+
+      <!-- Fuente: Cajas / Equipo / Carpeta (RB_Boxes, RB_Party, RB_Path) -->
+      <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.EdicionLotes.SobrePokemon}" />
+      <Border Background="{DynamicResource SuperficieHundida}" CornerRadius="16" Padding="4">
+        <d:RejillaSinPartir Columns="3">
+          <RadioButton Classes="segmento" Padding="6,0" GroupName="fuente-lotes" IsChecked="{Binding EsCajas}" IsEnabled="{Binding HayCajas}" Content="{DynamicResource Loc.Zonas.Cajas}" AutomationProperties.Name="{DynamicResource Loc.Zonas.Cajas}" AutomationProperties.HelpText="{DynamicResource Loc.EdicionLotes.PokemonTodasCajasPartida}" />
+          <RadioButton Classes="segmento" Padding="6,0" GroupName="fuente-lotes" IsChecked="{Binding EsEquipo}" IsEnabled="{Binding HayEquipo}" Content="{DynamicResource Loc.Form.Equipo}" AutomationProperties.Name="{DynamicResource Loc.Form.Equipo}" AutomationProperties.HelpText="{DynamicResource Loc.EdicionLotes.PokemonEquipo}" />
+          <RadioButton Classes="segmento" Padding="6,0" GroupName="fuente-lotes" IsChecked="{Binding EsCarpeta}" IsEnabled="{Binding PuedeLeerCarpetas}" Content="{DynamicResource Loc.ListaCarpetas.Carpeta}" AutomationProperties.Name="{DynamicResource Loc.ListaCarpetas.Carpeta}" AutomationProperties.HelpText="{DynamicResource Loc.EdicionLotes.ArchivosPokemonCarpetaMovil}" />
+        </d:RejillaSinPartir>
+      </Border>
+      <StackPanel Spacing="6" IsVisible="{Binding EsCarpeta}">
+        <TextBlock Classes="sec" Text="{Binding TextoCarpeta}" TextWrapping="Wrap" />
+        <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding ElegirCarpetaCommand}" IsEnabled="{Binding PuedeLeerCarpetas}" AutomationProperties.Name="{DynamicResource Loc.BaseDatosPkm.ElegirCarpeta}" AutomationProperties.HelpText="{DynamicResource Loc.EdicionLotes.EligeCarpetaArchivosPokemon}">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="FolderOpen" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Ajustes.Pkhex.ElegirCarpeta}" /></StackPanel>
+        </Button>
+      </StackPanel>
+      <TextBlock Classes="sec" Text="{Binding TextoCarpeta}" TextWrapping="Wrap" IsVisible="{Binding !PuedeLeerCarpetas}" />
+
+      <!-- Instrucciones y contador -->
+      <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.EdicionLotes.Instrucciones}" />
+      <Border Classes="tarjeta" Padding="14,10">
+        <StackPanel Spacing="8">
+          <TextBox Text="{Binding Instrucciones}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="120" MaxHeight="260" FontFamily="monospace"
+                   Watermark="=Species=25&#x0a;.IsShiny=true" AutomationProperties.Name="{DynamicResource Loc.EdicionLotes.Instrucciones}" AutomationProperties.HelpText="{Binding Ayuda}" />
+          <TextBlock Text="{Binding Coincidencias}" FontWeight="Bold" AutomationProperties.LiveSetting="Polite" />
+          <TextBlock Classes="sec" Text="{Binding Ayuda}" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+
+      <!-- Constructor de líneas (EntityInstructionBuilder) -->
+      <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Ajustes.Pkhex.AnadirLinea}" />
+      <Border Classes="tarjeta" Padding="14,10">
+        <StackPanel Spacing="8">
+          <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
+            <Button Classes="secundario" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding AbrirFormatosCommand}" AutomationProperties.Name="{lz:Formato EdicionLotes.Formato, {Binding TextoFormato}}">
+              <d:EtiquetaYValor Separacion="0"><TextBlock Text="{Binding TextoFormato}" TextWrapping="Wrap" VerticalAlignment="Center" /><d:Icono Glifo="ChevronDown" Width="18" Height="18" /></d:EtiquetaYValor>
+            </Button>
+            <Button Classes="secundario" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding AbrirPrefijosCommand}" AutomationProperties.Name="{lz:Formato EdicionLotes.Hace, {Binding TextoPrefijo}}">
+              <d:EtiquetaYValor Separacion="0"><TextBlock Text="{Binding TextoPrefijo}" TextWrapping="Wrap" VerticalAlignment="Center" /><d:Icono Glifo="ChevronDown" Width="18" Height="18" /></d:EtiquetaYValor>
+            </Button>
+          </d:RejillaSinPartir>
+          <Button Classes="secundario" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding AbrirPropiedadesCommand}" AutomationProperties.Name="{lz:Formato EdicionLotes.Propiedad, {Binding Propiedad}}">
+            <d:EtiquetaYValor Separacion="0"><TextBlock Text="{Binding Propiedad}" TextWrapping="Wrap" VerticalAlignment="Center" /><d:Icono Glifo="ChevronDown" Width="18" Height="18" /></d:EtiquetaYValor>
+          </Button>
+          <TextBlock Classes="sec" Text="{Binding TipoPropiedad}" TextWrapping="Wrap" />
+          <TextBlock Classes="sec" Text="{Binding ValorReferencia}" TextWrapping="Wrap" />
+          <TextBox Text="{Binding Valor}" Watermark="{DynamicResource Loc.BaseDatosPkm.ValorOpcional}" AutomationProperties.Name="{DynamicResource Loc.EdicionLotes.Valor2}" AutomationProperties.HelpText="{DynamicResource Loc.EdicionLotes.ValorComparaAsignaPuede}" />
+          <TextBlock Classes="sec" Text="{Binding LineaPrevista}" FontFamily="monospace" TextWrapping="Wrap" />
+          <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding AnadirLineaCommand}" AutomationProperties.Name="{DynamicResource Loc.EdicionLotes.AnadirLineaInstrucciones}">
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Plus" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Form.Anadir}" /></StackPanel>
+          </Button>
+        </StackPanel>
+      </Border>
+
+      <!-- Ejecutar -->
+      <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding EjecutarCommand}" IsEnabled="{Binding PuedeEjecutar}" AutomationProperties.Name="{DynamicResource Loc.EdicionLotes.EjecutarInstrucciones}">
+        <TextBlock Text="{DynamicResource Loc.EdicionLotes.Ejecutar}" TextAlignment="Center" TextWrapping="Wrap" />
+      </Button>
+      <StackPanel Spacing="6" IsVisible="{Binding Ocupado}">
+        <ProgressBar IsIndeterminate="{Binding FraccionIndeterminada}" Value="{Binding Fraccion}" Minimum="0" Maximum="100" AutomationProperties.Name="{DynamicResource Loc.EdicionLotes.ProgresoEditorLotes}" />
+        <TextBlock Classes="sec" Text="{Binding TextoAvance}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+        <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CancelarCommand}" AutomationProperties.Name="{DynamicResource Loc.Comun.Cancelar}"><TextBlock Text="{DynamicResource Loc.Comun.Cancelar}" TextAlignment="Center" /></Button>
+      </StackPanel>
+      <Border Classes="insignia" Classes.error="{Binding ResultadoEsError}" Padding="12,8" IsVisible="{Binding HayResultado}">
+        <TextBlock Text="{Binding Resultado}" TextWrapping="Wrap" FontWeight="Bold" AutomationProperties.LiveSetting="Polite" />
+      </Border>
+      <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding EjecutarIgualmenteCommand}" IsVisible="{Binding HayAvisoVacias}" AutomationProperties.Name="{DynamicResource Loc.EdicionLotes.EjecutarIgualmente}" AutomationProperties.HelpText="{DynamicResource Loc.EdicionLotes.EjecutaAunqueHayaPropiedades}">
+        <TextBlock Text="{DynamicResource Loc.EdicionLotes.EjecutarIgualmente}" TextAlignment="Center" TextWrapping="Wrap" />
+      </Button>
+      <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding DeshacerLoteCommand}" IsVisible="{Binding PuedeDeshacerLote}" AutomationProperties.Name="{DynamicResource Loc.EdicionLotes.DeshacerLote}" AutomationProperties.HelpText="{DynamicResource Loc.EdicionLotes.DevuelvePokemonCambiadosUltimo}">
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Undo2" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.EdicionLotes.DeshacerLote}" /></StackPanel>
+      </Button>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

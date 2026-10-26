@@ -1,0 +1,73 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             xmlns:v="clr-namespace:Pokekeep.Mobile.Ui.Views"
+             x:Class="Pokekeep.Mobile.Ui.Views.EditorPartidaView"
+             x:DataType="vm:EditorPartidaViewModel">
+  <Grid RowDefinitions="Auto,*,Auto" Margin="16,0,16,0">
+    <!-- Cabecera: volver, titulo y pestanas -->
+    <StackPanel Grid.Row="0" Spacing="6">
+      <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" AutomationProperties.Name="{DynamicResource Loc.Form.Vista.EditorPartidaView.0}" AutomationProperties.HelpText="{DynamicResource Loc.Form.Vista.EditorPartidaView.1}">
+        <StackPanel Orientation="Horizontal" Spacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Form.Vista.EditorPartidaView.0}" /></StackPanel>
+      </Button>
+      <StackPanel Spacing="2" Margin="0,0,0,2">
+        <d:TextoEntero Classes="titulo" Text="{Binding Titulo}" TextWrapping="Wrap" AutomationProperties.HeadingLevel="1" />
+        <TextBlock Classes="sec" Text="{Binding Descripcion}" TextWrapping="Wrap" />
+      </StackPanel>
+      <d:TiraConIndicio IsVisible="{Binding VariasPestanas}">
+        <ItemsControl ItemsSource="{Binding Pestanas}">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="8" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:PestanaPVm">
+              <ToggleButton Classes="chip" IsChecked="{Binding Elegida, Mode=OneWay}" Command="{Binding $parent[ItemsControl].((vm:EditorPartidaViewModel)DataContext).ElegirCommand}" CommandParameter="{Binding}"
+                            MinHeight="48" AutomationProperties.Name="{Binding Accesible}">
+                <TextBlock Text="{Binding Titulo}" TextWrapping="NoWrap" />
+              </ToggleButton>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </d:TiraConIndicio>
+    </StackPanel>
+
+    <!-- Contenido: secciones de campos o una tabla -->
+    <Panel Grid.Row="1" Margin="0,8,0,0">
+      <ScrollViewer VerticalScrollBarVisibility="Auto" IsVisible="{Binding HaySecciones}">
+        <ItemsControl ItemsSource="{Binding Secciones}" Margin="0,0,0,16">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="12" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:SeccionPVm">
+              <Border Classes="tarjeta" IsVisible="{Binding Visible}">
+                <StackPanel Spacing="2">
+                  <TextBlock Classes="etiqueta" Text="{Binding Titulo}" IsVisible="{Binding HayTitulo}" AutomationProperties.HeadingLevel="2" />
+                  <ItemsControl ItemsSource="{Binding Campos}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="vm:CampoPVm"><v:CampoPView /></DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+      <v:TablaPView DataContext="{Binding Tabla}" IsVisible="{Binding $parent[UserControl].((vm:EditorPartidaViewModel)DataContext).HayTabla}" />
+      <v:ColeccionPView DataContext="{Binding Coleccion}" IsVisible="{Binding $parent[UserControl].((vm:EditorPartidaViewModel)DataContext).HayColeccion}" />
+    </Panel>
+
+    <!-- Cambios sin aplicar: siempre a mano -->
+    <Border Grid.Row="2" Name="BarraAcciones" Classes="tarjeta-pendiente" Padding="12" Margin="0,4,0,0" IsVisible="{Binding HayCambios}">
+      <StackPanel Spacing="8">
+        <TextBlock Text="{Binding TextoCambios}" FontWeight="Bold" TextWrapping="Wrap" AutomationProperties.HelpText="{DynamicResource Loc.Form.Vista.EditorPartidaView.2}" />
+        <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
+          <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding DescartarCommand}" AutomationProperties.Name="{DynamicResource Loc.Form.Vista.EditorPartidaView.3}" AutomationProperties.HelpText="{DynamicResource Loc.Form.Vista.EditorPartidaView.4}">
+            <TextBlock Text="{DynamicResource Loc.Form.Vista.EditorPartidaView.5}" TextAlignment="Center" />
+          </Button>
+          <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding AplicarCommand}" AutomationProperties.Name="{DynamicResource Loc.Form.Vista.EditorPartidaView.6}" AutomationProperties.HelpText="{DynamicResource Loc.Form.Vista.EditorPartidaView.7}">
+            <TextBlock Text="{DynamicResource Loc.Form.Vista.EditorPartidaView.8}" TextAlignment="Center" />
+          </Button>
+        </d:RejillaSinPartir>
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

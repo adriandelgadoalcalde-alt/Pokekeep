@@ -1,0 +1,56 @@
+PKHeX-Pokekeep {{VERSION}}  -  guía corta
+==========================================
+
+Qué es
+------
+PKHeX portable (26.10.18) con «Legalizar automáticamente» y «Optimizar stats», una pestaña
+«Librería» para añadir Pokémon legales a tus cajas, «Completar el juego» (Pokédex completa) y
+«Edición masiva». Todo en castellano de España. Forma parte de la familia Keep, de IncrediBad.
+No es oficial ni está afiliado a Nintendo, Game Freak ni The Pokémon Company.
+
+Cómo se usa
+-----------
+1. Descomprime la carpeta «PKHeX-Pokekeep» donde quieras (el escritorio, una unidad USB, una ruta con
+   espacios o tildes...). No se instala nada.
+2. Abre PKHeX.exe (doble clic). No necesita .NET instalado, ni permisos de administrador, ni
+   conexión a Internet.
+3. Abre tu partida con Archivo > Abrir. TRABAJA SIEMPRE SOBRE UNA COPIA de tu guardado (PKHeX además
+   guarda copias de seguridad en la carpeta «bak» de aquí al guardar).
+4. Clic derecho sobre una casilla de caja o de equipo:
+   - «Legalizar automáticamente»: deja el Pokémon legal (mismo Pokémon, origen admitido por el juego)
+     y, si lo permite el encuentro, con las mejores estadísticas posibles.
+   - «Optimizar stats»: solo para Pokémon que ya son legales; conserva todo su origen y mejora IV/EV.
+   Pestaña «Librería»: busca en la base de datos de lo que existe legalmente en tu juego y pulsa
+   «Añadir a la caja».
+   Herramientas > Pokekeep: «Completar el juego» y «Edición masiva». Cada operación se puede
+   deshacer de una vez (Opciones > Deshacer último cambio, o Ctrl+U).
+5. Guarda con Archivo > Exportar guardado, como en PKHeX de siempre.
+
+Qué hay en la carpeta
+---------------------
+PKHeX.exe ........ el programa. Todo lo demás (DLL, runtime de .NET 10) está en esta misma carpeta.
+pokekeep-worker.exe .. el motor de legalización (lo lanza PKHeX solo; no se usa a mano).
+Pokekeep\datos\ ...... la base de datos de encuentros y Librería (autolegalidad.sqlite) y la caché de
+                       soluciones precalculadas (soluciones.sqlite): solo se leen, nunca se modifican.
+Pokekeep\manifiesto.json .. huella SHA-256 de cada fichero (el programa la comprueba al arrancar).
+cfg.json, bak\ ....... tus ajustes y tus copias de seguridad; se crean/actualizan aquí, junto al programa.
+Licencias\ ........... GPL-3.0 (PKHeX y Pokekeep), MIT (ALM), avisos de terceros y el aviso
+                       de EventsGallery.
+Fuente\ .............. el código fuente correspondiente (exigido por la GPL).
+Verificar-paquete.ps1  comprueba que ningún fichero ha cambiado (clic derecho > Ejecutar con PowerShell).
+
+Privacidad y seguridad
+----------------------
+- No se conecta a Internet (se ha desactivado la comprobación de versiones de PKHeX) y no escribe
+  fuera de esta carpeta: sin registro de Windows, sin AppData, sin instalador.
+- Tus guardados, entrenadores y Pokémon no salen del equipo.
+- Si Windows muestra «SmartScreen protegió su PC», es porque el programa no está firmado: pulsa «Más
+  información» > «Ejecutar de todas formas». Si descargaste el ZIP, antes de descomprimirlo puedes
+  hacer clic derecho > Propiedades > «Desbloquear».
+
+Aviso
+-----
+Los datos de eventos proceden de EventsGallery (Project Pokémon), un repositorio sin licencia
+declarada. Ver Licencias\AVISO-EventsGallery.txt.
+
+Versión: {{VERSION}}   -   PKHeX 26.10.18 (bfe89c74a3f5)   -   ALM 26.10.18 (b13c011bb0c4)

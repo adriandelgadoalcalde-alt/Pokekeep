@@ -1,0 +1,993 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design">
+  <!-- Sistema de diseno Pokekeep, direccion «Nitida unificada» (02-DISENO-DE-LA-APP.md de Codex). Tokens claro/oscuro, escala 4/8/12/16/24/32,
+       tarjetas 20, campos y botones 12, insignias rectangulares de radio 8 (Patrones-UI-validados). Los ajustes de contraste AA se documentan en docs\android\sistema-de-diseno.md. -->
+  <Styles.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+          <SolidColorBrush x:Key="Fondo" Color="#F5F3ED" />
+          <SolidColorBrush x:Key="Superficie" Color="#FFFEFA" />
+          <SolidColorBrush x:Key="SuperficieHundida" Color="#EDEBE2" />
+          <SolidColorBrush x:Key="Texto" Color="#252821" />
+          <SolidColorBrush x:Key="TextoSecundario" Color="#62665A" />
+          <SolidColorBrush x:Key="Separacion" Color="#E2E3D8" />
+          <SolidColorBrush x:Key="Dorado" Color="#69572E" />
+          <SolidColorBrush x:Key="SeleccionSuave" Color="#F1E8D3" />
+          <SolidColorBrush x:Key="Correcto" Color="#245F46" />
+          <SolidColorBrush x:Key="CorrectoFondo" Color="#E3F0E8" />
+          <SolidColorBrush x:Key="Aviso" Color="#895B19" />
+          <SolidColorBrush x:Key="AvisoFondo" Color="#F8ECD3" />
+          <SolidColorBrush x:Key="Error" Color="#9A2B2B" />
+          <SolidColorBrush x:Key="ErrorFondo" Color="#F7E2E0" />
+          <SolidColorBrush x:Key="AccionFuerte" Color="#25231D" />
+          <SolidColorBrush x:Key="DoradoSobreAccion" Color="#F2D9A2" />
+          <SolidColorBrush x:Key="Velo" Color="#66000000" />
+          <SolidColorBrush x:Key="AccionBorde" Color="#25231D" />
+          <SolidColorBrush x:Key="BordeCasilla" Color="#B9BBAB" />
+          <SolidColorBrush x:Key="VeloNumeroCasilla" Color="#EBF5F3ED" />
+          <SolidColorBrush x:Key="TextoApagado" Color="#62665A" />
+          <!-- X21: ToggleSwitch, CheckBox y RadioButton de Fluent con los tokens de la app (acento dorado), en este tema: activo, inactivo, pulsado, deshabilitado. El foco visible va en los estilos de abajo. -->
+          <SolidColorBrush x:Key="ControlSinRelleno" Color="Transparent" />
+          <StaticResource x:Key="ToggleSwitchFillOff" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="ToggleSwitchFillOffPointerOver" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="ToggleSwitchFillOffPressed" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="ToggleSwitchFillOffDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="ToggleSwitchStrokeOff" ResourceKey="TextoSecundario" />
+          <StaticResource x:Key="ToggleSwitchStrokeOffPointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="ToggleSwitchStrokeOffPressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="ToggleSwitchStrokeOffDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="ToggleSwitchKnobFillOff" ResourceKey="TextoSecundario" />
+          <StaticResource x:Key="ToggleSwitchKnobFillOffPointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="ToggleSwitchKnobFillOffPressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="ToggleSwitchKnobFillOffDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="ToggleSwitchFillOn" ResourceKey="Dorado" />
+          <StaticResource x:Key="ToggleSwitchFillOnPointerOver" ResourceKey="Dorado" />
+          <StaticResource x:Key="ToggleSwitchFillOnPressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="ToggleSwitchFillOnDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="ToggleSwitchStrokeOn" ResourceKey="Dorado" />
+          <StaticResource x:Key="ToggleSwitchStrokeOnPointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="ToggleSwitchStrokeOnPressed" ResourceKey="Texto" />
+          <StaticResource x:Key="ToggleSwitchStrokeOnDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="ToggleSwitchKnobFillOn" ResourceKey="Superficie" />
+          <StaticResource x:Key="ToggleSwitchKnobFillOnPointerOver" ResourceKey="Superficie" />
+          <StaticResource x:Key="ToggleSwitchKnobFillOnPressed" ResourceKey="SuperficieHundida" />
+          <StaticResource x:Key="ToggleSwitchKnobFillOnDisabled" ResourceKey="TextoApagado" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillUnchecked" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeUnchecked" ResourceKey="TextoSecundario" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundUnchecked" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBackgroundUnchecked" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushUnchecked" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundUnchecked" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillUncheckedPointerOver" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundUncheckedPointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBackgroundUncheckedPointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushUncheckedPointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundUncheckedPointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillUncheckedPressed" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundUncheckedPressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBackgroundUncheckedPressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushUncheckedPressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundUncheckedPressed" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillUncheckedDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeUncheckedDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundUncheckedDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBackgroundUncheckedDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushUncheckedDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundUncheckedDisabled" ResourceKey="TextoApagado" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillChecked" ResourceKey="Dorado" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeChecked" ResourceKey="Dorado" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundChecked" ResourceKey="Superficie" />
+          <StaticResource x:Key="CheckBoxBackgroundChecked" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushChecked" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundChecked" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" ResourceKey="Dorado" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeCheckedPointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" ResourceKey="Superficie" />
+          <StaticResource x:Key="CheckBoxBackgroundCheckedPointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushCheckedPointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundCheckedPointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillCheckedPressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeCheckedPressed" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" ResourceKey="SuperficieHundida" />
+          <StaticResource x:Key="CheckBoxBackgroundCheckedPressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushCheckedPressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundCheckedPressed" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeCheckedDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" ResourceKey="TextoApagado" />
+          <StaticResource x:Key="CheckBoxBackgroundCheckedDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushCheckedDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundCheckedDisabled" ResourceKey="TextoApagado" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillIndeterminate" ResourceKey="Dorado" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeIndeterminate" ResourceKey="Dorado" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundIndeterminate" ResourceKey="Superficie" />
+          <StaticResource x:Key="CheckBoxBackgroundIndeterminate" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushIndeterminate" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundIndeterminate" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillIndeterminatePointerOver" ResourceKey="Dorado" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeIndeterminatePointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundIndeterminatePointerOver" ResourceKey="Superficie" />
+          <StaticResource x:Key="CheckBoxBackgroundIndeterminatePointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushIndeterminatePointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundIndeterminatePointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillIndeterminatePressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeIndeterminatePressed" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundIndeterminatePressed" ResourceKey="SuperficieHundida" />
+          <StaticResource x:Key="CheckBoxBackgroundIndeterminatePressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushIndeterminatePressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundIndeterminatePressed" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillIndeterminateDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeIndeterminateDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundIndeterminateDisabled" ResourceKey="TextoApagado" />
+          <StaticResource x:Key="CheckBoxBackgroundIndeterminateDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushIndeterminateDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundIndeterminateDisabled" ResourceKey="TextoApagado" />
+          <StaticResource x:Key="RadioButtonBackground" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonBorderBrush" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonForeground" ResourceKey="Texto" />
+          <StaticResource x:Key="RadioButtonOuterEllipseFill" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonOuterEllipseStroke" ResourceKey="TextoSecundario" />
+          <StaticResource x:Key="RadioButtonOuterEllipseCheckedFill" ResourceKey="Dorado" />
+          <StaticResource x:Key="RadioButtonOuterEllipseCheckedStroke" ResourceKey="Dorado" />
+          <StaticResource x:Key="RadioButtonCheckGlyphFill" ResourceKey="Superficie" />
+          <StaticResource x:Key="RadioButtonCheckGlyphStroke" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonBackgroundPointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonBorderBrushPointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonForegroundPointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="RadioButtonOuterEllipseFillPointerOver" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="RadioButtonOuterEllipseStrokePointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="RadioButtonOuterEllipseCheckedFillPointerOver" ResourceKey="Dorado" />
+          <StaticResource x:Key="RadioButtonOuterEllipseCheckedStrokePointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="RadioButtonCheckGlyphFillPointerOver" ResourceKey="Superficie" />
+          <StaticResource x:Key="RadioButtonCheckGlyphStrokePointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonBackgroundPressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonBorderBrushPressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonForegroundPressed" ResourceKey="Texto" />
+          <StaticResource x:Key="RadioButtonOuterEllipseFillPressed" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="RadioButtonOuterEllipseStrokePressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="RadioButtonOuterEllipseCheckedFillPressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="RadioButtonOuterEllipseCheckedStrokePressed" ResourceKey="Texto" />
+          <StaticResource x:Key="RadioButtonCheckGlyphFillPressed" ResourceKey="SuperficieHundida" />
+          <StaticResource x:Key="RadioButtonCheckGlyphStrokePressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonBackgroundDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonBorderBrushDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonForegroundDisabled" ResourceKey="TextoApagado" />
+          <StaticResource x:Key="RadioButtonOuterEllipseFillDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonOuterEllipseStrokeDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="RadioButtonOuterEllipseCheckedFillDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="RadioButtonOuterEllipseCheckedStrokeDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="RadioButtonCheckGlyphFillDisabled" ResourceKey="TextoApagado" />
+          <StaticResource x:Key="RadioButtonCheckGlyphStrokeDisabled" ResourceKey="ControlSinRelleno" />
+          <!-- uso10: el desplegable de Fluent toma sus colores de estos recursos (su plantilla gana a los estilos): los del tema de la app. -->
+          <StaticResource x:Key="ComboBoxBackground" ResourceKey="Fondo" />
+          <StaticResource x:Key="ComboBoxBackgroundPointerOver" ResourceKey="Fondo" />
+          <StaticResource x:Key="ComboBoxBackgroundPressed" ResourceKey="Fondo" />
+          <StaticResource x:Key="ComboBoxBackgroundUnfocused" ResourceKey="Fondo" />
+          <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="Separacion" />
+          <StaticResource x:Key="ComboBoxBorderBrushPointerOver" ResourceKey="Dorado" />
+          <StaticResource x:Key="ComboBoxBorderBrushPressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="ComboBoxBackgroundBorderBrushFocused" ResourceKey="Dorado" />
+          <StaticResource x:Key="ComboBoxDropDownGlyphForeground" ResourceKey="Dorado" />
+          <StaticResource x:Key="ComboBoxDropDownGlyphForegroundFocused" ResourceKey="Dorado" />
+          <StaticResource x:Key="ComboBoxDropDownBackground" ResourceKey="Superficie" />
+          <StaticResource x:Key="ComboBoxDropDownBorderBrush" ResourceKey="Separacion" />
+          <StaticResource x:Key="ComboBoxItemForeground" ResourceKey="Texto" />
+          <StaticResource x:Key="ComboBoxItemForegroundPointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="ComboBoxItemForegroundPressed" ResourceKey="Texto" />
+          <StaticResource x:Key="ComboBoxItemForegroundSelected" ResourceKey="Dorado" />
+          <StaticResource x:Key="ComboBoxItemForegroundSelectedPointerOver" ResourceKey="Dorado" />
+          <StaticResource x:Key="ComboBoxItemForegroundSelectedPressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="ComboBoxItemBackgroundPointerOver" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="ComboBoxItemBackgroundPressed" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="ComboBoxItemBackgroundSelected" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="ComboBoxItemBackgroundSelectedPointerOver" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="ComboBoxItemBackgroundSelectedPressed" ResourceKey="SeleccionSuave" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <SolidColorBrush x:Key="Fondo" Color="#151714" />
+          <SolidColorBrush x:Key="Superficie" Color="#22241E" />
+          <SolidColorBrush x:Key="SuperficieHundida" Color="#1B1D18" />
+          <SolidColorBrush x:Key="Texto" Color="#F4F2E8" />
+          <SolidColorBrush x:Key="TextoSecundario" Color="#B4B7A9" />
+          <SolidColorBrush x:Key="Separacion" Color="#3B3E32" />
+          <SolidColorBrush x:Key="Dorado" Color="#EBD19A" />
+          <SolidColorBrush x:Key="SeleccionSuave" Color="#383222" />
+          <SolidColorBrush x:Key="Correcto" Color="#A4DAB9" />
+          <SolidColorBrush x:Key="CorrectoFondo" Color="#1E3328" />
+          <SolidColorBrush x:Key="Aviso" Color="#ECC582" />
+          <SolidColorBrush x:Key="AvisoFondo" Color="#3A2E17" />
+          <SolidColorBrush x:Key="Error" Color="#F2B3AE" />
+          <SolidColorBrush x:Key="ErrorFondo" Color="#3D2220" />
+          <SolidColorBrush x:Key="AccionFuerte" Color="#25231D" />
+          <SolidColorBrush x:Key="DoradoSobreAccion" Color="#F2D9A2" />
+          <SolidColorBrush x:Key="Velo" Color="#99000000" />
+          <SolidColorBrush x:Key="AccionBorde" Color="#6B5F3E" />
+          <SolidColorBrush x:Key="BordeCasilla" Color="#6E7262" />
+          <SolidColorBrush x:Key="VeloNumeroCasilla" Color="#EB151714" />
+          <SolidColorBrush x:Key="TextoApagado" Color="#8F9385" />
+          <!-- X21: ToggleSwitch, CheckBox y RadioButton de Fluent con los tokens de la app (acento dorado), en este tema: activo, inactivo, pulsado, deshabilitado. El foco visible va en los estilos de abajo. -->
+          <SolidColorBrush x:Key="ControlSinRelleno" Color="Transparent" />
+          <StaticResource x:Key="ToggleSwitchFillOff" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="ToggleSwitchFillOffPointerOver" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="ToggleSwitchFillOffPressed" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="ToggleSwitchFillOffDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="ToggleSwitchStrokeOff" ResourceKey="TextoSecundario" />
+          <StaticResource x:Key="ToggleSwitchStrokeOffPointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="ToggleSwitchStrokeOffPressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="ToggleSwitchStrokeOffDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="ToggleSwitchKnobFillOff" ResourceKey="TextoSecundario" />
+          <StaticResource x:Key="ToggleSwitchKnobFillOffPointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="ToggleSwitchKnobFillOffPressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="ToggleSwitchKnobFillOffDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="ToggleSwitchFillOn" ResourceKey="Dorado" />
+          <StaticResource x:Key="ToggleSwitchFillOnPointerOver" ResourceKey="Dorado" />
+          <StaticResource x:Key="ToggleSwitchFillOnPressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="ToggleSwitchFillOnDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="ToggleSwitchStrokeOn" ResourceKey="Dorado" />
+          <StaticResource x:Key="ToggleSwitchStrokeOnPointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="ToggleSwitchStrokeOnPressed" ResourceKey="Texto" />
+          <StaticResource x:Key="ToggleSwitchStrokeOnDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="ToggleSwitchKnobFillOn" ResourceKey="Superficie" />
+          <StaticResource x:Key="ToggleSwitchKnobFillOnPointerOver" ResourceKey="Superficie" />
+          <StaticResource x:Key="ToggleSwitchKnobFillOnPressed" ResourceKey="SuperficieHundida" />
+          <StaticResource x:Key="ToggleSwitchKnobFillOnDisabled" ResourceKey="TextoApagado" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillUnchecked" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeUnchecked" ResourceKey="TextoSecundario" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundUnchecked" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBackgroundUnchecked" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushUnchecked" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundUnchecked" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillUncheckedPointerOver" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundUncheckedPointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBackgroundUncheckedPointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushUncheckedPointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundUncheckedPointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillUncheckedPressed" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundUncheckedPressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBackgroundUncheckedPressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushUncheckedPressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundUncheckedPressed" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillUncheckedDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeUncheckedDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundUncheckedDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBackgroundUncheckedDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushUncheckedDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundUncheckedDisabled" ResourceKey="TextoApagado" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillChecked" ResourceKey="Dorado" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeChecked" ResourceKey="Dorado" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundChecked" ResourceKey="Superficie" />
+          <StaticResource x:Key="CheckBoxBackgroundChecked" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushChecked" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundChecked" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" ResourceKey="Dorado" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeCheckedPointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" ResourceKey="Superficie" />
+          <StaticResource x:Key="CheckBoxBackgroundCheckedPointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushCheckedPointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundCheckedPointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillCheckedPressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeCheckedPressed" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" ResourceKey="SuperficieHundida" />
+          <StaticResource x:Key="CheckBoxBackgroundCheckedPressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushCheckedPressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundCheckedPressed" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeCheckedDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" ResourceKey="TextoApagado" />
+          <StaticResource x:Key="CheckBoxBackgroundCheckedDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushCheckedDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundCheckedDisabled" ResourceKey="TextoApagado" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillIndeterminate" ResourceKey="Dorado" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeIndeterminate" ResourceKey="Dorado" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundIndeterminate" ResourceKey="Superficie" />
+          <StaticResource x:Key="CheckBoxBackgroundIndeterminate" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushIndeterminate" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundIndeterminate" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillIndeterminatePointerOver" ResourceKey="Dorado" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeIndeterminatePointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundIndeterminatePointerOver" ResourceKey="Superficie" />
+          <StaticResource x:Key="CheckBoxBackgroundIndeterminatePointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushIndeterminatePointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundIndeterminatePointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillIndeterminatePressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeIndeterminatePressed" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundIndeterminatePressed" ResourceKey="SuperficieHundida" />
+          <StaticResource x:Key="CheckBoxBackgroundIndeterminatePressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushIndeterminatePressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundIndeterminatePressed" ResourceKey="Texto" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundFillIndeterminateDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="CheckBoxCheckBackgroundStrokeIndeterminateDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="CheckBoxCheckGlyphForegroundIndeterminateDisabled" ResourceKey="TextoApagado" />
+          <StaticResource x:Key="CheckBoxBackgroundIndeterminateDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxBorderBrushIndeterminateDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="CheckBoxForegroundIndeterminateDisabled" ResourceKey="TextoApagado" />
+          <StaticResource x:Key="RadioButtonBackground" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonBorderBrush" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonForeground" ResourceKey="Texto" />
+          <StaticResource x:Key="RadioButtonOuterEllipseFill" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonOuterEllipseStroke" ResourceKey="TextoSecundario" />
+          <StaticResource x:Key="RadioButtonOuterEllipseCheckedFill" ResourceKey="Dorado" />
+          <StaticResource x:Key="RadioButtonOuterEllipseCheckedStroke" ResourceKey="Dorado" />
+          <StaticResource x:Key="RadioButtonCheckGlyphFill" ResourceKey="Superficie" />
+          <StaticResource x:Key="RadioButtonCheckGlyphStroke" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonBackgroundPointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonBorderBrushPointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonForegroundPointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="RadioButtonOuterEllipseFillPointerOver" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="RadioButtonOuterEllipseStrokePointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="RadioButtonOuterEllipseCheckedFillPointerOver" ResourceKey="Dorado" />
+          <StaticResource x:Key="RadioButtonOuterEllipseCheckedStrokePointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="RadioButtonCheckGlyphFillPointerOver" ResourceKey="Superficie" />
+          <StaticResource x:Key="RadioButtonCheckGlyphStrokePointerOver" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonBackgroundPressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonBorderBrushPressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonForegroundPressed" ResourceKey="Texto" />
+          <StaticResource x:Key="RadioButtonOuterEllipseFillPressed" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="RadioButtonOuterEllipseStrokePressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="RadioButtonOuterEllipseCheckedFillPressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="RadioButtonOuterEllipseCheckedStrokePressed" ResourceKey="Texto" />
+          <StaticResource x:Key="RadioButtonCheckGlyphFillPressed" ResourceKey="SuperficieHundida" />
+          <StaticResource x:Key="RadioButtonCheckGlyphStrokePressed" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonBackgroundDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonBorderBrushDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonForegroundDisabled" ResourceKey="TextoApagado" />
+          <StaticResource x:Key="RadioButtonOuterEllipseFillDisabled" ResourceKey="ControlSinRelleno" />
+          <StaticResource x:Key="RadioButtonOuterEllipseStrokeDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="RadioButtonOuterEllipseCheckedFillDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="RadioButtonOuterEllipseCheckedStrokeDisabled" ResourceKey="Separacion" />
+          <StaticResource x:Key="RadioButtonCheckGlyphFillDisabled" ResourceKey="TextoApagado" />
+          <StaticResource x:Key="RadioButtonCheckGlyphStrokeDisabled" ResourceKey="ControlSinRelleno" />
+          <!-- uso10: el desplegable de Fluent toma sus colores de estos recursos (su plantilla gana a los estilos): los del tema de la app. -->
+          <StaticResource x:Key="ComboBoxBackground" ResourceKey="Fondo" />
+          <StaticResource x:Key="ComboBoxBackgroundPointerOver" ResourceKey="Fondo" />
+          <StaticResource x:Key="ComboBoxBackgroundPressed" ResourceKey="Fondo" />
+          <StaticResource x:Key="ComboBoxBackgroundUnfocused" ResourceKey="Fondo" />
+          <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="Separacion" />
+          <StaticResource x:Key="ComboBoxBorderBrushPointerOver" ResourceKey="Dorado" />
+          <StaticResource x:Key="ComboBoxBorderBrushPressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="ComboBoxBackgroundBorderBrushFocused" ResourceKey="Dorado" />
+          <StaticResource x:Key="ComboBoxDropDownGlyphForeground" ResourceKey="Dorado" />
+          <StaticResource x:Key="ComboBoxDropDownGlyphForegroundFocused" ResourceKey="Dorado" />
+          <StaticResource x:Key="ComboBoxDropDownBackground" ResourceKey="Superficie" />
+          <StaticResource x:Key="ComboBoxDropDownBorderBrush" ResourceKey="Separacion" />
+          <StaticResource x:Key="ComboBoxItemForeground" ResourceKey="Texto" />
+          <StaticResource x:Key="ComboBoxItemForegroundPointerOver" ResourceKey="Texto" />
+          <StaticResource x:Key="ComboBoxItemForegroundPressed" ResourceKey="Texto" />
+          <StaticResource x:Key="ComboBoxItemForegroundSelected" ResourceKey="Dorado" />
+          <StaticResource x:Key="ComboBoxItemForegroundSelectedPointerOver" ResourceKey="Dorado" />
+          <StaticResource x:Key="ComboBoxItemForegroundSelectedPressed" ResourceKey="Dorado" />
+          <StaticResource x:Key="ComboBoxItemBackgroundPointerOver" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="ComboBoxItemBackgroundPressed" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="ComboBoxItemBackgroundSelected" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="ComboBoxItemBackgroundSelectedPointerOver" ResourceKey="SeleccionSuave" />
+          <StaticResource x:Key="ComboBoxItemBackgroundSelectedPressed" ResourceKey="SeleccionSuave" />
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+      <FontFamily x:Key="FuenteRoboto">avares://Pokekeep.Mobile.Ui/Assets/Fonts#Roboto, avares://Pokekeep.Mobile.Ui/Assets/Fonts#Pokekeep Symbols</FontFamily>
+      <CornerRadius x:Key="RadioTarjeta">20</CornerRadius>
+      <CornerRadius x:Key="RadioCampo">12</CornerRadius>
+      <!-- uso10: listas desplegables y menús flotantes de Fluent con las esquinas de los campos de la app (antes 5). --><CornerRadius x:Key="OverlayCornerRadius">12</CornerRadius>
+      <CornerRadius x:Key="RadioInsignia">8</CornerRadius>
+      <CornerRadius x:Key="RadioCasilla">12</CornerRadius>
+      <!-- Casillas sobre el fondo de la caja (X6). El fondo es el MISMO arte en claro y en oscuro, asi que lo que va encima no depende del tema: borde oscuro translucido (contrasta con los fondos claros y con los oscuros)
+           y un velo muy ligero tras el sprite. -->
+      <SolidColorBrush x:Key="BordeCasillaSobreFondo" Color="#80000000" />
+      <SolidColorBrush x:Key="VeloOcupadaSobreFondo" Color="#2EFFFFFF" />
+      <x:Double x:Key="TamTitulo">24</x:Double>
+      <x:Double x:Key="TamTitulo2">18</x:Double>
+      <x:Double x:Key="TamCuerpo">15</x:Double>
+      <x:Double x:Key="TamPequeno">13</x:Double>
+      <x:Double x:Key="TamEtiqueta">12</x:Double>
+      <x:Double x:Key="TamMini">11</x:Double>
+      <x:Double x:Key="AnchoOpcionFondo">88</x:Double>
+      <x:Double x:Key="TamNav">12</x:Double>
+      <x:Double x:Key="TamDato">14</x:Double>
+      <x:Double x:Key="TamCampo">16</x:Double>
+      <x:Double x:Key="ObjetivoTactil">48</x:Double>
+      <!-- El contenido recibe los gestos. El indicador conserva Track/Thumb y su rango,
+           sin controles de línea o página heredados del escritorio. -->
+      <ControlTheme x:Key="IndicadorMovil" TargetType="ScrollBar">
+        <Setter Property="MinWidth" Value="16" />
+        <Setter Property="MinHeight" Value="16" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+          <ControlTemplate>
+            <Grid Background="{TemplateBinding Background}">
+              <Track Name="PART_Track" Minimum="{TemplateBinding Minimum}" Maximum="{TemplateBinding Maximum}"
+                     Value="{TemplateBinding Value, Mode=TwoWay}" ViewportSize="{TemplateBinding ViewportSize}"
+                     Orientation="{TemplateBinding Orientation}" DeferThumbDrag="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}">
+                <Thumb Name="PART_Thumb" IsHitTestVisible="False" AutomationProperties.AccessibilityView="Raw">
+                  <Thumb.Template><ControlTemplate><Border Background="{DynamicResource TextoSecundario}" CornerRadius="2" /></ControlTemplate></Thumb.Template>
+                </Thumb>
+              </Track>
+            </Grid>
+          </ControlTemplate>
+        </Setter>
+        <Style Selector="^:vertical /template/ Track"><Setter Property="IsDirectionReversed" Value="True" /></Style>
+        <Style Selector="^:vertical /template/ Thumb">
+          <Setter Property="Width" Value="4" /><Setter Property="MinHeight" Value="16" /><Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <Style Selector="^:horizontal /template/ Thumb">
+          <Setter Property="Height" Value="4" /><Setter Property="MinWidth" Value="16" /><Setter Property="VerticalAlignment" Value="Bottom" />
+        </Style>
+      </ControlTheme>
+      <!-- Una pista pulsable completa: las dos regiones del Slider de escritorio se estrechan
+           hasta cero en los extremos. Slider conserva sus manejadores de pista/arrastre,
+           el teclado y su peer de rango; el área de la pista y el tirador miden 48 dp. -->
+      <ControlTheme x:Key="DeslizadorMovil" TargetType="Slider">
+        <Setter Property="MinWidth" Value="48" />
+        <Setter Property="MinHeight" Value="48" />
+        <Setter Property="Template">
+          <ControlTemplate>
+            <Grid MinHeight="48">
+              <Border Height="4" Margin="24,0" VerticalAlignment="Center" CornerRadius="2" Background="{DynamicResource Separacion}" IsHitTestVisible="False" />
+              <!-- Slider conecta PART_IncreaseButton al punto de la pista, no a un incremento fijo.
+                   Se deja fuera del Track para que su área no dependa del valor actual. -->
+              <Button Name="PART_IncreaseButton" Focusable="False" Padding="0" MinWidth="48" MinHeight="48"
+                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent"
+                      AutomationProperties.Name="{TemplateBinding AutomationProperties.Name}">
+                <Button.Template><ControlTemplate><Border Background="Transparent" /></ControlTemplate></Button.Template>
+              </Button>
+              <Track Name="PART_Track" Minimum="{TemplateBinding Minimum}" Maximum="{TemplateBinding Maximum}"
+                     Value="{TemplateBinding Value, Mode=TwoWay}" IsDirectionReversed="{TemplateBinding IsDirectionReversed}"
+                     Orientation="{TemplateBinding Orientation}">
+                <Thumb Name="PART_Thumb" Width="48" Height="48" AutomationProperties.Name="{DynamicResource Loc.Tema.AjustarExperiencia}">
+                  <Thumb.Template>
+                    <ControlTemplate>
+                      <Border Background="Transparent">
+                        <Border Width="20" Height="20" CornerRadius="10" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource Dorado}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" />
+                      </Border>
+                    </ControlTemplate>
+                  </Thumb.Template>
+                </Thumb>
+              </Track>
+            </Grid>
+          </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Thumb">
+          <Setter Property="BorderBrush" Value="{DynamicResource Texto}" /><Setter Property="BorderThickness" Value="2" />
+        </Style>
+      </ControlTheme>
+    </ResourceDictionary>
+  </Styles.Resources>
+
+  <!-- Base -->
+  <Style Selector="TextBlock">
+    <Setter Property="TextWrapping" Value="Wrap" />
+    <Setter Property="FontFamily" Value="{StaticResource FuenteRoboto}" />
+    <Setter Property="Foreground" Value="{DynamicResource Texto}" />
+    <Setter Property="FontSize" Value="{DynamicResource TamCuerpo}" />
+  </Style>
+  <Style Selector="TextBlock.titulo"><Setter Property="TextWrapping" Value="Wrap" /><Setter Property="FontSize" Value="{DynamicResource TamTitulo}" /><Setter Property="FontWeight" Value="Bold" /></Style>
+  <Style Selector="TextBlock.titulo2"><Setter Property="TextWrapping" Value="Wrap" /><Setter Property="FontSize" Value="{DynamicResource TamTitulo2}" /><Setter Property="FontWeight" Value="Bold" /></Style>
+  <Style Selector="TextBlock.negrita"><Setter Property="FontWeight" Value="Medium" /></Style>
+  <!-- uso10: con poco alto (móvil apaisado o letra grande; ShellView.AjustarAlEspacio pone .poco-alto en la raíz) el título de cada
+       página baja un escalón y el lema fijo de las pestañas cede el sitio, para que las cajas y las listas se vean sin desplazar. -->
+  <Style Selector=".poco-alto TextBlock.titulo"><Setter Property="FontSize" Value="{DynamicResource TamTitulo2}" /></Style>
+  <Style Selector=".poco-alto TextBlock.subtitulo-pestana"><Setter Property="IsVisible" Value="False" /></Style>
+  <!-- Las barras de selección, colocar y búsqueda ocupan el sitio de la cabecera de Cajas: con ella más baja, su título baja también. -->
+  <Style Selector=".poco-alto TextBlock.titulo-barra"><Setter Property="FontSize" Value="{DynamicResource TamCuerpo}" /></Style>
+  <!-- Mochila: el resumen de huecos usa todo el ancho y «Acciones» baja a su propia fila (a x2 el resumen se partía en cinco líneas). -->
+  <Style Selector="Grid.resumen-acciones > Button.boton-acciones"><Setter Property="Grid.Column" Value="1" /></Style>
+  <Style Selector=".poco-alto Grid.resumen-acciones > Button.boton-acciones">
+    <Setter Property="Grid.Column" Value="0" /><Setter Property="Grid.Row" Value="1" /><Setter Property="HorizontalAlignment" Value="Left" /><Setter Property="Margin" Value="0,8,0,0" />
+  </Style>
+  <Style Selector="TextBlock.sec"><Setter Property="TextWrapping" Value="Wrap" /><Setter Property="Foreground" Value="{DynamicResource TextoSecundario}" /><Setter Property="FontSize" Value="{DynamicResource TamPequeno}" /></Style>
+  <Style Selector="TextBlock.etiqueta"><Setter Property="Foreground" Value="{DynamicResource TextoSecundario}" /><Setter Property="FontSize" Value="{DynamicResource TamEtiqueta}" /><Setter Property="FontWeight" Value="Medium" /></Style>
+  <Style Selector="TextBlock.dorado"><Setter Property="Foreground" Value="{DynamicResource Dorado}" /></Style>
+
+  <!-- Tarjetas -->
+  <Style Selector="Border.tarjeta">
+    <Setter Property="Background" Value="{DynamicResource Superficie}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Separacion}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{StaticResource RadioTarjeta}" />
+    <Setter Property="Padding" Value="16" />
+    <Setter Property="BoxShadow" Value="0 2 10 0 #10000000" />
+  </Style>
+  <Style Selector="Border.tarjeta-oscura">
+    <Setter Property="Background" Value="{DynamicResource AccionFuerte}" />
+    <Setter Property="CornerRadius" Value="{StaticResource RadioTarjeta}" />
+    <Setter Property="Padding" Value="16,14" />
+  </Style>
+  <!-- F7: tarjeta de «cambios pendientes» de un editor de partida (Mochila, Entrenador...): acento dorado, texto normal -->
+  <Style Selector="Border.tarjeta-pendiente">
+    <Setter Property="Background" Value="{DynamicResource SeleccionSuave}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Dorado}" />
+    <Setter Property="BorderThickness" Value="1.5" />
+    <Setter Property="CornerRadius" Value="{StaticResource RadioTarjeta}" />
+  </Style>
+  <Style Selector="Border.separador"><Setter Property="Height" Value="1" /><Setter Property="Background" Value="{DynamicResource Separacion}" /></Style>
+
+  <!-- Insignias: siempre rectangulares de radio 8; estado = color + icono + texto -->
+  <Style Selector="Border.insignia">
+    <Setter Property="CornerRadius" Value="{StaticResource RadioInsignia}" />
+    <Setter Property="Padding" Value="8,4" />
+    <Setter Property="Background" Value="{DynamicResource SuperficieHundida}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Separacion}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Border.insignia TextBlock"><Setter Property="FontSize" Value="{DynamicResource TamEtiqueta}" /><Setter Property="FontWeight" Value="Medium" /></Style>
+  <Style Selector="Border.insignia.ok"><Setter Property="Background" Value="{DynamicResource CorrectoFondo}" /><Setter Property="BorderBrush" Value="{DynamicResource Correcto}" /></Style>
+  <Style Selector="Border.insignia.ok TextBlock"><Setter Property="Foreground" Value="{DynamicResource Correcto}" /></Style>
+  <Style Selector="Border.insignia.ok d|Icono"><Setter Property="Foreground" Value="{DynamicResource Correcto}" /></Style>
+  <Style Selector="Border.insignia.aviso"><Setter Property="Background" Value="{DynamicResource AvisoFondo}" /><Setter Property="BorderBrush" Value="{DynamicResource Aviso}" /></Style>
+  <Style Selector="Border.insignia.aviso TextBlock"><Setter Property="Foreground" Value="{DynamicResource Aviso}" /></Style>
+  <Style Selector="Border.insignia.aviso d|Icono"><Setter Property="Foreground" Value="{DynamicResource Aviso}" /></Style>
+  <Style Selector="Border.insignia.error"><Setter Property="Background" Value="{DynamicResource ErrorFondo}" /><Setter Property="BorderBrush" Value="{DynamicResource Error}" /></Style>
+  <Style Selector="Border.insignia.error TextBlock"><Setter Property="Foreground" Value="{DynamicResource Error}" /></Style>
+  <Style Selector="Border.insignia.error d|Icono"><Setter Property="Foreground" Value="{DynamicResource Error}" /></Style>
+  <Style Selector="Border.insignia.dorado"><Setter Property="Background" Value="{DynamicResource SeleccionSuave}" /><Setter Property="BorderBrush" Value="{DynamicResource Dorado}" /></Style>
+  <Style Selector="Border.insignia.dorado TextBlock"><Setter Property="Foreground" Value="{DynamicResource Dorado}" /></Style>
+  <Style Selector="Border.insignia.dorado d|Icono"><Setter Property="Foreground" Value="{DynamicResource Dorado}" /></Style>
+  <Style Selector="Border.insignia d|Icono"><Setter Property="Width" Value="14" /><Setter Property="Height" Value="14" /></Style>
+
+  <!-- Botones -->
+  <Style Selector="Button">
+    <Setter Property="FontFamily" Value="{StaticResource FuenteRoboto}" />
+    <Setter Property="MinHeight" Value="{StaticResource ObjetivoTactil}" />
+    <Setter Property="MinWidth" Value="{StaticResource ObjetivoTactil}" />
+    <Setter Property="Padding" Value="16,0" />
+    <Setter Property="CornerRadius" Value="{StaticResource RadioCampo}" />
+    <Setter Property="FontSize" Value="{DynamicResource TamCuerpo}" />
+    <Setter Property="FontWeight" Value="Medium" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Foreground" Value="{DynamicResource Texto}" />
+  </Style>
+  <Style Selector="Button.secundario">
+    <Setter Property="Background" Value="{DynamicResource Superficie}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Separacion}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Button.secundario:pointerover /template/ ContentPresenter#PART_ContentPresenter, Button.secundario:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource SeleccionSuave}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Dorado}" />
+    <Setter Property="Foreground" Value="{DynamicResource Texto}" />
+  </Style>
+  <Style Selector="Button.primario">
+    <Setter Property="Background" Value="{DynamicResource AccionFuerte}" />
+    <Setter Property="Foreground" Value="{DynamicResource DoradoSobreAccion}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource AccionBorde}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Button.primario:pointerover /template/ ContentPresenter#PART_ContentPresenter, Button.primario:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="#3A372E" />
+    <Setter Property="Foreground" Value="{DynamicResource DoradoSobreAccion}" />
+  </Style>
+  <Style Selector="Button.primario TextBlock"><Setter Property="Foreground" Value="{DynamicResource DoradoSobreAccion}" /></Style>
+  <Style Selector="Button.primario d|Icono"><Setter Property="Foreground" Value="{DynamicResource DoradoSobreAccion}" /></Style>
+  <Style Selector="Button.texto">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Foreground" Value="{DynamicResource Dorado}" />
+  </Style>
+  <Style Selector="Button.texto:pointerover /template/ ContentPresenter#PART_ContentPresenter, Button.texto:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource SeleccionSuave}" />
+    <Setter Property="Foreground" Value="{DynamicResource Dorado}" />
+  </Style>
+  <Style Selector="Button.texto TextBlock"><Setter Property="Foreground" Value="{DynamicResource Dorado}" /></Style>
+  <Style Selector="Button.texto d|Icono"><Setter Property="Foreground" Value="{DynamicResource Dorado}" /></Style>
+  <Style Selector="Button.secundario TextBlock"><Setter Property="Foreground" Value="{DynamicResource Texto}" /></Style>
+  <Style Selector="Button.secundario d|Icono"><Setter Property="Foreground" Value="{DynamicResource Texto}" /></Style>
+  <Style Selector="Button.icono">
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Background" Value="{DynamicResource Superficie}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Separacion}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Button.icono:pointerover /template/ ContentPresenter#PART_ContentPresenter, Button.icono:pressed /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource SeleccionSuave}" /><Setter Property="BorderBrush" Value="{DynamicResource Dorado}" /></Style>
+  <Style Selector="Button:disabled"><Setter Property="Opacity" Value="0.45" /></Style>
+  <!-- El boton primario apagado no hereda el dorado claro sobre gris (se leia casi nada): fondo hundido, texto apagado (TextoApagado: >= 4,5:1 sobre el fondo hundido y al menos 2:1 por debajo del texto de un boton secundario activo, para que se vea apagado y no solo legible) y borde, sin opacidad. -->
+  <Style Selector="Button.primario:disabled"><Setter Property="Opacity" Value="1" /></Style>
+  <!-- El velo de la hoja es un Button accesible (X19); cuando la hoja no se cierra con el fondo va desactivado, pero se ve igual que siempre. -->
+  <Style Selector="Button.velo:disabled"><Setter Property="Opacity" Value="1" /></Style>
+  <Style Selector="Button.primario:disabled /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource SuperficieHundida}" /><Setter Property="BorderBrush" Value="{DynamicResource Separacion}" /><Setter Property="Foreground" Value="{DynamicResource TextoApagado}" /></Style>
+  <Style Selector="Button.primario:disabled TextBlock"><Setter Property="Foreground" Value="{DynamicResource TextoApagado}" /></Style>
+  <Style Selector="Button.primario:disabled d|Icono"><Setter Property="Foreground" Value="{DynamicResource TextoApagado}" /></Style>
+
+  <!-- X21: foco visible (teclado) y estados de los controles de Fluent, con tokens. -->
+  <Style Selector="ToggleSwitch:focus-visible /template/ Border#OuterBorder, ToggleSwitch:focus-visible /template/ Border#SwitchKnobBounds"><Setter Property="BorderBrush" Value="{DynamicResource Texto}" /><Setter Property="BorderThickness" Value="2" /></Style>
+  <Style Selector="CheckBox:focus-visible /template/ Border#NormalRectangle"><Setter Property="BorderBrush" Value="{DynamicResource Texto}" /><Setter Property="BorderThickness" Value="2" /></Style>
+  <Style Selector="RadioButton:focus-visible /template/ Ellipse#OuterEllipse, RadioButton:focus-visible /template/ Ellipse#CheckOuterEllipse"><Setter Property="Stroke" Value="{DynamicResource Texto}" /><Setter Property="StrokeThickness" Value="2" /></Style>
+  <Style Selector="RadioButton.segmento:focus-visible /template/ Border#PART_Segmento, RadioButton.destino:focus-visible /template/ Border#PART_Fondo"><Setter Property="BorderBrush" Value="{DynamicResource Texto}" /><Setter Property="BorderThickness" Value="2" /></Style>
+  <Style Selector="RadioButton.segmento:pressed /template/ Border#PART_Segmento, RadioButton.destino:pressed /template/ Border#PART_Fondo"><Setter Property="Background" Value="{DynamicResource SeleccionSuave}" /></Style>
+  <Style Selector="RadioButton.segmento:disabled /template/ ContentPresenter#PART_ContentPresenter, RadioButton.destino:disabled /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Foreground" Value="{DynamicResource TextoApagado}" /></Style>
+  <!-- Segmento (Cajas/Equipo, pestanas del editor): RadioButton con aspecto de segmento -->
+  <Style Selector="RadioButton.segmento">
+    <Setter Property="FontFamily" Value="{StaticResource FuenteRoboto}" />
+    <Setter Property="FontSize" Value="{DynamicResource TamDato}" />
+    <Setter Property="MinHeight" Value="{StaticResource ObjetivoTactil}" />
+    <Setter Property="MinWidth" Value="{StaticResource ObjetivoTactil}" />
+    <Setter Property="Padding" Value="16,0" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Foreground" Value="{DynamicResource TextoSecundario}" />
+    <Setter Property="FontWeight" Value="Medium" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="PART_Segmento" Background="Transparent" CornerRadius="{StaticResource RadioCampo}" Padding="{TemplateBinding Padding}" MinHeight="{TemplateBinding MinHeight}">
+          <!-- ADR 0105: la etiqueta de TEXTO de un segmento baja de linea en vez de recortarse (3 segmentos iguales a 360 dp y letra al doble: «Carpeta» necesitaba 99 dp y cabian 94,7). Solo para contenido de texto; hereda tamano y grosor del RadioButton. -->
+          <Border.DataTemplates><DataTemplate x:DataType="x:String"><AccessText Text="{Binding}" TextWrapping="Wrap" HorizontalAlignment="Center" FontSize="{Binding $parent[RadioButton].FontSize}" FontWeight="{Binding $parent[RadioButton].FontWeight}" /></DataTemplate></Border.DataTemplates>
+          <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                            Foreground="{TemplateBinding Foreground}" FontWeight="{TemplateBinding FontWeight}" FontSize="{TemplateBinding FontSize}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="RadioButton.segmento:checked /template/ Border#PART_Segmento"><Setter Property="Background" Value="{DynamicResource Superficie}" /><Setter Property="BoxShadow" Value="0 1 4 0 #1A000000" /></Style>
+  <Style Selector="RadioButton.segmento:checked /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Foreground" Value="{DynamicResource Texto}" /></Style>
+  <Style Selector="RadioButton.segmento:pointerover:not(:checked) /template/ Border#PART_Segmento"><Setter Property="Background" Value="{DynamicResource SeleccionSuave}" /></Style>
+
+  <!-- Todo campo, también los filtros y ajustes sin la clase campo, admite el dedo (alto). No se toca el MinWidth: el de Fluent (64) ya supera 48 y bajarlo estrechaba las casillas IV/EV. -->
+  <Style Selector="TextBox">
+    <Setter Property="MinHeight" Value="{StaticResource ObjetivoTactil}" />
+    <Setter Property="PlaceholderForeground" Value="{DynamicResource TextoSecundario}" />
+  </Style>
+  <!-- El marcador es texto activo, no un control deshabilitado. Mantiene el
+       color secundario del tema sin la opacidad 0,5 de la plantilla Fluent. -->
+  <Style Selector="TextBox:empty /template/ TextBlock#PART_Placeholder">
+    <Setter Property="Opacity" Value="1" />
+  </Style>
+  <!-- Desplegables (uso10, QA del propietario: el de idioma salía con el gris y las esquinas rectas de Fluent). Mismo campo que
+       TextBox.campo; la lista desplegada es una tarjeta de la app y la opción elegida o tocada va en dorado suave. -->
+  <Style Selector="ComboBox">
+    <Setter Property="FontFamily" Value="{StaticResource FuenteRoboto}" />
+    <Setter Property="MinHeight" Value="{StaticResource ObjetivoTactil}" />
+    <Setter Property="FontSize" Value="{DynamicResource TamCampo}" />
+    <Setter Property="CornerRadius" Value="{StaticResource RadioCampo}" />
+    <Setter Property="Padding" Value="12,0" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Background" Value="{DynamicResource Fondo}" />
+    <Setter Property="Foreground" Value="{DynamicResource Texto}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Separacion}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="ComboBox:pointerover /template/ Border#Background"><Setter Property="Background" Value="{DynamicResource Fondo}" /><Setter Property="BorderBrush" Value="{DynamicResource Dorado}" /></Style>
+  <Style Selector="ComboBox:focus-visible /template/ Border#Background"><Setter Property="BorderBrush" Value="{DynamicResource Dorado}" /><Setter Property="BorderThickness" Value="2" /></Style>
+  <Style Selector="ComboBox:dropdownopen /template/ Border#Background"><Setter Property="BorderBrush" Value="{DynamicResource Dorado}" /><Setter Property="BorderThickness" Value="2" /></Style>
+  <!-- Desactivado: el campo sigue siendo el campo de la app (el Fluent lo rellena de gris); solo se apaga con la opacidad. -->
+  <Style Selector="ComboBox:disabled"><Setter Property="Opacity" Value="0.45" /></Style>
+  <Style Selector="ComboBox:disabled /template/ Border#Background"><Setter Property="Background" Value="{DynamicResource Fondo}" /><Setter Property="BorderBrush" Value="{DynamicResource Separacion}" /></Style>
+  <Style Selector="ComboBox /template/ PathIcon#DropDownGlyph"><Setter Property="Foreground" Value="{DynamicResource Dorado}" /></Style>
+  <Style Selector="ComboBox /template/ Border#PopupBorder">
+    <Setter Property="Background" Value="{DynamicResource Superficie}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Separacion}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{StaticResource RadioCampo}" />
+    <Setter Property="Padding" Value="4" />
+  </Style>
+  <Style Selector="ComboBoxItem">
+    <Setter Property="MinHeight" Value="{StaticResource ObjetivoTactil}" />
+    <Setter Property="Padding" Value="12,0" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="FontSize" Value="{DynamicResource TamCampo}" />
+    <Setter Property="Foreground" Value="{DynamicResource Texto}" />
+    <Setter Property="CornerRadius" Value="8" />
+  </Style>
+  <Style Selector="ComboBoxItem /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="CornerRadius" Value="8" /></Style>
+  <Style Selector="ComboBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource SeleccionSuave}" /><Setter Property="Foreground" Value="{DynamicResource Texto}" /></Style>
+  <Style Selector="ComboBoxItem:pressed /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource SeleccionSuave}" /><Setter Property="Foreground" Value="{DynamicResource Texto}" /></Style>
+  <Style Selector="ComboBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource SeleccionSuave}" /><Setter Property="Foreground" Value="{DynamicResource Dorado}" /></Style>
+  <Style Selector="ComboBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource SeleccionSuave}" /><Setter Property="Foreground" Value="{DynamicResource Dorado}" /></Style>
+  <Style Selector="ComboBoxItem:selected"><Setter Property="FontWeight" Value="SemiBold" /></Style>
+  <!-- Campos de texto -->
+  <Style Selector="TextBox.campo">
+    <Setter Property="FontFamily" Value="{StaticResource FuenteRoboto}" />
+    <Setter Property="MinHeight" Value="{StaticResource ObjetivoTactil}" />
+    <Setter Property="FontSize" Value="{DynamicResource TamCampo}" />
+    <Setter Property="CornerRadius" Value="{StaticResource RadioCampo}" />
+    <Setter Property="Padding" Value="12,0" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Background" Value="{DynamicResource Fondo}" />
+    <Setter Property="Foreground" Value="{DynamicResource Texto}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Separacion}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="TextBox.campo:focus /template/ Border#PART_BorderElement"><Setter Property="BorderBrush" Value="{DynamicResource Dorado}" /><Setter Property="BorderThickness" Value="2" /><Setter Property="Background" Value="{DynamicResource Superficie}" /></Style>
+  <Style Selector="TextBox.campo:pointerover /template/ Border#PART_BorderElement"><Setter Property="BorderBrush" Value="{DynamicResource Dorado}" /></Style>
+  <Style Selector="TextBox.numero"><Setter Property="HorizontalContentAlignment" Value="Center" /><Setter Property="Padding" Value="4,0" /></Style>
+
+  <!-- Casillas de la caja -->
+  <Style Selector="Border.casilla">
+    <Setter Property="Background" Value="{DynamicResource SuperficieHundida}" />
+    <Setter Property="CornerRadius" Value="{StaticResource RadioCasilla}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BordeCasilla}" />
+    <Setter Property="BorderThickness" Value="1.5" />
+  </Style>
+  <Style Selector="Border.casilla.ocupada"><Setter Property="Background" Value="{DynamicResource Fondo}" /></Style>
+  <!-- Con fondo de caja: la casilla vacia es solo su borde (el fondo se ve entero, como en PKHeX), la ocupada lleva un velo ligero tras el sprite y el numero va en su propia pastilla. Debe ir ANTES de seleccionada/marcada/origen para que estas ganen. -->
+  <Style Selector="Border.confondo Border.casilla">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="{StaticResource BordeCasillaSobreFondo}" />
+  </Style>
+  <Style Selector="Border.confondo Border.casilla.ocupada"><Setter Property="Background" Value="{StaticResource VeloOcupadaSobreFondo}" /></Style>
+  <!-- El número de una ranura vacía sigue siendo información activa. El color
+       secundario aporta jerarquía sin perder contraste con otra opacidad. -->
+  <Style Selector="Border.numero"><Setter Property="Opacity" Value="1" /></Style>
+  <Style Selector="Border.confondo Border.numero">
+    <Setter Property="Opacity" Value="1" />
+    <Setter Property="Background" Value="{DynamicResource VeloNumeroCasilla}" />
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="Padding" Value="6,1" />
+  </Style>
+  <Style Selector="Border.casilla.seleccionada"><Setter Property="Background" Value="{DynamicResource SeleccionSuave}" /><Setter Property="BorderBrush" Value="{DynamicResource Dorado}" /><Setter Property="BorderThickness" Value="2.5" /></Style>
+  <Style Selector="Border.casilla.marcada"><Setter Property="Background" Value="{DynamicResource SeleccionSuave}" /><Setter Property="BorderBrush" Value="{DynamicResource Dorado}" /><Setter Property="BorderThickness" Value="2.5" /></Style>
+  <Style Selector="Border.casilla.atenuada"><Setter Property="Opacity" Value="0.38" /></Style>
+  <Style Selector="Border.casilla.coincide"><Setter Property="BorderBrush" Value="{DynamicResource Dorado}" /><Setter Property="BorderThickness" Value="2.5" /></Style>
+  <Style Selector="Border.casilla.origen"><Setter Property="BorderBrush" Value="{DynamicResource Aviso}" /><Setter Property="Background" Value="{DynamicResource AvisoFondo}" /></Style>
+  <!-- Arrastre (X10): la casilla bajo el dedo, verde si se puede soltar ahi y roja si no -->
+  <Style Selector="Border.casilla.objetivo"><Setter Property="BorderBrush" Value="{DynamicResource Correcto}" /><Setter Property="BorderThickness" Value="3" /><Setter Property="Background" Value="{DynamicResource SeleccionSuave}" /></Style>
+  <Style Selector="Border.casilla.rechazo"><Setter Property="BorderBrush" Value="{DynamicResource Error}" /><Setter Property="BorderThickness" Value="3" /></Style>
+  <Style Selector="Border.casilla.toque-colocar"><Setter Property="BorderBrush" Value="{DynamicResource Correcto}" /></Style>
+  <Style Selector="Border.casilla.toque-borrar"><Setter Property="BorderBrush" Value="{DynamicResource Error}" /></Style>
+
+  <!-- Barra de destinos -->
+  <Style Selector="RadioButton.destino">
+    <Setter Property="FontFamily" Value="{StaticResource FuenteRoboto}" />
+    <Setter Property="MinHeight" Value="64" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Foreground" Value="{DynamicResource TextoSecundario}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="PART_Fondo" Background="Transparent" CornerRadius="{StaticResource RadioCampo}" Margin="2,4" Padding="0,6">
+          <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="RadioButton.destino:checked /template/ Border#PART_Fondo"><Setter Property="Background" Value="{DynamicResource SeleccionSuave}" /></Style>
+  <Style Selector="RadioButton.destino:checked /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Foreground" Value="{DynamicResource Dorado}" /></Style>
+  <!-- Revisión de B+: la etiqueta va en UNA línea dentro de un Viewbox que solo la reduce (nunca la agranda) hasta que quepa en la pestaña. Con Wrap, «Pokémon» se partía en «Pokémo / n» a 360 dp y letra x1,3. -->
+  <Style Selector="Viewbox.etiquetaDestino"><Setter Property="StretchDirection" Value="DownOnly" /><Setter Property="Stretch" Value="Uniform" /><Setter Property="HorizontalAlignment" Value="Center" /></Style>
+  <Style Selector="RadioButton.destino TextBlock"><Setter Property="Foreground" Value="{DynamicResource TextoSecundario}" /><Setter Property="FontSize" Value="{DynamicResource TamNav}" /><Setter Property="TextWrapping" Value="NoWrap" /><Setter Property="TextAlignment" Value="Center" /><Setter Property="FontWeight" Value="Medium" /></Style>
+  <Style Selector="RadioButton.destino d|Icono"><Setter Property="Foreground" Value="{DynamicResource TextoSecundario}" /></Style>
+  <Style Selector="RadioButton.destino:checked TextBlock"><Setter Property="Foreground" Value="{DynamicResource Dorado}" /><Setter Property="FontWeight" Value="Bold" /></Style>
+  <Style Selector="RadioButton.destino:checked d|Icono"><Setter Property="Foreground" Value="{DynamicResource Dorado}" /></Style>
+  <Style Selector="RadioButton.segmento TextBlock"><Setter Property="Foreground" Value="{DynamicResource TextoSecundario}" /><Setter Property="FontWeight" Value="Medium" /></Style>
+  <Style Selector="RadioButton.segmento:checked TextBlock"><Setter Property="Foreground" Value="{DynamicResource Texto}" /></Style>
+  <Style Selector="ScrollViewer"><Setter Property="Background" Value="Transparent" /></Style>
+  <Style Selector="ScrollBar"><Setter Property="Theme" Value="{StaticResource IndicadorMovil}" /><Setter Property="IsHitTestVisible" Value="False" /><Setter Property="AutomationProperties.AccessibilityView" Value="Raw" /></Style>
+  <Style Selector="ScrollViewer"><Setter Property="AutomationProperties.Name" Value="{DynamicResource Loc.Tema.ContenidoDesplazable}" /></Style>
+
+  <!-- Boton de casilla: solo el contenido; el objetivo tactil es la celda entera -->
+  <Style Selector="Button.casilla">
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="VerticalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" CornerRadius="12" />
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Button.casilla:disabled /template/ ContentPresenter#PART_ContentPresenter, Button.fila:disabled /template/ ContentPresenter#PART_ContentPresenter, Button.texto:disabled /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="Transparent" /></Style>
+  <Style Selector="Button.casilla:pressed /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Opacity" Value="0.7" /></Style>
+
+  <!-- Chip de filtro: 48 dp de objetivo tactil con forma rectangular de radio 8 -->
+  <Style Selector="ToggleButton.chip">
+    <Setter Property="FontFamily" Value="{StaticResource FuenteRoboto}" />
+    <Setter Property="MinHeight" Value="48" />
+    <!-- ADR 0105: tambien 48 dp de ANCHO. Un chip con una palabra corta («All», en ingles) salia de 46 dp: un objetivo tactil por debajo del minimo. -->
+    <Setter Property="MinWidth" Value="48" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="Transparent" MinHeight="48" Padding="0,6">
+          <Border Name="PART_Chip" CornerRadius="8" BorderThickness="1" BorderBrush="{DynamicResource Separacion}" Background="{DynamicResource Superficie}" Padding="12,0" VerticalAlignment="Center" MinHeight="36">
+            <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+          </Border>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <!-- Boton con la forma del chip, en UN solo estilo para sus dos usos (F6+F7, integracion): «Button.chip» = accion que convive con chips en una fila (Exportar, Vaciar, Elegir un valor);
+       «Button.filtro» = chip de filtro que ABRE un selector (Libreria), activo (.activo) = hay un valor elegido. Mismo molde: 48 dp de objetivo, 36 dp visibles, radio 8 -->
+  <Style Selector="Button.chip, Button.filtro">
+    <Setter Property="FontFamily" Value="{StaticResource FuenteRoboto}" />
+    <Setter Property="MinHeight" Value="48" />
+    <Setter Property="MinWidth" Value="48" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="Transparent" MinHeight="48" Padding="0,6">
+          <Border Name="PART_Chip" CornerRadius="8" BorderThickness="1" BorderBrush="{DynamicResource Separacion}" Background="{DynamicResource Superficie}" Padding="12,0" VerticalAlignment="Center" MinHeight="36">
+            <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+          </Border>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Button.chip:pointerover /template/ Border#PART_Chip, Button.chip:pressed /template/ Border#PART_Chip, Button.filtro:pointerover /template/ Border#PART_Chip, Button.filtro:pressed /template/ Border#PART_Chip"><Setter Property="Background" Value="{DynamicResource SeleccionSuave}" /><Setter Property="BorderBrush" Value="{DynamicResource Dorado}" /></Style>
+  <!-- QA de uso10 (prueba 06): el tema Fluent pinta el ContentPresenter#PART_ContentPresenter del Button (gris al pasar, al pulsar y al desactivar) y en un chip/filtro
+       eso sale como un recuadro gris DENTRO, detras del texto. El fondo lo pone solo Border#PART_Chip; el ContentPresenter queda transparente en TODOS los estados,
+       y el foco de teclado se ve con el borde dorado como en los campos. -->
+  <Style Selector="Button.chip /template/ ContentPresenter#PART_ContentPresenter, Button.chip:pointerover /template/ ContentPresenter#PART_ContentPresenter, Button.chip:pressed /template/ ContentPresenter#PART_ContentPresenter, Button.chip:disabled /template/ ContentPresenter#PART_ContentPresenter, Button.chip:focus /template/ ContentPresenter#PART_ContentPresenter, Button.filtro /template/ ContentPresenter#PART_ContentPresenter, Button.filtro:pointerover /template/ ContentPresenter#PART_ContentPresenter, Button.filtro:pressed /template/ ContentPresenter#PART_ContentPresenter, Button.filtro:disabled /template/ ContentPresenter#PART_ContentPresenter, Button.filtro:focus /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+  </Style>
+  <Style Selector="Button.chip:focus-visible /template/ Border#PART_Chip, Button.filtro:focus-visible /template/ Border#PART_Chip"><Setter Property="BorderBrush" Value="{DynamicResource Dorado}" /><Setter Property="BorderThickness" Value="2" /></Style>
+  <Style Selector="Button.chip TextBlock, Button.filtro TextBlock"><Setter Property="FontWeight" Value="Medium" /><Setter Property="FontSize" Value="{DynamicResource TamPequeno}" /><Setter Property="Foreground" Value="{DynamicResource Texto}" /></Style>
+  <Style Selector="ToggleButton.chip:checked /template/ Border#PART_Chip"><Setter Property="Background" Value="{DynamicResource SeleccionSuave}" /><Setter Property="BorderBrush" Value="{DynamicResource Dorado}" /></Style>
+  <!-- El tema Fluent pinta de azul de acento el ContentPresenter de un ToggleButton marcado/pulsado: aqui el fondo lo pone el Border#PART_Chip -->
+  <Style Selector="ToggleButton.chip:checked /template/ ContentPresenter#PART_ContentPresenter, ToggleButton.chip:pointerover /template/ ContentPresenter#PART_ContentPresenter, ToggleButton.chip:pressed /template/ ContentPresenter#PART_ContentPresenter, ToggleButton.chip:checked:pointerover /template/ ContentPresenter#PART_ContentPresenter, ToggleButton.chip:checked:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="ToggleButton.chip TextBlock"><Setter Property="FontWeight" Value="Medium" /><Setter Property="FontSize" Value="{DynamicResource TamPequeno}" /></Style>
+  <Style Selector="ToggleButton.chip:checked TextBlock"><Setter Property="Foreground" Value="{DynamicResource Dorado}" /></Style>
+  <!-- Contenido de texto plano (Content="Sí"): su TextBlock lo crea el ContentPresenter y no lo alcanza el selector de arriba;
+       el Fluent le pondria el blanco de ToggleButtonForegroundChecked, ilegible sobre SeleccionSuave en tema claro (F5, "Encuentro predestinado") -->
+  <Style Selector="ToggleButton.chip:checked /template/ ContentPresenter#PART_ContentPresenter, ToggleButton.chip:checked:pointerover /template/ ContentPresenter#PART_ContentPresenter, ToggleButton.chip:checked:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Foreground" Value="{DynamicResource Dorado}" />
+  </Style>
+  <Style Selector="ToggleButton.chip d|Icono"><Setter Property="Width" Value="16" /><Setter Property="Height" Value="16" /></Style>
+
+  <!-- Solo del filtro (Libreria): estado activo, iconos y apagado -->
+  <Style Selector="Button.filtro.activo /template/ Border#PART_Chip"><Setter Property="Background" Value="{DynamicResource SeleccionSuave}" /><Setter Property="BorderBrush" Value="{DynamicResource Dorado}" /></Style>
+  <Style Selector="Button.filtro.activo TextBlock"><Setter Property="Foreground" Value="{DynamicResource Dorado}" /></Style>
+  <Style Selector="Button.filtro d|Icono"><Setter Property="Width" Value="16" /><Setter Property="Height" Value="16" /><Setter Property="Foreground" Value="{DynamicResource TextoSecundario}" /></Style>
+  <Style Selector="Button.filtro.activo d|Icono"><Setter Property="Foreground" Value="{DynamicResource Dorado}" /></Style>
+  <Style Selector="Button.filtro:disabled"><Setter Property="Opacity" Value="0.45" /></Style>
+
+  <Style Selector="ListBox.limpia"><Setter Property="Background" Value="Transparent" /><Setter Property="Padding" Value="0" /><Setter Property="BorderThickness" Value="0" /></Style>
+  <Style Selector="ListBoxItem"><Setter Property="d:NombreDeContenido.Usar" Value="True" /></Style>
+  <Style Selector="ListBox.limpia > ListBoxItem"><Setter Property="Padding" Value="0" /><Setter Property="Margin" Value="0,0,0,8" /><Setter Property="MinHeight" Value="0" /><Setter Property="Background" Value="Transparent" /><Setter Property="CornerRadius" Value="16" /></Style>
+  <Style Selector="ListBox.limpia > ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="Transparent" /></Style>
+  <Style Selector="ListBox.limpia > ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="Transparent" /></Style>
+  <!-- Fila de menu accionable: toda la fila es el objetivo tactil -->
+  <Style Selector="Button.fila">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="Margin" Value="0,2" />
+  </Style>
+  <!-- Uso real 1, punto 6: UN solo resalte, el de la fila, y solo mientras el dedo la pulsa (en tactil no hay «hover»: pointerover se quedaba pegado tras soltar). -->
+  <Style Selector="Button.fila:pressed /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource SeleccionSuave}" /></Style>
+  <Style Selector="Button.fila:pointerover /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="Transparent" /></Style>
+  <!-- Los estados por defecto del tema Fluent del ListBoxItem (azul de lado a lado al pasar, pulsar o seleccionar) no se usan en NINGUNA lista de la app: el resalte es el de la fila (Button.fila) o el propio contenido. -->
+  <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter, ListBoxItem:pressed /template/ ContentPresenter#PART_ContentPresenter, ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter, ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter, ListBoxItem:selected:pressed /template/ ContentPresenter#PART_ContentPresenter, ListBoxItem:selected:focus /template/ ContentPresenter#PART_ContentPresenter, ListBoxItem:selected:focus:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <!-- Fila con marca (F9 9a: cajas y Pokémon de la Edición masiva): toda la fila alterna; la marca la dice el icono, no el fondo -->
+  <Style Selector="ToggleButton.fila">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="6,0" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+  </Style>
+  <Style Selector="ToggleButton.fila:checked /template/ ContentPresenter#PART_ContentPresenter, ToggleButton.fila:checked:pointerover /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="Transparent" /><Setter Property="Foreground" Value="{DynamicResource Texto}" /></Style>
+  <!-- Como Button.fila (uso real 1, punto 6): sin resalte al pasar (en táctil se queda pegado); solo mientras se pulsa. -->
+  <Style Selector="ToggleButton.fila:pointerover /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="Transparent" /></Style>
+  <Style Selector="ToggleButton.fila:pressed /template/ ContentPresenter#PART_ContentPresenter, ToggleButton.fila:checked:pressed /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource SeleccionSuave}" /></Style>
+  <Style Selector="ToggleButton.fila:checked d|Icono"><Setter Property="Foreground" Value="{DynamicResource Dorado}" /></Style>
+
+  <!-- Deslizador (barra de experiencia): dorado de la marca, no el azul del tema -->
+  <Style Selector="Slider"><Setter Property="Theme" Value="{StaticResource DeslizadorMovil}" /></Style>
+
+  <!-- Barra de progreso: dorada sobre la linea de separacion (el azul por defecto no es de la marca) -->
+  <Style Selector="ProgressBar">
+    <Setter Property="Foreground" Value="{DynamicResource Dorado}" />
+    <Setter Property="Background" Value="{DynamicResource Separacion}" />
+    <Setter Property="MinHeight" Value="6" />
+  </Style>
+
+  <!-- Plegable (X15): el Expander con el diseño de la app. Ancho completo, fondo hundido, cabecera de 48 dp con el chevron de Lucide y el cuerpo separado por una línea; no usa el aspecto por defecto de Fluent.
+       Accesibilidad: sigue siendo un Expander (ExpandCollapse) y su cabecera un ToggleButton con el título como nombre. -->
+  <Style Selector="ToggleButton.cabecera-plegable">
+    <Setter Property="FontFamily" Value="{StaticResource FuenteRoboto}" />
+    <Setter Property="FontSize" Value="{DynamicResource TamDato}" />
+    <Setter Property="FontWeight" Value="Medium" />
+    <Setter Property="Foreground" Value="{DynamicResource Texto}" />
+    <Setter Property="MinHeight" Value="{StaticResource ObjetivoTactil}" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Padding" Value="14,0" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="PART_Cabecera" Background="Transparent" CornerRadius="{StaticResource RadioCampo}" Padding="{TemplateBinding Padding}" MinHeight="{TemplateBinding MinHeight}">
+          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+            <ContentPresenter Name="PART_Titulo" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Foreground="{TemplateBinding Foreground}"
+                              FontWeight="{TemplateBinding FontWeight}" FontSize="{TemplateBinding FontSize}" VerticalAlignment="Center" TextWrapping="Wrap" />
+            <d:Icono Name="PART_Chevron" Grid.Column="1" Glifo="ChevronDown" Width="20" Height="20" VerticalAlignment="Center" Foreground="{DynamicResource TextoSecundario}" />
+          </Grid>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="ToggleButton.cabecera-plegable:checked /template/ d|Icono#PART_Chevron"><Setter Property="Glifo" Value="ChevronUp" /><Setter Property="Foreground" Value="{DynamicResource Dorado}" /></Style>
+  <Style Selector="ToggleButton.cabecera-plegable:pointerover /template/ Border#PART_Cabecera, ToggleButton.cabecera-plegable:pressed /template/ Border#PART_Cabecera"><Setter Property="Background" Value="{DynamicResource SeleccionSuave}" /></Style>
+  <Style Selector="Expander.plegable">
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="MinHeight" Value="{StaticResource ObjetivoTactil}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{DynamicResource SuperficieHundida}" BorderBrush="{DynamicResource Separacion}" BorderThickness="1" CornerRadius="{StaticResource RadioCampo}">
+          <StackPanel>
+            <ToggleButton Name="PART_Cabecera" Classes="cabecera-plegable" Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding HeaderTemplate}"
+                          IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}" IsEnabled="{TemplateBinding IsEnabled}" />
+            <StackPanel Name="PART_Cuerpo" Classes="cuerpo-plegable" IsVisible="{TemplateBinding IsExpanded}">
+              <Border Classes="separador" />
+              <ContentPresenter Name="PART_Cuerpo2" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Padding="14,12" HorizontalContentAlignment="Stretch" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <!-- Animaciones base. Solo existen bajo .movimiento: con «reducir movimiento» del sistema la raiz lleva .sin-movimiento y ninguna se declara (Movimiento.Aplicar).
+       Se animan Opacity y Margin (Avalonia 12 no trae animador por defecto para RenderTransform). -->
+  <Style Selector="Border.movimiento Panel.pagina[IsVisible=True]">
+    <Style.Animations>
+      <Animation Duration="0:0:0.2" Easing="CubicEaseOut">
+        <KeyFrame Cue="0%"><Setter Property="Opacity" Value="0" /><Setter Property="Margin" Value="0,14,0,0" /></KeyFrame>
+        <KeyFrame Cue="100%"><Setter Property="Opacity" Value="1" /><Setter Property="Margin" Value="0,0,0,0" /></KeyFrame>
+      </Animation>
+    </Style.Animations>
+  </Style>
+  <Style Selector="Border.movimiento Panel.hoja[IsVisible=True] > Button.velo">
+    <Style.Animations>
+      <Animation Duration="0:0:0.2" Easing="CubicEaseOut">
+        <KeyFrame Cue="0%"><Setter Property="Opacity" Value="0" /></KeyFrame>
+        <KeyFrame Cue="100%"><Setter Property="Opacity" Value="1" /></KeyFrame>
+      </Animation>
+    </Style.Animations>
+  </Style>
+  <Style Selector="Border.movimiento Panel.hoja[IsVisible=True] Border.panel-hoja">
+    <Style.Animations>
+      <Animation Duration="0:0:0.28" Easing="CubicEaseOut">
+        <KeyFrame Cue="0%"><Setter Property="Opacity" Value="0" /><Setter Property="Margin" Value="0,0,0,-48" /></KeyFrame>
+        <KeyFrame Cue="100%"><Setter Property="Opacity" Value="1" /><Setter Property="Margin" Value="0,0,0,0" /></KeyFrame>
+      </Animation>
+    </Style.Animations>
+  </Style>
+  <Style Selector="Border.movimiento Border.toast[IsVisible=True]">
+    <Style.Animations>
+      <Animation Duration="0:0:0.22" Easing="CubicEaseOut">
+        <KeyFrame Cue="0%"><Setter Property="Opacity" Value="0" /><Setter Property="Margin" Value="16,-8,16,0" /></KeyFrame>
+        <KeyFrame Cue="100%"><Setter Property="Opacity" Value="1" /><Setter Property="Margin" Value="16,8,16,0" /></KeyFrame>
+      </Animation>
+    </Style.Animations>
+  </Style>
+  <Style Selector="Border.movimiento Expander.plegable /template/ StackPanel.cuerpo-plegable[IsVisible=True]">
+    <Style.Animations>
+      <Animation Duration="0:0:0.2" Easing="CubicEaseOut">
+        <KeyFrame Cue="0%"><Setter Property="Opacity" Value="0" /><Setter Property="Margin" Value="0,-8,0,0" /></KeyFrame>
+        <KeyFrame Cue="100%"><Setter Property="Opacity" Value="1" /><Setter Property="Margin" Value="0,0,0,0" /></KeyFrame>
+      </Animation>
+    </Style.Animations>
+  </Style>
+  <!-- Seleccion de casilla: transicion suave de fondo y borde -->
+  <Style Selector="Border.movimiento Border.casilla">
+    <Setter Property="Transitions">
+      <Transitions>
+        <BrushTransition Property="Background" Duration="0:0:0.15" />
+        <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
+      </Transitions>
+    </Setter>
+  </Style>
+<Style Selector="Button.velo:disabled"><Setter Property="IsHitTestVisible" Value="False" /><Setter Property="AutomationProperties.AccessibilityView" Value="Raw" /></Style>
+</Styles>

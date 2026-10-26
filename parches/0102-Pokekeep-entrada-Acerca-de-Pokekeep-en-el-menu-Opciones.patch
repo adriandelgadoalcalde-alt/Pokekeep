@@ -1,0 +1,30 @@
+From f3d8ada7f345d6faf1b1669ffee82a0e54f6aa7d Mon Sep 17 00:00:00 2001
+From: Pokekeep <pokekeep@invalid>
+Date: Wed, 7 Oct 2026 23:13:31 +0200
+Subject: [PATCH 10/11] Pokekeep: entrada Acerca de Pokekeep en el menu
+ Opciones
+
+Abre la ventana propia AutoLegalidad.Ui.AcercaDe.VentanaAcercaDe junto al Acerca de de PKHeX, que no se toca.
+---
+ PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs b/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs
+index 7f5e2054a..c4194c230 100644
+--- a/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs
++++ b/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs
+@@ -70,6 +70,11 @@ private void InitializePokekeep()
+         pkMenuLogs.Click += (_, _) => AutoLegalidad.Ui.Diagnostico.CarpetaRegistros.Abrir(this);
+         Menu_Options.DropDownItems.Insert(Math.Max(0, Menu_Options.DropDownItems.IndexOf(Menu_About)), pkMenuLogs);
+ 
++        // ---- Opciones: «Acerca de Pokekeep» (0.6.4), junto al «Acerca de» de PKHeX, que no se toca ----
++        var pkMenuAbout = new ToolStripMenuItem("Acerca de Pokekeep") { Name = "Menu_PokekeepAcercaDe", Image = Resources.about };
++        pkMenuAbout.Click += (_, _) => AutoLegalidad.Ui.AcercaDe.VentanaAcercaDe.Mostrar(this);
++        Menu_Options.DropDownItems.Insert(Math.Max(0, Menu_Options.DropDownItems.IndexOf(Menu_About)), pkMenuAbout);
++
+         // ---- Pestaña «Librería» junto a Caja, Equipo, Otro y SAV ----
+         Pokekeep.AddLibraryTab(C_SAV.AddExtraTab);
+ 
+-- 
+2.55.0.windows.5
+

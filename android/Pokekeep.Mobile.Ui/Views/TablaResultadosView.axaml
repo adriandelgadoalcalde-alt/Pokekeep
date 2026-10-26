@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:h="clr-namespace:Pokekeep.Mobile.Ui.Herramientas"
+             x:Class="Pokekeep.Mobile.Ui.Views.TablaResultadosView"
+             x:DataType="h:TablaResultadosViewModel">
+  <StackPanel Spacing="8">
+    <TextBox Text="{Binding Filtro}" Watermark="{DynamicResource Loc.TablaResultados.Filtrar}" AutomationProperties.Name="{DynamicResource Loc.TablaResultados.FiltrarResultados}" />
+    <d:EtiquetaYValor Separacion="8">
+      <TextBlock Classes="sec" Text="{Binding Resumen}" VerticalAlignment="Center" TextWrapping="Wrap" AutomationProperties.Name="{Binding Resumen}" />
+      <Button Name="BotonOrden" Classes="secundario" Click="AlOrdenar" MinHeight="48" AutomationProperties.Name="{Binding TextoOrden}" AutomationProperties.HelpText="{DynamicResource Loc.EstadisticasBase.CambiaColumnaOrdena}">
+        <TextBlock Text="{Binding TextoOrden}" TextWrapping="Wrap" MaxWidth="200" />
+      </Button>
+    </d:EtiquetaYValor>
+    <Border Classes="tarjeta" Padding="14,10" IsVisible="{Binding SinFilas}"><TextBlock Classes="sec" Text="{DynamicResource Loc.Selector.SinResultados}" TextWrapping="Wrap" /></Border>
+    <Border Classes="tarjeta" Padding="8,4" IsVisible="{Binding HayFilas}">
+      <ItemsControl ItemsSource="{Binding Filas}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="h:FilaTabla">
+            <Button Classes="fila" Command="{Binding $parent[UserControl].((h:TablaResultadosViewModel)DataContext).TocarCommand}" CommandParameter="{Binding}" AutomationProperties.Name="{Binding Accesible}">
+              <Grid ColumnDefinitions="Auto,*" Margin="8,8" HorizontalAlignment="Stretch">
+                <d:LogoJuego Width="48" Height="44" Margin="0,0,12,0" VerticalAlignment="Center" IsVisible="{Binding HayLogo}" VersionJuego="{Binding VersionLogo}" />
+                <d:SpritePokemon Width="48" Height="44" Margin="0,0,12,0" VerticalAlignment="Center" IsVisible="{Binding HaySprite}" Especie="{Binding Sprite.Especie, FallbackValue=0}" Forma="{Binding Sprite.Forma, FallbackValue=0}" Genero="{Binding Sprite.Genero, FallbackValue=0}" Brillante="{Binding Sprite.Brillante, FallbackValue=False}" Huevo="{Binding Sprite.Huevo, FallbackValue=False}" Contexto="{Binding Sprite.Contexto, FallbackValue=0}" Foreground="{DynamicResource TextoSecundario}" />
+                <StackPanel Grid.Column="1" Spacing="1" HorizontalAlignment="Stretch">
+                  <TextBlock Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+                  <TextBlock Classes="sec" Text="{Binding Subtitulo}" TextWrapping="Wrap" />
+                </StackPanel>
+              </Grid>
+            </Button>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </Border>
+    <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding MostrarMasCommand}" IsVisible="{Binding HayMas}" AutomationProperties.Name="{Binding TextoMas}">
+      <TextBlock Text="{Binding TextoMas}" TextWrapping="Wrap" TextAlignment="Center" />
+    </Button>
+  </StackPanel>
+</UserControl>

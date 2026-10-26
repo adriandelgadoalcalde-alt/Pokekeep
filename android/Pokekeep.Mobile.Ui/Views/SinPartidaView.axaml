@@ -1,0 +1,66 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.SinPartidaView"
+             x:DataType="vm:ShellViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="16" Margin="16,24,16,24">
+      <!-- Sesion sin guardar tras morir el proceso -->
+      <Border Classes="tarjeta" IsVisible="{Binding HayRecuperables}">
+        <StackPanel Spacing="10">
+          <TextBlock Classes="titulo2" Text="{DynamicResource Loc.Inicio.RecuperarTitulo}" />
+          <TextBlock Classes="sec" TextWrapping="Wrap" Text="{DynamicResource Loc.Inicio.RecuperarAyuda}" />
+          <ItemsControl ItemsSource="{Binding Recuperables}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:FilaRecuperable">
+                <StackPanel Spacing="6" Margin="0,4">
+                  <TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                  <TextBlock Classes="sec" Text="{Binding Detalle}" />
+                  <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
+                    <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding $parent[ItemsControl].((vm:ShellViewModel)DataContext).RecuperarCommand}" CommandParameter="{Binding}" AutomationProperties.Name="{Binding Accesible}"><TextBlock Text="{DynamicResource Loc.Inicio.Recuperar}" /></Button>
+                    <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding $parent[ItemsControl].((vm:ShellViewModel)DataContext).DescartarRecuperacionCommand}" CommandParameter="{Binding}" AutomationProperties.Name="{DynamicResource Loc.Inicio.DescartarAyuda}"><TextBlock Text="{DynamicResource Loc.Inicio.Descartar}" /></Button>
+                  </d:RejillaSinPartir>
+                </StackPanel>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Border>
+
+      <Border Classes="tarjeta">
+        <StackPanel Spacing="12">
+          <TextBlock Classes="titulo2" Text="{DynamicResource Loc.Inicio.Empezar}" />
+          <TextBlock Classes="sec" TextWrapping="Wrap" Text="{DynamicResource Loc.Inicio.CopiaPrivada}" />
+          <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding AbrirCommand}" AutomationProperties.Name="{DynamicResource Loc.Inicio.Abrir}" AutomationProperties.HelpText="{DynamicResource Loc.Inicio.AbrirAyuda}">
+            <StackPanel Orientation="Horizontal" Spacing="8"><d:Icono Glifo="FolderOpen" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Inicio.Abrir}" /></StackPanel>
+          </Button>
+          <!-- Partida en blanco de «Más > Ajustes > General» (Startup.DefaultSaveVersion; bloque 10-1) -->
+          <Button Name="BotonPartidaEnBlanco" Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding AbrirPartidaEnBlancoCommand}" AutomationProperties.Name="{Binding TextoPartidaEnBlanco}" AutomationProperties.HelpText="{DynamicResource Loc.Inicio.BlancoAyuda}">
+            <Grid ColumnDefinitions="Auto,*" HorizontalAlignment="Center" ColumnSpacing="8"><d:Icono Glifo="Plus" Width="20" Height="20" /><d:TextoEntero Grid.Column="1" Text="{Binding TextoPartidaEnBlanco}" TextWrapping="Wrap" TextAlignment="Center" /></Grid>
+          </Button>
+        </StackPanel>
+      </Border>
+
+      <Border Classes="tarjeta" IsVisible="{Binding HayRecientes}" Padding="12,12,12,8">
+        <StackPanel Spacing="4">
+          <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Inicio.Recientes}" Margin="4,0,0,4" />
+          <ItemsControl ItemsSource="{Binding Recientes}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:FilaReciente">
+                <Button Classes="fila" Command="{Binding $parent[ItemsControl].((vm:ShellViewModel)DataContext).AbrirRecienteCommand}" CommandParameter="{Binding}" AutomationProperties.Name="{Binding Accesible}">
+                  <Grid ColumnDefinitions="Auto,*,Auto" MinHeight="56">
+                    <d:LogoPartida Juego="{Binding Juego}" Caratula="True" Width="48" Height="48" Margin="4,0,12,0" ColorRespaldo="{DynamicResource Dorado}" VerticalAlignment="Center" AutomationProperties.AccessibilityView="Raw" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center"><TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" /><TextBlock Classes="sec" Text="{Binding Detalle}" /></StackPanel>
+                    <d:Icono Grid.Column="2" Glifo="ChevronRight" Width="20" Height="20" Margin="8,0" Foreground="{DynamicResource TextoSecundario}" VerticalAlignment="Center" />
+                  </Grid>
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Border>
+      <Button Classes="secundario" Command="{Binding ActualizarRecientesCommand}" AutomationProperties.Name="{DynamicResource Loc.Inicio.Actualizar}"><TextBlock Text="{DynamicResource Loc.Inicio.Actualizar}" TextWrapping="Wrap" /></Button>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

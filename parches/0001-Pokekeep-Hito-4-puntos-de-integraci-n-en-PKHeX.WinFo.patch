@@ -1,0 +1,398 @@
+From e9b24fd97120724a2c99c483d2b7e41847afb0a9 Mon Sep 17 00:00:00 2001
+From: Adrian <noreply@pokekeep.invalid>
+Date: Sat, 3 Oct 2026 16:41:04 +0200
+Subject: [PATCH 01/11] =?UTF-8?q?Pokekeep=20Hito=204:=20puntos=20de=20inte?=
+ =?UTF-8?q?graci=C3=B3n=20en=20PKHeX.WinForms=20(men=C3=BA=20de=20casilla,?=
+ =?UTF-8?q?=20botones=20del=20editor,=20barra,=20pesta=C3=B1a=20Librer?=
+ =?UTF-8?q?=C3=ADa,=20ajustes)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ .../Controls/SAV Editor/ContextMenuSAV.cs     |  27 +++++
+ .../Controls/SAV Editor/SAVEditor.cs          |   3 +
+ .../Controls/SAV Editor/SlotChangeManager.cs  |   5 +
+ PKHeX.WinForms/MainWindow/Main.cs             |   4 +
+ PKHeX.WinForms/PKHeX.WinForms.csproj          |   5 +
+ PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs      |  96 ++++++++++++++++
+ .../Pokekeep/PokekeepIntegration.cs           | 106 ++++++++++++++++++
+ PKHeX.WinForms/Settings/PKHeXSettings.cs      |   4 +
+ 8 files changed, 250 insertions(+)
+ create mode 100644 PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs
+ create mode 100644 PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs
+
+diff --git a/PKHeX.WinForms/Controls/SAV Editor/ContextMenuSAV.cs b/PKHeX.WinForms/Controls/SAV Editor/ContextMenuSAV.cs
+index dd22b61b9..55ac4ca21 100644
+--- a/PKHeX.WinForms/Controls/SAV Editor/ContextMenuSAV.cs	
++++ b/PKHeX.WinForms/Controls/SAV Editor/ContextMenuSAV.cs	
+@@ -1,7 +1,9 @@
+ using System;
+ using System.ComponentModel;
+ using System.Windows.Forms;
++using AutoLegalidad.Ui;
+ using PKHeX.Core;
++using PKHeX.WinForms.Properties;
+ 
+ using static PKHeX.Core.MessageStrings;
+ 
+@@ -9,13 +11,28 @@ namespace PKHeX.WinForms.Controls;
+ 
+ public partial class ContextMenuSAV : UserControl
+ {
++    // Pokekeep (Hito 4): dos acciones sobre la casilla bajo el menu. La casilla se FIJA al abrirlo (MenuOpening/GetSenderInfo), no al hacer clic.
++    private readonly ToolStripSeparator mnuPokekeepSep = new() { Name = "mnuPokekeepSep" };
++    private readonly ToolStripMenuItem mnuPokekeepLegalize = new() { Name = "mnuPokekeepLegalize", Text = Textos.LegalizarAutomaticamente, Image = Resources.wand };
++    private readonly ToolStripMenuItem mnuPokekeepOptimize = new() { Name = "mnuPokekeepOptimize", Text = Textos.OptimizarStats, Image = Resources.vallohi };
++    private ISlotInfo? _pokekeepSlot;
++
+     public ContextMenuSAV()
+     {
+         InitializeComponent();
++        mnuPokekeepLegalize.Click += (_, _) => RunPokekeep(PokekeepAction.Legalize);
++        mnuPokekeepOptimize.Click += (_, _) => RunPokekeep(PokekeepAction.Optimize);
++        mnuVSD.Items.AddRange([mnuPokekeepSep, mnuPokekeepLegalize, mnuPokekeepOptimize]);
+         if (Application.IsDarkModeEnabled)
+             WinFormsUtil.InvertToolStripIcons(mnuVSD.Items);
+     }
+ 
++    private void RunPokekeep(PokekeepAction action)
++    {
++        if (_pokekeepSlot is { } slot)
++            Pokekeep.RunOnSlot(action, slot);
++    }
++
+     public SaveDataEditor<PictureBox> Editor { private get; set; } = null!;
+     public required SlotChangeManager Manager { get; init; }
+ 
+@@ -137,6 +154,16 @@ private void MenuOpening(object sender, CancelEventArgs e)
+         ToggleItem(mnuDelete, canDelete);
+         ToggleItem(mnuLegality, canLegality);
+ 
++        // Pokekeep: la casilla queda fijada AQUI. Desactivadas (con el motivo como ayuda) si esta vacia, bloqueada o el destino es desconocido.
++        _pokekeepSlot = info.Slot;
++        var pokekeep = Pokekeep.SlotAvailability(info.Slot);
++        foreach (var item in new[] { mnuPokekeepLegalize, mnuPokekeepOptimize })
++        {
++            item.Enabled = pokekeep.Enabled;
++            item.ToolTipText = pokekeep.Enabled ? (item == mnuPokekeepLegalize ? Textos.LegalizarTooltip : Textos.OptimizarTooltip) : pokekeep.Reason;
++        }
++        mnuPokekeepSep.Visible = mnuPokekeepLegalize.Visible = mnuPokekeepOptimize.Visible = canView || canSet;
++
+         if (!canView && !canSet && !canDelete)
+             e.Cancel = true;
+     }
+diff --git a/PKHeX.WinForms/Controls/SAV Editor/SAVEditor.cs b/PKHeX.WinForms/Controls/SAV Editor/SAVEditor.cs
+index ee8220e71..f794c602b 100644
+--- a/PKHeX.WinForms/Controls/SAV Editor/SAVEditor.cs	
++++ b/PKHeX.WinForms/Controls/SAV Editor/SAVEditor.cs	
+@@ -58,6 +58,9 @@ public bool FlagIllegal
+         }
+     }
+ 
++    /// <summary>Pokekeep: punto de integracion para anadir una pestana propia (Libreria) al panel de la derecha.</summary>
++    public void AddExtraTab(TabPage page) => tabBoxMulti.TabPages.Add(page);
++
+     public void ReloadSlots()
+     {
+         UpdateBoxViewers(all: true);
+diff --git a/PKHeX.WinForms/Controls/SAV Editor/SlotChangeManager.cs b/PKHeX.WinForms/Controls/SAV Editor/SlotChangeManager.cs
+index 16362e731..6a24aeb30 100644
+--- a/PKHeX.WinForms/Controls/SAV Editor/SlotChangeManager.cs	
++++ b/PKHeX.WinForms/Controls/SAV Editor/SlotChangeManager.cs	
+@@ -139,6 +139,11 @@ public void DragDrop(object? sender, DragEventArgs e)
+         if (sender is not PictureBox pb)
+             return;
+         var info = GetSlotInfo(pb);
++        if (Pokekeep.TryDropLibraryEntry(e, info.Slot)) // Pokekeep: entrada de la Libreria soltada en esta casilla (nunca sobrescribe; ver AutoLegalidad.Ui)
++        {
++            Drag.Reset();
++            return;
++        }
+         if (!info.CanWriteTo() || Drag.Info.Source?.CanWriteTo() == false)
+         {
+             WinFormsUtil.Asterisk();
+diff --git a/PKHeX.WinForms/MainWindow/Main.cs b/PKHeX.WinForms/MainWindow/Main.cs
+index 95b8ac306..e62f994af 100644
+--- a/PKHeX.WinForms/MainWindow/Main.cs
++++ b/PKHeX.WinForms/MainWindow/Main.cs
+@@ -111,6 +111,8 @@ private void FormLoadAddEvents()
+         // Add translatable extra menu controls.
+         Menu_Tools.DropDownItems.Add(new ToolStripSeparator());
+         Troubleshooting.AddTroubleshootingControls(Menu_Tools, Plugins, true);
++
++        InitializePokekeep();
+     }
+ 
+     public void LoadInitialFiles(StartupArguments args)
+@@ -823,6 +825,7 @@ private void ResetSAVPKMEditors(SaveFile sav)
+         sav.State.Edited = false;
+         foreach (var p in Plugins)
+             p.NotifySaveLoaded();
++        Pokekeep.NotifySaveChanged();
+     }
+ 
+     private static string GetProgramTitle()
+@@ -1215,6 +1218,7 @@ private void GetPreview(PictureBox pb, PKM? pk = null)
+ 
+     private void PKME_Tabs_LegalityChanged(object sender, EventArgs e)
+     {
++        UpdatePokekeepAvailability();
+         if (HaX)
+         {
+             PB_Legal.Visible = false;
+diff --git a/PKHeX.WinForms/PKHeX.WinForms.csproj b/PKHeX.WinForms/PKHeX.WinForms.csproj
+index b0c4e9b11..ed615018c 100644
+--- a/PKHeX.WinForms/PKHeX.WinForms.csproj
++++ b/PKHeX.WinForms/PKHeX.WinForms.csproj
+@@ -30,6 +30,11 @@
+     <SelfContained>false</SelfContained>
+   </PropertyGroup>
+ 
++  <ItemGroup>
++    <!-- Pokekeep (Hito 4): coordinador de UI, barra de operacion, Libreria y ajustes. Vive en el repo de Pokekeep, junto a esta copia de PKHeX. -->
++    <ProjectReference Include="..\..\..\Pokekeep\src\AutoLegalidad.Ui\AutoLegalidad.Ui.csproj" />
++  </ItemGroup>
++
+   <ItemGroup>
+     <ProjectReference Include="..\PKHeX.Core\PKHeX.Core.csproj" />
+     <ProjectReference Include="..\PKHeX.Drawing.Misc\PKHeX.Drawing.Misc.csproj" />
+diff --git a/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs b/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs
+new file mode 100644
+index 000000000..8584196b0
+--- /dev/null
++++ b/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs
+@@ -0,0 +1,96 @@
++using System;
++using System.Drawing;
++using System.Windows.Forms;
++using AutoLegalidad.Ui;
++using AutoLegalidad.Ui.Operation;
++using PKHeX.WinForms.Properties;
++
++namespace PKHeX.WinForms;
++
++/// <summary>
++/// Pokekeep (Hito 4): parte de la ventana principal que añade los dos botones del editor, las entradas del menú Herramientas, la barra de operación
++/// y la pestaña «Librería». La lógica está en AutoLegalidad.Ui; aquí solo se colocan los controles y se conectan los puntos de integración.
++/// </summary>
++public partial class Main
++{
++    private Panel? _pkStrip;
++    private Button? _pkLegalize;
++    private Button? _pkOptimize;
++    private ToolStripMenuItem? _pkMenuLegalize;
++    private ToolStripMenuItem? _pkMenuOptimize;
++    private ToolStripMenuItem? _pkMenuLibrary;
++    private ToolTip? _pkTip;
++    private bool _pkBarGrown;
++
++    private void InitializePokekeep()
++    {
++        var app = Pokekeep.Initialize(this, C_SAV, UpdatePokekeepAvailability);
++        _pkTip = new ToolTip();
++
++        // ---- Botones del editor, junto al estado de legalidad (franja inferior del panel del editor) ----
++        _pkLegalize = new Button { Name = "B_PokekeepLegalizar", Text = Textos.LegalizarAutomaticamente, Image = Resources.wand, ImageAlign = ContentAlignment.MiddleLeft, TextImageRelation = TextImageRelation.ImageBeforeText, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Margin = new Padding(3, 3, 3, 3), Padding = new Padding(4, 0, 4, 0) };
++        _pkOptimize = new Button { Name = "B_PokekeepOptimizar", Text = Textos.OptimizarStats, Image = Resources.vallohi, ImageAlign = ContentAlignment.MiddleLeft, TextImageRelation = TextImageRelation.ImageBeforeText, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Margin = new Padding(3, 3, 3, 3), Padding = new Padding(4, 0, 4, 0) };
++        _pkLegalize.Click += (_, _) => Pokekeep.RunOnEditor(PokekeepAction.Legalize);
++        _pkOptimize.Click += (_, _) => Pokekeep.RunOnEditor(PokekeepAction.Optimize);
++        var flow = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.LeftToRight, WrapContents = false, Padding = new Padding(2, 0, 0, 0) };
++        flow.Controls.Add(_pkLegalize);
++        flow.Controls.Add(_pkOptimize);
++        _pkStrip = new Panel { Name = "P_Pokekeep", Dock = DockStyle.Bottom, Height = 34 };
++        _pkStrip.Controls.Add(flow);
++        splitContainer1.Panel1.Controls.Add(_pkStrip);
++        _pkStrip.SendToBack();                  // las franjas ancladas abajo se colocan antes que el editor (Fill)
++        Height += _pkStrip.Height;              // el editor conserva su tamaño de siempre
++
++        // ---- Barra de operación (progreso, Cancelar, resumen, Ver cambios, Deshacer) ----
++        app.Bar.VisibleChanged += (_, _) => AdjustForPokekeepBar(app.Bar);
++        Controls.Add(app.Bar);
++        app.Bar.SendToBack();
++
++        // ---- Menú Herramientas ----
++        Menu_Tools.DropDownItems.Add(new ToolStripSeparator());
++        _pkMenuLegalize = new ToolStripMenuItem(Textos.LegalizarAutomaticamente) { Name = "Menu_PokekeepLegalizar", Image = Resources.wand };
++        _pkMenuOptimize = new ToolStripMenuItem(Textos.OptimizarStats) { Name = "Menu_PokekeepOptimizar", Image = Resources.vallohi };
++        _pkMenuLibrary = new ToolStripMenuItem(Textos.LibreriaMenu) { Name = "Menu_PokekeepLibreria", Image = Resources.database };
++        _pkMenuLegalize.Click += (_, _) => Pokekeep.RunOnEditor(PokekeepAction.Legalize);
++        _pkMenuOptimize.Click += (_, _) => Pokekeep.RunOnEditor(PokekeepAction.Optimize);
++        _pkMenuLibrary.Click += (_, _) => app.OpenLibraryWindow(this);
++        Menu_Tools.DropDownItems.AddRange([_pkMenuLegalize, _pkMenuOptimize, _pkMenuLibrary]);
++
++        // ---- Pestaña «Librería» junto a Caja, Equipo, Otro y SAV ----
++        Pokekeep.AddLibraryTab(C_SAV.AddExtraTab);
++
++        UpdatePokekeepAvailability();
++    }
++
++    /// <summary>Activa o desactiva los botones y las entradas de menú del editor según el estado actual, con el motivo como ayuda.</summary>
++    private void UpdatePokekeepAvailability()
++    {
++        if (_pkLegalize is null || _pkOptimize is null || _pkTip is null)
++            return;
++        var av = Pokekeep.EditorAvailability();
++        var tipLegalize = av.Enabled ? Textos.LegalizarTooltip : av.Reason ?? string.Empty;
++        var tipOptimize = av.Enabled ? Textos.OptimizarTooltip : av.Reason ?? string.Empty;
++        _pkLegalize.Enabled = _pkOptimize.Enabled = av.Enabled;
++        _pkTip.SetToolTip(_pkLegalize, tipLegalize);
++        _pkTip.SetToolTip(_pkOptimize, tipOptimize);
++        if (_pkMenuLegalize is not null) { _pkMenuLegalize.Enabled = av.Enabled; _pkMenuLegalize.ToolTipText = tipLegalize; }
++        if (_pkMenuOptimize is not null) { _pkMenuOptimize.Enabled = av.Enabled; _pkMenuOptimize.ToolTipText = tipOptimize; }
++    }
++
++    /// <summary>La barra ocupa su propia franja: la ventana crece lo que mide para que el resto no se encoja (y vuelve a su tamaño al ocultarla).</summary>
++    private void AdjustForPokekeepBar(Control bar)
++    {
++        if (WindowState != FormWindowState.Normal)
++            return;
++        if (bar.Visible && !_pkBarGrown)
++        {
++            Height += bar.Height;
++            _pkBarGrown = true;
++        }
++        else if (!bar.Visible && _pkBarGrown)
++        {
++            Height -= bar.Height;
++            _pkBarGrown = false;
++        }
++    }
++}
+diff --git a/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs b/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs
+new file mode 100644
+index 000000000..3477d82c1
+--- /dev/null
++++ b/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs
+@@ -0,0 +1,106 @@
++using System;
++using System.Drawing;
++using System.Windows.Forms;
++using AutoLegalidad.Ui;
++using AutoLegalidad.Ui.Library;
++using AutoLegalidad.Ui.Operation;
++using PKHeX.Core;
++using PKHeX.WinForms.Controls;
++
++namespace PKHeX.WinForms;
++
++/// <summary>
++/// Pokekeep (Hito 4): puntos EXPLÍCITOS de integración de «Legalizar automáticamente», «Optimizar stats» y la Librería en PKHeX.WinForms.
++/// Todo lo demás (coordinador, barra, Librería, ajustes) vive en AutoLegalidad.Ui. Este fichero no usa reflexión sobre controles privados: solo
++/// recibe lo que PKHeX ya expone (<see cref="SAVEditor.EditEnv"/>, <see cref="Main"/>) y se lo da al coordinador.
++/// </summary>
++internal static class Pokekeep
++{
++    public static PokekeepApp? App { get; private set; }
++    private static SAVEditor? _sav;
++    private static Action? _availabilityChanged;
++
++    /// <summary>Se llama una vez, desde el constructor de <see cref="Main"/>, con los controles ya creados.</summary>
++    public static PokekeepApp Initialize(Main main, SAVEditor sav, Action availabilityChanged)
++    {
++        _sav = sav;
++        _availabilityChanged = availabilityChanged;
++        App = new PokekeepApp(new MainHost(main, sav), Program.Settings.Pokekeep);
++        App.Coordinator.ProgressChanged += (_, _) => availabilityChanged();
++        App.Coordinator.Completed += (_, _) => availabilityChanged();
++        return App;
++    }
++
++    /// <summary>Añade la pestaña «Librería» al panel de la derecha (junto a Caja, Equipo, Otro y Guardado).</summary>
++    public static void AddLibraryTab(Action<TabPage> addTab)
++    {
++        if (App is null)
++            return;
++        var page = new TabPage(Textos.LibreriaPestana) { Name = "Tab_Libreria", UseVisualStyleBackColor = true, Padding = new Padding(4) };
++        page.Controls.Add(App.CreateLibraryView());
++        addTab(page);
++    }
++
++    /// <summary>Avisa a la Librería de que se abrió (o cerró) otra partida.</summary>
++    public static void NotifySaveChanged()
++    {
++        if (_sav is null)
++            return;
++        foreach (var view in FindLibraryViews(_sav.FindForm()))
++            view.NotifySaveChanged();
++        _availabilityChanged?.Invoke();
++    }
++
++    private static System.Collections.Generic.IEnumerable<LibraryView> FindLibraryViews(Form? form)
++    {
++        if (form is null)
++            yield break;
++        foreach (var c in form.Controls.Find("LibraryView", true))
++            if (c is LibraryView v)
++                yield return v;
++    }
++
++    // ---- Acciones ----
++    public static void RunOnEditor(PokekeepAction action) => Fire(App?.Coordinator.RunOnEditorAsync(action));
++    public static void RunOnSlot(PokekeepAction action, ISlotInfo slot) => Fire(App?.Coordinator.RunOnSlotAsync(action, slot));
++
++    public static Availability EditorAvailability() => App?.Coordinator.GetEditorAvailability() ?? Availability.No("Pokekeep no está disponible.");
++    public static Availability SlotAvailability(ISlotInfo slot) => App?.Coordinator.GetSlotAvailability(slot) ?? Availability.No("Pokekeep no está disponible.");
++
++    /// <summary>
++    /// Suelta de una entrada de la Librería sobre una casilla (arrastre). Devuelve true si el arrastre era de la Librería y ya se ha gestionado.
++    /// La casilla se fija AQUÍ (la que hay bajo el ratón al soltar); nunca se sobrescribe.
++    /// </summary>
++    public static bool TryDropLibraryEntry(DragEventArgs e, ISlotInfo slot)
++    {
++        if (App is null || e.Data?.GetDataPresent(LibraryView.DragFormat) != true)
++            return false;
++        var row = LibraryView.DraggedRow;
++        if (row is not null)
++            Fire(App.Coordinator.AddLibraryEntryAsync(row, slot));
++        return true;
++    }
++
++    /// <summary>Lanza la tarea sin esperar (el resultado llega por los eventos del coordinador) y no deja escapar excepciones sin registrar.</summary>
++    private static async void Fire(System.Threading.Tasks.Task? task)
++    {
++        if (task is null)
++            return;
++        try
++        {
++            await task.ConfigureAwait(true);
++        }
++        catch (Exception ex) when (ex is not OutOfMemoryException)
++        {
++            WinFormsUtil.Error("Pokekeep: error inesperado. No se ha modificado nada.", ex);
++        }
++    }
++
++    private sealed class MainHost(Main main, SAVEditor sav) : IPokekeepHost
++    {
++        public IWin32Window? Window => main;
++        public SaveDataEditor<PictureBox> Env => sav.EditEnv;
++        public int CurrentBox => sav.CurrentBox;
++        public void NotifyUndoRedoChanged() => sav.UpdateUndoRedo();
++    }
++}
+diff --git a/PKHeX.WinForms/Settings/PKHeXSettings.cs b/PKHeX.WinForms/Settings/PKHeXSettings.cs
+index 32009b451..bd5a6e139 100644
+--- a/PKHeX.WinForms/Settings/PKHeXSettings.cs
++++ b/PKHeX.WinForms/Settings/PKHeXSettings.cs
+@@ -7,6 +7,7 @@
+ using System.Text.Json;
+ using System.Text.Json.Serialization;
+ using System.Threading.Tasks;
++using AutoLegalidad.Ui;
+ using PKHeX.Core;
+ 
+ namespace PKHeX.WinForms;
+@@ -45,6 +46,9 @@ public sealed class PKHeXSettings : IProgramSettings
+     public MysteryGiftDatabaseSettings MysteryDb { get; set; } = new();
+     public ReportGridSettings Report { get; set; } = new();
+ 
++    // Pokekeep (Hito 4): Legalizar automaticamente, Optimizar stats y Libreria.
++    public PokekeepSettings Pokekeep { get; set; } = new();
++
+     [Browsable(false)]
+     public SlotExportSettings SlotExport { get; set; } = new();
+ 
+-- 
+2.55.0.windows.5
+

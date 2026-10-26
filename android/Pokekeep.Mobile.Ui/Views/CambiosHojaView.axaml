@@ -1,0 +1,43 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.CambiosHojaView"
+             x:DataType="vm:CambiosHojaViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="12" Margin="20,4,20,24">
+      <TextBlock Text="{Binding Cabecera}" FontWeight="Bold" TextWrapping="Wrap" />
+      <TextBlock Classes="sec" Text="{Binding Subtitulo}" TextWrapping="Wrap" />
+      <TextBlock Name="TextoSinCambios" Text="{Binding TextoSinCambios}" IsVisible="{Binding HayTextoSinCambios}" TextWrapping="Wrap" FontStyle="Italic" />
+      <ItemsControl ItemsSource="{Binding Filas}" IsVisible="{Binding HayFilas}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:FilaCambio">
+            <Border Classes="tarjeta" Padding="12,10" Margin="0,0,0,8" AutomationProperties.Name="{Binding Accesible}">
+              <StackPanel Spacing="4">
+                <TextBlock Text="{Binding Campo}" FontWeight="Bold" TextWrapping="Wrap" />
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="10">
+                  <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.DisenoCajaHoja.Antes}" VerticalAlignment="Center" />
+                  <TextBlock Grid.Column="1" Text="{Binding Antes}" TextWrapping="Wrap" />
+                  <TextBlock Grid.Row="1" Classes="etiqueta" Text="{DynamicResource Loc.DisenoCajaHoja.Despues}" VerticalAlignment="Center" />
+                  <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Despues}" TextWrapping="Wrap" FontWeight="Medium" />
+                </Grid>
+                <TextBlock Classes="sec" Text="{Binding Motivo}" IsVisible="{Binding HayMotivo}" TextWrapping="Wrap" FontStyle="Italic" />
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <Border Classes="tarjeta" Padding="12,10" IsVisible="{Binding HayNotas}">
+        <TextBlock Name="NotasCambios" Text="{Binding Notas}" TextWrapping="Wrap" FontSize="{DynamicResource TamPequeno}" />
+      </Border>
+      <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
+        <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CopiarCommand}" IsEnabled="{Binding PuedeCopiar}" AutomationProperties.Name="{DynamicResource Loc.Seleccion.Copiar}" AutomationProperties.HelpText="{DynamicResource Loc.CambiosHoja.CopiaCambiosPortapapeles}">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="ClipboardCopy" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Seleccion.Copiar}" /></StackPanel>
+        </Button>
+        <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding VolverCommand}" AutomationProperties.Name="{DynamicResource Loc.CambiosHoja.VolverResultado}">
+          <TextBlock Text="{DynamicResource Loc.Menu.Volver}" TextAlignment="Center" />
+        </Button>
+      </d:RejillaSinPartir>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

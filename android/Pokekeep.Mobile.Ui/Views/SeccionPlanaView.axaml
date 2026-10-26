@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             xmlns:v="clr-namespace:Pokekeep.Mobile.Ui.Views"
+             x:Class="Pokekeep.Mobile.Ui.Views.SeccionPlanaView"
+             x:DataType="vm:SeccionPlanaVm">
+  <Border Classes="tarjeta" IsVisible="{Binding Visible}">
+    <StackPanel Spacing="2">
+      <TextBlock Classes="etiqueta" Text="{Binding Titulo}" IsVisible="{Binding HayTitulo}" AutomationProperties.HeadingLevel="2" Margin="0,0,0,4" />
+      <ItemsControl ItemsSource="{Binding Campos}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:CampoVm"><v:CampoView /></DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+  </Border>
+</UserControl>

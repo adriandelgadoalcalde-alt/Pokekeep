@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>AutoLegalidad.Registro</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <!-- Registro de fallos compartido (PKHeX-Pokekeep, Worker y cliente del Worker; ADR 0040). SIN referencias a PKHeX.Core ni a ningun otro proyecto. -->
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="AutoLegalidad.UnitTests" />
+    <InternalsVisibleTo Include="AutoLegalidad.IntegrationTests" />
+    <InternalsVisibleTo Include="AutoLegalidad.UiTests" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,116 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.CampoPView"
+             x:DataType="vm:CampoPVm">
+  <!-- Un campo de un editor de partida: etiqueta, valor y, si esta fijo, el motivo. La marca dorada a la izquierda dice que el campo tiene un cambio sin aplicar. -->
+  <Grid ColumnDefinitions="4,*" IsVisible="{Binding Visible}">
+    <Border Width="4" CornerRadius="2" Margin="0,6,0,6" Background="{DynamicResource Dorado}" IsVisible="{Binding Modificado}" AutomationProperties.AccessibilityView="Raw" />
+    <StackPanel Grid.Column="1" Spacing="2" Margin="8,0,0,0">
+      <Border Classes="separador" Margin="0,2,0,0" />
+
+      <!-- Numeros: etiqueta a la izquierda, campo a la derecha -->
+      <d:EtiquetaYValor MinHeight="52" IsVisible="{Binding EsNumero}">
+        <StackPanel VerticalAlignment="Center">
+          <TextBlock Text="{Binding Etiqueta}" TextWrapping="Wrap" />
+          <TextBlock Classes="sec" Text="{Binding Detalle}" IsVisible="{Binding HayDetalle}" />
+          <TextBlock Classes="sec" Text="{Binding Motivo}" IsVisible="{Binding EsFijo}" />
+        </StackPanel>
+        <Panel HorizontalAlignment="Left">
+          <TextBox Classes="campo numero" Width="132" Text="{Binding Valor}" IsEnabled="{Binding EsEditable}" MaxLength="{Binding Longitud}" LostFocus="AlPerderFoco"
+                   IsVisible="{Binding EsEnteroSinSigno}" TextInputOptions.ContentType="Digits" AutomationProperties.Name="{Binding Etiqueta}" AutomationProperties.HelpText="{Binding Ayuda}" />
+          <TextBox Classes="campo numero" Width="132" Text="{Binding Valor}" IsEnabled="{Binding EsEditable}" LostFocus="AlPerderFoco"
+                   IsVisible="{Binding EsNumeroLibre}" TextInputOptions.ContentType="Number" AutomationProperties.Name="{Binding Etiqueta}" AutomationProperties.HelpText="{Binding Ayuda}" />
+        </Panel>
+      </d:EtiquetaYValor>
+
+      <!-- Texto y fechas: etiqueta y campo en dos lineas -->
+      <StackPanel Spacing="4" Margin="0,4" IsVisible="{Binding EsTexto}">
+        <TextBlock Classes="etiqueta" Text="{Binding Etiqueta}" TextWrapping="Wrap" />
+        <TextBox Classes="campo" Text="{Binding Valor}" IsEnabled="{Binding EsEditable}" MaxLength="{Binding Longitud}" PlaceholderText="{Binding Marcador}" LostFocus="AlPerderFoco" IsVisible="{Binding EsTextoLinea}"
+                 AutomationProperties.Name="{Binding Etiqueta}" AutomationProperties.HelpText="{Binding Ayuda}" />
+        <TextBox Classes="campo" Text="{Binding Valor}" IsEnabled="{Binding EsEditable}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="96" LostFocus="AlPerderFoco" IsVisible="{Binding EsTextoVarias}"
+                 AutomationProperties.Name="{Binding Etiqueta}" AutomationProperties.HelpText="{Binding Ayuda}" />
+        <!-- Rejilla tactil de tonos (Artista puntos, y en Gen. 5 el C-Gear y los fondos): un toque cambia el tono de la casilla -->
+        <ToggleButton Name="AmpliarRejilla" Classes="chip" Content="{DynamicResource Loc.Form.Vista.CampoPView.0}" AutomationProperties.Name="{DynamicResource Loc.Form.Vista.CampoPView.1}" IsVisible="{Binding EsRejilla}" MinHeight="48" />
+        <StackPanel Name="MandosRejilla" IsVisible="False" />
+        <ScrollViewer Name="VisorRejilla" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" IsVisible="{Binding EsRejilla}" AutomationProperties.Name="{Binding Etiqueta}">
+        <d:RejillaTonos Name="RejillaPixeles" Valor="{Binding Valor, Mode=TwoWay}" AnchoCasillas="{Binding AnchoRejilla}" AltoCasillas="{Binding AltoRejilla}" Paleta="{Binding PaletaRejilla}" IsEnabled="{Binding EsEditable}"
+                        IsVisible="{Binding EsRejilla}" HorizontalAlignment="Center" Margin="0,4"
+                        AutomationProperties.Name="{Binding Etiqueta}" AutomationProperties.HelpText="{Binding Ayuda}" /></ScrollViewer>
+        <TextBlock Classes="sec" Text="{Binding Detalle}" IsVisible="{Binding HayDetalle}" />
+        <TextBlock Classes="sec" Text="{Binding Motivo}" IsVisible="{Binding EsFijo}" />
+      </StackPanel>
+
+      <!-- Lista: toda la fila abre el selector con buscador -->
+      <StackPanel IsVisible="{Binding EsOpcion}">
+        <Button Classes="fila" Command="{Binding ElegirCommand}" IsVisible="{Binding EsEditable}" MinHeight="52" AutomationProperties.Name="{Binding Accesible}" AutomationProperties.HelpText="{Binding Ayuda}">
+          <d:EtiquetaYValor Separacion="0">
+            <StackPanel VerticalAlignment="Center">
+              <TextBlock Classes="sec" Text="{Binding Etiqueta}" />
+              <TextBlock Text="{Binding Valor}" FontWeight="Medium" Foreground="{DynamicResource Dorado}" TextWrapping="Wrap" IsVisible="{Binding ValorLargo}" Margin="0,2,0,0" />
+            </StackPanel>
+            <Grid ColumnDefinitions="Auto,*,Auto" HorizontalAlignment="Stretch">
+              <d:SpritePokemon UnSoloPokemon="True" Width="48" Height="44" Margin="8,0,0,0" VerticalAlignment="Center" IsVisible="{Binding HayEspecieSprite}" Especie="{Binding EspecieSprite}" VersionJuego="{Binding VersionJuego}" Foreground="{DynamicResource TextoSecundario}" />
+              <d:TextoEntero Grid.Column="1" Text="{Binding Valor}" FontWeight="Medium" Foreground="{DynamicResource Dorado}" VerticalAlignment="Center" TextAlignment="Right" TextWrapping="Wrap" MaxWidth="180" Margin="8,0,0,0" IsVisible="{Binding ValorCorto}" />
+              <d:Icono Grid.Column="2" Glifo="ChevronRight" Width="18" Height="18" Margin="6,0,0,0" Foreground="{DynamicResource TextoSecundario}" VerticalAlignment="Center" />
+            </Grid>
+          </d:EtiquetaYValor>
+        </Button>
+        <!-- Fijo: texto normal (un boton desactivado deja el texto casi sin contraste) -->
+        <StackPanel IsVisible="{Binding EsFijo}" Margin="0,6" Spacing="2" AutomationProperties.Name="{Binding Accesible}">
+          <TextBlock Classes="sec" Text="{Binding Etiqueta}" />
+          <TextBlock Text="{Binding Valor}" FontWeight="Medium" TextWrapping="Wrap" />
+          <TextBlock Classes="sec" Text="{Binding Motivo}" />
+        </StackPanel>
+      </StackPanel>
+
+      <!-- Interruptor -->
+      <d:EtiquetaYValor MinHeight="52" IsVisible="{Binding EsMarca}">
+        <StackPanel VerticalAlignment="Center">
+          <TextBlock Text="{Binding Etiqueta}" TextWrapping="Wrap" />
+          <TextBlock Classes="sec" Text="{Binding Detalle}" IsVisible="{Binding HayDetalle}" />
+          <TextBlock Classes="sec" Text="{Binding Motivo}" IsVisible="{Binding EsFijo}" />
+        </StackPanel>
+        <ToggleButton Classes="chip" IsChecked="{Binding Marcado, Mode=TwoWay}" HorizontalAlignment="Left" IsEnabled="{Binding EsEditable}" MinWidth="64" MinHeight="48" Content="{Binding TextoMarca}" AutomationProperties.Name="{Binding Accesible}" AutomationProperties.HelpText="{Binding Ayuda}" />
+      </d:EtiquetaYValor>
+
+      <!-- Accion de un solo sentido: queda pendiente hasta aplicar (se puede cancelar) -->
+      <d:EtiquetaYValor MinHeight="52" IsVisible="{Binding EsAccion}">
+        <StackPanel VerticalAlignment="Center">
+          <TextBlock Text="{Binding Etiqueta}" TextWrapping="Wrap" />
+          <TextBlock Classes="sec" Text="{Binding Detalle}" IsVisible="{Binding HayDetalle}" />
+          <TextBlock Classes="sec" Text="{Binding Motivo}" IsVisible="{Binding EsFijo}" />
+        </StackPanel>
+        <ToggleButton Classes="chip" IsChecked="{Binding Marcado, Mode=OneWay}" HorizontalAlignment="Left" Command="{Binding AlternarCommand}" IsVisible="{Binding EsEditable}" MinWidth="88" MinHeight="48" Content="{Binding TextoMarca}" AutomationProperties.Name="{Binding Accesible}" AutomationProperties.HelpText="{Binding Ayuda}" />
+      </d:EtiquetaYValor>
+
+      <!-- Archivo: importar (queda pendiente hasta aplicar) y, si se puede, exportar -->
+      <StackPanel Spacing="6" Margin="0,4" IsVisible="{Binding EsArchivo}">
+        <TextBlock Text="{Binding Etiqueta}" TextWrapping="Wrap" />
+        <TextBlock Classes="sec" Text="{Binding ResumenArchivo}" TextWrapping="Wrap" />
+        <TextBlock Classes="sec" Text="{Binding Detalle}" TextWrapping="Wrap" IsVisible="{Binding HayDetalle}" />
+        <TextBlock Classes="sec" Text="{Binding Motivo}" IsVisible="{Binding EsFijo}" />
+        <TextBlock Classes="sec" Text="{Binding Detalle}" IsVisible="{Binding HayDetalle}" TextWrapping="Wrap" />
+        <WrapPanel>
+          <Button Classes="chip" Command="{Binding ImportarCommand}" IsEnabled="{Binding EsEditable}" IsVisible="{Binding PuedeImportar}" MinHeight="48" Margin="0,0,8,0" AutomationProperties.Name="{Binding TextoImportar}" AutomationProperties.HelpText="{Binding Ayuda}"><TextBlock Text="{Binding TextoImportar}" /></Button>
+          <Button Classes="chip" Command="{Binding QuitarCommand}" IsVisible="{Binding HayArchivoElegido}" MinHeight="48" Margin="0,0,8,0" AutomationProperties.Name="{DynamicResource Loc.Form.Vista.CampoPView.2}"><TextBlock Text="{DynamicResource Loc.Form.Vista.CampoPView.3}" /></Button>
+          <Button Classes="chip" Command="{Binding ExportarCommand}" IsVisible="{Binding PuedeExportar}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Form.Vista.CampoPView.4}" AutomationProperties.HelpText="{DynamicResource Loc.Form.Vista.CampoPView.5}"><TextBlock Text="{DynamicResource Loc.Form.Vista.CampoPView.6}" /></Button>
+        </WrapPanel>
+        <!-- Vista previa de la imagen del campo (skin del C-Gear): lo elegido o, si no hay nada, lo que hay en la partida -->
+        <Border IsVisible="{Binding HayVista}" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="{DynamicResource Separacion}" CornerRadius="8" ClipToBounds="True" AutomationProperties.Name="{DynamicResource Loc.Form.Vista.CampoPView.7}" AutomationProperties.HelpText="{DynamicResource Loc.Form.Vista.CampoPView.8}">
+          <Image Source="{Binding Vista}" Width="256" Height="192" Stretch="Uniform" AutomationProperties.AccessibilityView="Raw" />
+        </Border>
+      </StackPanel>
+
+      <!-- Solo lectura -->
+      <d:EtiquetaYValor MinHeight="44" IsVisible="{Binding EsInfo}" AutomationProperties.Name="{Binding Accesible}">
+        <TextBlock Classes="sec" Text="{Binding Etiqueta}" VerticalAlignment="Center" />
+        <TextBlock Text="{Binding Valor}" FontWeight="Medium" VerticalAlignment="Center" TextAlignment="Right" TextWrapping="Wrap" MaxWidth="220" />
+      </d:EtiquetaYValor>
+
+      <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding Error}" IsVisible="{Binding HayError}" AutomationProperties.LiveSetting="Assertive" />
+    </StackPanel>
+  </Grid>
+</UserControl>

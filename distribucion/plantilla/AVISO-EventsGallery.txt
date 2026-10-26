@@ -1,0 +1,17 @@
+AVISO - datos de eventos de EventsGallery (Project Pokémon)
+===========================================================
+
+La base de datos incluida en este paquete (Pokekeep\datosutolegalidad.sqlite) se ha construido
+también a partir de EventsGallery (https://github.com/projectpokemon/EventsGallery, Project Pokémon).
+Ese repositorio no declara ninguna licencia: los derechos de sus ficheros son de sus autores y de los
+propietarios de los contenidos (Nintendo, Game Freak, The Pokémon Company).
+
+  - El repositorio de código de Pokekeep no contiene ningún byte de EventsGallery (solo hashes y
+    metadatos de procedencia, docs/datos/eventsgallery-manifest.tsv).
+  - Pokekeep no muestra ni publica los títulos de los eventos.
+  - Atribución: «Event data courtesy of Project Pokémon (projectpokemon.org), EventsGallery».
+  - Si eres autor de EventsGallery y no estás de acuerdo con este uso, abre una incidencia en
+    https://github.com/adriandelgadoalcalde-alt/Pokekeep y se retiran esos datos.
+
+No se distribuyen ROMs, guardados, claves ni binarios de juego. Pokémon y sus nombres son marcas de
+Nintendo, Game Freak y The Pokémon Company; Pokekeep es una herramienta no oficial.

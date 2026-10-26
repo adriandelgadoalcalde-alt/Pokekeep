@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.ConfirmarHojaView"
+             x:DataType="vm:ConfirmarHojaViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="14" Margin="20,4,20,24">
+      <ItemsControl ItemsSource="{Binding Parrafos}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="x:String"><TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,3" /></DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
+        <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CancelarCommand}" AutomationProperties.Name="{Binding TextoCancelar}">
+          <TextBlock Text="{Binding TextoCancelar}" TextAlignment="Center" />
+        </Button>
+        <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding ConfirmarCommand}" AutomationProperties.Name="{Binding TextoConfirmar}">
+          <TextBlock Text="{Binding TextoConfirmar}" TextAlignment="Center" TextWrapping="Wrap" />
+        </Button>
+      </d:RejillaSinPartir>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

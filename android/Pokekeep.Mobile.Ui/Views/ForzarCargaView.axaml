@@ -1,0 +1,60 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:f="clr-namespace:Pokekeep.Mobile.Ui.Herramientas.ForzarCarga"
+             x:Class="Pokekeep.Mobile.Ui.Views.ForzarCargaView"
+             x:DataType="f:ForzarCargaViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="16,0,16,24" Spacing="10">
+      <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" AutomationProperties.Name="{DynamicResource Loc.ImportarHex.VolverHerramientas}">
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.ImportarHex.VolverHerramientas}" TextWrapping="Wrap" VerticalAlignment="Center" /></Grid>
+      </Button>
+      <StackPanel Spacing="2" Margin="0,4,0,4">
+        <TextBlock Classes="titulo" Text="{Binding Titulo}" />
+        <TextBlock Classes="sec" TextWrapping="Wrap" Text="{Binding Subtitulo}" />
+      </StackPanel>
+
+      <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Shell.Archivo2}" />
+      <Border Classes="tarjeta" Padding="14,10">
+        <StackPanel Spacing="8">
+          <TextBlock Text="{Binding TextoArchivo}" TextWrapping="Wrap" FontWeight="Medium" AutomationProperties.LiveSetting="Polite" />
+          <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding ExaminarCommand}" AutomationProperties.Name="{DynamicResource Loc.Comun.Examinar}" AutomationProperties.HelpText="{DynamicResource Loc.ForzarCarga.EligeArchivoGuardado}">
+            <Grid ColumnDefinitions="Auto,*" HorizontalAlignment="Center" ColumnSpacing="8"><d:Icono Glifo="FolderOpen" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.Comun.ExaminarPuntos}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+          </Button>
+        </StackPanel>
+      </Border>
+
+      <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.ForzarCarga.QueEs}" />
+      <Border Classes="tarjeta" Padding="8,4">
+        <StackPanel>
+          <Button Classes="fila" Command="{Binding ElegirTipoCommand}" AutomationProperties.Name="{DynamicResource Loc.ForzarCarga.TipoArchivoGuardado}" AutomationProperties.HelpText="{Binding TextoTipo}">
+            <StackPanel Margin="8,8" Spacing="1"><TextBlock Classes="sec" Text="{DynamicResource Loc.ForzarCarga.TipoArchivoGuardado}" /><TextBlock Text="{Binding TextoTipo}" TextWrapping="Wrap" FontWeight="Medium" /></StackPanel>
+          </Button>
+          <Button Classes="fila" Command="{Binding ElegirSubversionCommand}" IsVisible="{Binding HaySubversiones}" AutomationProperties.Name="{DynamicResource Loc.ForzarCarga.Subversion}" AutomationProperties.HelpText="{Binding TextoSubversion}">
+            <StackPanel Margin="8,8" Spacing="1"><TextBlock Classes="sec" Text="{DynamicResource Loc.ForzarCarga.Subversion}" /><TextBlock Text="{Binding TextoSubversion}" TextWrapping="Wrap" FontWeight="Medium" /></StackPanel>
+          </Button>
+          <Button Classes="fila" Command="{Binding ElegirIdiomaCommand}" AutomationProperties.Name="{DynamicResource Loc.Catalogo.Idioma}" AutomationProperties.HelpText="{Binding TextoIdioma}">
+            <StackPanel Margin="8,8" Spacing="1"><TextBlock Classes="sec" Text="{DynamicResource Loc.Catalogo.Idioma}" /><TextBlock Text="{Binding TextoIdioma}" TextWrapping="Wrap" FontWeight="Medium" /></StackPanel>
+          </Button>
+          <Button Classes="fila" Command="{Binding ElegirManejadorCommand}" AutomationProperties.Name="{DynamicResource Loc.ForzarCarga.Manejador}" AutomationProperties.HelpText="{Binding TextoManejador}">
+            <StackPanel Margin="8,8" Spacing="1"><TextBlock Classes="sec" Text="{DynamicResource Loc.ForzarCarga.Manejador}" /><TextBlock Text="{Binding TextoManejador}" TextWrapping="Wrap" FontWeight="Medium" /></StackPanel>
+          </Button>
+          <Grid ColumnDefinitions="*,Auto" Margin="8,4">
+            <StackPanel VerticalAlignment="Center" Spacing="1">
+              <TextBlock Text="{DynamicResource Loc.ForzarCarga.ElegirVersionGen}" TextWrapping="Wrap" FontWeight="Medium" />
+              <TextBlock Classes="sec" Text="{DynamicResource Loc.ForzarCarga.PreguntaRubiZafiroEsmeralda}" TextWrapping="Wrap" />
+            </StackPanel>
+            <ToggleSwitch Grid.Column="1" IsChecked="{Binding ElegirVersionGen3}" OnContent="" OffContent="" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.ForzarCarga.ElegirVersionGen}" />
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <Border Classes="insignia error" Padding="12,8" IsVisible="{Binding HayError}">
+        <TextBlock Text="{Binding Error}" TextWrapping="Wrap" FontWeight="Bold" AutomationProperties.LiveSetting="Polite" />
+      </Border>
+      <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding ContinuarCommand}" IsEnabled="{Binding PuedeContinuar}" AutomationProperties.Name="{DynamicResource Loc.CompletarJuego.Continuar}" AutomationProperties.HelpText="{DynamicResource Loc.ForzarCarga.AbreArchivoElegido}">
+        <TextBlock Text="{DynamicResource Loc.CompletarJuego.Continuar}" TextAlignment="Center" />
+      </Button>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

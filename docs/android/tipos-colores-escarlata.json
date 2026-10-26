@@ -1,0 +1,118 @@
+{
+ "fuente": "capturas del juego Pokémon Escarlata (Eden, ventana de 1706x915), 21-oct-2026",
+ "metodo": "Etiquetas de tipo en la pantalla Datos del Pokémon (area 1185,213,165,36: pastilla de «Tipo», para Planta, Normal, Bicho y Eléctrico) y en el panel lateral de la caja con el Pokémon resaltado (areas 1150,134,110,20 = primera pastilla de tipo, 1308,134,110,20 = segunda). Color = moda de los píxeles del área, sin degradado (fondo plano; texto e icono blancos son minoría). Medidos Planta, Normal, Bicho y Eléctrico en ambas pantallas con resultado idéntico. La pastilla de Teratipo (cristal con degradado) no se mide.",
+ "tipos": {
+  "Normal": {
+   "rgb": "#9FA09F",
+   "estado": "medido",
+   "especie": 915,
+   "area": "1185,213,165,36"
+  },
+  "Lucha": {
+   "rgb": "#FF8000",
+   "estado": "medido",
+   "especie": 903,
+   "area": "1150,134,110,20"
+  },
+  "Volador": {
+   "rgb": "#81B8EF",
+   "estado": "medido",
+   "especie": 905,
+   "area": "1308,134,110,20"
+  },
+  "Veneno": {
+   "rgb": "#9141CC",
+   "estado": "medido",
+   "especie": 1019,
+   "area": "1150,134,110,20"
+  },
+  "Tierra": {
+   "rgb": "#915121",
+   "estado": "medido",
+   "especie": 901,
+   "area": "1150,134,110,20"
+  },
+  "Roca": {
+   "rgb": "#B1A981",
+   "estado": "medido",
+   "especie": 1022,
+   "area": "1150,134,110,20"
+  },
+  "Bicho": {
+   "rgb": "#91A018",
+   "estado": "medido",
+   "especie": 917,
+   "area": "1185,213,165,36"
+  },
+  "Fantasma": {
+   "rgb": "#704170",
+   "estado": "medido",
+   "especie": 911,
+   "area": "1308,134,110,20"
+  },
+  "Acero": {
+   "rgb": "#60A0B8",
+   "estado": "medido",
+   "especie": 1018,
+   "area": "1150,134,110,20"
+  },
+  "Fuego": {
+   "rgb": "#E72829",
+   "estado": "medido",
+   "especie": 910,
+   "area": "1150,134,110,20"
+  },
+  "Agua": {
+   "rgb": "#2980EF",
+   "estado": "medido",
+   "especie": 912,
+   "area": "1150,134,110,20"
+  },
+  "Planta": {
+   "rgb": "#3FA029",
+   "estado": "medido",
+   "especie": 906,
+   "area": "1185,213,165,36"
+  },
+  "Eléctrico": {
+   "rgb": "#FBC000",
+   "estado": "medido",
+   "especie": 26,
+   "area": "1185,213,165,36"
+  },
+  "Psíquico": {
+   "rgb": "#EF4179",
+   "estado": "medido",
+   "especie": 876,
+   "area": "1150,134,110,20"
+  },
+  "Hielo": {
+   "rgb": "#3FD8FF",
+   "estado": "medido",
+   "especie": 896,
+   "area": "1150,134,110,20"
+  },
+  "Dragón": {
+   "rgb": "#4F61E0",
+   "estado": "medido",
+   "especie": 887,
+   "area": "1150,134,110,20"
+  },
+  "Siniestro": {
+   "rgb": "#524142",
+   "estado": "medido",
+   "especie": 904,
+   "area": "1150,134,110,20"
+  },
+  "Hada": {
+   "rgb": "#F16DF1",
+   "estado": "medido",
+   "especie": 905,
+   "area": "1150,134,110,20"
+  }
+ },
+ "limites": [
+  "La partida de Eden cargada por el agente es una de pruebas; se restauró el main original (misma huella SHA-256).",
+  "Fuente de las pastillas del panel de caja: tamaño menor que en Datos, mismo color de fondo plano."
+ ]
+}

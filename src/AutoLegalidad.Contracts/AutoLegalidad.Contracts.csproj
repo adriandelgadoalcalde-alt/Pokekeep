@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>AutoLegalidad.Contracts</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <!-- Contratos puros: SIN referencia al Core ni a ALM (plan 5.1). La UI y el Worker solo comparten estos tipos. -->
+  </PropertyGroup>
+</Project>

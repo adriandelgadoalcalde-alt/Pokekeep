@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Primer plano del icono adaptativo: hexagono dorado sobre grafito con la P y la Poke Ball en su ojo. Traduccion literal de icono\android-foreground.svg (Codex, 1080x1080: translate(540 540) scale(.68) translate(-512 -512))
+     a VectorDrawable: x' = 0,68 x + 191,84. La zona segura del adaptativo es el circulo central de 66/108 del lienzo: el hexagono (alto 0,68 x 812 = 552 de 1080) cabe con margen. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp" android:height="108dp" android:viewportWidth="1080" android:viewportHeight="1080">
+  <group android:scaleX="0.68" android:scaleY="0.68" android:translateX="191.84" android:translateY="191.84">
+    <path android:pathData="M512 116 855 314V710L512 908 169 710V314Z" android:fillColor="#211E19" android:strokeWidth="38" android:strokeLineJoin="round">
+      <aapt:attr name="android:strokeColor">
+        <gradient android:type="linear" android:startX="169" android:startY="116" android:endX="683" android:endY="908">
+          <item android:offset="0" android:color="#F3D9A1" />
+          <item android:offset="1" android:color="#CAAE76" />
+        </gradient>
+      </aapt:attr>
+    </path>
+    <path android:pathData="M377 720V310H535C633 310 696 365 696 448S633 586 535 586H451V720ZM451 376V520H528C586 520 619 494 619 448S586 376 528 376Z" android:fillType="evenOdd">
+      <aapt:attr name="android:fillColor">
+        <gradient android:type="linear" android:startX="377" android:startY="310" android:endX="616" android:endY="720">
+          <item android:offset="0" android:color="#F3D9A1" />
+          <item android:offset="1" android:color="#CAAE76" />
+        </gradient>
+      </aapt:attr>
+    </path>
+    <path android:pathData="M451 448H619" android:strokeColor="#E5C991" android:strokeWidth="14" />
+    <path android:pathData="M506 448A29 29 0 1 0 564 448A29 29 0 1 0 506 448Z" android:fillColor="#211E19" android:strokeWidth="13">
+      <aapt:attr name="android:strokeColor">
+        <gradient android:type="linear" android:startX="506" android:startY="419" android:endX="564" android:endY="477">
+          <item android:offset="0" android:color="#F3D9A1" />
+          <item android:offset="1" android:color="#CAAE76" />
+        </gradient>
+      </aapt:attr>
+    </path>
+    <path android:pathData="M526 448A9 9 0 1 0 544 448A9 9 0 1 0 526 448Z" android:fillColor="#F3D9A1" />
+  </group>
+</vector>

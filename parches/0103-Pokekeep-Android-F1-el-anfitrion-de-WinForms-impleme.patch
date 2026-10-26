@@ -1,0 +1,29 @@
+From 40d331f4268698d5cd6886bfb9d1dc33470ff210 Mon Sep 17 00:00:00 2001
+From: Pokekeep <pokekeep@invalid>
+Date: Thu, 8 Oct 2026 17:12:51 +0200
+Subject: [PATCH 11/11] Pokekeep Android F1: el anfitrion de WinForms
+ implementa IWinFormsHost
+
+IPokekeepHost pasa a AutoLegalidad.App sin tipos de WinForms (IEditEnvironment). Lo que PKHeX.WinForms
+ofrece de verdad (ventana, SaveDataEditor<PictureBox>) se declara ahora en IWinFormsHost (AutoLegalidad.Ui),
+que PokekeepApp convierte con WinFormsHostAdapter. Cambio de una linea: sin cambio de comportamiento.
+---
+ PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs b/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs
+index a963ac46d..558932dfd 100644
+--- a/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs
++++ b/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs
+@@ -107,7 +107,7 @@ private static async void Fire(System.Threading.Tasks.Task? task)
+         }
+     }
+ 
+-    private sealed class MainHost(Main main, SAVEditor sav) : IPokekeepHost
++    private sealed class MainHost(Main main, SAVEditor sav) : IWinFormsHost
+     {
+         public IWin32Window? Window => main;
+         public SaveDataEditor<PictureBox> Env => sav.EditEnv;
+-- 
+2.55.0.windows.5
+

@@ -1,0 +1,107 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:l="clr-namespace:Pokekeep.Mobile.Ui.Localizacion"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.LibreriaView"
+             x:DataType="vm:LibreriaViewModel">
+  <Grid Name="Raiz" RowDefinitions="Auto,*,Auto">
+    <!-- Cabecera: título, buscador y filtros como chips (con poco alto, apaisado o con texto grande, la cabecera se desplaza en vez de tapar la lista: LibreriaView.AjustarAlEspacio) -->
+    <ScrollViewer Name="Cabecera" Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Margin="16,8,16,0">
+      <StackPanel Spacing="2" Margin="0,0,0,10">
+        <TextBlock Classes="titulo" Text="{DynamicResource Loc.Libreria.Vista.0}" />
+        <TextBlock Classes="sec" Text="{Binding Subtitulo}" TextWrapping="Wrap" />
+      </StackPanel>
+      <TextBox Name="Buscador" Classes="campo" Text="{Binding Texto}" PlaceholderText="{Binding TextoDeBusqueda}" IsEnabled="{Binding HayLista}"
+               AutomationProperties.Name="{DynamicResource Loc.Libreria.Vista.1}" AutomationProperties.HelpText="{DynamicResource Loc.Libreria.Vista.2}">
+        <TextBox.InnerLeftContent>
+          <d:Icono Glifo="Search" Width="20" Height="20" Margin="12,0,0,0" Foreground="{DynamicResource TextoSecundario}" />
+        </TextBox.InnerLeftContent>
+      </TextBox>
+      <d:TiraConIndicio IsVisible="{Binding HayLista}" Margin="0,2,0,0">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <Button Name="FiltroGeneracion" Classes="filtro" Classes.activo="{Binding GeneracionActiva}" Command="{Binding AbrirGeneracionCommand}" AutomationProperties.Name="{l:Formato Libreria.Filtro.Generacion, {Binding EtiquetaGeneracion}}">
+            <StackPanel Orientation="Horizontal" Spacing="6"><TextBlock Text="{Binding EtiquetaGeneracion}" TextWrapping="NoWrap" /><d:Icono Glifo="ChevronDown" /></StackPanel>
+          </Button>
+          <Button Name="FiltroOrigen" Classes="filtro" Classes.activo="{Binding OrigenActivo}" Command="{Binding AbrirOrigenCommand}" AutomationProperties.Name="{l:Formato Libreria.Filtro.Origen, {Binding EtiquetaOrigen}}">
+            <StackPanel Orientation="Horizontal" Spacing="6"><TextBlock Text="{Binding EtiquetaOrigen}" TextWrapping="NoWrap" /><d:Icono Glifo="ChevronDown" /></StackPanel>
+          </Button>
+          <Button Name="FiltroEspecie" Classes="filtro" Classes.activo="{Binding EspecieActiva}" Command="{Binding AbrirEspecieCommand}" AutomationProperties.Name="{l:Formato Libreria.Filtro.Especie, {Binding EtiquetaEspecie}}">
+            <StackPanel Orientation="Horizontal" Spacing="6"><TextBlock Text="{Binding EtiquetaEspecie}" TextWrapping="NoWrap" /><d:Icono Glifo="ChevronDown" /></StackPanel>
+          </Button>
+          <Button Name="FiltroForma" Classes="filtro" Classes.activo="{Binding FormaActiva}" Command="{Binding AbrirFormaCommand}" IsEnabled="{Binding FormaDisponible}" AutomationProperties.Name="{l:Formato Libreria.Filtro.Forma, {Binding EtiquetaForma}}" AutomationProperties.HelpText="{DynamicResource Loc.Libreria.Vista.3}">
+            <StackPanel Orientation="Horizontal" Spacing="6"><TextBlock Text="{Binding EtiquetaForma}" TextWrapping="NoWrap" /><d:Icono Glifo="ChevronDown" /></StackPanel>
+          </Button>
+          <Button Name="FiltroIdioma" Classes="filtro" Classes.activo="{Binding IdiomaActivo}" Command="{Binding AbrirIdiomaCommand}" AutomationProperties.Name="{l:Formato Libreria.Filtro.Idioma, {Binding EtiquetaIdioma}}">
+            <StackPanel Orientation="Horizontal" Spacing="6"><TextBlock Text="{Binding EtiquetaIdioma}" TextWrapping="NoWrap" /><d:Icono Glifo="ChevronDown" /></StackPanel>
+          </Button>
+          <Button Name="FiltroRegion" Classes="filtro" Classes.activo="{Binding RegionActiva}" Command="{Binding AbrirRegionCommand}" AutomationProperties.Name="{l:Formato Libreria.Filtro.Region, {Binding EtiquetaRegion}}">
+            <StackPanel Orientation="Horizontal" Spacing="6"><TextBlock Text="{Binding EtiquetaRegion}" TextWrapping="NoWrap" /><d:Icono Glifo="ChevronDown" /></StackPanel>
+          </Button>
+          <ToggleButton Name="FiltroDisponibles" Classes="chip" IsChecked="{Binding SoloDisponibles}" AutomationProperties.Name="{DynamicResource Loc.Libreria.Vista.4}" AutomationProperties.HelpText="{DynamicResource Loc.Libreria.Vista.5}">
+            <StackPanel Orientation="Horizontal" Spacing="6"><d:Icono Glifo="ListFilter" /><TextBlock Text="{DynamicResource Loc.Libreria.Vista.4}" TextWrapping="NoWrap" /></StackPanel>
+          </ToggleButton>
+          <Button Classes="texto" MinHeight="48" Padding="8,0" Command="{Binding LimpiarFiltrosCommand}" IsVisible="{Binding HayFiltros}" AutomationProperties.Name="{DynamicResource Loc.Libreria.Vista.6}">
+            <TextBlock Text="{DynamicResource Loc.Libreria.Vista.7}" TextWrapping="NoWrap" />
+          </Button>
+        </StackPanel>
+      </d:TiraConIndicio>
+    </StackPanel>
+    </ScrollViewer>
+
+    <!-- Lista del catálogo (virtualizada): cada fila con su estado y, atenuada, su motivo -->
+    <Panel Grid.Row="1" ClipToBounds="True">
+      <ScrollViewer VerticalScrollBarVisibility="Auto" IsVisible="{Binding HayBanner}">
+      <Border Classes="tarjeta" VerticalAlignment="Top" Margin="16,12,16,12">
+        <StackPanel Spacing="6">
+          <TextBlock Classes="titulo2" Text="{Binding TituloBanner}" />
+          <TextBlock Name="TextoBanner" Classes="sec" TextWrapping="Wrap" Text="{Binding Banner}" />
+        </StackPanel>
+      </Border>
+      </ScrollViewer>
+      <TextBlock Classes="sec" Text="{DynamicResource Loc.Libreria.Vista.8}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="16,32,16,0" IsVisible="{Binding SinResultados}" />
+      <ListBox Name="Lista" Classes="limpia" ItemsSource="{Binding Filas}" IsVisible="{Binding HayLista}" Margin="8,4,8,0" AutomationProperties.Name="{DynamicResource Loc.Libreria.Vista.9}" SelectionMode="Single">
+        <ListBox.Styles>
+          <Style Selector="ListBoxItem"><Setter Property="Padding" Value="0" /><Setter Property="MinHeight" Value="0" /><Setter Property="Margin" Value="0,0,0,8" /></Style>
+        </ListBox.Styles>
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="vm:FilaLibreria">
+            <Border Classes="tarjeta" Padding="10" AutomationProperties.Name="{Binding Accesible}">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <Button Grid.ColumnSpan="2" Classes="fila" Padding="0" HorizontalContentAlignment="Stretch" Command="{Binding $parent[ListBox].((vm:LibreriaViewModel)DataContext).AbrirFichaCommand}" CommandParameter="{Binding}"
+                        AutomationProperties.Name="{Binding Accesible}" AutomationProperties.HelpText="{DynamicResource Loc.Libreria.Vista.10}" Background="Transparent" />
+                <Border Width="64" Height="64" Classes="casilla ocupada" Margin="0,0,12,0" Classes.atenuada="{Binding Atenuada}" IsHitTestVisible="False">
+                  <d:SpritePokemon Margin="3" Especie="{Binding Entrada.Especie}" Forma="{Binding FormaSprite}" ArgumentoForma="{Binding ArgumentoForma}" VersionJuego="{Binding VersionJuego}" Genero="{Binding Entrada.Genero}" Brillante="{Binding Entrada.Brillante}" Contexto="{Binding Contexto}" Modo="{Binding Modo}" Foreground="{DynamicResource TextoSecundario}" />
+                </Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2" IsHitTestVisible="False">
+                  <TextBlock Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+                  <TextBlock Classes="sec" Text="{Binding Detalle}" TextWrapping="Wrap" />
+                  <WrapPanel Margin="0,4,0,0">
+                    <Border Classes="insignia" Classes.ok="{Binding EtiquetaOk}" Classes.aviso="{Binding EtiquetaAviso}" HorizontalAlignment="Left" Margin="0,0,6,0">
+                      <StackPanel Orientation="Horizontal" Spacing="6"><d:Icono Glifo="{Binding Glifo}" /><TextBlock Text="{Binding Etiqueta}" TextWrapping="NoWrap" /></StackPanel>
+                    </Border>
+                    <Border Classes="insignia dorado" HorizontalAlignment="Left" IsVisible="{Binding Gigamax}"><TextBlock Text="{DynamicResource Loc.Libreria.Vista.11}" /></Border>
+                  </WrapPanel>
+                  <TextBlock Classes="sec" Text="{Binding Motivo}" IsVisible="{Binding HayMotivo}" TextWrapping="Wrap" Foreground="{DynamicResource Aviso}" />
+                </StackPanel>
+                <Button Grid.Column="2" Classes="icono" Width="48" Height="48" IsEnabled="{Binding Entrada.Ofrecible}" VerticalAlignment="Center" Margin="8,0,0,0"
+                        Command="{Binding $parent[ListBox].((vm:LibreriaViewModel)DataContext).AnadirRapidoCommand}" CommandParameter="{Binding}"
+                        AutomationProperties.Name="{DynamicResource Loc.Libreria.Vista.12}" AutomationProperties.HelpText="{DynamicResource Loc.Libreria.Vista.13}">
+                  <d:Icono Glifo="Plus" Foreground="{DynamicResource Dorado}" />
+                </Button>
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </Panel>
+
+    <!-- Paginación de 50 en 50 -->
+    <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto" Margin="16,4,16,8" IsVisible="{Binding HayLista}">
+      <Button Name="BotonAnterior" Classes="secundario" MinHeight="48" MinWidth="48" Command="{Binding AnteriorCommand}" IsEnabled="{Binding PuedeAnterior}" AutomationProperties.Name="{DynamicResource Loc.Libreria.Vista.14}"><d:Icono Glifo="ChevronLeft" Width="20" Height="20" /></Button>
+      <TextBlock Grid.Column="1" Name="TextoPagina" Classes="sec" Text="{Binding TextoPagina}" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" AutomationProperties.LiveSetting="Polite" />
+      <Button Name="BotonSiguiente" Grid.Column="2" Classes="secundario" MinHeight="48" MinWidth="48" Command="{Binding SiguienteCommand}" IsEnabled="{Binding PuedeSiguiente}" AutomationProperties.Name="{DynamicResource Loc.Libreria.Vista.15}"><d:Icono Glifo="ChevronRight" Width="20" Height="20" /></Button>
+    </Grid>
+  </Grid>
+</UserControl>

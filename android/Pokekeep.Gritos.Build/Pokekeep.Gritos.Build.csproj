@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Generador del paquete de gritos de serie (X11): descarga (con caché) PokeAPI/cries y pokemon.csv/pokemon_forms.csv en revisiones FIJADAS, traduce id de PokeAPI a (especie, forma) de PKHeX
+       y empaqueta los .ogg ORIGINALES, byte a byte, en gritos.pkpack + manifest.json (mismo formato que los sprites) + procedencia. Uso: herramientas\generar-gritos-android.ps1 -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Pokekeep.Gritos.Build</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Pokekeep.Sprites\Pokekeep.Sprites.csproj" />
+    <EmbeddedResource Include="formas-manuales.tsv" LogicalName="formas-manuales.tsv" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Operaciones de Pokekeep en el movil SIN tipos de Android (net10.0): lo que une la interfaz (puertos de Pokekeep.Mobile.Ui) con el nucleo compartido (AutoLegalidad.App: PokekeepCoordinator, LibraryData,
+       AcercaDeModelo...). Va aparte de Pokekeep.Mobile.Platform (net10.0-android) para poder probarlo en el PC con los MISMOS ficheros que corren en el telefono. ADR 0060. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework Condition="'$(PokekeepAndroid)' == 'true'">net10.0-android</TargetFramework>
+    <SupportedOSPlatformVersion Condition="'$(PokekeepAndroid)' == 'true'">29</SupportedOSPlatformVersion>
+    <RootNamespace>Pokekeep.Mobile.Operaciones</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Pokekeep.Mobile.Ui\Pokekeep.Mobile.Ui.csproj" />
+    <ProjectReference Include="..\..\src\AutoLegalidad.App\AutoLegalidad.App.csproj" />
+    <ProjectReference Include="..\..\src\AutoLegalidad.Catalog\AutoLegalidad.Catalog.csproj" />
+    <ProjectReference Include="..\..\src\AutoLegalidad.Contracts\AutoLegalidad.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\AutoLegalidad.Registro\AutoLegalidad.Registro.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Pokekeep.Android.VisualTests" />
+    <InternalsVisibleTo Include="Pokekeep.Android.UiTests" />
+    <InternalsVisibleTo Include="Pokekeep.Android.WinFormsTests" />
+  </ItemGroup>
+</Project>

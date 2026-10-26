@@ -1,0 +1,52 @@
+<Project>
+  <!-- ADR 0039: el repo es la raiz y las fuentes de terceros (fuentes\, herramientas\alm-*...) viven DENTRO. Estas propiedades solo
+       valen para el codigo propio (src\ y tests\); lo de terceros se compila con sus propios ajustes, como antes del traslado. -->
+  <PropertyGroup>
+    <PokekeepPropio Condition="$([System.String]::new('$(MSBuildProjectDirectory)\').StartsWith('$(MSBuildThisFileDirectory)src\'))">true</PokekeepPropio>
+    <PokekeepPropio Condition="$([System.String]::new('$(MSBuildProjectDirectory)\').StartsWith('$(MSBuildThisFileDirectory)tests\'))">true</PokekeepPropio>
+    <PokekeepPropio Condition="$([System.String]::new('$(MSBuildProjectDirectory)/').StartsWith('$(MSBuildThisFileDirectory)src/'))">true</PokekeepPropio>
+    <PokekeepPropio Condition="$([System.String]::new('$(MSBuildProjectDirectory)/').StartsWith('$(MSBuildThisFileDirectory)tests/'))">true</PokekeepPropio>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(PokekeepPropio)' == 'true'">
+    <!-- Las salidas de la compilacion para Android (herramientas/compilar-android.ps1) viven en obj-android y bin-android: el codigo generado ahi nunca debe entrar en una compilacion de escritorio. -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj-android/**;bin-android/**</DefaultItemExcludes>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>14</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <!-- Reproducibilidad: versiones exactas fijadas y lockfile por proyecto (packages.lock.json). -->
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <NuGetAudit>false</NuGetAudit>
+  </PropertyGroup>
+
+  <!-- Android (Fase 1, ADR 0054): `herramientas\compilar-android.ps1` compila con -p:PokekeepAndroid=true. El codigo propio (src\ y tests\) pasa a net10.0-android SIN tocar el csproj de nadie; el Core de
+       fuentes\ conserva su net10.0 (regla 12: no se toca) y se referencia como biblioteca portable, como en cualquier app de Android. Aqui tambien se separan las carpetas de salida (para no pisar el
+       obj\ y bin\ de escritorio) y se fija la version minima de Android del producto (12 = API 31). Sin esa propiedad este grupo no existe y nada cambia. -->
+  <PropertyGroup Condition="'$(PokekeepAndroid)' == 'true' And '$(PokekeepPropio)' == 'true'">
+    <TargetFramework>net10.0-android</TargetFramework>
+    <BaseIntermediateOutputPath>obj-android\</BaseIntermediateOutputPath>
+    <BaseOutputPath>bin-android\</BaseOutputPath>
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**;obj-android/**;bin-android/**</DefaultItemExcludes>
+    <!-- Los packages.lock.json versionados son de escritorio (TFM net10.0): la restauracion Android escribe su propio fichero de bloqueo, ignorado por git. -->
+    <NuGetLockFilePath>obj-android\packages.lock.json</NuGetLockFilePath>
+    <SupportedOSPlatformVersion>31</SupportedOSPlatformVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(PokekeepPropio)' == 'true' And '$(PokekeepPortable)' == 'true'">
+    <!-- Hito 6: compilacion del PAQUETE PORTABLE. El binario no lleva las variables de entorno ni las rutas de desarrollo (ver PokekeepPaths y el Worker). -->
+    <DefineConstants>$(DefineConstants);POKEKEEP_PORTABLE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(PokekeepPropio)' == 'true'">
+    <!-- Raíz del proyecto = este repo (contiene fuentes\, ignorada por git; ADR 0039). -->
+    <ProyectoRaiz>$(MSBuildThisFileDirectory)</ProyectoRaiz>
+    <!-- Core oficial FIJADO por commit (ver fuentes.lock.json y docs/adr/0001). Se puede sobrescribir con -p:PKHeXCoreProject=... -->
+    <PKHeXCoreProject Condition="'$(PKHeXCoreProject)' == ''">$(ProyectoRaiz)fuentes\PKHeX-oficial\PKHeX.Core\PKHeX.Core.csproj</PKHeXCoreProject>
+    <!-- Raiz del arbol de PKHeX al que pertenece ese Core (Hito 4: PKHeX.Drawing.PokeSprite sale del MISMO arbol, oficial por defecto o la copia con parches de Pokekeep). -->
+    <PKHeXRaiz>$([System.IO.Path]::GetFullPath('$(PKHeXCoreProject)\..\..\'))</PKHeXRaiz>
+  </PropertyGroup>
+</Project>

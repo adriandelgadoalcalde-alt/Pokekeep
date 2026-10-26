@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\PokekeepVersion.props" />
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <RootNamespace>AutoLegalidad.Ui</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <NeutralLanguage>es-ES</NeutralLanguage>
+    <!-- Version real del producto: src\PokekeepVersion.props (la comparten Ui y App; la lee la ventana «Acerca de»). -->
+    <Version>$(PokekeepVersion)</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Core y Drawing salen del MISMO arbol de PKHeX (oficial por defecto; la copia con parches de Pokekeep al construir el ejecutable, -p:PKHeXCoreProject=...). -->
+    <ProjectReference Include="$(PKHeXCoreProject)" />
+    <ProjectReference Include="$(PKHeXRaiz)PKHeX.Drawing.PokeSprite\PKHeX.Drawing.PokeSprite.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.App\AutoLegalidad.App.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.Contracts\AutoLegalidad.Contracts.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.Registro\AutoLegalidad.Registro.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.WorkerClient\AutoLegalidad.WorkerClient.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.Catalog\AutoLegalidad.Catalog.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="AutoLegalidad.UiTests" />
+  </ItemGroup>
+</Project>

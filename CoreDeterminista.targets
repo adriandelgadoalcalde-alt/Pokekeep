@@ -1,0 +1,26 @@
+<Project>
+  <!-- ADR 0068: el PKHeX.Core.dll (y el PKHeX.Drawing.PokeSprite) sale BYTE A BYTE IGUAL desde cualquier copia y cualquier ruta.
+       Motivo: la ruta del PDB va incrustada en el DLL, asi que el mismo commit y el mismo SourceRevisionId daban un SHA-256 distinto en cada carpeta, y el catalogo
+       (autolegalidad.sqlite, core_dll_sha256) esta sellado a ese hash. Solucion: PathMap (ruta de la raiz del proyecto hacia /pokekeep) aplicado a las referencias de
+       proyecto que apuntan al arbol de PKHeX, desde nuestra configuracion y SIN tocar las fuentes de PKHeX (su Directory.Build.props es el suyo y no importa el nuestro).
+       Va en AdditionalProperties de la referencia, es decir, como propiedad GLOBAL de ese proyecto: la heredan sus propias referencias (Drawing a Core), de modo que el
+       Core se compila UNA sola vez, con las mismas propiedades se llegue por donde se llegue. Se aplica sobre _MSBuildProjectReferenceExistent (y no sobre el item
+       ProjectReference) porque ahi estan TAMBIEN las referencias transitivas que el SDK anade al proyecto que consume; si no, el Core se compilaria dos veces en paralelo
+       (CS2012). EnableSourceLink=false: el JSON de SourceLink (que se mete en el PDB y de ahi en su suma de comprobacion dentro del DLL) lleva la ruta absoluta SIN mapear y solo existe si la carpeta tiene .git. Si un script pasa su propio -p:PathMap, esta referencia manda sobre el del Core.
+       Lo importa el Directory.Build.targets de la raiz y el de android\. -->
+  <PropertyGroup Condition="'$(ProyectoRaiz)' != '' And '$(PKHeXRaiz)' != ''">
+    <PokekeepPathMapRaiz>$([System.String]::Copy('$(ProyectoRaiz)').TrimEnd('\'))</PokekeepPathMapRaiz>
+  </PropertyGroup>
+  <!-- ADR 0068 (cierre del limite): con -p:PokekeepAndroid=true (herramientas\compilar-apk.ps1 y compilar-android.ps1) el Core y el Drawing del arbol de PKHeX salen a carpetas PROPIAS
+       (obj\android\ y bin\android\ dentro de cada proyecto), de modo que compilar el APK nunca pisa el PKHeX.Core.dll de escritorio (el catalogo esta sellado a su hash). Solo se cambian
+       IntermediateOutputPath y OutputPath (no BaseIntermediateOutputPath): project.assets.json y nuget.g.props siguen donde la restauracion los dejo. -->
+  <Target Name="PokekeepCoreDeterminista" AfterTargets="_SplitProjectReferencesByFileExistence" Condition="'$(PokekeepPathMapRaiz)' != ''">
+    <ItemGroup>
+      <_MSBuildProjectReferenceExistent Update="$(PKHeXRaiz)**\*.csproj" AdditionalProperties="%(_MSBuildProjectReferenceExistent.AdditionalProperties);PathMap=$(PokekeepPathMapRaiz)=/pokekeep;EnableSourceLink=false" />
+    </ItemGroup>
+    <!-- Con ArtifactsPath el SDK ya separa todas las salidas fuera de fuentes, incluida la restauracion. -->
+    <ItemGroup Condition="'$(PokekeepAndroid)' == 'true' And '$(ArtifactsPath)' == ''">
+      <_MSBuildProjectReferenceExistent Update="$(PKHeXRaiz)**\*.csproj" AdditionalProperties="%(_MSBuildProjectReferenceExistent.AdditionalProperties);IntermediateOutputPath=%(RootDir)%(Directory)obj\android\$(Configuration)\net10.0\;OutputPath=%(RootDir)%(Directory)bin\android\$(Configuration)\net10.0\" />
+    </ItemGroup>
+  </Target>
+</Project>

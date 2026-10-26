@@ -1,0 +1,367 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             xmlns:e="clr-namespace:Pokekeep.Mobile.Ui.Herramientas.Equipo"
+             xmlns:mo="clr-namespace:Pokekeep.Mobile.Ui.Modelo"
+             x:Class="Pokekeep.Mobile.Ui.Views.CajasView"
+             x:DataType="vm:CajasViewModel">
+  <UserControl.Styles>
+    <Style Selector="Border.resalte-arrastre"><Setter Property="BorderBrush" Value="{DynamicResource Correcto}" /></Style>
+    <Style Selector="Border.resalte-arrastre.rechazo"><Setter Property="BorderBrush" Value="{DynamicResource Error}" /></Style>
+    <Style Selector="Border.apoyo-arrastre :is(Control)"><Setter Property="AutomationProperties.AccessibilityView" Value="Raw" /></Style>
+    <Style Selector="Grid.oculto"><Setter Property="Opacity" Value="0" /><Setter Property="IsHitTestVisible" Value="False" /></Style>
+    <Style Selector="Border.tres RadioButton.segmento"><Setter Property="FontSize" Value="{DynamicResource TamPequeno}" /></Style>
+    <Style Selector="Border.tres RadioButton.segmento"><Setter Property="Padding" Value="8,0" /></Style>
+  </UserControl.Styles>
+  <UserControl.Resources>
+    <!-- La casilla de una caja, del equipo o de una zona: sprite, aviso de legalidad, bloqueo, seleccion multiple, busqueda y ultimo toque -->
+    <DataTemplate x:Key="PlantillaCasilla" x:DataType="vm:CasillaViewModel">
+      <Button Classes="casilla" Command="{Binding $parent[UserControl].((vm:CajasViewModel)DataContext).SeleccionarCommand}" CommandParameter="{Binding}"
+              AutomationProperties.Name="{Binding NombreAccesible}" AutomationProperties.HelpText="{DynamicResource Loc.Cajas.TocaVerFichaManten}">
+        <d:CasillaBusqueda Pulso="{Binding PulsoBusqueda}" Classes="casilla" Classes.ocupada="{Binding Ocupada}" Classes.seleccionada="{Binding Seleccionada}" Classes.marcada="{Binding Marcada}" Classes.atenuada="{Binding Atenuada}" Classes.coincide="{Binding Coincide}"
+                Classes.origen="{Binding EsOrigen}" Classes.objetivo="{Binding ObjetivoSoltar}" Classes.rechazo="{Binding ObjetivoRechazado}" Classes.toque-colocar="{Binding TocoColocar}" Classes.toque-borrar="{Binding TocoBorrar}" Opacity="{Binding Atenuacion}">
+          <Grid>
+            <Border Classes="numero" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding Vacia}">
+              <TextBlock Text="{Binding Numero}" FontSize="{DynamicResource TamEtiqueta}" Foreground="{DynamicResource TextoSecundario}" />
+            </Border>
+            <d:SpritePokemon Margin="3" IsVisible="{Binding Ocupada}" Especie="{Binding Especie}" Forma="{Binding Forma}" Genero="{Binding Genero}" Brillante="{Binding Brillante}" Huevo="{Binding Huevo}" Imagen="{Binding Sprite}" JuegoIcono="{Binding JuegoIcono}" Fondo="{Binding SpriteFondo}" Recuadro="{Binding SpriteRecuadro}" Marcas="{Binding SpriteMarcas}" Suave="{Binding SpriteSuave}" Silueta="{Binding SpriteEsSilueta}" Contexto="{Binding Contexto}" Modo="{Binding Modo}"
+                             Foreground="{DynamicResource TextoSecundario}" />
+            <Border IsVisible="{Binding MostrarAviso}" Classes="insignia" Classes.error="{Binding EsIlegal}" Classes.aviso="{Binding EsHome}" Padding="0" Width="18" Height="18" CornerRadius="6" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="2">
+              <d:Icono Glifo="{Binding GlifoAviso}" Width="12" Height="12" />
+            </Border>
+            <Border IsVisible="{Binding Bloqueada}" Classes="insignia" Padding="0" Width="18" Height="18" CornerRadius="6" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="2">
+              <d:Icono Glifo="Lock" Width="12" Height="12" />
+            </Border>
+            <!-- Seleccion multiple: marca pequena en la esquina (16 dp: menos del 10 % del sprite), con icono y no solo con color -->
+            <Border IsVisible="{Binding Marcada}" Classes="insignia dorado" Padding="0" Width="14" Height="14" CornerRadius="4" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1">
+              <d:Icono Glifo="Check" Width="10" Height="10" />
+            </Border>
+            <Border IsVisible="{Binding ParaMarcar}" BorderBrush="{DynamicResource TextoSecundario}" BorderThickness="1.5" Background="Transparent" Width="14" Height="14" CornerRadius="4" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1" />
+            <d:TrazoBusqueda Intensidad="{Binding $parent[d:CasillaBusqueda].Intensidad}" IsHitTestVisible="False" />
+          </Grid>
+        </d:CasillaBusqueda>
+      </Button>
+    </DataTemplate>
+  </UserControl.Resources>
+
+  <Panel>
+  <ScrollViewer Name="Desplazador" VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="16" Margin="16,8,16,24">
+
+      <!-- Cabecera. El titulo y la barra de estado (seleccion, colocar, busqueda) comparten el MISMO sitio y el alto del titulo: entrar o salir de la seleccion no mueve la rejilla (las acciones van en la barra de abajo, ShellView). -->
+      <Panel>
+        <Grid Name="CabeceraNormal" IsVisible="{Binding !CabeceraBusqueda}" ColumnDefinitions="*,Auto,Auto" Classes.oculto="{Binding !CabeceraNormal}" IsEnabled="{Binding CabeceraNormal}">
+          <StackPanel Spacing="2" VerticalAlignment="Center">
+            <TextBlock Classes="titulo" Text="{DynamicResource Loc.Cajas.Pokemon}" />
+            <TextBlock Classes="sec subtitulo-pestana" Text="{DynamicResource Loc.Cajas.CajasEquipoSolaVista}" />
+          </StackPanel>
+          <Button Grid.Column="1" Classes="icono" Width="48" Height="48" Command="{Binding AbrirBusquedaCommand}" IsVisible="{Binding TieneCajas}" AutomationProperties.Name="{DynamicResource Loc.Cajas.BuscarCajas}" AutomationProperties.HelpText="{DynamicResource Loc.Cajas.ResaltaPokemonCumplenCriterios}">
+            <d:Icono Glifo="Search" Foreground="{DynamicResource Texto}" />
+          </Button>
+          <Button Grid.Column="2" Classes="icono" Width="48" Height="48" Command="{Binding AbrirMenuMasCommand}" AutomationProperties.Name="{DynamicResource Loc.Cajas.Opciones}" AutomationProperties.HelpText="{DynamicResource Loc.Cajas.DeshacerOrdenarLimpiarNombre}">
+            <d:Icono Glifo="EllipsisVertical" Foreground="{DynamicResource Texto}" />
+          </Button>
+        </Grid>
+        <!-- Seleccion multiple: contador y salir -->
+        <Grid ColumnDefinitions="Auto,*" IsVisible="{Binding CabeceraSeleccion}" Height="{Binding #CabeceraNormal.Bounds.Height}" ClipToBounds="True" VerticalAlignment="Top">
+          <Button Classes="icono" Width="48" Height="48" Command="{Binding CancelarSeleccionCommand}" AutomationProperties.Name="{DynamicResource Loc.Cajas.SalirSeleccion}" AutomationProperties.HelpText="{DynamicResource Loc.Cajas.DejaSeleccionarCambiarNada}">
+            <d:Icono Glifo="X" Foreground="{DynamicResource Texto}" />
+          </Button>
+          <TextBlock Grid.Column="1" Classes="titulo2 titulo-barra" Text="{Binding TextoSeleccion}" VerticalAlignment="Center" Margin="8,0,0,0" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+        </Grid>
+        <!-- Colocar: que se esta moviendo o copiando -->
+        <Grid ColumnDefinitions="Auto,*" IsVisible="{Binding CabeceraColocar}" Height="{Binding #CabeceraNormal.Bounds.Height}" ClipToBounds="True" VerticalAlignment="Top">
+          <Button Classes="icono" Width="48" Height="48" Command="{Binding CancelarColocacionCommand}" AutomationProperties.Name="{DynamicResource Loc.Comun.Cancelar}" AutomationProperties.HelpText="{DynamicResource Loc.Seleccion.CancelarAyuda}">
+            <d:Icono Glifo="X" Foreground="{DynamicResource Texto}" />
+          </Button>
+          <TextBlock Grid.Column="1" Classes="titulo2 titulo-barra" Text="{Binding TextoColocar}" VerticalAlignment="Center" Margin="8,0,0,0" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" AutomationProperties.LiveSetting="Polite" />
+        </Grid>
+        <!-- Busqueda en curso: reserva como minimo la altura de la cabecera normal (ver CajasView.axaml.cs) para que la rejilla no salte
+             al buscar, igual que seleccion y colocar; y crece con su texto, asi que con el texto al 200 % no recorta «1 coincidencia» (uso9) -->
+        <Grid Name="CabeceraBuscando" ColumnDefinitions="Auto,*,Auto,Auto,Auto" IsVisible="{Binding CabeceraBusqueda}" MinHeight="48" VerticalAlignment="Top">
+          <d:Icono Glifo="Search" Margin="0,0,10,0" VerticalAlignment="Center" />
+          <!-- Una línea que se ajusta (uso10): con letra grande «N coincidencias» se partía junto a los tres botones y empujaba la rejilla. -->
+          <d:TextoAjustado Grid.Column="1" FontWeight="Bold" TamanoPreferido="{DynamicResource TamTitulo2}" Text="{Binding TextoBusqueda}" TextWrapping="NoWrap" VerticalAlignment="Center" AutomationProperties.LiveSetting="Polite" />
+          <Button Grid.Column="2" Classes="icono" Width="48" Height="48" Command="{Binding AnteriorCoincidenciaCommand}" IsEnabled="{Binding HayCoincidencias}" AutomationProperties.Name="{DynamicResource Loc.Cajas.CoincidenciaAnterior}"><d:Icono Glifo="ChevronLeft" Foreground="{DynamicResource Texto}" /></Button>
+          <Button Grid.Column="3" Classes="icono" Width="48" Height="48" Command="{Binding SiguienteCoincidenciaCommand}" IsEnabled="{Binding HayCoincidencias}" AutomationProperties.Name="{DynamicResource Loc.Cajas.CoincidenciaSiguiente}"><d:Icono Glifo="ChevronRight" Foreground="{DynamicResource Texto}" /></Button>
+          <Button Grid.Column="4" Classes="icono" Width="48" Height="48" Command="{Binding QuitarBusquedaCommand}" AutomationProperties.Name="{DynamicResource Loc.Cajas.QuitarBusqueda}" AutomationProperties.HelpText="{DynamicResource Loc.Cajas.DejaResaltar}"><d:Icono Glifo="X" Foreground="{DynamicResource Texto}" /></Button>
+        </Grid>
+      </Panel>
+
+      <TextBlock Name="DestinoBusqueda" Classes="sec" Text="{Binding AnuncioBusqueda}" IsVisible="{Binding HayAnuncioBusqueda}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+
+      <!-- Segmento de zonas: Cajas / Equipo / Otros (solo las que tiene el guardado) -->
+      <Border Classes.tres="{Binding TresZonas}" Background="{DynamicResource SuperficieHundida}" CornerRadius="16" Padding="4" IsVisible="{Binding VariasZonas}">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="{Binding AnchoZonaCajas}" /><ColumnDefinition Width="{Binding AnchoZonaEquipo}" /><ColumnDefinition Width="{Binding AnchoZonaOtros}" />
+          </Grid.ColumnDefinitions>
+          <RadioButton Grid.Column="0" Classes="segmento" GroupName="zona-pokemon" IsChecked="{Binding EsCajas}" IsVisible="{Binding TieneCajas}" Content="{DynamicResource Loc.Zonas.Cajas}" AutomationProperties.Name="{DynamicResource Loc.Zonas.Cajas}" AutomationProperties.HelpText="{DynamicResource Loc.Cajas.MuestraCajaActivaGuardado}" />
+          <RadioButton Grid.Column="1" Classes="segmento" GroupName="zona-pokemon" IsChecked="{Binding EsEquipo}" IsVisible="{Binding TieneEquipo}" Content="{DynamicResource Loc.Form.Equipo}" AutomationProperties.Name="{DynamicResource Loc.Form.Equipo}" AutomationProperties.HelpText="{DynamicResource Loc.Cajas.MuestraEquipoCombate}" />
+          <RadioButton Grid.Column="2" Classes="segmento" GroupName="zona-pokemon" IsChecked="{Binding EsOtros}" IsVisible="{Binding TieneOtros}" Content="{DynamicResource Loc.Zonas.Otros}" AutomationProperties.Name="{DynamicResource Loc.Zonas.Otros}" AutomationProperties.HelpText="{DynamicResource Loc.Cajas.GuarderiaCajaCombateGTS}" />
+        </Grid>
+      </Border>
+
+      <!-- Selector de caja -->
+      <Grid ColumnDefinitions="Auto,*,Auto,Auto" IsVisible="{Binding MostrarNavegacionCaja}">
+        <Button Name="BotonCajaAnterior" Grid.Column="0" Classes="texto" AutomationProperties.Name="{DynamicResource Loc.Cajas.CajaAnterior}">
+          <d:Icono Glifo="ChevronLeft" Foreground="{DynamicResource Dorado}" />
+        </Button>
+        <Button Grid.Column="1" Classes="texto" Command="{Binding AbrirSelectorCajaCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" AutomationProperties.Name="{Binding EtiquetaCaja}" AutomationProperties.HelpText="{DynamicResource Loc.Cajas.EligeOtraCajaLista}">
+          <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+            <TextBlock Text="{Binding NombreCaja}" FontWeight="Medium" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Foreground="{DynamicResource Texto}" />
+            <d:Icono Glifo="ChevronDown" Width="18" Height="18" Foreground="{DynamicResource Dorado}" />
+          </StackPanel>
+        </Button>
+        <Button Name="BotonCajaSiguiente" Grid.Column="2" Classes="texto" AutomationProperties.Name="{DynamicResource Loc.Cajas.CajaSiguiente}">
+          <d:Icono Glifo="ChevronRight" Foreground="{DynamicResource Dorado}" />
+        </Button>
+        <TextBlock Grid.Column="3" Classes="sec" Text="{Binding Ocupacion}" VerticalAlignment="Center" Margin="8,0,4,0" AutomationProperties.Name="{DynamicResource Loc.Cajas.CasillasOcupadas}" />
+      </Grid>
+
+      <!-- Cuadricula real de la caja (deslizar a los lados cambia de caja). Carrusel (X6): la caja que se ve y, a su lado mientras se desliza o se pulsa «anterior/siguiente», la VECINA con su fondo y sus Pokemon;
+           se mueven las dos con una transformacion (nunca se reconstruye la cuadricula por fotograma) y, al terminar, la caja real pasa a mostrar la que entro. El fondo se ve como en PKHeX; las casillas dejan verlo (Tema.axaml, «confondo»). -->
+      <Border Name="TarjetaCaja" AutomationProperties.Name="{DynamicResource Loc.Cajas.CajaPokemon}" AutomationProperties.HelpText="{DynamicResource Loc.Cajas.DeslizaLadosCambiarCaja}" Classes="tarjeta" Classes.confondo="{Binding HayFondo}" Padding="12" IsVisible="{Binding MostrarCuadriculaCaja}" ClipToBounds="True">
+        <Border.GestureRecognizers>
+          <ScrollGestureRecognizer CanHorizontallyScroll="True" CanVerticallyScroll="False" IsScrollInertiaEnabled="True" />
+        </Border.GestureRecognizers>
+        <Panel Margin="-12">
+          <Panel Name="CapaVecina" IsVisible="False" IsHitTestVisible="False" AutomationProperties.AccessibilityView="Raw">
+            <d:FondoCajaImagen Name="FondoVecina" Source="{Binding ImagenFondoVecina}" IsVisible="{Binding HayFondoVecina}" AutomationProperties.AccessibilityView="Raw" />
+            <ItemsControl Name="RejillaVecina" Margin="12" ItemsSource="{Binding CasillasVecina}" ItemTemplate="{StaticResource PlantillaCasilla}">
+              <ItemsControl.ItemsPanel><ItemsPanelTemplate><d:CuadriculaCasillas Columnas="{Binding Columnas}" Espacio="4" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+            </ItemsControl>
+          </Panel>
+          <Panel Name="CapaActual">
+            <d:FondoCajaImagen Name="FondoCaja" Source="{Binding ImagenFondo}" IsVisible="{Binding HayFondo}" AutomationProperties.AccessibilityView="Raw" />
+            <ItemsControl Name="Rejilla" Margin="12" ItemsSource="{Binding CasillasCaja}" ItemTemplate="{StaticResource PlantillaCasilla}">
+              <ItemsControl.ItemsPanel><ItemsPanelTemplate><d:CuadriculaCasillas Columnas="{Binding Columnas}" Espacio="4" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+            </ItemsControl>
+          </Panel>
+        </Panel>
+      </Border>
+
+      <!-- Zona de destino extra mientras se arrastra (X10): el equipo vive en otra pestana, asi que aparece aqui, a la vista, solo mientras el Pokemon va en la mano -->
+
+
+      <!-- Lo mismo desde el equipo: la caja actual, para llevar un Pokemon del equipo a una caja -->
+
+
+      <!-- Equipo -->
+      <Border Name="TarjetaEquipo" Classes="tarjeta" Padding="12" IsVisible="{Binding MostrarEquipoEnPagina}">
+        <StackPanel Spacing="8">
+          <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Cajas.EQUIPOCOMBATE}" />
+          <ItemsControl Name="RejillaEquipo" ItemsSource="{Binding CasillasEquipo}" ItemTemplate="{StaticResource PlantillaCasilla}">
+            <ItemsControl.ItemsPanel><ItemsPanelTemplate><d:CuadriculaCasillas Columnas="{Binding ColumnasEquipo}" Espacio="4" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          </ItemsControl>
+          <Button Name="BotonCoberturaEquipo" Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding AbrirCoberturaYPlantillasCommand}" AutomationProperties.Name="{x:Static e:TextosEquipo.BotonEquipo}" AutomationProperties.HelpText="{x:Static e:TextosEquipo.BotonEquipoAyuda}">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="ShieldCheck" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{x:Static e:TextosEquipo.BotonEquipo}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+          </Button>
+        </StackPanel>
+      </Border>
+
+      <!-- Otras zonas: guarderia, Caja de combate, GTS, fusion, acompanante... -->
+      <ItemsControl ItemsSource="{Binding Grupos}" IsVisible="{Binding MostrarOtros}">
+        <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="16" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:GrupoViewModel">
+            <Border Classes="tarjeta" Padding="12">
+              <StackPanel Spacing="10">
+                <TextBlock Classes="titulo2" Text="{Binding Titulo}" AutomationProperties.HeadingLevel="2" />
+                <TextBlock Classes="sec" Text="{Binding Nota}" IsVisible="{Binding HayNota}" />
+                <ItemsControl ItemsSource="{Binding Casillas}" ItemTemplate="{StaticResource PlantillaCasilla}">
+                  <ItemsControl.ItemsPanel><ItemsPanelTemplate><d:CuadriculaCasillas Columnas="{Binding Columnas}" Espacio="8" MaxCelda="104" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <!-- Guarderia: experiencia ganada, huevo disponible y semilla -->
+                <StackPanel Spacing="8" IsVisible="{Binding EsGuarderia}">
+                  <ItemsControl ItemsSource="{Binding Experiencias}" IsVisible="{Binding TieneExperiencia}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="vm:ExperienciaGuarderia">
+                        <d:EtiquetaYValor Separacion="0" Margin="0,2">
+                          <TextBlock Text="{Binding Etiqueta}" VerticalAlignment="Center" />
+                          <TextBox Classes="campo numero" MinWidth="120" Text="{Binding Texto}" TextInputOptions.ContentType="Digits" AutomationProperties.Name="{Binding Etiqueta}" />
+                        </d:EtiquetaYValor>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                  <d:EtiquetaYValor Separacion="0" IsVisible="{Binding TieneHuevo}" MinHeight="48">
+                    <TextBlock Text="{DynamicResource Loc.Cajas.HuevoDisponible}" VerticalAlignment="Center" />
+                    <ToggleSwitch IsChecked="{Binding Huevo}" OnContent="" OffContent="" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Cajas.HuevoDisponible}" />
+                  </d:EtiquetaYValor>
+                  <d:EtiquetaYValor Separacion="0" IsVisible="{Binding TieneSemilla}">
+                    <TextBlock Text="{DynamicResource Loc.Cajas.SemillaHexadecimal}" VerticalAlignment="Center" />
+                    <TextBox Classes="campo" MinWidth="170" Text="{Binding Semilla}" MaxLength="{Binding DigitosSemilla}" AutomationProperties.Name="{DynamicResource Loc.Cajas.SemillaGuarderiaHexadecimal}" />
+                  </d:EtiquetaYValor>
+                  <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding ErrorSemilla}" IsVisible="{Binding HayErrorSemilla}" />
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+
+      <Border Classes="tarjeta" Padding="16" IsVisible="{Binding SinAlmacen}">
+        <TextBlock Classes="sec" Text="{DynamicResource Loc.Cajas.PartidaTieneCajasEquipo}" />
+      </Border>
+
+      <Grid ColumnDefinitions="*,*" ColumnSpacing="12" IsVisible="{Binding !SinAlmacen}">
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="6">
+          <Border Classes="insignia error" Padding="0" Width="18" Height="18" CornerRadius="6" VerticalAlignment="Center"><d:Icono Glifo="TriangleAlert" Width="12" Height="12" /></Border>
+          <TextBlock Grid.Column="1" Classes="sec" Text="{DynamicResource Loc.ModeloInformeLegalidad.RevisarLegalidad}" TextWrapping="Wrap" VerticalAlignment="Center" />
+        </Grid>
+        <TextBlock Grid.Column="1" Classes="sec" Text="{DynamicResource Loc.Cajas.ObjetoVisibleCasilla}" TextWrapping="Wrap" TextAlignment="Right" VerticalAlignment="Center" />
+      </Grid>
+
+        <TextBlock Classes="sec" IsVisible="{Binding !HaySeleccion}" Text="{DynamicResource Loc.Cajas.TocaPokemonVerFicha}" TextWrapping="Wrap" />
+        <!-- Casilla vacia -->
+      <Border Classes="tarjeta" IsVisible="{Binding HayVacia}">
+        <StackPanel Spacing="12">
+          <TextBlock Classes="titulo2" Text="{Binding TextoVacia}" AutomationProperties.LiveSetting="Polite" />
+          <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding AbrirMenuCasillaElegidaCommand}" AutomationProperties.Name="{DynamicResource Loc.Cajas.OpcionesCasillaVacia}" AutomationProperties.HelpText="{DynamicResource Loc.Cajas.ImportarArchivoAnadirPokemon}">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"><d:Icono Glifo="Plus" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.Cajas.PonerPokemonAqui}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+          </Button>
+        </StackPanel>
+      </Border>
+
+      <!-- Ficha compacta -->
+      <Border Classes="tarjeta" IsVisible="{Binding FichaVisible}">
+        <ContentControl Content="{Binding Ficha}">
+          <ContentControl.ContentTemplate>
+            <DataTemplate x:DataType="vm:FichaViewModel">
+              <StackPanel Spacing="12" AutomationProperties.Name="{Binding Resumen}">
+                <d:EtiquetaYValor Separacion="8">
+                  <TextBlock Classes="titulo2" Text="{Binding Apodo}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                  <Button Classes="icono" Width="48" Height="48" VerticalAlignment="Top" Command="{Binding MenuCommand}" IsVisible="{Binding HayMenu}" AutomationProperties.Name="{DynamicResource Loc.Cajas.Acciones}" AutomationProperties.HelpText="{DynamicResource Loc.Cajas.MoverCopiarExportarVer}">
+                    <d:Icono Glifo="EllipsisVertical" Foreground="{DynamicResource Texto}" />
+                  </Button>
+                </d:EtiquetaYValor>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                  <d:SpritePokemon UnSoloPokemon="True" Grande="True" Width="96" Height="96" Contexto="{Binding Contexto}" Especie="{Binding Especie}" Forma="{Binding Forma}" ArgumentoForma="{Binding ArgumentoForma}" VersionJuego="{Binding VersionJuego}" Modo="{Binding Modo}" Genero="{Binding Genero}" Brillante="{Binding Brillante}" Huevo="{Binding Huevo}" Foreground="{DynamicResource TextoSecundario}" />
+                  <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+                    <TextBlock Classes="sec" Text="{Binding Numero}" TextWrapping="Wrap" />
+                    <TextBlock Classes="sec" Text="{Binding Nivel}" TextWrapping="Wrap" />
+                    <TextBlock Classes="sec" Text="{Binding Ubicacion}" TextWrapping="Wrap" />
+                    <ItemsControl ItemsSource="{Binding Etiquetas}" Margin="0,4,0,0">
+                      <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel Orientation="Horizontal" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="mo:TipoVm"><d:EtiquetaTipo Margin="0,0,6,6" Tipo="{Binding Indice}" Texto="{Binding Texto}" /></DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </StackPanel>
+                </Grid>
+                <Border Classes="separador" />
+                <StackPanel Spacing="8">
+                  <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                    <Image Width="32" Height="32" Source="{Binding ImagenObjeto}" IsVisible="{Binding TieneObjeto}" AutomationProperties.AccessibilityView="Raw" RenderOptions.BitmapInterpolationMode="None" />
+                    <TextBlock Grid.Column="1" Text="{Binding NombreObjeto}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                  </Grid>
+                  <Border Classes="insignia" Classes.ok="{Binding !EsIlegal}" Classes.error="{Binding EsIlegal}">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="6">
+                      <d:Icono Glifo="{Binding GlifoEstado}" VerticalAlignment="Center" />
+                      <d:TextoEntero Grid.Column="1" Text="{Binding TextoEstado}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                    </Grid>
+                  </Border>
+                </StackPanel>
+                <ItemsControl ItemsSource="{Binding Motivos}" IsVisible="{Binding HayMotivos}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="x:String"><TextBlock Classes="sec" Text="{Binding}" Margin="0,2" /></DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock Classes="sec" Text="{DynamicResource Loc.Cajas.SoloLecturaCopiaPokemon2}" IsVisible="{Binding SoloLectura}" />
+                <Expander Classes="plegable" Header="{DynamicResource Loc.Cajas.ResumenPokemon}" AutomationProperties.Name="{DynamicResource Loc.Cajas.ResumenPokemon}" IsVisible="{Binding HayResumen}">
+                  <TextBlock Text="{Binding TextoResumen}" TextWrapping="Wrap" />
+                </Expander>
+                <Expander Classes="plegable" Header="{DynamicResource Loc.Cajas.InformacionEncuentro}" AutomationProperties.Name="{DynamicResource Loc.Cajas.InformacionEncuentro}" IsVisible="{Binding HayEncuentro}">
+                  <TextBlock Text="{Binding TextoEncuentro}" TextWrapping="Wrap" />
+                </Expander>
+                <Expander Classes="plegable" Header="{DynamicResource Loc.Cajas.SetShowdown}" AutomationProperties.Name="{DynamicResource Loc.Cajas.SetShowdown}" IsVisible="{Binding HayShowdown}">
+                  <StackPanel Spacing="10">
+                    <TextBlock Text="{Binding TextoShowdown}" TextWrapping="Wrap" />
+                    <TextBlock Classes="sec" Text="{Binding NotaShowdown}" IsVisible="{Binding HayNotaShowdown}" />
+                    <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CopiarShowdownCommand}" IsVisible="{Binding PuedeCopiarShowdown}" AutomationProperties.Name="{DynamicResource Loc.Cajas.CopiarSetShowdown}" AutomationProperties.HelpText="{DynamicResource Loc.Cajas.CopiaTextoSetPortapapeles}">
+                      <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"><d:Icono Glifo="Copy" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.Seleccion.Copiar}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+                    </Button>
+                  </StackPanel>
+                </Expander>
+                <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
+                  <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding EditarCommand}" AutomationProperties.Name="{DynamicResource Loc.Cajas.Editar}" AutomationProperties.HelpText="{DynamicResource Loc.Cajas.AbreEditorCompletoPokemon}">
+                    <StackPanel Spacing="4"><d:Icono Glifo="SlidersHorizontal" Width="20" Height="20" HorizontalAlignment="Center" /><TextBlock Text="{DynamicResource Loc.Cajas.Editar}" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" /></StackPanel>
+                  </Button>
+                  <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding OptimizarCommand}" IsEnabled="{Binding PuedeAcciones}" AutomationProperties.Name="{DynamicResource Loc.Editor.OptimizarStats}" AutomationProperties.HelpText="{DynamicResource Loc.Cajas.SubeEstadisticasDentroLegal}">
+                    <StackPanel Spacing="4"><d:Icono Glifo="Sparkles" Width="20" Height="20" HorizontalAlignment="Center" /><TextBlock Text="{DynamicResource Loc.Editor.OptimizarStats}" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" /></StackPanel>
+                  </Button>
+                </d:RejillaSinPartir>
+                <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding VerLegalidadCommand}" IsVisible="{Binding MostrarAccesoLegalidad}" AutomationProperties.Name="{DynamicResource Loc.Cajas.VerLegalidad}">
+                  <TextBlock Text="{DynamicResource Loc.Cajas.VerLegalidad}" TextWrapping="Wrap" TextAlignment="Center" />
+                </Button>
+                <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding LegalizarCommand}" IsEnabled="{Binding PuedeAcciones}" AutomationProperties.Name="{DynamicResource Loc.Cajas.LegalizarAutomaticamente}" AutomationProperties.HelpText="{DynamicResource Loc.Cajas.HaceLegalPokemonPolitica}">
+                  <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"><d:Icono Glifo="WandSparkles" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.Cajas.LegalizarAutomaticamente}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+                </Button>
+              </StackPanel>
+            </DataTemplate>
+          </ContentControl.ContentTemplate>
+        </ContentControl>
+      </Border>
+      <!-- uso10 (modo arrastre): sitio extra al final mientras se arrastra, para que la página pueda subir lo que haga falta y la
+           zona de destino quepa entera debajo sin encoger nada. Vale 0 fuera del arrastre. -->
+      <Border Name="EspacioArrastre" Height="0" IsHitTestVisible="False" AutomationProperties.AccessibilityView="Raw" />
+    </StackPanel>
+  </ScrollViewer>
+
+  <!-- uso10: la caja de apoyo (desde Equipo y Otros) va encima de la página, como la del equipo; el modo arrastre la coloca pegada al equipo. -->
+      <!-- uso10 (QA del propietario): la caja de apoyo se ve IGUAL que la de la página (tarjeta con el fondo de la caja de borde a borde,
+           su marco y sus casillas) y, encima, solo una etiqueta con su nombre; las flechas del borde avisan de que se puede cambiar de caja. -->
+      <!-- uso10: velo del color del fondo entre la tarjeta de origen y el final de la vista mientras dura el modo arrastre: lo que queda debajo
+           de la página no asoma por los huecos de las zonas (QA del propietario). -->
+      <Border Name="VeloArrastre" Background="{DynamicResource Fondo}" VerticalAlignment="Top" ZIndex="1" IsVisible="False" IsHitTestVisible="False" AutomationProperties.AccessibilityView="Raw" />
+      <Border Name="ApoyoCaja" Classes="apoyo-arrastre" VerticalAlignment="Top" Margin="16,0,16,0" ZIndex="1" IsVisible="{Binding MostrarApoyoCaja}" AutomationProperties.AccessibilityView="Raw">
+        <StackPanel Spacing="6">
+          <Border Classes="insignia" HorizontalAlignment="Left" Background="{DynamicResource Superficie}"><TextBlock Text="{Binding EtiquetaCaja}" /></Border>
+          <Border Name="MarcoApoyoCaja" Classes="tarjeta" Classes.confondo="{Binding HayFondo}" Padding="12" ClipToBounds="True">
+            <Panel Margin="-12">
+              <d:FondoCajaImagen Source="{Binding ImagenFondo}" IsVisible="{Binding HayFondo}" AutomationProperties.AccessibilityView="Raw" />
+              <ItemsControl Name="RejillaApoyoCaja" Margin="12" ItemsSource="{Binding CasillasCaja}" ItemTemplate="{StaticResource PlantillaCasilla}">
+                <ItemsControl.ItemsPanel><ItemsPanelTemplate><d:CuadriculaCasillas Columnas="{Binding Columnas}" Espacio="4" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+              </ItemsControl>
+            </Panel>
+          </Border>
+        </StackPanel>
+      </Border>
+  <!-- Capa del arrastre (X10): el fantasma del Pokemon que va con el dedo, el desplazado que vuela al origen y los avisos de borde (pasar de caja). Nunca recibe toques. -->
+  <Border Name="ApoyoEquipo" Classes="tarjeta apoyo-arrastre" Padding="12" VerticalAlignment="Bottom" Margin="16,0,16,16" ZIndex="1" IsVisible="{Binding MostrarApoyoEquipo}" AutomationProperties.AccessibilityView="Raw">
+        <StackPanel Spacing="8">
+          <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Cajas.SUELTAAQUILLEVARLOEQUIPO}" />
+          <ItemsControl Name="RejillaApoyoEquipo" ItemsSource="{Binding CasillasEquipo}" ItemTemplate="{StaticResource PlantillaCasilla}">
+            <ItemsControl.ItemsPanel><ItemsPanelTemplate><d:CuadriculaCasillas Columnas="{Binding Columnas}" Espacio="4" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          </ItemsControl>
+        </StackPanel>
+      </Border>
+  <Canvas ZIndex="2" Name="CapaArrastre" IsHitTestVisible="False" IsVisible="False" ClipToBounds="True" AutomationProperties.AccessibilityView="Raw">
+    <Border Name="AvisoBordeIzq" Opacity="0" Width="30" CornerRadius="0,14,14,0" Background="{DynamicResource SeleccionSuave}" BorderBrush="{DynamicResource Dorado}" BorderThickness="0,2.5,2.5,2.5">
+      <d:Icono Glifo="ChevronLeft" Width="22" Height="22" Foreground="{DynamicResource Dorado}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    </Border>
+    <Border Name="AvisoBordeDer" Opacity="0" Width="30" CornerRadius="14,0,0,14" Background="{DynamicResource SeleccionSuave}" BorderBrush="{DynamicResource Dorado}" BorderThickness="2.5,2.5,0,2.5">
+      <d:Icono Glifo="ChevronRight" Width="22" Height="22" Foreground="{DynamicResource Dorado}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    </Border>
+    <Panel Name="FantasmaDesplazado" IsVisible="False" RenderTransformOrigin="50%,50%" x:DataType="vm:CasillaViewModel">
+      <Border CornerRadius="12" Background="{DynamicResource Superficie}" BorderBrush="{DynamicResource BordeCasilla}" BorderThickness="1.5">
+        <d:SpritePokemon Margin="3" Especie="{Binding Especie}" Forma="{Binding Forma}" Genero="{Binding Genero}" Brillante="{Binding Brillante}" Huevo="{Binding Huevo}" Imagen="{Binding Sprite}" JuegoIcono="{Binding JuegoIcono}" Fondo="{Binding SpriteFondo}" Recuadro="{Binding SpriteRecuadro}" Marcas="{Binding SpriteMarcas}" Suave="{Binding SpriteSuave}" Silueta="{Binding SpriteEsSilueta}" Contexto="{Binding Contexto}" Modo="{Binding Modo}" Foreground="{DynamicResource TextoSecundario}" />
+      </Border>
+    </Panel>
+    <Panel Name="Fantasma" IsVisible="False" RenderTransformOrigin="50%,50%" x:DataType="vm:CasillaViewModel">
+      <Border Name="FantasmaSombra" Opacity="0" CornerRadius="14" Background="{DynamicResource Superficie}" BoxShadow="0 10 20 2 #66000000" />
+      <Border CornerRadius="14" Background="{DynamicResource Superficie}" BorderBrush="{DynamicResource Dorado}" BorderThickness="2.5">
+        <Grid>
+          <d:SpritePokemon Margin="3" Especie="{Binding Especie}" Forma="{Binding Forma}" Genero="{Binding Genero}" Brillante="{Binding Brillante}" Huevo="{Binding Huevo}" Imagen="{Binding Sprite}" JuegoIcono="{Binding JuegoIcono}" Fondo="{Binding SpriteFondo}" Recuadro="{Binding SpriteRecuadro}" Marcas="{Binding SpriteMarcas}" Suave="{Binding SpriteSuave}" Silueta="{Binding SpriteEsSilueta}" Contexto="{Binding Contexto}" Modo="{Binding Modo}" Foreground="{DynamicResource TextoSecundario}" />
+          <Border Name="FantasmaCantidad" IsVisible="False" Classes="insignia dorado" Padding="5,1" CornerRadius="8" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-6,-6,0">
+            <TextBlock Name="FantasmaTexto" FontSize="{DynamicResource TamEtiqueta}" FontWeight="Bold" />
+          </Border>
+        </Grid>
+      </Border>
+    </Panel>
+    <!-- Encima del fantasma: el destino sigue visible aunque el sprite pase sobre su borde. -->
+    <Border Name="ResalteDestino" Classes="resalte-arrastre" IsVisible="False" ZIndex="10" CornerRadius="14" BorderThickness="4" Background="Transparent" />
+  </Canvas>
+  </Panel>
+</UserControl>

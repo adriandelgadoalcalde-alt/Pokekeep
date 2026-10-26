@@ -1,0 +1,81 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:lz="clr-namespace:Pokekeep.Mobile.Ui.Localizacion"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:s="clr-namespace:Pokekeep.Mobile.Ui.Herramientas.Showdown"
+             x:Class="Pokekeep.Mobile.Ui.Views.ShowdownView"
+             x:DataType="s:ShowdownViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="16,0,16,24" Spacing="10">
+      <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" AutomationProperties.Name="{DynamicResource Loc.ImportarHex.VolverHerramientas}">
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.ImportarHex.VolverHerramientas}" TextWrapping="Wrap" VerticalAlignment="Center" /></Grid>
+      </Button>
+      <StackPanel Spacing="2" Margin="0,4,0,4">
+        <TextBlock Classes="titulo" Text="{Binding Titulo}" />
+        <TextBlock Classes="sec" TextWrapping="Wrap" Text="{Binding Subtitulo}" />
+      </StackPanel>
+
+      <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Showdown.ImportarSet}" />
+      <Border Classes="tarjeta" Padding="14,10">
+        <StackPanel Spacing="8">
+          <TextBlock Classes="sec" TextWrapping="Wrap" Text="{DynamicResource Loc.Showdown.PegaSetShowdownSmogon}" />
+          <TextBox Text="{Binding TextoSet}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="96" MaxHeight="220" PlaceholderText="{DynamicResource Loc.Showdown.PegaAquiSet}" AutomationProperties.Name="{DynamicResource Loc.Showdown.TextoSet}" />
+          <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
+            <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding PegarCommand}" AutomationProperties.Name="{DynamicResource Loc.ImportarHex.PegarPortapapeles}">
+              <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Clipboard" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.Showdown.Pegar}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+            </Button>
+            <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding RevisarCommand}" IsEnabled="{Binding PuedeRevisar}" AutomationProperties.Name="{DynamicResource Loc.Showdown.RevisarSet}">
+              <TextBlock Text="{DynamicResource Loc.Showdown.RevisarSet}" TextAlignment="Center" />
+            </Button>
+          </d:RejillaSinPartir>
+          <Border Classes="insignia error" Padding="12,8" IsVisible="{Binding HayAvisoSet}">
+            <TextBlock Text="{Binding AvisoSet}" TextWrapping="Wrap" FontWeight="Bold" AutomationProperties.LiveSetting="Polite" />
+          </Border>
+          <StackPanel Spacing="6" IsVisible="{Binding HayVistaPrevia}">
+            <TextBlock Text="{Binding CabeceraSet}" FontWeight="Medium" TextWrapping="Wrap" />
+            <Border Classes="tarjeta" Padding="12,8"><TextBlock Text="{Binding VistaPrevia}" TextWrapping="Wrap" FontFamily="monospace" AutomationProperties.Name="{DynamicResource Loc.Showdown.SetReformateado}" /></Border>
+            <Border Classes="insignia aviso" Padding="12,8" IsVisible="{Binding HayLineasNoValidas}">
+              <TextBlock Text="{Binding LineasNoValidas}" TextWrapping="Wrap" AutomationProperties.Name="{DynamicResource Loc.Showdown.LineasValidas}" />
+            </Border>
+            <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding AplicarACommand}" IsEnabled="{Binding NoOcupado}" AutomationProperties.Name="{DynamicResource Loc.Showdown.AplicarSetPokemon}" AutomationProperties.HelpText="{DynamicResource Loc.Showdown.EligeCajaPokemonAplica}">
+              <TextBlock Text="{DynamicResource Loc.Showdown.AplicarPokemon}" TextAlignment="Center" TextWrapping="Wrap" />
+            </Button>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Showdown.ExportarSets}" />
+      <Border Classes="tarjeta" Padding="14,10">
+        <StackPanel Spacing="8">
+          <TextBlock Classes="sec" TextWrapping="Wrap" Text="{DynamicResource Loc.Showdown.CopiaPortapapelesSetsFormato}" />
+          <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding ExportarEquipoCommand}" IsVisible="{Binding TieneEquipo}" IsEnabled="{Binding NoOcupado}" AutomationProperties.Name="{DynamicResource Loc.Cajas.ExportarEquipo}">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="ClipboardCopy" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.Cajas.ExportarEquipo}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+          </Button>
+          <StackPanel Spacing="8" IsVisible="{Binding TieneCajas}">
+            <Button Classes="secundario" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding ElegirCajaCommand}" AutomationProperties.Name="{lz:Formato Showdown.CajaExportar2, {Binding NombreCajaExportar}}">
+              <Grid ColumnDefinitions="*,Auto"><TextBlock Text="{lz:Formato Showdown.Caja, {Binding NombreCajaExportar}}" TextWrapping="Wrap" VerticalAlignment="Center" /><d:Icono Grid.Column="1" Glifo="ChevronDown" Width="18" Height="18" /></Grid>
+            </Button>
+            <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding ExportarCajaCommand}" IsEnabled="{Binding NoOcupado}" AutomationProperties.Name="{DynamicResource Loc.Showdown.ExportarCajaElegida}">
+              <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="ClipboardCopy" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.Showdown.ExportarCaja}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+            </Button>
+            <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding ExportarTodasCommand}" IsEnabled="{Binding NoOcupado}" AutomationProperties.Name="{DynamicResource Loc.Cajas.ExportarTodasCajas}">
+              <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="ClipboardCopy" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.Cajas.ExportarTodasCajas}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+            </Button>
+          </StackPanel>
+          <StackPanel Spacing="6" IsVisible="{Binding Ocupado}">
+            <ProgressBar IsIndeterminate="{Binding FraccionIndeterminada}" Value="{Binding Fraccion}" Minimum="0" Maximum="100" AutomationProperties.Name="{DynamicResource Loc.BaseDatosPkm.Progreso}" />
+            <TextBlock Classes="sec" Text="{Binding TextoAvance}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+            <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CancelarCommand}" AutomationProperties.Name="{DynamicResource Loc.Comun.Cancelar}"><TextBlock Text="{DynamicResource Loc.Comun.Cancelar}" TextAlignment="Center" /></Button>
+          </StackPanel>
+          <StackPanel Spacing="6" IsVisible="{Binding HayTextoExportado}">
+            <Border Classes="tarjeta" Padding="12,8"><TextBlock Text="{Binding TextoExportado}" TextWrapping="Wrap" FontFamily="monospace" AutomationProperties.Name="{DynamicResource Loc.Showdown.SetsExportados}" /></Border>
+            <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CopiarExportadoCommand}" AutomationProperties.Name="{DynamicResource Loc.Showdown.CopiarNuevoPortapapeles}">
+              <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="ClipboardCopy" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.Showdown.CopiarNuevo}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+            </Button>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+      <TextBlock Classes="sec" Text="{Binding Estado}" IsVisible="{Binding HayEstado}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

@@ -1,0 +1,112 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             xmlns:l="clr-namespace:Pokekeep.Mobile.Ui.Localizacion"
+             x:Class="Pokekeep.Mobile.Ui.Views.AjustesView"
+             x:DataType="vm:AjustesViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="16,0,16,24" Spacing="10">
+      <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" AutomationProperties.Name="{DynamicResource Loc.Comun.VolverMas}">
+        <StackPanel Orientation="Horizontal" Spacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Comun.VolverMas}" /></StackPanel>
+      </Button>
+      <StackPanel Spacing="2" Margin="0,4,0,4">
+        <TextBlock Classes="titulo" Text="{DynamicResource Loc.Ajustes.Titulo}" />
+        <TextBlock Classes="sec" TextWrapping="Wrap" Text="{Binding Subtitulo}" />
+      </StackPanel>
+      <Border Classes="insignia aviso" Padding="12,8" IsVisible="{Binding HayAviso}"><TextBlock Text="{Binding Aviso}" TextWrapping="Wrap" /></Border>
+      <StackPanel Spacing="6" DataContext="{x:Static l:IdiomaInterfaz.Actual}" x:DataType="l:ServicioIdioma">
+        <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Idioma.Titulo}" />
+        <ComboBox Name="SelectorIdioma" ItemsSource="{Binding Opciones}" SelectedItem="{Binding Seleccionado, Mode=TwoWay}" HorizontalAlignment="Stretch" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Idioma.Titulo}" AutomationProperties.HelpText="{DynamicResource Loc.Idioma.Ayuda}">
+          <ComboBox.ItemTemplate><DataTemplate x:DataType="l:OpcionIdioma"><TextBlock Text="{Binding Nombre}" /></DataTemplate></ComboBox.ItemTemplate>
+        </ComboBox>
+        <TextBlock Classes="sec" Text="{DynamicResource Loc.Idioma.Ayuda}" TextWrapping="Wrap" />
+      </StackPanel>
+      <!-- uso10: la variante del arrastre (C16) desaparece: el modo arrastre aprobado por el propietario es la única forma (CajasView.ModoArrastre.cs). -->
+      <TextBox Classes="campo" Text="{Binding Filtro}" PlaceholderText="{DynamicResource Loc.Ajustes.Buscar}" AutomationProperties.Name="{DynamicResource Loc.Ajustes.Buscar.Ayuda}" />
+      <ItemsControl ItemsSource="{Binding ResultadosBusqueda}">
+        <ItemsControl.ItemTemplate><DataTemplate x:DataType="vm:ResultadoAjuste">
+          <Button Classes="fila" Command="{Binding Abrir}" AutomationProperties.Name="{Binding Nombre}" AutomationProperties.HelpText="{Binding Descripcion}">
+            <StackPanel Spacing="4"><TextBlock Text="{Binding Nombre}" FontWeight="Bold" TextWrapping="Wrap" /><TextBlock Classes="sec" Text="{Binding Descripcion}" TextWrapping="Wrap" /><TextBlock Classes="sec" Text="{Binding Grupo}" /></StackPanel>
+          </Button>
+        </DataTemplate></ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <ItemsControl ItemsSource="{Binding GruposFiltrados}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:GrupoAjustes">
+            <StackPanel Spacing="6" Margin="0,6,0,0">
+              <TextBlock Classes="etiqueta" Text="{Binding Nombre}" />
+              <Border Classes="tarjeta" Padding="14,6">
+                <ItemsControl ItemsSource="{Binding Filas}">
+                  <ItemsControl.DataTemplates>
+                    <DataTemplate x:DataType="vm:AjusteInterruptor">
+                      <StackPanel Spacing="4" Margin="0,8" AutomationProperties.Name="{Binding Accesible}">
+                        <d:EtiquetaYValor Separacion="0">
+                          <TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextWrapping="Wrap" VerticalAlignment="Center" />
+                          <ToggleButton HorizontalAlignment="Left" Classes="chip" IsChecked="{Binding Activo}" MinWidth="64" AutomationProperties.Name="{Binding Nombre}" AutomationProperties.HelpText="{Binding Descripcion}"><TextBlock Text="{Binding ValorTexto}" /></ToggleButton>
+                        </d:EtiquetaYValor>
+                        <TextBlock Classes="sec" Text="{Binding Descripcion}" TextWrapping="Wrap" Foreground="{DynamicResource Aviso}" IsVisible="{Binding EsRiesgo}" />
+                        <TextBlock Classes="sec" Text="{Binding Descripcion}" TextWrapping="Wrap" IsVisible="{Binding !EsRiesgo}" />
+                      </StackPanel>
+                    </DataTemplate>
+                    <DataTemplate x:DataType="vm:AjusteEntero">
+                      <StackPanel Spacing="4" Margin="0,8" AutomationProperties.Name="{Binding Accesible}">
+                        <d:EtiquetaYValor Separacion="4">
+                          <TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextWrapping="Wrap" VerticalAlignment="Center" />
+                          <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Left">
+                            <Button Classes="icono" Width="48" Height="48" Command="{Binding BajarCommand}" IsEnabled="{Binding PuedeBajar}" AutomationProperties.Name="{Binding TextoBajar}"><d:Icono Glifo="Minus" /></Button>
+                            <TextBlock Text="{Binding ValorTexto}" MinWidth="44" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" AutomationProperties.Name="{Binding TextoValor}" />
+                            <Button Classes="icono" Width="48" Height="48" Command="{Binding SubirCommand}" IsEnabled="{Binding PuedeSubir}" AutomationProperties.Name="{Binding TextoSubir}"><d:Icono Glifo="Plus" /></Button>
+                          </StackPanel>
+                        </d:EtiquetaYValor>
+                        <TextBlock Classes="sec" Text="{Binding Descripcion}" TextWrapping="Wrap" />
+                      </StackPanel>
+                    </DataTemplate>
+                    <DataTemplate x:DataType="vm:AjusteOpcion">
+                      <StackPanel Spacing="4" Margin="0,8" AutomationProperties.Name="{Binding Accesible}">
+                        <TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextWrapping="Wrap" />
+                        <Button Classes="secundario" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding AbrirCommand}" AutomationProperties.Name="{Binding Nombre}" AutomationProperties.HelpText="{Binding Descripcion}">
+                          <Grid ColumnDefinitions="*,Auto"><TextBlock Text="{Binding ValorTexto}" TextWrapping="Wrap" VerticalAlignment="Center" /><d:Icono Grid.Column="1" Glifo="ChevronDown" Width="18" Height="18" /></Grid>
+                        </Button>
+                        <TextBlock Classes="sec" Text="{Binding Descripcion}" TextWrapping="Wrap" />
+                      </StackPanel>
+                    </DataTemplate>
+                  </ItemsControl.DataTemplates>
+                </ItemsControl>
+              </Border>
+            </StackPanel>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <Button Name="BotonRestablecer" Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding RestablecerCommand}" AutomationProperties.Name="{DynamicResource Loc.Ajustes.Restablecer}" AutomationProperties.HelpText="{DynamicResource Loc.Ajustes.RestablecerAyuda}">
+        <Grid ColumnDefinitions="Auto,*" HorizontalAlignment="Center" ColumnSpacing="8"><d:Icono Glifo="RefreshCw" Width="20" Height="20" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.Ajustes.RestablecerTexto}" TextWrapping="Wrap" TextAlignment="Center" /></Grid>
+      </Button>
+      <StackPanel Spacing="6" Margin="0,6,0,0" IsVisible="{Binding MostrarGruposPkhex}">
+        <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Ajustes.Pkhex}" />
+        <Border Classes="insignia aviso" Padding="12,8" IsVisible="{Binding HayAvisoPkhex}"><TextBlock Text="{Binding AvisoPkhex}" TextWrapping="Wrap" /></Border>
+        <Border Classes="tarjeta" Padding="8,4">
+          <ItemsControl ItemsSource="{Binding GruposPkhex}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:EntradaGrupoPkhex">
+                <Button Classes="fila" Command="{Binding Abrir}" AutomationProperties.Name="{Binding Accesible}">
+                  <Grid ColumnDefinitions="*,Auto" MinHeight="56">
+                    <StackPanel VerticalAlignment="Center" Spacing="1" Margin="8,4">
+                      <TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextWrapping="Wrap" />
+                      <TextBlock Classes="sec" Text="{Binding Detalle}" />
+                    </StackPanel>
+                    <d:Icono Grid.Column="1" Glifo="ChevronRight" Width="20" Height="20" Margin="8,0" Foreground="{DynamicResource TextoSecundario}" VerticalAlignment="Center" />
+                  </Grid>
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </Border>
+        <!-- SettingsEditor.B_Reset (bloque 10-1) -->
+        <Button Name="BotonRestablecerPkhex" Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding RestablecerPkhexCommand}" AutomationProperties.Name="{DynamicResource Loc.Ajustes.RestablecerPkhex}" AutomationProperties.HelpText="{DynamicResource Loc.Ajustes.RestablecerPkhexAyuda}">
+          <Grid ColumnDefinitions="Auto,*" HorizontalAlignment="Center" ColumnSpacing="8"><d:Icono Glifo="RefreshCw" Width="20" Height="20" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.Ajustes.RestablecerPkhex}" TextWrapping="Wrap" TextAlignment="Center" /></Grid>
+        </Button>
+      </StackPanel>
+      <Border Classes="tarjeta" Padding="14,10" IsVisible="{Binding HayPronto}"><TextBlock Classes="sec" Text="{Binding Pronto}" TextWrapping="Wrap" /></Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

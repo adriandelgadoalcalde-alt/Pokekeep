@@ -1,0 +1,200 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:lz="clr-namespace:Pokekeep.Mobile.Ui.Localizacion"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             xmlns:v="clr-namespace:Pokekeep.Mobile.Ui.Views"
+             x:Class="Pokekeep.Mobile.Ui.Views.CompletarJuegoView"
+             x:DataType="vm:CompletarJuegoViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="16,0,16,24" Spacing="10">
+      <Button Name="BotonVolver" Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" IsEnabled="{Binding NoOcupado}" Padding="8,0" AutomationProperties.Name="{DynamicResource Loc.Comun.VolverMas}">
+        <StackPanel Orientation="Horizontal" Spacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Comun.VolverMas}" /></StackPanel>
+      </Button>
+      <StackPanel Spacing="2" Margin="0,4,0,4">
+        <TextBlock Classes="titulo" Text="{DynamicResource Loc.Menu.Mas.Completar.Titulo}" />
+        <TextBlock Name="TextoPaso" Classes="sec" Text="{Binding TextoPaso}" AutomationProperties.LiveSetting="Polite" />
+      </StackPanel>
+
+      <!-- Paso 1: opciones, con el resumen recalculado al momento -->
+      <StackPanel Spacing="10" IsVisible="{Binding EnAlcance}">
+        <Border Classes="insignia aviso" Padding="12,8" IsVisible="{Binding HayMotivo}"><TextBlock Name="TextoMotivo" Text="{Binding Motivo}" TextWrapping="Wrap" /></Border>
+        <TextBlock Name="LineaJuego" Text="{Binding LineaJuego}" FontWeight="Bold" TextWrapping="Wrap" />
+        <StackPanel Spacing="6" IsVisible="{Binding Analizando}">
+          <ProgressBar IsIndeterminate="{Binding Analizando}" AutomationProperties.Name="{DynamicResource Loc.CompletarJuego.AnalizandoTienes}" />
+          <TextBlock Name="TextoAnalizando" Classes="sec" Text="{DynamicResource Loc.CompletarJuego.AnalizandoTienesPartida}" AutomationProperties.LiveSetting="Polite" />
+        </StackPanel>
+
+        <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.CompletarJuego.FORMAS}" />
+        <ItemsControl ItemsSource="{Binding Formas}">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel Orientation="Horizontal" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:OpcionElegibleVm">
+              <ToggleButton Classes="chip" Margin="0,0,6,0" MinHeight="48" IsChecked="{Binding Elegida, Mode=OneWay}" Command="{Binding ElegirCommand}" AutomationProperties.Name="{Binding Accesible}">
+                <TextBlock Text="{Binding Etiqueta}" TextWrapping="Wrap" />
+              </ToggleButton>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.CompletarJuego.ORDEN}" />
+        <ItemsControl ItemsSource="{Binding Ordenes}">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel Orientation="Horizontal" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:OpcionElegibleVm">
+              <ToggleButton Classes="chip" Margin="0,0,6,0" MinHeight="48" IsChecked="{Binding Elegida, Mode=OneWay}" Command="{Binding ElegirCommand}" AutomationProperties.Name="{Binding Accesible}">
+                <TextBlock Text="{Binding Etiqueta}" TextWrapping="Wrap" />
+              </ToggleButton>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <CheckBox IsChecked="{Binding ReemplazarTodo}" MinHeight="48">
+          <TextBlock Text="{DynamicResource Loc.CompletarJuego.ReemplazarTodo}" TextWrapping="Wrap" />
+        </CheckBox>
+        <Border Classes="tarjeta" Padding="14,6">
+          <StackPanel Spacing="2">
+            <d:EtiquetaYValor Separacion="4">
+              <StackPanel VerticalAlignment="Center" Spacing="2">
+                <TextBlock Text="{DynamicResource Loc.CompletarJuego.EmpezarCaja}" FontWeight="Medium" TextWrapping="Wrap" />
+                <TextBlock Name="TextoCaja" Classes="sec" Text="{Binding TextoCaja}" />
+              </StackPanel>
+              <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Left">
+                <Button Name="BotonMenosCaja" Classes="icono" Width="48" Height="48" Command="{Binding MenosCajaCommand}" IsEnabled="{Binding PuedeMenosCaja}" AutomationProperties.Name="{DynamicResource Loc.Cajas.CajaAnterior}"><d:Icono Glifo="Minus" Width="20" Height="20" /></Button>
+              <TextBlock Text="{Binding CajaInicio}" MinWidth="28" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" />
+              <Button Name="BotonMasCaja" Classes="icono" Width="48" Height="48" Command="{Binding MasCajaCommand}" IsEnabled="{Binding PuedeMasCaja}" AutomationProperties.Name="{DynamicResource Loc.Cajas.CajaSiguiente}"><d:Icono Glifo="Plus" Width="20" Height="20" /></Button>
+              </StackPanel>
+            </d:EtiquetaYValor>
+            <d:EtiquetaYValor Separacion="0">
+              <TextBlock Text="{DynamicResource Loc.CompletarJuego.OmitirTengo}" FontWeight="Medium" TextWrapping="Wrap" VerticalAlignment="Center" />
+              <ToggleButton Name="InterruptorOmitir" Classes="chip" IsChecked="{Binding OmitirLoQueTengo}" MinWidth="64" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.CompletarJuego.OmitirTengo}" AutomationProperties.HelpText="{DynamicResource Loc.CompletarJuego.GeneraEspecieFormaPokemon}"><TextBlock Text="{Binding ValorOmitir}" /></ToggleButton>
+            </d:EtiquetaYValor>
+            <d:EtiquetaYValor Separacion="0">
+              <TextBlock Text="{DynamicResource Loc.CompletarJuego.PreferirVersionEventoLegendarios}" FontWeight="Medium" TextWrapping="Wrap" VerticalAlignment="Center" />
+              <ToggleButton Name="InterruptorEvento" Classes="chip" IsChecked="{Binding PreferirEvento}" MinWidth="64" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.CompletarJuego.PreferirVersionEvento}" AutomationProperties.HelpText="{DynamicResource Loc.CompletarJuego.LegendariosSublegendariosSingularesIntenta}"><TextBlock Text="{Binding ValorEvento}" /></ToggleButton>
+            </d:EtiquetaYValor>
+            <d:EtiquetaYValor Separacion="4">
+              <StackPanel VerticalAlignment="Center" Spacing="2">
+                <TextBlock Text="{DynamicResource Loc.Ajustes.Propiedad.BulkWorkers.Nombre}" FontWeight="Medium" TextWrapping="Wrap" />
+                <TextBlock Name="TextoProcesos" Classes="sec" Text="{Binding TextoProcesos}" TextWrapping="Wrap" />
+              </StackPanel>
+              <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Left">
+                <Button Name="BotonMenosProcesos" Classes="icono" Width="48" Height="48" Command="{Binding MenosProcesosCommand}" IsEnabled="{Binding PuedeMenosProcesos}" AutomationProperties.Name="{DynamicResource Loc.CompletarJuego.MenosProcesos}"><d:Icono Glifo="Minus" Width="20" Height="20" /></Button>
+              <TextBlock Text="{Binding Procesos}" MinWidth="28" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" />
+              <Button Name="BotonMasProcesos" Classes="icono" Width="48" Height="48" Command="{Binding MasProcesosCommand}" IsEnabled="{Binding PuedeMasProcesos}" AutomationProperties.Name="{DynamicResource Loc.CompletarJuego.Procesos}"><d:Icono Glifo="Plus" Width="20" Height="20" /></Button>
+              </StackPanel>
+            </d:EtiquetaYValor>
+            <StackPanel Spacing="2" IsVisible="{Binding MostrarHome}">
+              <d:EtiquetaYValor Separacion="0">
+                <TextBlock Text="{DynamicResource Loc.CompletarJuego.ActivarAjusteHOMERiesgo}" FontWeight="Medium" TextWrapping="Wrap" VerticalAlignment="Center" />
+                <ToggleButton Name="InterruptorHome" Classes="chip" IsChecked="{Binding IncluirHome}" MinWidth="64" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.CompletarJuego.ActivarAjusteHOMERiesgo}" AutomationProperties.HelpText="{DynamicResource Loc.CompletarJuego.MatriculaHOMEPKHeXDa}"><TextBlock Text="{Binding ValorHome}" /></ToggleButton>
+              </d:EtiquetaYValor>
+              <TextBlock Classes="sec" Text="{DynamicResource Loc.CompletarJuego.MatriculaHOMEPKHeXDa2}" TextWrapping="Wrap" Foreground="{DynamicResource Aviso}" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <Border Classes="tarjeta" Padding="14,10" IsVisible="{Binding NoAnalizando}">
+          <StackPanel Spacing="6">
+            <TextBlock Name="TextoResumen" Text="{Binding Resumen}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+            <TextBlock Name="TextoCapacidad" Text="{Binding Capacidad}" FontWeight="Bold" TextWrapping="Wrap" />
+          </StackPanel>
+        </Border>
+        <Button Name="BotonContinuar" Classes="primario" HorizontalAlignment="Stretch" Command="{Binding SiguienteCommand}" IsEnabled="{Binding PuedeAvanzar}" AutomationProperties.Name="{DynamicResource Loc.CompletarJuego.Continuar}" AutomationProperties.HelpText="{DynamicResource Loc.CompletarJuego.PasaVistaPreviaTodavia}">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><TextBlock Text="{DynamicResource Loc.CompletarJuego.Continuar}" /><d:Icono Glifo="ChevronRight" Width="20" Height="20" /></StackPanel>
+        </Button>
+      </StackPanel>
+
+      <!-- Paso 2: vista previa con lo que no se genera y su motivo -->
+      <StackPanel Spacing="10" IsVisible="{Binding EnVistaPrevia}">
+        <Border Classes="tarjeta" Padding="14,10">
+          <StackPanel Spacing="6">
+            <TextBlock Text="{Binding Resumen}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding Capacidad}" FontWeight="Bold" TextWrapping="Wrap" />
+            <TextBlock Name="TextoEstimado" Classes="sec" Text="{Binding Estimado}" TextWrapping="Wrap" IsVisible="{Binding HayEstimado}" />
+          </StackPanel>
+        </Border>
+        <TextBlock Name="TituloLista" Classes="etiqueta" Text="{Binding TituloLista}" TextWrapping="Wrap" />
+        <ItemsControl ItemsSource="{Binding FilasVisibles}" IsVisible="{Binding HayFilas}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:FilaNoSeGeneraVm">
+              <Border Classes="tarjeta" Padding="12,8" Margin="0,0,0,6">
+                <StackPanel Spacing="4">
+                  <Button Classes="fila" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" MinHeight="48" Padding="0" Command="{Binding AlternarCommand}" AutomationProperties.Name="{Binding Accesible}" AutomationProperties.HelpText="{DynamicResource Loc.CompletarJuego.DespliegaMotivoCompleto}">
+                    <d:EtiquetaYValor Separacion="8">
+                      <StackPanel Spacing="2" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextWrapping="Wrap" />
+                        <TextBlock Classes="sec" Text="{Binding Motivo}" TextWrapping="Wrap" />
+                      </StackPanel>
+                      <Border Classes="insignia" Classes.aviso="{Binding EsAviso}" Classes.error="{Binding EsError}" Padding="8,3" VerticalAlignment="Center" MaxWidth="170">
+                        <TextBlock Text="{Binding Etiqueta}" TextWrapping="Wrap" TextAlignment="Center" />
+                      </Border>
+                    </d:EtiquetaYValor>
+                  </Button>
+                  <TextBlock Classes="sec" Text="{Binding Detalle}" TextWrapping="Wrap" IsVisible="{Binding Abierta}" />
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Button Name="BotonMasFilas" Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding MostrarMasFilasCommand}" IsVisible="{Binding HayMasFilas}" AutomationProperties.Name="{Binding TextoMasFilas}"><TextBlock Text="{Binding TextoMasFilas}" TextAlignment="Center" /></Button>
+        <TextBlock Classes="sec" Text="{Binding TextoProcesos}" TextWrapping="Wrap" />
+        <CheckBox IsChecked="{Binding ConfirmoReemplazo}" IsVisible="{Binding ReemplazarTodo}" MinHeight="48">
+          <TextBlock Text="{Binding ConfirmacionReemplazo}" TextWrapping="Wrap" />
+        </CheckBox>
+        <d:RejillaSinPartir Columns="{Binding ColumnasBotones}" RowSpacing="8" ColumnSpacing="8">
+          <Button Name="BotonAtras" Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding AnteriorCommand}" AutomationProperties.Name="{DynamicResource Loc.CompletarJuego.Atras}" AutomationProperties.HelpText="{DynamicResource Loc.CompletarJuego.VuelveOpciones}">
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="ChevronLeft" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.CompletarJuego.Atras}" /></StackPanel>
+          </Button>
+          <Button Name="BotonGenerar" Classes="primario" HorizontalAlignment="Stretch" Command="{Binding GenerarCommand}" IsEnabled="{Binding PuedeGenerar}" AutomationProperties.Name="{Binding TextoGenerar}">
+            <!-- Grid (no StackPanel horizontal): «Generar hasta donde quepa» baja de línea en vez de salirse del botón a x2,0 (lo cazó la matriz). -->
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Sparkles" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{Binding TextoGenerar}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+          </Button>
+        </d:RejillaSinPartir>
+      </StackPanel>
+
+      <!-- Paso 3: ejecución con progreso real -->
+      <StackPanel Spacing="12" IsVisible="{Binding EnEjecucion}">
+        <ProgressBar IsIndeterminate="{Binding Indeterminado}" Value="{Binding Fraccion}" Minimum="0" Maximum="1" AutomationProperties.Name="{DynamicResource Loc.AccionHoja.ProgresoOperacion}" />
+        <TextBlock Name="TextoProgreso" Text="{Binding TextoProgreso}" FontWeight="Medium" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+        <TextBlock Name="TextoTiempo" Classes="sec" Text="{Binding LineaTiempo}" />
+        <ItemsControl ItemsSource="{Binding Recientes}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="x:String"><TextBlock Classes="sec" Text="{Binding}" TextWrapping="Wrap" /></DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Border Name="TarjetaPregunta" Classes="tarjeta" Padding="14,10" IsVisible="{Binding HayPregunta}">
+          <StackPanel Spacing="10">
+            <TextBlock Text="{Binding TextoPregunta}" TextWrapping="Wrap" FontWeight="Medium" AutomationProperties.LiveSetting="Assertive" />
+        <d:RejillaSinPartir Columns="{Binding ColumnasBotones}" RowSpacing="8" ColumnSpacing="8">
+              <Button Name="BotonDescartar" Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding DescartarCommand}" AutomationProperties.Name="{DynamicResource Loc.CompletarJuego.Descartar}" AutomationProperties.HelpText="{DynamicResource Loc.CompletarJuego.CambiaNada}"><TextBlock Text="{DynamicResource Loc.CompletarJuego.Descartar}" TextAlignment="Center" /></Button>
+              <Button Name="BotonColocar" Classes="primario" HorizontalAlignment="Stretch" Command="{Binding ColocarCommand}" AutomationProperties.Name="{DynamicResource Loc.CompletarJuego.Colocar}" AutomationProperties.HelpText="{DynamicResource Loc.CompletarJuego.ColocaPokemonGeneradosUnico}"><TextBlock Text="{DynamicResource Loc.CompletarJuego.Colocar}" TextAlignment="Center" /></Button>
+            </d:RejillaSinPartir>
+          </StackPanel>
+        </Border>
+        <Button Name="BotonCancelar" Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CancelarCommand}" IsEnabled="{Binding NoCancelando}" IsVisible="{Binding SinPregunta}" AutomationProperties.Name="{DynamicResource Loc.Comun.Cancelar}" AutomationProperties.HelpText="{DynamicResource Loc.CompletarJuego.DetieneMotorPokemonGenerados}">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="X" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Comun.Cancelar}" /></StackPanel>
+        </Button>
+      </StackPanel>
+
+      <!-- Resultado e informe -->
+      <StackPanel Spacing="12" IsVisible="{Binding EnInforme}">
+        <Border Name="InsigniaResultado" Classes="insignia" Classes.ok="{Binding ResultadoOk}" Classes.aviso="{Binding ResultadoAviso}" Classes.error="{Binding ResultadoError}" Padding="12,10" AutomationProperties.LiveSetting="Assertive">
+          <Grid ColumnDefinitions="Auto,*">
+            <d:Icono Glifo="{Binding GlifoResultado}" Width="22" Height="22" VerticalAlignment="Top" Margin="0,1,10,0" />
+            <d:TextoEntero Grid.Column="1" Name="TitularResultado" Text="{Binding Titular}" FontWeight="Bold" TextWrapping="Wrap" VerticalAlignment="Center" />
+          </Grid>
+        </Border>
+        <TextBlock Name="DetalleResultado" Text="{Binding Detalle}" TextWrapping="Wrap" IsVisible="{Binding HayDetalle}" />
+        <TextBlock Classes="sec" Text="{lz:Formato AccionHoja.Duracion, {Binding Duracion}}" />
+        <d:RejillaSinPartir Columns="{Binding ColumnasBotones}" RowSpacing="8" ColumnSpacing="8">
+          <Button Name="BotonDeshacer" Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding DeshacerCommand}" IsEnabled="{Binding PuedeDeshacer}" AutomationProperties.Name="{DynamicResource Loc.CompletarJuego.DeshacerTodoLote}" AutomationProperties.HelpText="{DynamicResource Loc.CompletarJuego.DevuelveTodasCasillasEstaban}">
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Undo2" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.SubeditorHoja.Deshacer}" /></StackPanel>
+          </Button>
+          <Button Name="BotonListo" Classes="primario" HorizontalAlignment="Stretch" Command="{Binding VolverCommand}" AutomationProperties.Name="{DynamicResource Loc.Comun.Listo}" AutomationProperties.HelpText="{DynamicResource Loc.CompletarJuego.Vuelve}"><TextBlock Text="{DynamicResource Loc.Comun.Listo}" TextAlignment="Center" /></Button>
+        </d:RejillaSinPartir>
+        <TextBlock Name="TextoDeshacer" Classes="sec" Text="{Binding AvisoDeshacer}" IsVisible="{Binding HayAvisoDeshacer}" Foreground="{DynamicResource Aviso}" AutomationProperties.LiveSetting="Polite" />
+        <v:InformeMasivoView DataContext="{Binding Informe}" />
+      </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

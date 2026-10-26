@@ -1,0 +1,410 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:e="clr-namespace:Pokekeep.Mobile.Ui.Herramientas.Equipo"
+             xmlns:b="clr-namespace:Pokekeep.Mobile.Ui.Herramientas.Banco"
+             x:Class="Pokekeep.Mobile.Ui.Views.BancoView"
+             x:DataType="b:BancoViewModel">
+  <UserControl.Resources>
+    <!-- El icono de caja del Pokémon (misma medida en todas las filas; sin recurso de imagen, el propio sprite dibuja la silueta con el número). -->
+    <DataTemplate x:Key="IconoSolo" x:DataType="e:IconoPokemon">
+      <d:SpritePokemon Width="{x:Static e:IconoPokemon.Ancho}" Height="{x:Static e:IconoPokemon.Alto}" VerticalAlignment="Center" Especie="{Binding Especie}" Forma="{Binding Forma}" ArgumentoForma="{Binding ArgumentoForma}" Genero="{Binding Genero}" Brillante="{Binding Brillante}" Huevo="{Binding Huevo}" Contexto="{Binding Contexto}" Modo="{Binding Modo}" VersionJuego="{Binding VersionJuego}" Foreground="{DynamicResource TextoSecundario}" />
+    </DataTemplate>
+
+    <!-- Una fila elegible del banco: marca + icono + nombre, detalle e insignias; la estrella de favorito va aparte (un botón no puede ir dentro de otro). -->
+    <DataTemplate x:Key="FilaPokemon" x:DataType="b:FilaBancoVm">
+      <d:EtiquetaYValor Separacion="0">
+        <ToggleButton Classes="fila" IsChecked="{Binding Seleccionada}" MinHeight="64" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{Binding Accesible}">
+          <Grid ColumnDefinitions="Auto,Auto,*" ColumnSpacing="8" Margin="0,4">
+            <Panel VerticalAlignment="Center">
+              <d:Icono Glifo="SquareCheckBig" Width="20" Height="20" IsVisible="{Binding Seleccionada}" />
+              <d:Icono Glifo="Square" Width="20" Height="20" IsVisible="{Binding !Seleccionada}" />
+            </Panel>
+            <ContentControl Grid.Column="1" Content="{Binding Icono}" ContentTemplate="{StaticResource IconoSolo}" VerticalAlignment="Center" />
+            <StackPanel Grid.Column="2" Spacing="2" VerticalAlignment="Center">
+              <TextBlock Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+              <TextBlock Classes="sec" Text="{Binding Subtitulo}" TextWrapping="Wrap" />
+              <WrapPanel ItemSpacing="6" LineSpacing="4">
+                <Border Classes="insignia ok" Padding="8,2" IsVisible="{Binding EsLegal}"><Grid ColumnDefinitions="Auto,*" ColumnSpacing="4"><d:Icono Glifo="CircleCheck" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{Binding TextoLegal}" TextWrapping="Wrap" /></Grid></Border>
+                <Border Classes="insignia error" Padding="8,2" IsVisible="{Binding EsIlegal}"><Grid ColumnDefinitions="Auto,*" ColumnSpacing="4"><d:Icono Glifo="TriangleAlert" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{Binding TextoLegal}" TextWrapping="Wrap" /></Grid></Border>
+                <Border Classes="insignia dorado" Padding="8,2" IsVisible="{Binding Variocolor}"><Grid ColumnDefinitions="Auto,*" ColumnSpacing="4"><d:Icono Glifo="Sparkles" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{x:Static b:TextosBanco.Variocolor}" TextWrapping="Wrap" /></Grid></Border>
+              </WrapPanel>
+              <TextBlock Classes="sec" Text="{Binding Etiquetas}" IsVisible="{Binding HayEtiquetas}" TextWrapping="Wrap" />
+              <TextBlock Classes="sec" Text="{Binding EliminadoEl}" IsVisible="{Binding HayEliminado}" TextWrapping="Wrap" />
+            </StackPanel>
+          </Grid>
+        </ToggleButton>
+        <Button Classes="icono" Width="48" Height="48" VerticalAlignment="Center" Command="{Binding AlternarFavoritoCommand}" AutomationProperties.Name="{Binding AccesibleFavorito}">
+          <Panel>
+            <d:Icono Glifo="Star" Width="22" Height="22" IsVisible="{Binding Favorito}" Foreground="{DynamicResource Dorado}" />
+            <d:Icono Glifo="Star" Width="22" Height="22" IsVisible="{Binding !Favorito}" Foreground="{DynamicResource TextoSecundario}" Opacity="0.55" />
+          </Panel>
+        </Button>
+      </d:EtiquetaYValor>
+    </DataTemplate>
+
+    <!-- Una fila de solo lectura (dentro de un grupo de repetidos). -->
+    <DataTemplate x:Key="FilaLigera" x:DataType="b:FilaBancoVm">
+      <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" Margin="0,4" AutomationProperties.Name="{Binding Accesible}">
+        <ContentControl Content="{Binding Icono}" ContentTemplate="{StaticResource IconoSolo}" VerticalAlignment="Center" />
+        <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+          <TextBlock Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+          <TextBlock Classes="sec" Text="{Binding Subtitulo}" TextWrapping="Wrap" />
+          <TextBlock Classes="sec" Text="{Binding GuardadoEl}" TextWrapping="Wrap" />
+        </StackPanel>
+      </Grid>
+    </DataTemplate>
+  </UserControl.Resources>
+
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="16,0,16,24" Spacing="10">
+      <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" MinHeight="48" AutomationProperties.Name="{x:Static b:TextosBanco.Volver}">
+        <StackPanel Orientation="Horizontal" Spacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" /><TextBlock Text="{x:Static b:TextosBanco.Volver}" /></StackPanel>
+      </Button>
+      <StackPanel Spacing="2" Margin="0,4,0,4" IsVisible="{Binding VeTitulo}">
+        <TextBlock Classes="titulo" Text="{Binding Titulo}" TextWrapping="Wrap" />
+        <TextBlock Classes="sec" TextWrapping="Wrap" Text="{Binding Subtitulo}" IsVisible="{Binding VeSubtitulo}" />
+      </StackPanel>
+
+      <!-- Dónde está el banco -->
+      <Border Classes="tarjeta" Padding="14,10" IsVisible="{Binding VeUbicacion}">
+        <StackPanel Spacing="8">
+          <TextBlock Classes="etiqueta" Text="{x:Static b:TextosBanco.EtiquetaDonde}" />
+          <TextBlock Text="{Binding TextoUbicacion}" TextWrapping="Wrap" />
+          <Border Classes="insignia aviso" Padding="10,6" IsVisible="{Binding AvisoPrivada}">
+            <TextBlock Text="{Binding AvisoPrivadaTexto}" TextWrapping="Wrap" />
+          </Border>
+          <Button Name="BotonElegirCarpeta" Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding ElegirCarpetaCommand}" IsEnabled="{Binding PuedeElegirCarpeta}" AutomationProperties.Name="{x:Static b:TextosBanco.ElegirCarpeta}" AutomationProperties.HelpText="{x:Static b:TextosBanco.ElegirCarpetaAyuda}">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="FolderOpen" Width="20" Height="20" /><d:TextoEntero Grid.Column="1" Text="{x:Static b:TextosBanco.ElegirCarpeta}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+          </Button>
+        </StackPanel>
+      </Border>
+
+      <TextBlock Classes="sec" Text="{Binding Estado}" IsVisible="{Binding MuestraEstado}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+      <Border Classes="tarjeta" Padding="14,10" IsVisible="{Binding Ocupado}">
+        <StackPanel Spacing="8">
+          <ProgressBar IsIndeterminate="True" AutomationProperties.Name="{x:Static b:TextosBanco.Trabajando}" />
+          <TextBlock Classes="sec" Text="{Binding TextoAvance}" TextWrapping="Wrap" />
+          <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding CancelarLegalizacionCommand}" IsVisible="{Binding Sacando}" AutomationProperties.Name="{x:Static b:TextosBanco.Cancelar}">
+            <TextBlock Text="{x:Static b:TextosBanco.Cancelar}" TextAlignment="Center" />
+          </Button>
+        </StackPanel>
+      </Border>
+
+      <!-- Cargando el banco (en segundo plano, cancelable) -->
+      <Border Classes="tarjeta" Padding="14,10" IsVisible="{Binding Cargando}">
+        <StackPanel Spacing="8">
+          <ProgressBar IsIndeterminate="True" AutomationProperties.Name="{x:Static b:TextosBanco.CargandoBanco}" />
+          <TextBlock Text="{x:Static b:TextosBanco.CargandoBanco}" TextWrapping="Wrap" />
+          <Button Name="BotonCancelarCarga" Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding CancelarCargaCommand}" AutomationProperties.Name="{x:Static b:TextosBanco.Cancelar}">
+            <TextBlock Text="{x:Static b:TextosBanco.Cancelar}" TextAlignment="Center" />
+          </Button>
+        </StackPanel>
+      </Border>
+      <Button Name="BotonReintentar" Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding ReintentarCommand}" IsVisible="{Binding PuedeReintentar}" AutomationProperties.Name="{x:Static b:TextosBanco.Reintentar}">
+        <TextBlock Text="{x:Static b:TextosBanco.Reintentar}" TextAlignment="Center" />
+      </Button>
+
+      <!-- Pestañas -->
+      <d:RejillaSinPartir Columns="2" RowSpacing="8" ColumnSpacing="8" IsVisible="{Binding VePestanas}">
+        <RadioButton Classes="segmento" GroupName="pestana-banco" IsChecked="{Binding EsModoPokemon, Mode=OneWay}" Command="{Binding VerPokemonCommand}" MinHeight="48" AutomationProperties.Name="{Binding TextoModoPokemon}"><TextBlock Text="{Binding TextoModoPokemon}" TextWrapping="Wrap" TextAlignment="Center" /></RadioButton>
+        <RadioButton Classes="segmento" GroupName="pestana-banco" IsChecked="{Binding EsModoPapelera, Mode=OneWay}" Command="{Binding VerPapeleraCommand}" MinHeight="48" AutomationProperties.Name="{Binding TextoModoPapelera}"><TextBlock Text="{Binding TextoModoPapelera}" TextWrapping="Wrap" TextAlignment="Center" /></RadioButton>
+        <RadioButton Classes="segmento" GroupName="pestana-banco" IsChecked="{Binding EsModoDuplicados, Mode=OneWay}" Command="{Binding VerDuplicadosCommand}" MinHeight="48" AutomationProperties.Name="{Binding TextoModoDuplicados}"><TextBlock Text="{Binding TextoModoDuplicados}" TextWrapping="Wrap" TextAlignment="Center" /></RadioButton>
+        <RadioButton Classes="segmento" GroupName="pestana-banco" IsChecked="{Binding EsModoProgreso, Mode=OneWay}" Command="{Binding VerProgresoCommand}" MinHeight="48" AutomationProperties.Name="{x:Static b:TextosBanco.PestanaProgreso}"><TextBlock Text="{x:Static b:TextosBanco.PestanaProgreso}" TextWrapping="Wrap" TextAlignment="Center" /></RadioButton>
+      </d:RejillaSinPartir>
+
+      <!-- ====================================================== POKÉMON ====================================================== -->
+      <StackPanel Spacing="10" IsVisible="{Binding VePokemon}">
+        <Border Classes="insignia aviso" Padding="12,8" IsVisible="{Binding BancoVacio}">
+          <TextBlock Text="{x:Static b:TextosBanco.BancoVacioTexto}" TextWrapping="Wrap" />
+        </Border>
+
+        <StackPanel Spacing="8" IsVisible="{Binding HayPokemon}">
+          <TextBox Classes="campo" Text="{Binding Texto}" PlaceholderText="{x:Static b:TextosBanco.BuscarMarca}" MinHeight="48" AutomationProperties.Name="{x:Static b:TextosBanco.BuscarAccesible}" />
+          <WrapPanel ItemSpacing="8" LineSpacing="0">
+            <ToggleButton Name="BotonFiltros" Classes="chip" IsChecked="{Binding FiltrosAbiertos}" AutomationProperties.Name="{Binding TextoFiltros}">
+              <StackPanel Orientation="Horizontal" Spacing="6"><d:Icono Glifo="Funnel" /><TextBlock Text="{Binding TextoFiltros}" /></StackPanel>
+            </ToggleButton>
+            <Button Classes="chip" Command="{Binding ElegirOrdenCommand}" AutomationProperties.Name="{Binding TextoOrden}">
+              <StackPanel Orientation="Horizontal" Spacing="6"><d:Icono Glifo="ArrowUpDown" Width="16" Height="16" /><TextBlock Text="{Binding TextoOrden}" /></StackPanel>
+            </Button>
+            <Button Classes="chip" Command="{Binding QuitarFiltrosCommand}" IsVisible="{Binding HayFiltros}" AutomationProperties.Name="{x:Static b:TextosBanco.QuitarFiltros}">
+              <StackPanel Orientation="Horizontal" Spacing="6"><d:Icono Glifo="X" Width="16" Height="16" /><TextBlock Text="{x:Static b:TextosBanco.QuitarFiltros}" /></StackPanel>
+            </Button>
+          </WrapPanel>
+          <Border Classes="tarjeta" Padding="12,8" IsVisible="{Binding FiltrosAbiertos}">
+            <WrapPanel ItemSpacing="8" LineSpacing="0">
+              <Button Classes="filtro" Command="{Binding ElegirEspecieCommand}" AutomationProperties.Name="{Binding TextoEspecie}"><TextBlock Text="{Binding TextoEspecie}" /></Button>
+              <Button Classes="filtro" Command="{Binding ElegirTipoCommand}" AutomationProperties.Name="{Binding TextoTipo}"><TextBlock Text="{Binding TextoTipo}" /></Button>
+              <Button Classes="filtro" Command="{Binding ElegirJuegoCommand}" AutomationProperties.Name="{Binding TextoJuego}"><TextBlock Text="{Binding TextoJuego}" /></Button>
+              <Button Classes="filtro" Command="{Binding ElegirEtiquetaCommand}" AutomationProperties.Name="{Binding TextoEtiqueta}"><TextBlock Text="{Binding TextoEtiqueta}" /></Button>
+              <Button Classes="filtro" Command="{Binding CiclarVariocolorCommand}" AutomationProperties.Name="{Binding TextoVariocolor}"><TextBlock Text="{Binding TextoVariocolor}" /></Button>
+              <Button Classes="filtro" Command="{Binding CiclarLegalidadCommand}" AutomationProperties.Name="{Binding TextoLegalidad}"><TextBlock Text="{Binding TextoLegalidad}" /></Button>
+              <ToggleButton Classes="chip" IsChecked="{Binding SoloFavoritos, Mode=OneWay}" Command="{Binding AlternarSoloFavoritosCommand}" AutomationProperties.Name="{Binding TextoSoloFavoritos}">
+                <StackPanel Orientation="Horizontal" Spacing="6"><d:Icono Glifo="Star" /><TextBlock Text="{Binding TextoSoloFavoritos}" /></StackPanel>
+              </ToggleButton>
+            </WrapPanel>
+          </Border>
+
+          <TextBlock Classes="etiqueta" Text="{Binding TextoCantidad}" TextWrapping="Wrap" />
+          <WrapPanel ItemSpacing="8" LineSpacing="0">
+            <Button Classes="chip" Command="{Binding ElegirTodasCommand}" IsVisible="{Binding HayFilas}" AutomationProperties.Name="{x:Static b:TextosBanco.ElegirTodas}"><TextBlock Text="{x:Static b:TextosBanco.ElegirTodas}" /></Button>
+            <Button Classes="chip" Command="{Binding QuitarSeleccionCommand}" IsVisible="{Binding HayElegidas}" AutomationProperties.Name="{x:Static b:TextosBanco.QuitarSeleccion}"><TextBlock Text="{x:Static b:TextosBanco.QuitarSeleccion}" /></Button>
+          </WrapPanel>
+
+          <Border Classes="tarjeta" Padding="8,4" IsVisible="{Binding HayFilas}">
+            <ItemsControl ItemsSource="{Binding Filas}" ItemTemplate="{StaticResource FilaPokemon}" />
+          </Border>
+          <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding MostrarMasCommand}" IsVisible="{Binding HayMas}" AutomationProperties.Name="{Binding TextoMostrarMas}">
+            <TextBlock Text="{Binding TextoMostrarMas}" TextAlignment="Center" TextWrapping="Wrap" />
+          </Button>
+          <Border Classes="insignia aviso" Padding="12,8" IsVisible="{Binding SinCoincidencias}">
+            <TextBlock Text="{x:Static b:TextosBanco.SinCoincidenciasTexto}" TextWrapping="Wrap" />
+          </Border>
+
+          <!-- Acciones sobre lo elegido -->
+          <Border Classes="tarjeta" Padding="14,10" IsVisible="{Binding HayElegidas}">
+            <StackPanel Spacing="8">
+              <TextBlock Text="{Binding TextoElegidas}" FontWeight="Bold" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+              <Button Name="BotonSacar" Classes="primario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding SacarCommand}" AutomationProperties.Name="{x:Static b:TextosBanco.SacarALaPartida}" AutomationProperties.HelpText="{x:Static b:TextosBanco.SacarAyuda}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Upload" Width="20" Height="20" /><d:TextoEntero Grid.Column="1" Text="{x:Static b:TextosBanco.SacarALaPartida}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+              </Button>
+              <TextBlock Classes="sec" Text="{Binding MotivoSinPartida}" IsVisible="{Binding !HayPartida}" TextWrapping="Wrap" />
+              <StackPanel Spacing="8">
+                <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding FavoritoDeLaSeleccionCommand}" AutomationProperties.Name="{Binding TextoFavoritoSeleccion}">
+                  <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Star" Width="18" Height="18" /><d:TextoEntero Grid.Column="1" Text="{Binding TextoFavoritoSeleccion}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+                </Button>
+                <Button Name="BotonComparar" Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding CompararCommand}" AutomationProperties.Name="{x:Static b:TextosBanco.Comparar}" AutomationProperties.HelpText="{Binding AyudaComparar}">
+                  <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="ArrowLeftRight" Width="18" Height="18" /><d:TextoEntero Grid.Column="1" Text="{x:Static b:TextosBanco.Comparar}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+                </Button>
+              </StackPanel>
+              <TextBlock Classes="sec" Text="{Binding AyudaComparar}" TextWrapping="Wrap" />
+              <Border Classes="separador" />
+              <TextBlock Text="{x:Static b:TextosBanco.EtiquetasTitulo}" FontWeight="Medium" />
+              <TextBox Classes="campo" Text="{Binding EtiquetaTexto}" PlaceholderText="{x:Static b:TextosBanco.EtiquetaMarca}" MaxLength="24" MinHeight="48" AutomationProperties.Name="{x:Static b:TextosBanco.EtiquetaAccesible}" />
+              <ItemsControl ItemsSource="{Binding EtiquetasExistentes}" IsVisible="{Binding HayEtiquetasExistentes}">
+                <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel ItemSpacing="6" LineSpacing="0" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="x:String">
+                    <Button Classes="chip" Command="{Binding $parent[UserControl].((b:BancoViewModel)DataContext).UsarEtiquetaCommand}" CommandParameter="{Binding}" AutomationProperties.Name="{Binding}"><TextBlock Text="{Binding}" /></Button>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
+                <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding AnadirEtiquetaCommand}" AutomationProperties.Name="{x:Static b:TextosBanco.AnadirEtiqueta}"><TextBlock Text="{x:Static b:TextosBanco.AnadirEtiqueta}" TextAlignment="Center" TextWrapping="Wrap" /></Button>
+                <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding QuitarEtiquetaCommand}" AutomationProperties.Name="{x:Static b:TextosBanco.QuitarEtiquetaBoton}"><TextBlock Text="{x:Static b:TextosBanco.QuitarEtiquetaBoton}" TextAlignment="Center" TextWrapping="Wrap" /></Button>
+              </d:RejillaSinPartir>
+              <Border Classes="separador" />
+              <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding AlaPapeleraCommand}" AutomationProperties.Name="{x:Static b:TextosBanco.AlaPapelera}" AutomationProperties.HelpText="{x:Static b:TextosBanco.AlaPapeleraAyuda}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Trash2" Width="18" Height="18" /><d:TextoEntero Grid.Column="1" Text="{x:Static b:TextosBanco.AlaPapelera}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+              </Button>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </StackPanel>
+
+      <!-- ====================================================== SACAR ====================================================== -->
+      <StackPanel Spacing="10" IsVisible="{Binding Sacando}">
+        <TextBlock Classes="titulo2" Text="{x:Static b:TextosBanco.SacarTitulo}" AutomationProperties.HeadingLevel="2" TextWrapping="Wrap" />
+        <TextBlock Classes="sec" Text="{Binding ResumenSacar}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+        <Border Classes="insignia error" Padding="12,8" IsVisible="{Binding HayBloqueoSacar}"><TextBlock Text="{Binding BloqueoSacar}" TextWrapping="Wrap" FontWeight="Bold" /></Border>
+        <ItemsControl ItemsSource="{Binding ItemsSacar}">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="8" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="b:ItemSacarVm">
+              <Border Classes="tarjeta" Padding="14,10" AutomationProperties.Name="{Binding Accesible}">
+                <StackPanel Spacing="8">
+                  <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                    <ContentControl Content="{Binding Icono}" ContentTemplate="{StaticResource IconoSolo}" VerticalAlignment="Center" />
+                    <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                      <TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextWrapping="Wrap" />
+                      <TextBlock Classes="sec" Text="{Binding Destino}" TextWrapping="Wrap" />
+                    </StackPanel>
+                  </Grid>
+                  <Border Classes="insignia" Classes.ok="{Binding VeredictoOk}" Classes.error="{Binding VeredictoError}" Classes.aviso="{Binding VeredictoAviso}" Padding="10,4" HorizontalAlignment="Left">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="6"><d:Icono Glifo="{Binding GlifoVeredicto}" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{Binding TextoVeredicto}" TextWrapping="Wrap" /></Grid>
+                  </Border>
+                  <TextBlock Classes="sec" Text="{Binding Informe}" IsVisible="{Binding HayInforme}" TextWrapping="Wrap" />
+                  <TextBlock Classes="sec" Text="{Binding Avisos}" IsVisible="{Binding HayAvisos}" TextWrapping="Wrap" />
+                  <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding LegalizarCommand}" IsVisible="{Binding NecesitaLegalizar}" AutomationProperties.Name="{x:Static b:TextosBanco.Legalizar}" AutomationProperties.HelpText="{x:Static b:TextosBanco.LegalizarAyuda}">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="WandSparkles" Width="20" Height="20" /><d:TextoEntero Grid.Column="1" Text="{x:Static b:TextosBanco.Legalizar}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+                  </Button>
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <TextBlock Classes="sec" Text="{Binding MotivoLegalizar}" IsVisible="{Binding HayIlegalesEnElPlan}" TextWrapping="Wrap" />
+        <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding LegalizarTodosCommand}" IsVisible="{Binding HayIlegalesEnElPlan}" AutomationProperties.Name="{Binding TextoLegalizarTodos}">
+          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="WandSparkles" Width="20" Height="20" /><d:TextoEntero Grid.Column="1" Text="{Binding TextoLegalizarTodos}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+        </Button>
+        <Border Classes="tarjeta" Padding="14,10">
+          <StackPanel Spacing="6">
+            <d:EtiquetaYValor Separacion="0">
+              <TextBlock Text="{Binding TextoMoverAlSacar}" FontWeight="Medium" TextWrapping="Wrap" VerticalAlignment="Center" />
+              <ToggleButton Classes="chip" IsChecked="{Binding MoverAlSacar}" MinWidth="64" AutomationProperties.Name="{Binding TextoMoverAlSacar}" AutomationProperties.HelpText="{Binding AyudaMoverAlSacar}"><TextBlock Text="{x:Static b:TextosBanco.Si}" /></ToggleButton>
+            </d:EtiquetaYValor>
+            <TextBlock Classes="sec" Text="{Binding AyudaMoverAlSacar}" TextWrapping="Wrap" />
+          </StackPanel>
+        </Border>
+        <Button Name="BotonColocar" Classes="primario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding ColocarCommand}" AutomationProperties.Name="{x:Static b:TextosBanco.ColocarEnLaPartida}" AutomationProperties.HelpText="{x:Static b:TextosBanco.ColocarAyuda}">
+          <TextBlock Text="{x:Static b:TextosBanco.ColocarEnLaPartida}" TextAlignment="Center" TextWrapping="Wrap" />
+        </Button>
+        <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding CancelarSacarCommand}" AutomationProperties.Name="{x:Static b:TextosBanco.CancelarSacar}">
+          <TextBlock Text="{x:Static b:TextosBanco.CancelarSacar}" TextAlignment="Center" TextWrapping="Wrap" />
+        </Button>
+      </StackPanel>
+
+      <!-- ====================================================== COMPARAR ====================================================== -->
+      <StackPanel Spacing="10" IsVisible="{Binding Comparando}">
+        <TextBlock Classes="titulo2" Text="{Binding TituloComparacion}" AutomationProperties.HeadingLevel="2" TextWrapping="Wrap" />
+        <TextBlock Classes="sec" Text="{Binding ResumenComparacion}" TextWrapping="Wrap" />
+        <Border Classes="tarjeta" Padding="14,8">
+          <d:RejillaSinPartir Columns="2" ColumnSpacing="12" RowSpacing="12">
+            <TextBlock Text="{Binding NombreA}" FontWeight="Bold" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding NombreB}" FontWeight="Bold" TextWrapping="Wrap" />
+          </d:RejillaSinPartir>
+        </Border>
+        <ItemsControl ItemsSource="{Binding Comparacion}">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="8" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="b:GrupoComparacionVm">
+              <StackPanel Spacing="4">
+                <TextBlock Classes="etiqueta" Text="{Binding Titulo}" AutomationProperties.HeadingLevel="3" />
+                <Border Classes="tarjeta" Padding="14,6">
+                  <ItemsControl ItemsSource="{Binding Filas}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="b:FilaComparacion">
+                        <StackPanel Spacing="2" Margin="0,6" AutomationProperties.Name="{Binding Accesible}">
+                          <d:EtiquetaYValor Separacion="0">
+                            <TextBlock Classes="sec" Text="{Binding Etiqueta}" TextWrapping="Wrap" />
+                            <Border Classes="insignia dorado" Padding="8,2" IsVisible="{Binding Difiere}"><TextBlock Text="{x:Static b:TextosBanco.Distinto}" /></Border>
+                          </d:EtiquetaYValor>
+                          <d:RejillaSinPartir Columns="2" ColumnSpacing="12" RowSpacing="12">
+                            <TextBlock Text="{Binding A}" TextWrapping="Wrap" />
+                            <TextBlock Text="{Binding B}" TextWrapping="Wrap" />
+                          </d:RejillaSinPartir>
+                        </StackPanel>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </Border>
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding CerrarComparacionCommand}" AutomationProperties.Name="{x:Static b:TextosBanco.CerrarComparacion}">
+          <TextBlock Text="{x:Static b:TextosBanco.CerrarComparacion}" TextAlignment="Center" />
+        </Button>
+      </StackPanel>
+
+      <!-- ====================================================== PAPELERA ====================================================== -->
+      <StackPanel Spacing="10" IsVisible="{Binding VePapelera}">
+        <TextBlock Classes="sec" Text="{x:Static b:TextosBanco.PapeleraExplicacion}" TextWrapping="Wrap" />
+        <Border Classes="insignia aviso" Padding="12,8" IsVisible="{Binding PapeleraVacia}"><TextBlock Text="{x:Static b:TextosBanco.PapeleraVaciaTexto}" TextWrapping="Wrap" /></Border>
+        <StackPanel Spacing="8" IsVisible="{Binding HayPapelera}">
+          <TextBlock Classes="etiqueta" Text="{Binding TextoElegidas}" TextWrapping="Wrap" />
+          <WrapPanel ItemSpacing="8" LineSpacing="0">
+            <Button Classes="chip" Command="{Binding ElegirTodasCommand}" AutomationProperties.Name="{x:Static b:TextosBanco.ElegirTodas}"><TextBlock Text="{x:Static b:TextosBanco.ElegirTodas}" /></Button>
+            <Button Classes="chip" Command="{Binding QuitarSeleccionCommand}" IsVisible="{Binding HayElegidas}" AutomationProperties.Name="{x:Static b:TextosBanco.QuitarSeleccion}"><TextBlock Text="{x:Static b:TextosBanco.QuitarSeleccion}" /></Button>
+          </WrapPanel>
+          <Border Classes="tarjeta" Padding="8,4">
+            <ItemsControl ItemsSource="{Binding FilasPapelera}" ItemTemplate="{StaticResource FilaPokemon}" />
+          </Border>
+          <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding MostrarMasPapeleraCommand}" IsVisible="{Binding HayMasPapelera}" AutomationProperties.Name="{Binding TextoMostrarMasPapelera}">
+            <TextBlock Text="{Binding TextoMostrarMasPapelera}" TextAlignment="Center" TextWrapping="Wrap" />
+          </Button>
+          <Border Classes="tarjeta" Padding="14,10">
+            <StackPanel Spacing="8">
+              <Button Name="BotonRestaurar" Classes="primario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding RestaurarCommand}" AutomationProperties.Name="{x:Static b:TextosBanco.Restaurar}" AutomationProperties.HelpText="{x:Static b:TextosBanco.RestaurarAyuda}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Undo2" Width="20" Height="20" /><d:TextoEntero Grid.Column="1" Text="{x:Static b:TextosBanco.Restaurar}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+              </Button>
+              <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding BorrarParaSiempreCommand}" AutomationProperties.Name="{x:Static b:TextosBanco.BorrarParaSiempre}" AutomationProperties.HelpText="{x:Static b:TextosBanco.BorrarParaSiempreAyuda}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Trash2" Width="20" Height="20" /><d:TextoEntero Grid.Column="1" Text="{x:Static b:TextosBanco.BorrarParaSiempre}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+              </Button>
+              <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding VaciarPapeleraCommand}" AutomationProperties.Name="{x:Static b:TextosBanco.VaciarPapelera}" AutomationProperties.HelpText="{x:Static b:TextosBanco.VaciarPapeleraAyuda}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Eraser" Width="20" Height="20" /><d:TextoEntero Grid.Column="1" Text="{x:Static b:TextosBanco.VaciarPapelera}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+              </Button>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </StackPanel>
+
+      <!-- ====================================================== DUPLICADOS ====================================================== -->
+      <StackPanel Spacing="10" IsVisible="{Binding VeDuplicados}">
+        <TextBlock Classes="sec" Text="{x:Static b:TextosBanco.DuplicadosExplicacion}" TextWrapping="Wrap" />
+        <Border Classes="insignia ok" Padding="12,8" IsVisible="{Binding SinGrupos}"><TextBlock Text="{x:Static b:TextosBanco.SinDuplicados}" TextWrapping="Wrap" /></Border>
+        <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding EnviarTodosLosSobrantesCommand}" IsVisible="{Binding HaySobrantes}" AutomationProperties.Name="{Binding TextoEnviarTodos}" AutomationProperties.HelpText="{x:Static b:TextosBanco.EnviarTodosAyuda}">
+          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Trash2" Width="20" Height="20" /><d:TextoEntero Grid.Column="1" Text="{Binding TextoEnviarTodos}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+        </Button>
+        <ItemsControl ItemsSource="{Binding Grupos}">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="8" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="b:GrupoDuplicadosVm">
+              <Border Classes="tarjeta" Padding="14,10">
+                <StackPanel Spacing="6">
+                  <TextBlock Text="{Binding Titulo}" FontWeight="Bold" TextWrapping="Wrap" AutomationProperties.HeadingLevel="3" />
+                  <TextBlock Classes="sec" Text="{Binding Explicacion}" TextWrapping="Wrap" />
+                  <ItemsControl ItemsSource="{Binding Filas}" ItemTemplate="{StaticResource FilaLigera}" />
+                  <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding EnviarSobrantes}" IsVisible="{Binding Identicos}" AutomationProperties.Name="{Binding AccesibleEnviar}">
+                    <TextBlock Text="{Binding TextoEnviar}" TextAlignment="Center" TextWrapping="Wrap" />
+                  </Button>
+                  <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding CompararVersiones}" IsVisible="{Binding Versiones}" AutomationProperties.Name="{Binding AccesibleComparar}">
+                    <TextBlock Text="{x:Static b:TextosBanco.CompararVersiones}" TextAlignment="Center" TextWrapping="Wrap" />
+                  </Button>
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+
+      <!-- ====================================================== PROGRESO ====================================================== -->
+      <StackPanel Spacing="10" IsVisible="{Binding VeProgreso}">
+        <TextBlock Classes="sec" Text="{x:Static b:TextosBanco.ProgresoExplicacion}" TextWrapping="Wrap" />
+        <Border Classes="insignia aviso" Padding="12,8" IsVisible="{Binding BancoVacio}"><TextBlock Text="{x:Static b:TextosBanco.ProgresoVacio}" TextWrapping="Wrap" /></Border>
+        <Border Classes="tarjeta" Padding="14,10">
+          <StackPanel Spacing="12">
+            <StackPanel Spacing="4" AutomationProperties.Name="{Binding AccesibleEspecies}">
+              <d:EtiquetaYValor Separacion="0"><TextBlock Text="{x:Static b:TextosBanco.EspeciesTitulo}" FontWeight="Medium" TextWrapping="Wrap" /><TextBlock Text="{Binding TextoEspecies}" FontWeight="Bold" /></d:EtiquetaYValor>
+              <ProgressBar Minimum="0" Maximum="100" Value="{Binding PorcentajeEspecies}" />
+            </StackPanel>
+            <StackPanel Spacing="4" AutomationProperties.Name="{Binding AccesibleEspeciesVariocolor}">
+              <d:EtiquetaYValor Separacion="0"><TextBlock Text="{x:Static b:TextosBanco.EspeciesVariocolorTitulo}" FontWeight="Medium" TextWrapping="Wrap" /><TextBlock Text="{Binding TextoEspeciesVariocolor}" FontWeight="Bold" /></d:EtiquetaYValor>
+              <ProgressBar Minimum="0" Maximum="100" Value="{Binding PorcentajeEspeciesVariocolor}" />
+            </StackPanel>
+            <StackPanel Spacing="4" AutomationProperties.Name="{Binding AccesibleFormas}">
+              <d:EtiquetaYValor Separacion="0"><TextBlock Text="{x:Static b:TextosBanco.FormasTitulo}" FontWeight="Medium" TextWrapping="Wrap" /><TextBlock Text="{Binding TextoFormas}" FontWeight="Bold" /></d:EtiquetaYValor>
+              <ProgressBar Minimum="0" Maximum="100" Value="{Binding PorcentajeFormas}" />
+            </StackPanel>
+            <StackPanel Spacing="4" AutomationProperties.Name="{Binding AccesibleFormasVariocolor}">
+              <d:EtiquetaYValor Separacion="0"><TextBlock Text="{x:Static b:TextosBanco.FormasVariocolorTitulo}" FontWeight="Medium" TextWrapping="Wrap" /><TextBlock Text="{Binding TextoFormasVariocolor}" FontWeight="Bold" /></d:EtiquetaYValor>
+              <ProgressBar Minimum="0" Maximum="100" Value="{Binding PorcentajeFormasVariocolor}" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+        <TextBlock Classes="etiqueta" Text="{x:Static b:TextosBanco.PorGeneracion}" />
+        <ItemsControl ItemsSource="{Binding FilasProgreso}">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="8" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="b:FilaProgresoVm">
+              <Border Classes="tarjeta" Padding="14,10">
+                <StackPanel Spacing="6">
+                  <StackPanel Spacing="4" AutomationProperties.Name="{Binding Accesible}">
+                    <d:EtiquetaYValor Separacion="0"><TextBlock Text="{Binding Titulo}" FontWeight="Medium" /><TextBlock Text="{Binding Normales}" FontWeight="Bold" /></d:EtiquetaYValor>
+                    <ProgressBar Minimum="0" Maximum="100" Value="{Binding PorcentajeNormales}" />
+                    <d:EtiquetaYValor Separacion="0"><TextBlock Classes="sec" Text="{x:Static b:TextosBanco.Variocolor}" /><TextBlock Classes="sec" Text="{Binding Variocolor}" /></d:EtiquetaYValor>
+                    <ProgressBar Minimum="0" Maximum="100" Value="{Binding PorcentajeVariocolor}" />
+                  </StackPanel>
+                  <Button Classes="chip" HorizontalAlignment="Left" Command="{Binding AlternarFaltanCommand}" IsVisible="{Binding HayFaltan}" AutomationProperties.Name="{Binding TextoVerFaltan}"><TextBlock Text="{Binding TextoVerFaltan}" /></Button>
+                  <TextBlock Classes="sec" Text="{Binding TextoFaltan}" IsVisible="{Binding FaltanAbiertas}" TextWrapping="Wrap" />
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+      <TextBlock Classes="sec" Text="{x:Static b:TextosBanco.NotaFormato}" TextWrapping="Wrap" Margin="0,8,0,0" IsVisible="{Binding VePestanas}" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

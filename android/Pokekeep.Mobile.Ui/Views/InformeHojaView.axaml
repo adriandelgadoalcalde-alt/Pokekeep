@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.InformeHojaView"
+             x:DataType="vm:InformeHojaViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="12" Margin="20,4,20,24">
+      <Border Classes="insignia" Classes.ok="{Binding EstadoOk}" Classes.error="{Binding EstadoError}" Classes.aviso="{Binding EstadoAviso}" Padding="12,8" IsVisible="{Binding HayEstado}">
+        <TextBlock Text="{Binding Estado}" FontWeight="Bold" />
+      </Border>
+      <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding AlternarDetalleCommand}" IsVisible="{Binding HayDetalle}" AutomationProperties.Name="{Binding TextoDetalleBoton}">
+        <TextBlock Text="{Binding TextoDetalleBoton}" TextWrapping="Wrap" TextAlignment="Center" />
+      </Button>
+      <Border Classes="tarjeta" Padding="14,10">
+        <ItemsControl ItemsSource="{Binding Lineas}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="x:String"><TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,2" /></DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
+      <TextBlock Classes="sec" Text="{Binding Copiado}" AutomationProperties.LiveSetting="Polite" />
+      <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+        <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CopiarTextoCommand}" IsVisible="{Binding PuedeCopiar}" IsEnabled="{Binding PuedeCopiar}" AutomationProperties.Name="{DynamicResource Loc.InformeHoja.CopiarTexto}" AutomationProperties.HelpText="{DynamicResource Loc.InformeHoja.CopiaInformePortapapeles}">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="ClipboardCopy" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Seleccion.Copiar}" /></StackPanel>
+        </Button>
+        <Button Grid.Column="{Binding ColumnaCerrar}" Grid.ColumnSpan="{Binding ColumnasCerrar}" Classes="primario" HorizontalAlignment="Stretch" Command="{Binding CerrarCommand}" AutomationProperties.Name="{DynamicResource Loc.Comun.Listo}">
+          <TextBlock Text="{DynamicResource Loc.Comun.Listo}" TextAlignment="Center" />
+        </Button>
+      </Grid>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

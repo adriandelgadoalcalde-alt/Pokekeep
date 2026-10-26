@@ -1,0 +1,126 @@
+# Correspondencias PKHeX (especie, forma) -> identificador de pokemon.csv de PokeAPI. «-» = esa forma comparte el grito de la especie.
+# Origen: la tabla verificada de herramientas/completar-sprites-pixel.cjs (formas nuevas), mas las que revela el informe «formas».
+especie	forma	identificador	nota
+26	2	raichu-mega-x	sprites
+26	3	raichu-mega-y	sprites
+36	1	clefable-mega	sprites
+71	1	victreebel-mega	sprites
+121	1	starmie-mega	sprites
+128	1	tauros-paldea-combat-breed	sprites
+128	2	tauros-paldea-blaze-breed	sprites
+128	3	tauros-paldea-aqua-breed	sprites
+149	1	dragonite-mega	sprites
+154	1	meganium-mega	sprites
+160	1	feraligatr-mega	sprites
+194	1	wooper-paldea	sprites
+227	1	skarmory-mega	sprites
+358	1	chimecho-mega	sprites
+359	2	absol-mega-z	sprites
+398	1	staraptor-mega	sprites
+445	2	garchomp-mega-z	sprites
+448	2	lucario-mega-z	sprites
+478	1	froslass-mega	sprites
+485	1	heatran-mega	sprites
+491	1	darkrai-mega	sprites
+500	1	emboar-mega	sprites
+530	1	excadrill-mega	sprites
+545	1	scolipede-mega	sprites
+560	1	scrafty-mega	sprites
+604	1	eelektross-mega	sprites
+609	1	chandelure-mega	sprites
+623	1	golurk-mega	sprites
+652	1	chesnaught-mega	sprites
+655	1	delphox-mega	sprites
+658	3	greninja-mega	sprites
+668	1	pyroar-mega	sprites
+670	6	floette-mega	sprites
+678	2	meowstic-male-mega	sprites
+678	3	meowstic-female-mega	sprites
+687	1	malamar-mega	sprites
+689	1	barbaracle-mega	sprites
+691	1	dragalge-mega	sprites
+701	1	hawlucha-mega	sprites
+718	5	zygarde-mega	sprites
+740	1	crabominable-mega	sprites
+768	1	golisopod-mega	sprites
+780	1	drampa-mega	sprites
+801	2	magearna-mega	sprites
+801	3	magearna-original-mega	sprites
+807	1	zeraora-mega	sprites
+870	1	falinks-mega	sprites
+901	1	ursaluna-bloodmoon	sprites
+916	1	oinkologne-female	sprites
+925	1	maushold-family-of-three	sprites
+931	1	squawkabilly-blue-plumage	sprites
+931	2	squawkabilly-yellow-plumage	sprites
+931	3	squawkabilly-white-plumage	sprites
+952	1	scovillain-mega	sprites
+964	1	palafin-hero	sprites
+970	1	glimmora-mega	sprites
+978	1	tatsugiri-droopy	sprites
+978	2	tatsugiri-stretchy	sprites
+978	3	tatsugiri-curly-mega	sprites
+978	4	tatsugiri-droopy-mega	sprites
+978	5	tatsugiri-stretchy-mega	sprites
+998	1	baxcalibur-mega	sprites
+999	1	gimmighoul-roaming	sprites
+1007	1	koraidon-limited-build	sprites
+1007	2	koraidon-sprinting-build	sprites
+1007	3	koraidon-swimming-build	sprites
+1007	4	koraidon-gliding-build	sprites
+1008	1	miraidon-low-power-mode	sprites
+1008	2	miraidon-drive-mode	sprites
+1008	3	miraidon-aquatic-mode	sprites
+1008	4	miraidon-glide-mode	sprites
+1017	1	ogerpon-wellspring-mask	sprites
+1017	2	ogerpon-hearthflame-mask	sprites
+1017	3	ogerpon-cornerstone-mask	sprites
+1024	1	terapagos-terastal	sprites
+1024	2	terapagos-stellar	sprites
+25	1	pikachu-original-cap	nombre PKHeX «Original» = gorra original
+25	2	pikachu-hoenn-cap	nombre PKHeX «Hoenn»
+25	3	pikachu-sinnoh-cap	nombre PKHeX «Sinnoh»
+25	4	pikachu-unova-cap	nombre PKHeX «Unova»
+25	5	pikachu-kalos-cap	nombre PKHeX «Kalos»
+25	6	pikachu-alola-cap	nombre PKHeX «Alola»
+25	7	pikachu-partner-cap	nombre PKHeX «Partner»
+25	9	pikachu-world-cap	nombre PKHeX «World»
+20	2	raticate-totem-alola	«Large» = Pokémon dominante
+105	2	marowak-totem	«Large» = Pokémon dominante
+735	1	gumshoos-totem	«Large» = Pokémon dominante
+738	1	vikavolt-totem	«Large» = Pokémon dominante
+743	1	ribombee-totem	«Large» = Pokémon dominante
+752	1	araquanid-totem	«Large» = Pokémon dominante
+754	1	lurantis-totem	«Large» = Pokémon dominante
+758	1	salazzle-totem	«Large» = Pokémon dominante
+777	1	togedemaru-totem	«Large» = Pokémon dominante
+784	1	kommo-o-totem	«Large» = Pokémon dominante
+778	2	mimikyu-totem-disguised	«Large» disfrazado
+778	3	mimikyu-totem-busted	«Large» descubierto
+550	1	basculin-blue-striped	nombre PKHeX «Blue»
+550	2	basculin-white-striped	nombre PKHeX «White»
+555	2	darmanitan-galar-standard	nombre PKHeX «Galar»
+658	2	greninja-ash	nombre PKHeX «Active» = Greninja Ash
+678	1	meowstic-female	forma sin nombre en PKHeX = hembra
+876	1	indeedee-female	forma sin nombre en PKHeX = hembra
+902	1	basculegion-female	forma sin nombre en PKHeX = hembra
+710	3	pumpkaboo-super	«Jumbo»
+711	3	gourgeist-super	«Jumbo»
+718	2	zygarde-10-power-construct	«10%-C»
+718	3	zygarde-50-power-construct	«50%-C»
+744	1	rockruff-own-tempo	«Dusk» = Rockruff Ritmo Propio
+875	1	eiscue-noice	«Noice Face»
+774	1	minior-orange-meteor	«M-Orange»
+774	2	minior-yellow-meteor	«M-Yellow»
+774	3	minior-green-meteor	«M-Green»
+774	4	minior-blue-meteor	«M-Blue»
+774	5	minior-indigo-meteor	«M-Indigo»
+774	6	minior-violet-meteor	«M-Violet»
+774	7	minior-red	«C-Red»
+774	8	minior-orange	«C-Orange»
+774	9	minior-yellow	«C-Yellow»
+774	10	minior-green	«C-Green»
+774	11	minior-blue	«C-Blue»
+774	12	minior-indigo	«C-Indigo»
+774	13	minior-violet	«C-Violet»
+658	1	greninja-battle-bond	PKHeX llama «Ash» a la forma Vínculo (text_Forms índice 962)

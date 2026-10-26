@@ -1,0 +1,127 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:lz="clr-namespace:Pokekeep.Mobile.Ui.Localizacion"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:v="clr-namespace:Pokekeep.Mobile.Ui.Views"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             xmlns:e="clr-namespace:Pokekeep.Mobile.Ui.Herramientas.Encuentros"
+             xmlns:r="clr-namespace:Pokekeep.Mobile.Ui.Herramientas.RegalosDb"
+             x:Class="Pokekeep.Mobile.Ui.Views.RegalosDbView"
+             x:DataType="r:RegalosDbViewModel">
+  <UserControl.DataTemplates>
+    <DataTemplate x:DataType="e:FilaCriterioOpcion">
+      <StackPanel Spacing="4" Margin="0,6" AutomationProperties.Name="{Binding Accesible}">
+        <TextBlock Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+        <Button Classes="secundario" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" MinHeight="48" Command="{Binding AbrirCommand}" AutomationProperties.Name="{Binding Titulo}" AutomationProperties.HelpText="{Binding Descripcion}">
+          <d:EtiquetaYValor Separacion="0"><TextBlock Text="{Binding ValorTexto}" TextWrapping="Wrap" VerticalAlignment="Center" /><d:Icono Glifo="ChevronDown" Width="18" Height="18" /></d:EtiquetaYValor>
+        </Button>
+      </StackPanel>
+    </DataTemplate>
+    <DataTemplate x:DataType="vm:FilaPkhexInterruptor">
+      <StackPanel Spacing="4" Margin="0,8" AutomationProperties.Name="{Binding Accesible}">
+        <d:EtiquetaYValor Separacion="0">
+          <TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextWrapping="Wrap" VerticalAlignment="Center" />
+          <ToggleButton Classes="chip" IsChecked="{Binding Activo}" MinWidth="64" MinHeight="48" AutomationProperties.Name="{Binding Nombre}" AutomationProperties.HelpText="{Binding Descripcion}"><TextBlock Text="{Binding ValorTexto}" /></ToggleButton>
+        </d:EtiquetaYValor>
+        <TextBlock Classes="sec" Text="{Binding Descripcion}" TextWrapping="Wrap" IsVisible="{Binding HayDescripcion}" />
+      </StackPanel>
+    </DataTemplate>
+    <DataTemplate x:DataType="vm:FilaPkhexEntero">
+      <StackPanel Spacing="4" Margin="0,8" AutomationProperties.Name="{Binding Accesible}">
+        <d:EtiquetaYValor Separacion="4">
+          <TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextWrapping="Wrap" VerticalAlignment="Center" />
+          <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Left">
+            <Button Classes="icono" Width="48" Height="48" Command="{Binding BajarCommand}" IsEnabled="{Binding PuedeBajar}" AutomationProperties.Name="{lz:Formato Ajustes.Bajar, {Binding Nombre}}"><d:Icono Glifo="Minus" /></Button>
+          <TextBlock Text="{Binding ValorTexto}" MinWidth="44" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" AutomationProperties.Name="{lz:Formato Ajustes.Valor, {Binding ValorTexto}}" />
+          <Button Classes="icono" Width="48" Height="48" Command="{Binding SubirCommand}" IsEnabled="{Binding PuedeSubir}" AutomationProperties.Name="{lz:Formato Ajustes.Subir, {Binding Nombre}}"><d:Icono Glifo="Plus" /></Button>
+          </StackPanel>
+        </d:EtiquetaYValor>
+        <TextBlock Classes="sec" Text="{Binding Descripcion}" TextWrapping="Wrap" IsVisible="{Binding HayDescripcion}" />
+      </StackPanel>
+    </DataTemplate>
+  </UserControl.DataTemplates>
+
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="16,0,16,24" Spacing="10">
+      <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.ImportarHex.VolverHerramientas}">
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.ImportarHex.VolverHerramientas}" TextWrapping="Wrap" VerticalAlignment="Center" /></Grid>
+      </Button>
+      <StackPanel Spacing="2" Margin="0,4,0,4">
+        <TextBlock Classes="titulo" Text="{Binding Titulo}" TextWrapping="Wrap" />
+        <TextBlock Classes="sec" TextWrapping="Wrap" Text="{Binding Subtitulo}" />
+      </StackPanel>
+
+      <d:RejillaSinPartir Columns="2" RowSpacing="8" ColumnSpacing="8">
+        <RadioButton Classes="segmento" GroupName="pestana-regalosdb" IsChecked="{Binding EnGeneral, Mode=OneWay}" Command="{Binding VerPestanaCommand}" CommandParameter="general" MinHeight="48" Content="{DynamicResource Loc.Cajas.General}" AutomationProperties.Name="{DynamicResource Loc.BaseDatosPkm.PestanaGeneral}" />
+        <RadioButton Classes="segmento" GroupName="pestana-regalosdb" IsChecked="{Binding EnAvanzado, Mode=OneWay}" Command="{Binding VerPestanaCommand}" CommandParameter="avanzado" MinHeight="48" Content="{DynamicResource Loc.Ajustes.Pkhex.Grupo.22}" AutomationProperties.Name="{DynamicResource Loc.BaseDatosPkm.PestanaAvanzado}" />
+        <RadioButton Classes="segmento" GroupName="pestana-regalosdb" IsChecked="{Binding EnAjustes, Mode=OneWay}" Command="{Binding VerPestanaCommand}" CommandParameter="ajustes" MinHeight="48" Content="{DynamicResource Loc.Subeditores.Ajustes}" AutomationProperties.Name="{DynamicResource Loc.BaseDatosPkm.PestanaAjustes}" />
+      </d:RejillaSinPartir>
+
+      <!-- General -->
+      <Border Classes="tarjeta" Padding="14,8" IsVisible="{Binding EnGeneral}">
+        <StackPanel Spacing="2">
+          <ContentControl Content="{Binding Variocolor}" />
+          <ContentControl Content="{Binding Huevo}" />
+          <ContentControl Content="{Binding Especie}" />
+          <ContentControl Content="{Binding Objeto}" />
+          <ItemsControl ItemsSource="{Binding Movimientos}" />
+          <ContentControl Content="{Binding Comparador}" />
+          <ContentControl Content="{Binding Formato}" IsVisible="{Binding FormatoVisible}" />
+        </StackPanel>
+      </Border>
+
+      <!-- Avanzado -->
+      <Border Classes="tarjeta" Padding="14,8" IsVisible="{Binding EnAvanzado}">
+        <StackPanel Spacing="6">
+          <TextBlock Classes="sec" TextWrapping="Wrap" Text="{DynamicResource Loc.RegalosDb.InstruccionesFiltroEditorLotes}" />
+          <TextBox Text="{Binding Instrucciones}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="96" AutomationProperties.Name="{DynamicResource Loc.BaseDatosPkm.InstruccionesFiltro}" />
+          <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.BaseDatosPkm.AnadirCondicion}" Margin="0,6,0,0" />
+          <ContentControl Content="{Binding Propiedad}" />
+          <ContentControl Content="{Binding Prefijo}" />
+          <TextBox Text="{Binding ValorInstruccion}" Watermark="{DynamicResource Loc.BaseDatosPkm.ValorOpcional}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.BaseDatosPkm.ValorCondicion}" />
+          <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding AnadirInstruccionCommand}" AutomationProperties.Name="{DynamicResource Loc.BaseDatosPkm.AnadirCondicionInstrucciones}">
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Plus" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Form.Anadir}" /></StackPanel>
+          </Button>
+        </StackPanel>
+      </Border>
+
+      <!-- Ajustes -->
+      <Border Classes="tarjeta" Padding="14,6" IsVisible="{Binding EnAjustes}">
+        <StackPanel>
+          <ItemsControl ItemsSource="{Binding FilasAjustes}" />
+          <TextBlock Classes="sec" Text="{DynamicResource Loc.RegalosDb.OcultarRegalosDisponiblesAplica}" TextWrapping="Wrap" Margin="0,4,0,0" />
+          <TextBlock Classes="sec" Text="{Binding TextoPagina}" TextWrapping="Wrap" Margin="0,4,0,8" />
+        </StackPanel>
+      </Border>
+
+      <!-- Buscar -->
+      <d:RejillaSinPartir Columns="2" ColumnSpacing="8">
+        <Button Classes="primario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding BuscarCommand}" AutomationProperties.Name="{DynamicResource Loc.RegalosDb.BuscarRegalos}">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Search" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Comun.Buscar}" /></StackPanel>
+        </Button>
+        <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding ReiniciarFiltrosCommand}" AutomationProperties.Name="{DynamicResource Loc.BaseDatosPkm.ReiniciarFiltros}"><TextBlock Text="{DynamicResource Loc.BaseDatosPkm.ReiniciarFiltros}" TextWrapping="Wrap" TextAlignment="Center" /></Button>
+      </d:RejillaSinPartir>
+      <TextBlock Classes="sec" Text="{Binding Resultado}" FontWeight="Bold" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+      <TextBlock Classes="sec" Text="{Binding UltimoVisto}" TextWrapping="Wrap" IsVisible="{Binding HayUltimoVisto}" />
+      <v:TablaResultadosView DataContext="{Binding Tabla}" IsVisible="{Binding $parent[UserControl].((r:RegalosDbViewModel)DataContext).HayResultados}" />
+
+      <!-- Resultados (menú «Herramientas» del formulario) -->
+      <Border Classes="tarjeta" Padding="14,8">
+        <StackPanel Spacing="8">
+          <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Selector.Resultados}" />
+          <ContentControl Content="{Binding CajaInicio}" IsVisible="{Binding TieneCajas}" />
+          <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding ImportarResultadosCommand}" AutomationProperties.Name="{DynamicResource Loc.RegalosDb.ImportarResultadosPartida}">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"><d:Icono Glifo="Import" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.RegalosDb.ImportarResultadosPartida}" TextWrapping="Wrap" VerticalAlignment="Center" /></Grid>
+          </Button>
+          <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding ExportarResultadosCommand}" AutomationProperties.Name="{DynamicResource Loc.BaseDatosPkm.ExportarResultadosCarpeta3}">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"><d:Icono Glifo="FolderDown" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.BaseDatosPkm.ExportarResultadosCarpeta3}" TextWrapping="Wrap" VerticalAlignment="Center" /></Grid>
+          </Button>
+          <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding AbrirArchivoCommand}" AutomationProperties.Name="{DynamicResource Loc.RegalosDb.AbrirArchivoRegalo}">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"><d:Icono Glifo="FileUp" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.RegalosDb.AbrirArchivoRegalo}" TextWrapping="Wrap" VerticalAlignment="Center" /></Grid>
+          </Button>
+          <TextBlock Classes="sec" Text="{Binding TextoFormatosArchivo}" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

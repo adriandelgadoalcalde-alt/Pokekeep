@@ -1,0 +1,53 @@
+From 6837c18c25bf412b7d157f9c1cf685f869d2b8dd Mon Sep 17 00:00:00 2001
+From: Pokekeep <pokekeep@invalid>
+Date: Mon, 5 Oct 2026 12:30:57 +0200
+Subject: [PATCH 08/11] Pokekeep Hito 6: la ruta del proyecto de interfaz es
+ una propiedad y el modo portable no consulta versiones por red
+
+---
+ PKHeX.WinForms/MainWindow/Main.cs    | 3 +++
+ PKHeX.WinForms/PKHeX.WinForms.csproj | 7 ++++++-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/PKHeX.WinForms/MainWindow/Main.cs b/PKHeX.WinForms/MainWindow/Main.cs
+index e62f994af..d17f9e3ba 100644
+--- a/PKHeX.WinForms/MainWindow/Main.cs
++++ b/PKHeX.WinForms/MainWindow/Main.cs
+@@ -140,6 +140,9 @@ private void LoadBlankSaveFile(GameVersion version)
+ 
+     public async Task CheckForUpdates()
+     {
++        // Pokekeep (Hito 6, R-008): el paquete portable no hace conexiones de red por iniciativa propia (la comprobación de versiones consulta la API de GitHub).
++        if (AutoLegalidad.Ui.Portable.PortableMode.IsActive)
++            return;
+         Version? latestVersion;
+         // User might not be connected to the internet or with a flaky connection.
+         try { latestVersion = UpdateUtil.GetLatestPKHeXVersion(); }
+diff --git a/PKHeX.WinForms/PKHeX.WinForms.csproj b/PKHeX.WinForms/PKHeX.WinForms.csproj
+index ed615018c..d5a780d1f 100644
+--- a/PKHeX.WinForms/PKHeX.WinForms.csproj
++++ b/PKHeX.WinForms/PKHeX.WinForms.csproj
+@@ -20,6 +20,11 @@
+     <RootNamespace>PKHeX.WinForms</RootNamespace>
+   </PropertyGroup>
+ 
++  <PropertyGroup>
++    <!-- Pokekeep (Hito 6): proyecto de interfaz como propiedad (cada rama/worktree compila SU AutoLegalidad.Ui; herramientas\construir-winforms.ps1 la fija). -->
++    <PokekeepUiProject Condition="'$(PokekeepUiProject)' == ''">..\..\..\Pokekeep\src\AutoLegalidad.Ui\AutoLegalidad.Ui.csproj</PokekeepUiProject>
++  </PropertyGroup>
++
+   <PropertyGroup>
+     <DebugType>portable</DebugType>
+     <EmbedAllSources>true</EmbedAllSources>
+@@ -32,7 +37,7 @@
+ 
+   <ItemGroup>
+     <!-- Pokekeep (Hito 4): coordinador de UI, barra de operacion, Libreria y ajustes. Vive en el repo de Pokekeep, junto a esta copia de PKHeX. -->
+-    <ProjectReference Include="..\..\..\Pokekeep\src\AutoLegalidad.Ui\AutoLegalidad.Ui.csproj" />
++    <ProjectReference Include="$(PokekeepUiProject)" />
+   </ItemGroup>
+ 
+   <ItemGroup>
+-- 
+2.55.0.windows.5
+

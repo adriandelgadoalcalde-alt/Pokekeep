@@ -1,0 +1,67 @@
+From 757f2345e67a74561a89552c724c504a028fbaab Mon Sep 17 00:00:00 2001
+From: Adrian <noreply@pokekeep.invalid>
+Date: Sat, 3 Oct 2026 16:45:48 +0200
+Subject: [PATCH 02/11] =?UTF-8?q?Pokekeep=20Hito=204:=20cadenas=20de=20los?=
+ =?UTF-8?q?=20controles=20nuevos=20en=20castellano=20(es,=20es-419)=20e=20?=
+ =?UTF-8?q?ingl=C3=A9s?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ PKHeX.WinForms/Resources/text/lang_en.txt     | 8 ++++++++
+ PKHeX.WinForms/Resources/text/lang_es-419.txt | 8 ++++++++
+ PKHeX.WinForms/Resources/text/lang_es.txt     | 8 ++++++++
+ 3 files changed, 24 insertions(+)
+
+diff --git a/PKHeX.WinForms/Resources/text/lang_en.txt b/PKHeX.WinForms/Resources/text/lang_en.txt
+index 384aae054..76f9484a8 100644
+--- a/PKHeX.WinForms/Resources/text/lang_en.txt
++++ b/PKHeX.WinForms/Resources/text/lang_en.txt
+@@ -3403,3 +3403,11 @@ TrashEditor.L_Generation=Generation
+ TrashEditor.L_Language=Language
+ TrashEditor.L_Species=Species
+ TrashEditor.L_String=String
++Main.B_PokekeepLegalizar=Auto-legalize
++Main.B_PokekeepOptimizar=Optimize stats
++Main.Menu_PokekeepLegalizar=Auto-legalize
++Main.Menu_PokekeepOptimizar=Optimize stats
++Main.Menu_PokekeepLibreria=Pokekeep Library
++Main.mnuPokekeepLegalize=Auto-legalize
++Main.mnuPokekeepOptimize=Optimize stats
++Main.Tab_Libreria=Library
+diff --git a/PKHeX.WinForms/Resources/text/lang_es-419.txt b/PKHeX.WinForms/Resources/text/lang_es-419.txt
+index eef9c9458..0e5dcafd3 100644
+--- a/PKHeX.WinForms/Resources/text/lang_es-419.txt
++++ b/PKHeX.WinForms/Resources/text/lang_es-419.txt
+@@ -3403,3 +3403,11 @@ TrashEditor.L_Generation=Generación
+ TrashEditor.L_Language=Idioma
+ TrashEditor.L_Species=Especies
+ TrashEditor.L_String=Cadena
++Main.B_PokekeepLegalizar=Legalizar automáticamente
++Main.B_PokekeepOptimizar=Optimizar stats
++Main.Menu_PokekeepLegalizar=Legalizar automáticamente
++Main.Menu_PokekeepOptimizar=Optimizar stats
++Main.Menu_PokekeepLibreria=Librería de Pokekeep
++Main.mnuPokekeepLegalize=Legalizar automáticamente
++Main.mnuPokekeepOptimize=Optimizar stats
++Main.Tab_Libreria=Librería
+diff --git a/PKHeX.WinForms/Resources/text/lang_es.txt b/PKHeX.WinForms/Resources/text/lang_es.txt
+index deb551685..1a003fbbd 100644
+--- a/PKHeX.WinForms/Resources/text/lang_es.txt
++++ b/PKHeX.WinForms/Resources/text/lang_es.txt
+@@ -3403,3 +3403,11 @@ TrashEditor.L_Generation=Generación
+ TrashEditor.L_Language=Idioma
+ TrashEditor.L_Species=Especies
+ TrashEditor.L_String=Cadena
++Main.B_PokekeepLegalizar=Legalizar automáticamente
++Main.B_PokekeepOptimizar=Optimizar stats
++Main.Menu_PokekeepLegalizar=Legalizar automáticamente
++Main.Menu_PokekeepOptimizar=Optimizar stats
++Main.Menu_PokekeepLibreria=Librería de Pokekeep
++Main.mnuPokekeepLegalize=Legalizar automáticamente
++Main.mnuPokekeepOptimize=Optimizar stats
++Main.Tab_Libreria=Librería
+-- 
+2.55.0.windows.5
+

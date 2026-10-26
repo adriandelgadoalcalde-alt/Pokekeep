@@ -1,0 +1,20 @@
+<Project>
+  <!-- ADR 0039: el repo es la raiz y las fuentes de terceros (fuentes\, herramientas\alm-*...) viven DENTRO. Estas propiedades solo
+       valen para el codigo propio (src\ y tests\); lo de terceros se compila con sus propios ajustes, como antes del traslado. -->
+  <PropertyGroup>
+    <PokekeepPropio Condition="$([System.String]::new('$(MSBuildProjectDirectory)\').StartsWith('$(MSBuildThisFileDirectory)src\'))">true</PokekeepPropio>
+    <PokekeepPropio Condition="$([System.String]::new('$(MSBuildProjectDirectory)\').StartsWith('$(MSBuildThisFileDirectory)tests\'))">true</PokekeepPropio>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(PokekeepPropio)' == 'true'">
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+  <!-- Versiones EXACTAS entre corchetes: ningún rango ni versión flotante. -->
+  <ItemGroup Condition="'$(PokekeepPropio)' == 'true'">
+    <PackageVersion Include="Microsoft.Data.Sqlite" Version="[10.0.12]" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="[18.0.1]" />
+    <PackageVersion Include="xunit" Version="[2.9.3]" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="[3.1.5]" />
+  </ItemGroup>
+</Project>

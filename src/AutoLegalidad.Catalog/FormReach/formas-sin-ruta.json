@@ -1,0 +1,986 @@
+[
+  {
+    "Game": 10,
+    "Version": "D",
+    "Species": 172,
+    "Form": 1,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX enumera 2 encuentros para la especie 172 forma 1 en D: 0 exigen la matrícula (rastreador de HOME) (regla 6) y 2 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): EncounterStatic4: PKHeX rechaza la forma 1 (comprobación «Form») y solo valida la entidad con otra forma (x2)."
+  },
+  {
+    "Game": 11,
+    "Version": "P",
+    "Species": 172,
+    "Form": 1,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX enumera 2 encuentros para la especie 172 forma 1 en P: 0 exigen la matrícula (rastreador de HOME) (regla 6) y 2 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): EncounterStatic4: PKHeX rechaza la forma 1 (comprobación «Form») y solo valida la entidad con otra forma (x2)."
+  },
+  {
+    "Game": 12,
+    "Version": "Pt",
+    "Species": 172,
+    "Form": 1,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX enumera 2 encuentros para la especie 172 forma 1 en Pt: 0 exigen la matrícula (rastreador de HOME) (regla 6) y 2 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): EncounterStatic4: PKHeX rechaza la forma 1 (comprobación «Form») y solo valida la entidad con otra forma (x2)."
+  },
+  {
+    "Game": 24,
+    "Version": "X",
+    "Species": 670,
+    "Form": 5,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 670 forma 5 en X: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 25,
+    "Version": "Y",
+    "Species": 670,
+    "Form": 5,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 670 forma 5 en Y: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 26,
+    "Version": "AS",
+    "Species": 670,
+    "Form": 5,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 670 forma 5 en AS: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 27,
+    "Version": "OR",
+    "Species": 670,
+    "Form": 5,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 670 forma 5 en OR: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 30,
+    "Version": "SN",
+    "Species": 670,
+    "Form": 5,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 670 forma 5 en SN: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 30,
+    "Version": "SN",
+    "Species": 801,
+    "Form": 1,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 801 forma 1 en SN: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 31,
+    "Version": "MN",
+    "Species": 670,
+    "Form": 5,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 670 forma 5 en MN: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 31,
+    "Version": "MN",
+    "Species": 801,
+    "Form": 1,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 801 forma 1 en MN: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 32,
+    "Version": "US",
+    "Species": 670,
+    "Form": 5,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 670 forma 5 en US: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 32,
+    "Version": "US",
+    "Species": 801,
+    "Form": 1,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 801 forma 1 en US: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 33,
+    "Version": "UM",
+    "Species": 670,
+    "Form": 5,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 670 forma 5 en UM: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 33,
+    "Version": "UM",
+    "Species": 801,
+    "Form": 1,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 801 forma 1 en UM: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 42,
+    "Version": "GP",
+    "Species": 20,
+    "Form": 2,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 20 forma 2 en GP: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 42,
+    "Version": "GP",
+    "Species": 105,
+    "Form": 2,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 105 forma 2 en GP: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 42,
+    "Version": "GP",
+    "Species": 133,
+    "Form": 1,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX enumera 1 encuentros para la especie 133 forma 1 en GP: 0 exigen la matrícula (rastreador de HOME) (regla 6) y 1 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): EncounterStatic7b: PKHeX rechaza la forma 1 (comprobación «Form») y solo valida la entidad con otra forma (x1)."
+  },
+  {
+    "Game": 43,
+    "Version": "GE",
+    "Species": 20,
+    "Form": 2,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 20 forma 2 en GE: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 43,
+    "Version": "GE",
+    "Species": 25,
+    "Form": 8,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX enumera 1 encuentros para la especie 25 forma 8 en GE: 0 exigen la matrícula (rastreador de HOME) (regla 6) y 1 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): EncounterStatic7b: PKHeX rechaza la forma 8 (comprobación «Form») y solo valida la entidad con otra forma (x1)."
+  },
+  {
+    "Game": 43,
+    "Version": "GE",
+    "Species": 105,
+    "Form": 2,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 105 forma 2 en GE: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 44,
+    "Version": "SW",
+    "Species": 801,
+    "Form": 0,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 40 encuentros para la especie 801 forma 0 en SW: 40 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 45,
+    "Version": "SH",
+    "Species": 801,
+    "Form": 0,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 40 encuentros para la especie 801 forma 0 en SH: 40 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 45,
+    "Version": "SH",
+    "Species": 801,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 4 encuentros para la especie 801 forma 1 en SH: 4 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 25,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 26 encuentros para la especie 25 forma 1 en SL: 26 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 25,
+    "Form": 2,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 30 encuentros para la especie 25 forma 2 en SL: 30 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 25,
+    "Form": 3,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 30 encuentros para la especie 25 forma 3 en SL: 30 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 25,
+    "Form": 4,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 30 encuentros para la especie 25 forma 4 en SL: 30 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 25,
+    "Form": 5,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 30 encuentros para la especie 25 forma 5 en SL: 30 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 25,
+    "Form": 6,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 30 encuentros para la especie 25 forma 6 en SL: 30 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 25,
+    "Form": 7,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 38 encuentros para la especie 25 forma 7 en SL: 38 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 25,
+    "Form": 9,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 4 encuentros para la especie 25 forma 9 en SL: 4 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 490,
+    "Form": 0,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 52 encuentros para la especie 490 forma 0 en SL: 52 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 492,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 61 encuentros para la especie 492 forma 1 en SL: 61 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 493,
+    "Form": 0,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 0 en SL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 493,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 1 en SL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 493,
+    "Form": 2,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 2 en SL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 493,
+    "Form": 3,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 3 en SL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 493,
+    "Form": 4,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 4 en SL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 493,
+    "Form": 5,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 5 en SL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 493,
+    "Form": 6,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 6 en SL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 493,
+    "Form": 7,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 7 en SL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 493,
+    "Form": 8,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 8 en SL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 493,
+    "Form": 9,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 9 en SL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 493,
+    "Form": 10,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 10 en SL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 493,
+    "Form": 11,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 11 en SL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 493,
+    "Form": 12,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 12 en SL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 493,
+    "Form": 13,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 13 en SL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 493,
+    "Form": 14,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 14 en SL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 493,
+    "Form": 15,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 15 en SL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 493,
+    "Form": 16,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 16 en SL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 493,
+    "Form": 17,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 17 en SL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 658,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 18 encuentros para la especie 658 forma 1 en SL: 18 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 801,
+    "Form": 0,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 40 encuentros para la especie 801 forma 0 en SL: 40 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 801,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 4 encuentros para la especie 801 forma 1 en SL: 4 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 890,
+    "Form": 0,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 4 encuentros para la especie 890 forma 0 en SL: 4 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 893,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 6 encuentros para la especie 893 forma 1 en SL: 6 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 898,
+    "Form": 0,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 2 encuentros para la especie 898 forma 0 en SL: 2 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 898,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 2 encuentros para la especie 898 forma 1 en SL: 2 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 898,
+    "Form": 2,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 2 encuentros para la especie 898 forma 2 en SL: 2 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 1007,
+    "Form": 1,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 1007 forma 1 en SL: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 1007,
+    "Form": 2,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 1007 forma 2 en SL: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 1007,
+    "Form": 3,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 1007 forma 3 en SL: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 1007,
+    "Form": 4,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 1007 forma 4 en SL: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 1008,
+    "Form": 1,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 1008 forma 1 en SL: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 1008,
+    "Form": 2,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 1008 forma 2 en SL: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 1008,
+    "Form": 3,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 1008 forma 3 en SL: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 50,
+    "Version": "SL",
+    "Species": 1008,
+    "Form": 4,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 1008 forma 4 en SL: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 25,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 26 encuentros para la especie 25 forma 1 en VL: 26 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 25,
+    "Form": 2,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 30 encuentros para la especie 25 forma 2 en VL: 30 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 25,
+    "Form": 3,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 30 encuentros para la especie 25 forma 3 en VL: 30 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 25,
+    "Form": 4,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 30 encuentros para la especie 25 forma 4 en VL: 30 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 25,
+    "Form": 5,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 30 encuentros para la especie 25 forma 5 en VL: 30 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 25,
+    "Form": 6,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 30 encuentros para la especie 25 forma 6 en VL: 30 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 25,
+    "Form": 7,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 38 encuentros para la especie 25 forma 7 en VL: 38 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 25,
+    "Form": 9,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 4 encuentros para la especie 25 forma 9 en VL: 4 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 490,
+    "Form": 0,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 52 encuentros para la especie 490 forma 0 en VL: 52 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 492,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 61 encuentros para la especie 492 forma 1 en VL: 61 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 493,
+    "Form": 0,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 0 en VL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 493,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 1 en VL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 493,
+    "Form": 2,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 2 en VL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 493,
+    "Form": 3,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 3 en VL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 493,
+    "Form": 4,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 4 en VL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 493,
+    "Form": 5,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 5 en VL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 493,
+    "Form": 6,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 6 en VL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 493,
+    "Form": 7,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 7 en VL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 493,
+    "Form": 8,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 8 en VL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 493,
+    "Form": 9,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 9 en VL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 493,
+    "Form": 10,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 10 en VL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 493,
+    "Form": 11,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 11 en VL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 493,
+    "Form": 12,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 12 en VL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 493,
+    "Form": 13,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 13 en VL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 493,
+    "Form": 14,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 14 en VL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 493,
+    "Form": 15,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 15 en VL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 493,
+    "Form": 16,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 16 en VL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 493,
+    "Form": 17,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 116 encuentros para la especie 493 forma 17 en VL: 116 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 658,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 18 encuentros para la especie 658 forma 1 en VL: 18 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 801,
+    "Form": 0,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 40 encuentros para la especie 801 forma 0 en VL: 40 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 801,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 4 encuentros para la especie 801 forma 1 en VL: 4 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 890,
+    "Form": 0,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 4 encuentros para la especie 890 forma 0 en VL: 4 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 893,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 6 encuentros para la especie 893 forma 1 en VL: 6 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 898,
+    "Form": 0,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 2 encuentros para la especie 898 forma 0 en VL: 2 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 898,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 2 encuentros para la especie 898 forma 1 en VL: 2 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 898,
+    "Form": 2,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 2 encuentros para la especie 898 forma 2 en VL: 2 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 1007,
+    "Form": 1,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 1007 forma 1 en VL: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 1007,
+    "Form": 2,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 1007 forma 2 en VL: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 1007,
+    "Form": 3,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 1007 forma 3 en VL: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 1007,
+    "Form": 4,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 1007 forma 4 en VL: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 1008,
+    "Form": 1,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 1008 forma 1 en VL: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 1008,
+    "Form": 2,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 1008 forma 2 en VL: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 1008,
+    "Form": 3,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 1008 forma 3 en VL: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 51,
+    "Version": "VL",
+    "Species": 1008,
+    "Form": 4,
+    "Kind": "Impossible",
+    "Evidence": "PKHeX (EncounterMovesetGenerator.GenerateEncounters) no enumera NINGÚN encuentro para la especie 1008 forma 4 en VL: no existe ninguna ruta legal (nativa, de evento, por evolución ni por transferencia)."
+  },
+  {
+    "Game": 52,
+    "Version": "ZA",
+    "Species": 647,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 68 encuentros para la especie 647 forma 1 en ZA: 67 exigen la matrícula (rastreador de HOME) (regla 6) y 1 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): EncounterStatic9a: la especie 647 (forma 0) no evoluciona a 647 forma 1 según el árbol de evolución de PKHeX (x1)."
+  },
+  {
+    "Game": 52,
+    "Version": "ZA",
+    "Species": 658,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 18 encuentros para la especie 658 forma 1 en ZA: 18 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 52,
+    "Version": "ZA",
+    "Species": 664,
+    "Form": 18,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 36 encuentros para la especie 664 forma 18 en ZA: 36 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 52,
+    "Version": "ZA",
+    "Species": 664,
+    "Form": 19,
+    "Kind": "Impossible",
+    "Evidence": "Ni con el ajuste de HOME (aceptando la falta de matrícula, severidad Fishy): PKHeX enumera 36 encuentros para la especie 664 forma 19 en ZA: 0 exigen la matrícula (rastreador de HOME) (regla 6) y 36 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): EncounterEgg9: la especie 664 (forma 18) no evoluciona a 664 forma 19 según el árbol de evolución de PKHeX (x2); EncounterSlot9: la especie 664 (forma 30) no evoluciona a 664 forma 19 según el árbol de evolución de PKHeX (x34)."
+  },
+  {
+    "Game": 52,
+    "Version": "ZA",
+    "Species": 665,
+    "Form": 18,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 48 encuentros para la especie 665 forma 18 en ZA: 48 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 52,
+    "Version": "ZA",
+    "Species": 665,
+    "Form": 19,
+    "Kind": "Impossible",
+    "Evidence": "Ni con el ajuste de HOME (aceptando la falta de matrícula, severidad Fishy): PKHeX enumera 48 encuentros para la especie 665 forma 19 en ZA: 0 exigen la matrícula (rastreador de HOME) (regla 6) y 48 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): EncounterEgg9: PKHeX rechaza la forma 19 (comprobación «Form») y solo valida la entidad con otra forma (x2); EncounterSlot9: PKHeX rechaza la forma 19 (comprobación «Form») y solo valida la entidad con otra forma (x34); EncounterSlot9: la especie 665 (forma 30) no evoluciona a 665 forma 19 según el árbol de evolución de PKHeX (x12)."
+  },
+  {
+    "Game": 52,
+    "Version": "ZA",
+    "Species": 666,
+    "Form": 18,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 150 encuentros para la especie 666 forma 18 en ZA: 150 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 52,
+    "Version": "ZA",
+    "Species": 666,
+    "Form": 19,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 142 encuentros para la especie 666 forma 19 en ZA: 142 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 52,
+    "Version": "ZA",
+    "Species": 718,
+    "Form": 0,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 94 encuentros para la especie 718 forma 0 en ZA: 94 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 52,
+    "Version": "ZA",
+    "Species": 718,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 52 encuentros para la especie 718 forma 1 en ZA: 52 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  },
+  {
+    "Game": 52,
+    "Version": "ZA",
+    "Species": 801,
+    "Form": 1,
+    "Kind": "HomeOnly",
+    "Evidence": "PKHeX enumera 4 encuentros para la especie 801 forma 1 en ZA: 4 exigen la matrícula (rastreador de HOME) (regla 6) y 0 candidatos creados desde los demás fallan TODOS por motivos estructurales (sin encuentro, forma o evolución válidos): ."
+  }
+]

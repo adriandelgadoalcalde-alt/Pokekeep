@@ -1,0 +1,31 @@
+AVISOS DE TERCEROS - PKHeX-Pokekeep
+===================================
+
+Este paquete es una obra derivada de PKHeX y se distribuye bajo GPL-3.0-or-later (ver
+GPL-3.0-Pokekeep-y-PKHeX.txt). Componentes:
+
+1. PKHeX 26.10.18 (commit bfe89c74a3f5265805e364b79bc04ad38ebbc5ea)
+   Copyright (C) Kurt (kwsch) y colaboradores de PKHeX. Licencia GPL-3.0-or-later.
+   https://github.com/kwsch/PKHeX
+   PKHeX.WinForms está modificado (puntos de integración de Pokekeep, ver los parches en el
+   código fuente correspondiente, carpeta «parches»). PKHeX.Core se usa sin cambios de legalidad.
+   PKHeX incluye QRCoder (MIT) y sprites de pokesprite (MIT).
+
+2. Auto Legality Mod (ALM) / PKHeX-Plugins 26.10.18 (commit b13c011bb0c4c3d475ca7f0a30b880f5b24dbed7)
+   Copyright (c) 2018 Archit Date. Licencia MIT (ver MIT-ALM-PKHeX-Plugins.txt).
+   https://github.com/santacrab2/PKHeX-Plugins. Se usa su generador de legalidad, aislado detrás de
+   un adaptador y SIEMPRE verificado de forma independiente con el PKHeX.Core oficial.
+
+3. Project Pokémon - EventsGallery
+   Fuente de datos de eventos. Sin licencia declarada (ver AVISO-EventsGallery.txt).
+   Atribución: «Event data courtesy of Project Pokémon (projectpokemon.org)».
+   Datos de ventanas de Pokémon GO: PoGoEncTool (Project Pokémon, AGPL-3.0); solo se usan sus
+   datos, con atribución, y no se incluye ni enlaza su código.
+
+4. .NET 10 (runtime autocontenido). Copyright (c) .NET Foundation y colaboradores. Licencia MIT
+   (DotNet-LICENSE.txt y DotNet-THIRD-PARTY-NOTICES.TXT).
+
+5. Microsoft.Data.Sqlite 10.0.12 (MIT) y SQLitePCLRaw 2.1.12 (Apache-2.0) con SQLite (dominio público).
+
+Pokémon y sus nombres son marcas de Nintendo, Game Freak y The Pokémon Company. Pokekeep no está
+afiliado a ellas. No se distribuyen ROMs, guardados, claves ni binarios de juego.

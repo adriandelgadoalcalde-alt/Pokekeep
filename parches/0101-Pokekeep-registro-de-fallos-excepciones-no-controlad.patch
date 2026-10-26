@@ -1,0 +1,167 @@
+From 1a3ea653f108528ec5c10c309b2d24451cc69899 Mon Sep 17 00:00:00 2001
+From: Pokekeep <pokekeep@invalid>
+Date: Tue, 6 Oct 2026 19:51:22 +0200
+Subject: [PATCH 09/11] Pokekeep: registro de fallos (excepciones no
+ controladas, errores que PKHeX muestra al usuario, inicio y cierre de sesion)
+ y entrada Abrir carpeta de registros
+
+---
+ PKHeX.WinForms/Misc/ErrorWindow.cs       | 18 +++++++++++++++++-
+ PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs |  5 +++++
+ PKHeX.WinForms/Program.cs                | 18 ++++++++++++------
+ PKHeX.WinForms/Util/WinFormsUtil.cs      |  1 +
+ 4 files changed, 35 insertions(+), 7 deletions(-)
+
+diff --git a/PKHeX.WinForms/Misc/ErrorWindow.cs b/PKHeX.WinForms/Misc/ErrorWindow.cs
+index aad78031d..aa6a5bd87 100644
+--- a/PKHeX.WinForms/Misc/ErrorWindow.cs
++++ b/PKHeX.WinForms/Misc/ErrorWindow.cs
+@@ -9,6 +9,7 @@ public sealed partial class ErrorWindow : Form
+ {
+     public static DialogResult ShowErrorDialog(string friendlyMessage, Exception ex, bool allowContinue)
+     {
++        AutoLegalidad.Registro.RegistroFallos.Error($"PKHeX muestra un error al usuario: {friendlyMessage}", ex, "ErrorWindow.ShowErrorDialog");
+         string lang = WinFormsUtil.GetCultureLanguage();
+         using var dialog = new ErrorWindow(lang);
+         dialog.LoadException(ex, friendlyMessage, allowContinue);
+@@ -22,6 +23,20 @@ public ErrorWindow(string? lang = GameLanguage.DefaultLanguage)
+     {
+         InitializeComponent();
+         WinFormsUtil.TranslateInterface(this, lang ?? WinFormsUtil.GetCultureLanguage());
++        // Pokekeep (ADR 0040): el error queda en el registro; un boton abre su carpeta.
++        var openLogs = new Button { Name = "B_PokekeepRegistros", Text = AutoLegalidad.Ui.Diagnostico.TextosRegistro.AbrirCarpeta, Anchor = AnchorStyles.Bottom | AnchorStyles.Left, Location = new System.Drawing.Point(B_CopyToClipboard.Right + 8, B_CopyToClipboard.Top), Size = new System.Drawing.Size(180, B_CopyToClipboard.Height), UseVisualStyleBackColor = true, TabIndex = 6 };
++        openLogs.Click += (_, _) => AutoLegalidad.Ui.Diagnostico.CarpetaRegistros.Abrir(this);
++        // El mensaje es mas largo (lleva la nota del registro): se le da sitio sin tocar el resto del dialogo.
++        const int extra = 32;
++        MinimumSize = new System.Drawing.Size(MinimumSize.Width, MinimumSize.Height + extra);
++        ClientSize = new System.Drawing.Size(ClientSize.Width, ClientSize.Height + extra);
++        L_Message.Height += extra;
++        L_ProvideInfo.Top += extra;
++        T_ExceptionDetails.Top += extra;
++        T_ExceptionDetails.Height -= extra;
++        openLogs.Top = B_CopyToClipboard.Top;
++        openLogs.Width = 168;
++        Controls.Add(openLogs);
+     }
+ 
+     /// <summary>
+@@ -60,7 +75,7 @@ public Exception Error
+     public void LoadException(Exception ex, string friendlyMessage, bool allowContinue)
+     {
+         ShowContinue = allowContinue;
+-        Message = friendlyMessage;
++        Message = friendlyMessage + Environment.NewLine + AutoLegalidad.Ui.Diagnostico.TextosRegistro.ErrorGuardado;
+         Error = ex;
+     }
+ 
+@@ -92,6 +107,7 @@ private void UpdateExceptionDetailsMessage()
+         // Include message in case it contains important information, like a file path.
+         details.AppendLine("User Message:");
+         details.AppendLine(Message);
++        details.AppendLine("Pokekeep log folder: " + AutoLegalidad.Registro.Saneador.Sanear(AutoLegalidad.Registro.RegistroFallos.CarpetaParaAbrir() ?? "(no disponible)"));
+ 
+         T_ExceptionDetails.Text = details.ToString();
+     }
+diff --git a/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs b/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs
+index be8b2c8f9..7f5e2054a 100644
+--- a/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs
++++ b/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs
+@@ -65,6 +65,11 @@ private void InitializePokekeep()
+         Menu_Tools.DropDownItems.AddRange([_pkMenuLegalize, _pkMenuOptimize, _pkMenuLibrary, _pkMenuComplete, _pkMenuBulk]);
+         Menu_Tools.DropDownOpening += (_, _) => UpdatePokekeepBulkAvailability();
+ 
++        // ---- Opciones: «Abrir carpeta de registros» (ADR 0040), justo antes de «Acerca de» ----
++        var pkMenuLogs = new ToolStripMenuItem(AutoLegalidad.Ui.Diagnostico.TextosRegistro.AbrirCarpeta) { Name = "Menu_PokekeepRegistros", Image = Resources.folder };
++        pkMenuLogs.Click += (_, _) => AutoLegalidad.Ui.Diagnostico.CarpetaRegistros.Abrir(this);
++        Menu_Options.DropDownItems.Insert(Math.Max(0, Menu_Options.DropDownItems.IndexOf(Menu_About)), pkMenuLogs);
++
+         // ---- Pestaña «Librería» junto a Caja, Equipo, Otro y SAV ----
+         Pokekeep.AddLibraryTab(C_SAV.AddExtraTab);
+ 
+diff --git a/PKHeX.WinForms/Program.cs b/PKHeX.WinForms/Program.cs
+index c91f56e53..6e5896f50 100644
+--- a/PKHeX.WinForms/Program.cs
++++ b/PKHeX.WinForms/Program.cs
+@@ -2,6 +2,7 @@
+ using System.IO;
+ using System.Threading;
+ using System.Windows.Forms;
++using AutoLegalidad.Registro;
+ using PKHeX.Core;
+ 
+ #if !DEBUG
+@@ -28,6 +29,10 @@ internal static class Program
+     public static bool HaX { get; private set; }
+     static Program()
+     {
++        // Pokekeep (ADR 0040): registro de fallos. Primero, para que la excepcion quede anotada antes de que PKHeX muestre su dialogo.
++        RegistroFallos.Configurar("PKHeX");
++        RegistroFallos.InstalarCapturaGlobal();
++        Application.ThreadException += (_, t) => RegistroFallos.Error("Excepción no controlada en el hilo de la interfaz", t.Exception, "Application.ThreadException");
+ #if !DEBUG
+         Application.ThreadException += UIThreadException;
+         Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+@@ -48,6 +53,7 @@ private static void Main()
+     {
+         // Load settings first
+         var settings = Settings;
++        RegistroFallos.IniciarSesion($"PKHeX {CurrentVersion}");
+         settings.LocalResources.SetLocalPath(WorkingDirectory);
+         StartupUtil.ReloadSettings(settings);
+ 
+@@ -136,13 +142,13 @@ private static string GetErrorMessage(Exception e)
+         try
+         {
+             if (IsPluginError<IPlugin>(e, out var pluginName))
+-                return $"An error occurred in a PKHeX plugin. Please report this error to the plugin author/maintainer.\n{pluginName}";
++                return $"Ha ocurrido un error en un plugin de PKHeX. Comunícalo a su autor.\n{pluginName}";
+         }
+         catch
+         {
+             // If we fail to analyze the stack trace, just return the generic message. Don't risk another exception.
+         }
+-        return "An error occurred in PKHeX. Please report this error to the PKHeX author.";
++        return "Ha ocurrido un error en PKHeX.";
+     }
+ 
+     private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+@@ -152,20 +158,20 @@ private static void CurrentDomain_UnhandledException(object sender, UnhandledExc
+         {
+             if (IsOldPkhexCorePresent(ex))
+             {
+-                Error("You have upgraded PKHeX incorrectly. Please delete PKHeX.Core.dll.");
++                Error("PKHeX se ha actualizado mal. Borra PKHeX.Core.dll.");
+             }
+             else if (IsPkhexCoreMissing(ex))
+             {
+-                Error("You have installed PKHeX incorrectly. Please ensure you have unzipped all files before running.");
++                Error("PKHeX se ha instalado mal. Descomprime todos los ficheros antes de ejecutarlo.");
+             }
+             else if (ex is not null)
+             {
+                 var msg = GetErrorMessage(ex);
+-                ErrorWindow.ShowErrorDialog($"{msg}\nPKHeX must now close.", ex, false);
++                ErrorWindow.ShowErrorDialog($"{msg}\nPKHeX debe cerrarse ahora.", ex, false);
+             }
+             else
+             {
+-                Error("A fatal non-UI error has occurred in PKHeX, and the details could not be displayed.  Please report this to the author.");
++                Error("Ha ocurrido un error grave en PKHeX y no se han podido mostrar los detalles. Consulta la carpeta de registros.");
+             }
+         }
+         catch (Exception reportingException)
+diff --git a/PKHeX.WinForms/Util/WinFormsUtil.cs b/PKHeX.WinForms/Util/WinFormsUtil.cs
+index 54eb91b9d..bf5831fff 100644
+--- a/PKHeX.WinForms/Util/WinFormsUtil.cs
++++ b/PKHeX.WinForms/Util/WinFormsUtil.cs
+@@ -144,6 +144,7 @@ internal static DialogResult Error(params ReadOnlySpan<string?> lines)
+     {
+         Hand();
+         string msg = string.Join(Environment.NewLine + Environment.NewLine, lines);
++        AutoLegalidad.Registro.RegistroFallos.Error($"PKHeX muestra un error al usuario: {msg}", contexto: "WinFormsUtil.Error");
+         return MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+     }
+ 
+-- 
+2.55.0.windows.5
+

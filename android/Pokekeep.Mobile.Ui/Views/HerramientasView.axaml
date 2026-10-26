@@ -1,0 +1,59 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:h="clr-namespace:Pokekeep.Mobile.Ui.Herramientas"
+             x:Class="Pokekeep.Mobile.Ui.Views.HerramientasView"
+             x:DataType="h:HerramientasViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="16,0,16,24" Spacing="10">
+      <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" AutomationProperties.Name="{DynamicResource Loc.Comun.VolverMas}">
+        <StackPanel Orientation="Horizontal" Spacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Comun.VolverMas}" /></StackPanel>
+      </Button>
+      <StackPanel Spacing="2" Margin="0,4,0,4">
+        <TextBlock Classes="titulo" Text="{Binding Titulo}" />
+        <TextBlock Classes="sec" TextWrapping="Wrap" Text="{Binding Subtitulo}" />
+      </StackPanel>
+      <Border Classes="tarjeta" Padding="14,10" IsVisible="{Binding NoHayHerramientas}"><TextBlock Classes="sec" Text="{Binding TextoVacio}" TextWrapping="Wrap" /></Border>
+      <ItemsControl ItemsSource="{Binding Grupos}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="h:GrupoHerramientas">
+            <StackPanel Spacing="6" Margin="0,6,0,0">
+              <TextBlock Classes="etiqueta" Text="{Binding Nombre}" />
+              <Border Classes="tarjeta" Padding="8,4">
+                <ItemsControl ItemsSource="{Binding Entradas}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="h:EntradaHerramienta">
+                      <Panel>
+                        <Button Classes="fila" IsVisible="{Binding Disponible}" Command="{Binding Abrir}" AutomationProperties.Name="{Binding Titulo}" AutomationProperties.HelpText="{Binding Linea}">
+                          <Grid ColumnDefinitions="Auto,*,Auto" MinHeight="64">
+                            <Border Width="40" Height="40" CornerRadius="12" Background="{DynamicResource SeleccionSuave}" Margin="8,0,12,0">
+                              <d:Icono Glifo="{Binding Glifo}" Width="22" Height="22" Foreground="{DynamicResource Dorado}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1" Margin="0,6">
+                              <d:TextoEntero Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+                              <TextBlock Classes="sec" Text="{Binding Linea}" TextWrapping="Wrap" />
+                            </StackPanel>
+                            <d:Icono Grid.Column="2" Glifo="ChevronRight" Width="20" Height="20" Margin="8,0" Foreground="{DynamicResource TextoSecundario}" VerticalAlignment="Center" />
+                          </Grid>
+                        </Button>
+                        <Grid IsVisible="{Binding NoDisponible}" ColumnDefinitions="Auto,*" MinHeight="64" Margin="0,2" AutomationProperties.Name="{Binding Titulo}" AutomationProperties.HelpText="{Binding Linea}">
+                          <Border Width="40" Height="40" CornerRadius="12" Background="{DynamicResource SeleccionSuave}" Margin="8,0,12,0" Opacity="0.6">
+                            <d:Icono Glifo="{Binding Glifo}" Width="22" Height="22" Foreground="{DynamicResource TextoSecundario}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                          </Border>
+                          <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1" Margin="0,6,8,6">
+                            <TextBlock Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" Foreground="{DynamicResource TextoSecundario}" />
+                            <TextBlock Classes="sec" Text="{Binding Linea}" TextWrapping="Wrap" />
+                          </StackPanel>
+                        </Grid>
+                      </Panel>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </Border>
+            </StackPanel>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

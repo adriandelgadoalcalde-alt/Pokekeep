@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Interfaz de Pokekeep para Android (Avalonia 12): sistema de diseno, controles, vistas y ViewModels. net10.0 (se prueba en el PC con Avalonia.Headless y se hospeda en Pokekeep.Mobile, la cabecera net10.0-android).
+       Solo depende de Avalonia y PKHeX.Core (biblioteca portable); el motor, el almacenamiento y el catalogo llegan por interfaces (puertos) que implementa la cabecera. ADR 0056. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Pokekeep.Mobile.Ui</RootNamespace>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <NeutralLanguage>es-ES</NeutralLanguage>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <!-- Ganchos de prueba (inyeccion de fallos): solo en Debug o con -p:PokekeepPruebas=true. El APK de uso (Release) NO los lleva. -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug' Or '$(PokekeepPruebas)' == 'true'">
+    <DefineConstants>$(DefineConstants);POKEKEEP_PRUEBAS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <!-- QR del Pokemon exportado (QRMessageUtil del Core da el mensaje; PKHeX.Drawing.Misc usa el mismo QRCoder). MIT. Solo se usa el generador de la matriz de modulos, nunca System.Drawing. ADR 0058. -->
+    <PackageReference Include="QRCoder" />
+    <!-- Leer un QR de una imagen de la galeria (importar el Pokemon que otro movil o PKHeX ha mostrado): ZXing.Net, Apache-2.0, solo el decodificador sobre una matriz de pixeles; sin camara ni permisos. ADR 0059. -->
+    <PackageReference Include="ZXing.Net" />
+    <ProjectReference Include="$(PKHeXCoreProject)" />
+    <ProjectReference Include="..\Pokekeep.Sprites\Pokekeep.Sprites.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\Fonts\*.ttf" />
+    <AvaloniaResource Include="Assets\Imagenes\*.png" />
+    <!-- Textos en castellano de PKHeX (formularios y enumeraciones), tal cual: etiquetas, pestanas y nombres de los editores de partida (F7, ADR 0061). GPL-3.0, como PKHeX. -->
+    <EmbeddedResource Include="Assets\Textos\lang_es.txt" LogicalName="lang_es.txt" />
+    <!-- Inglés del PKHeX fijado, sin traducirlo ni mantener otra copia. GPL-3.0. -->
+    <EmbeddedResource Include="..\..\fuentes\PKHeX-oficial\PKHeX.WinForms\Resources\text\lang_en.txt" LogicalName="lang_en.txt" />
+    <EmbeddedResource Include="Assets\Localizacion\*.json" LogicalName="localizacion/%(Filename)%(Extension)" />
+    <!-- F10-13: referencia íntegra de los atajos originales, distribuida sin modificar desde el PKHeX fijado. -->
+    <EmbeddedResource Include="Assets\Textos\shortcuts_es.txt" LogicalName="shortcuts_es.txt" />
+    <!-- Cargas de moda de Sol/Luna y Ultra (los mismos .bin de PKHeX): ropa desbloqueada de golpe. -->
+    <EmbeddedResource Include="Assets\Datos\*" LogicalName="datos/%(Filename)%(Extension)" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Pokekeep.Android.VisualTests" />
+    <InternalsVisibleTo Include="Pokekeep.Android.UiTests" />
+    <InternalsVisibleTo Include="Pokekeep.Android.WinFormsTests" />
+  </ItemGroup>
+</Project>

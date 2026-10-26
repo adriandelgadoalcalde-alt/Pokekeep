@@ -1,0 +1,80 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.InformeMasivoView"
+             x:DataType="vm:InformeMasivoViewModel">
+  <StackPanel Spacing="10">
+    <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.InformeMasivo.INFORMEPOKEMON}" IsVisible="{Binding HayFilas}" />
+    <Border Classes="tarjeta" Padding="14,10" IsVisible="{Binding HayFilas}">
+      <ItemsControl ItemsSource="{Binding Totales}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="x:String"><TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,2" /></DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </Border>
+    <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.InformeMasivo.FILTRARESTADO}" IsVisible="{Binding HayFilas}" />
+    <ItemsControl ItemsSource="{Binding Filtros}" IsVisible="{Binding HayFilas}">
+      <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel Orientation="Horizontal" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="vm:FiltroEstado">
+          <ToggleButton Classes="chip" Margin="0,0,6,6" MinHeight="48" IsChecked="{Binding Activo, Mode=OneWay}" Command="{Binding $parent[ItemsControl].((vm:InformeMasivoViewModel)DataContext).FiltrarCommand}" CommandParameter="{Binding}" AutomationProperties.Name="{Binding Accesible}">
+            <TextBlock Text="{Binding Texto}" TextWrapping="Wrap" />
+          </ToggleButton>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+    <TextBlock Classes="sec" Text="{Binding ResumenFiltro}" IsVisible="{Binding HayFilas}" AutomationProperties.LiveSetting="Polite" />
+    <ItemsControl ItemsSource="{Binding Visibles}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="vm:FilaInformeVm">
+          <Border Classes="tarjeta" Padding="12,8" Margin="0,0,0,6" AutomationProperties.Name="{Binding Accesible}">
+            <StackPanel Spacing="4">
+              <Button Classes="fila" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" MinHeight="48" Padding="0" Command="{Binding AlternarCommand}" AutomationProperties.Name="{Binding Accesible}" AutomationProperties.HelpText="{DynamicResource Loc.InformeMasivo.DespliegaDetallePokemon}">
+                <d:EtiquetaYValor Separacion="8">
+                  <StackPanel Spacing="2" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextWrapping="Wrap" />
+                    <TextBlock Classes="sec" Text="{Binding Casilla}" IsVisible="{Binding HayCasilla}" />
+                  </StackPanel>
+                  <Border Classes="insignia" Classes.ok="{Binding EsOk}" Classes.aviso="{Binding EsAviso}" Classes.error="{Binding EsError}" Padding="8,3" VerticalAlignment="Center" MaxWidth="170">
+                    <TextBlock Text="{Binding Etiqueta}" TextWrapping="Wrap" TextAlignment="Center" />
+                  </Border>
+                </d:EtiquetaYValor>
+              </Button>
+              <ItemsControl ItemsSource="{Binding Simbolos}" IsVisible="{Binding HayOperaciones}">
+                <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel Orientation="Horizontal" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:SimboloOperacion">
+                    <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,12,0" AutomationProperties.Name="{Binding Accesible}">
+                      <TextBlock Classes="sec" Text="{Binding Nombre}" VerticalAlignment="Center" />
+                      <d:Icono Glifo="{Binding Glifo}" Width="14" Height="14" IsVisible="{Binding EsGlifo}" VerticalAlignment="Center" />
+                      <TextBlock Classes="sec" Text="{Binding Simbolo}" IsVisible="{Binding EsTexto}" VerticalAlignment="Center" />
+                    </StackPanel>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <ItemsControl ItemsSource="{Binding Detalle}" IsVisible="{Binding Abierta}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="x:String"><TextBlock Classes="sec" Text="{Binding}" TextWrapping="Wrap" Margin="0,1" /></DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+    <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding MostrarMasCommand}" IsVisible="{Binding HayMas}" AutomationProperties.Name="{Binding TextoMas}">
+      <TextBlock Text="{Binding TextoMas}" TextAlignment="Center" />
+    </Button>
+    <TextBlock Classes="sec" Text="{Binding Aviso}" IsVisible="{Binding HayAviso}" AutomationProperties.LiveSetting="Polite" />
+    <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CopiarCommand}" IsEnabled="{Binding PuedeCopiar}" AutomationProperties.Name="{DynamicResource Loc.InformeMasivo.CopiarInforme}" AutomationProperties.HelpText="{DynamicResource Loc.InformeMasivo.CopiaInformeCompletoPortapapeles}">
+      <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="ClipboardCopy" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.InformeMasivo.CopiarInforme}" /></StackPanel>
+    </Button>
+    <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding GuardarTextoCommand}" IsEnabled="{Binding PuedeGuardar}" AutomationProperties.Name="{DynamicResource Loc.InformeMasivo.GuardarInformeTexto}" AutomationProperties.HelpText="{DynamicResource Loc.InformeMasivo.GuardaDondeElijasArchivo}">
+      <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="FileText" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.InformeMasivo.GuardarTexto}" /></StackPanel>
+    </Button>
+    <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding GuardarCsvCommand}" IsEnabled="{Binding PuedeGuardar}" AutomationProperties.Name="{DynamicResource Loc.InformeMasivo.GuardarInformeCSV}" AutomationProperties.HelpText="{DynamicResource Loc.InformeMasivo.GuardaDondeElijasHoja}">
+      <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="FileDown" Width="20" Height="20" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.InformeMasivo.GuardarHojaCalculoCSV}" TextWrapping="Wrap" TextAlignment="Center" /></Grid>
+    </Button>
+  </StackPanel>
+</UserControl>

@@ -1,0 +1,6 @@
+<Project>
+  <!-- Version REAL del producto (la lee la ventana «Acerca de» desde AutoLegalidad.App). Solo aqui: tocar AutoLegalidad.Engine cambiaria su hash y con el la cache de soluciones. -->
+  <PropertyGroup>
+    <PokekeepVersion>1.0.1</PokekeepVersion>
+  </PropertyGroup>
+</Project>

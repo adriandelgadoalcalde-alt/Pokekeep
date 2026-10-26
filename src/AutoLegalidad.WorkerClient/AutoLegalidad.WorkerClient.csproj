@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>AutoLegalidad.WorkerClient</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AutoLegalidad.Contracts\AutoLegalidad.Contracts.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.Registro\AutoLegalidad.Registro.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,55 @@
+From 29f466f768b7bb729cf01825eb049280de6baf50 Mon Sep 17 00:00:00 2001
+From: Pokekeep <pokekeep@invalid>
+Date: Sun, 4 Oct 2026 09:07:45 +0200
+Subject: [PATCH 04/11] Pokekeep Hito 3c: la ventana sigue el alto de la barra
+ de operacion (el resumen largo la hace crecer)
+
+---
+ PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs | 18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
+
+diff --git a/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs b/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs
+index 8584196b0..8ca749776 100644
+--- a/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs
++++ b/PKHeX.WinForms/Pokekeep/Main.Pokekeep.cs
+@@ -20,7 +20,7 @@ public partial class Main
+     private ToolStripMenuItem? _pkMenuOptimize;
+     private ToolStripMenuItem? _pkMenuLibrary;
+     private ToolTip? _pkTip;
+-    private bool _pkBarGrown;
++    private int _pkBarAdded;            // alto que la ventana ha crecido por la barra (la barra cambia de alto según el texto del resumen)
+ 
+     private void InitializePokekeep()
+     {
+@@ -43,6 +43,7 @@ private void InitializePokekeep()
+ 
+         // ---- Barra de operación (progreso, Cancelar, resumen, Ver cambios, Deshacer) ----
+         app.Bar.VisibleChanged += (_, _) => AdjustForPokekeepBar(app.Bar);
++        app.Bar.SizeChanged += (_, _) => AdjustForPokekeepBar(app.Bar);
+         Controls.Add(app.Bar);
+         app.Bar.SendToBack();
+ 
+@@ -82,15 +83,10 @@ private void AdjustForPokekeepBar(Control bar)
+     {
+         if (WindowState != FormWindowState.Normal)
+             return;
+-        if (bar.Visible && !_pkBarGrown)
+-        {
+-            Height += bar.Height;
+-            _pkBarGrown = true;
+-        }
+-        else if (!bar.Visible && _pkBarGrown)
+-        {
+-            Height -= bar.Height;
+-            _pkBarGrown = false;
+-        }
++        var wanted = bar.Visible ? bar.Height : 0;
++        if (wanted == _pkBarAdded)
++            return;
++        Height += wanted - _pkBarAdded;
++        _pkBarAdded = wanted;
+     }
+ }
+-- 
+2.55.0.windows.5
+

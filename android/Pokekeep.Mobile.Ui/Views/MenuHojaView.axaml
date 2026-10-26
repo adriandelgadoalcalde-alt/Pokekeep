@@ -1,0 +1,71 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.MenuHojaView"
+             x:DataType="vm:MenuHojaViewModel">
+  <UserControl.Styles>
+    <!-- uso10: el hueco de 48 es solo para las carátulas de los juegos; las filas con icono siguen en 40 y no restan ancho al texto con letra grande. -->
+    <Style Selector="Border.icono-fila"><Setter Property="Width" Value="40" /><Setter Property="Height" Value="40" /></Style>
+    <Style Selector="Border.icono-fila.juego"><Setter Property="Width" Value="48" /><Setter Property="Height" Value="48" /></Style>
+  </UserControl.Styles>
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="12" Margin="16,0,16,24">
+      <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverAtrasCommand}" IsVisible="{Binding HayVolver}" AutomationProperties.Name="{DynamicResource Loc.Menu.Volver}" AutomationProperties.HelpText="{DynamicResource Loc.MenuHoja.VuelveMenuAnterior}">
+        <StackPanel Orientation="Horizontal" Spacing="6"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Menu.Volver}" /></StackPanel>
+      </Button>
+      <TextBlock Classes="sec" Text="{Binding Subtitulo}" IsVisible="{Binding HaySubtitulo}" Margin="4,0" />
+      <!-- Interruptores (los equivalentes de Mayús y Ctrl de PKHeX) -->
+      <Border Classes="tarjeta" Padding="12,4" IsVisible="{Binding HayInterruptores}">
+        <ItemsControl ItemsSource="{Binding Interruptores}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:InterruptorHoja">
+              <Grid ColumnDefinitions="*,Auto" MinHeight="56" Margin="0,2">
+                <StackPanel VerticalAlignment="Center" Spacing="1">
+                  <TextBlock Text="{Binding Texto}" FontWeight="Medium" />
+                  <TextBlock Classes="sec" Text="{Binding Descripcion}" />
+                </StackPanel>
+                <ToggleSwitch Grid.Column="1" IsChecked="{Binding Activo}" OnContent="" OffContent="" MinHeight="48" AutomationProperties.Name="{Binding Accesible}" />
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
+      <ItemsControl ItemsSource="{Binding Secciones}">
+        <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="12" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:SeccionHoja">
+            <StackPanel Spacing="6">
+              <TextBlock Classes="etiqueta" Text="{Binding Titulo}" IsVisible="{Binding TieneTitulo}" Margin="8,0" AutomationProperties.HeadingLevel="2" />
+              <Border Classes="tarjeta" Padding="8,4">
+                <ItemsControl ItemsSource="{Binding Entradas}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:EntradaHoja">
+                      <Button Classes="fila" Command="{Binding $parent[UserControl].((vm:MenuHojaViewModel)DataContext).ElegirCommand}" CommandParameter="{Binding}" IsEnabled="{Binding Accionable}" MinHeight="56"
+                              AutomationProperties.Name="{Binding Accesible}">
+                        <Grid ColumnDefinitions="Auto,*,Auto" MinHeight="56">
+                          <Border Classes="icono-fila" Classes.juego="{Binding HayJuego}" CornerRadius="12" Background="{DynamicResource SeleccionSuave}" Margin="4,0,12,0" VerticalAlignment="Center">
+                            <Panel>
+                              <d:Icono Glifo="{Binding Glifo}" IsVisible="{Binding !HayJuego}" Width="22" Height="22" Foreground="{DynamicResource Dorado}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                              <d:LogoPartida Juego="{Binding Juego}" Caratula="True" IsVisible="{Binding HayJuego}" ColorRespaldo="{DynamicResource Dorado}" AutomationProperties.AccessibilityView="Raw" />
+                            </Panel>
+                          </Border>
+                          <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1" Margin="0,4">
+                            <TextBlock Text="{Binding Titulo}" FontWeight="Medium" />
+                            <TextBlock Classes="sec" Text="{Binding Linea}" IsVisible="{Binding TieneDescripcion}" />
+                          </StackPanel>
+                          <d:Icono Grid.Column="2" Glifo="Check" Width="20" Height="20" Margin="8,0" Foreground="{DynamicResource Dorado}" IsVisible="{Binding Elegida}" VerticalAlignment="Center" />
+                        </Grid>
+                      </Button>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </Border>
+            </StackPanel>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <TextBlock Classes="sec" Text="{Binding Pie}" IsVisible="{Binding HayPie}" Margin="8,0" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Compila el codigo FUENTE de ALM 26.10.18 (commit fijado, ver fuentes.lock.json) contra el PKHeX.Core fijado de <raiz>\fuentes, por RUTA:
+    ningun byte de ALM entra en este repo (ADR 0009). ALM referencia por defecto el paquete NuGet PKHeX.Core 26.10.18 (otro ensamblado, otros tipos):
+    mezclarlo con nuestro Core compilado daria dos copias incompatibles de PKM. Solo AutoLegalidad.ALMAdapter referencia este proyecto.
+  -->
+  <PropertyGroup>
+    <RootNamespace>PKHeX.Core.AutoMod</RootNamespace>
+    <AssemblyName>AutoLegalidad.AlmSource</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <!-- Codigo de terceros (MIT): sus advertencias no son nuestras; el adaptador y el resto SI son estrictos. -->
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <NoWarn>$(NoWarn);CS1591;CS8600;CS8601;CS8602;CS8603;CS8604;CS8618;CS8619;CS8625;CS0618;CS0168;CS0219</NoWarn>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <AlmDir>$(ProyectoRaiz)fuentes\ALM-estable\PKHeX.Core.AutoMod\</AlmDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(AlmDir)AutoMod\**\*.cs" Link="AutoMod\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="$(AlmDir)Enhancements\**\*.cs" Link="Enhancements\%(RecursiveDir)%(Filename)%(Extension)" />
+    <ProjectReference Include="$(PKHeXCoreProject)" />
+  </ItemGroup>
+</Project>

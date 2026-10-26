@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.ImagenesView"
+             x:DataType="vm:ImagenesViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="12" Margin="16,0,16,24">
+      <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" AutomationProperties.Name="{DynamicResource Loc.Form.Vista.EditorPartidaView.0}" AutomationProperties.HelpText="{DynamicResource Loc.Form.Vista.EditorPartidaView.1}">
+        <StackPanel Orientation="Horizontal" Spacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Form.Vista.EditorPartidaView.0}" /></StackPanel>
+      </Button>
+      <StackPanel Spacing="2">
+        <TextBlock Classes="titulo" Text="{DynamicResource Loc.Partida.Editor.imagenes.Titulo}" AutomationProperties.HeadingLevel="1" />
+        <TextBlock Classes="sec" Text="{Binding Resumen}" TextWrapping="Wrap" />
+      </StackPanel>
+      <ItemsControl ItemsSource="{Binding Imagenes}">
+        <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="12" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:ImagenJugadorVm">
+            <Border Classes="tarjeta" Padding="12">
+              <StackPanel Spacing="8">
+                <StackPanel AutomationProperties.Name="{Binding Accesible}">
+                  <TextBlock Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+                  <TextBlock Classes="sec" Text="{Binding Tamano}" />
+                </StackPanel>
+                <Image Source="{Binding Imagen}" Stretch="Uniform" MaxHeight="360" HorizontalAlignment="Center" AutomationProperties.Name="{Binding Titulo}" />
+                <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding ExportarCommand}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Imagenes.ExportarPNG}" AutomationProperties.HelpText="{DynamicResource Loc.Imagenes.GuardaImagenArchivoPNG}">
+                  <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center"><d:Icono Glifo="FileDown" Width="18" Height="18" /><TextBlock Text="{DynamicResource Loc.Imagenes.ExportarPNG2}" /></StackPanel>
+                </Button>
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

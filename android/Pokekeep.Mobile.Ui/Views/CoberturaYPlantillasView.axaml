@@ -1,0 +1,233 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:e="clr-namespace:Pokekeep.Mobile.Ui.Herramientas.Equipo"
+             xmlns:mo="clr-namespace:Pokekeep.Mobile.Ui.Modelo"
+             x:Class="Pokekeep.Mobile.Ui.Views.CoberturaYPlantillasView"
+             x:DataType="e:CoberturaYPlantillasViewModel">
+  <UserControl.Resources>
+    <!-- X45: el icono de caja del Pokémon, con la MISMA medida y alineación en todas las filas (IconoPokemon.Ancho × Alto); sin recurso de imagen, la silueta con su número es el marcador común de la app. -->
+    <DataTemplate x:Key="IconoSolo" x:DataType="e:IconoPokemon">
+      <d:SpritePokemon Width="{x:Static e:IconoPokemon.Ancho}" Height="{x:Static e:IconoPokemon.Alto}" VerticalAlignment="Center" Especie="{Binding Especie}" Forma="{Binding Forma}" ArgumentoForma="{Binding ArgumentoForma}" Genero="{Binding Genero}" Brillante="{Binding Brillante}" Huevo="{Binding Huevo}" Contexto="{Binding Contexto}" Modo="{Binding Modo}" VersionJuego="{Binding VersionJuego}" Foreground="{DynamicResource TextoSecundario}" />
+    </DataTemplate>
+    <DataTemplate x:Key="IconoTira" x:DataType="e:IconoPokemon">
+      <d:SpritePokemon Width="{x:Static e:IconoPokemon.AnchoTira}" Height="{x:Static e:IconoPokemon.AltoTira}" VerticalAlignment="Center" Especie="{Binding Especie}" Forma="{Binding Forma}" ArgumentoForma="{Binding ArgumentoForma}" Genero="{Binding Genero}" Brillante="{Binding Brillante}" Huevo="{Binding Huevo}" Contexto="{Binding Contexto}" Modo="{Binding Modo}" VersionJuego="{Binding VersionJuego}" Foreground="{DynamicResource TextoSecundario}" />
+    </DataTemplate>
+    <DataTemplate x:Key="IconoConTexto" x:DataType="e:IconoPokemon">
+      <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+        <d:SpritePokemon Width="{x:Static e:IconoPokemon.Ancho}" Height="{x:Static e:IconoPokemon.Alto}" VerticalAlignment="Center" Especie="{Binding Especie}" Forma="{Binding Forma}" ArgumentoForma="{Binding ArgumentoForma}" Genero="{Binding Genero}" Brillante="{Binding Brillante}" Huevo="{Binding Huevo}" Contexto="{Binding Contexto}" Modo="{Binding Modo}" VersionJuego="{Binding VersionJuego}" Foreground="{DynamicResource TextoSecundario}" />
+        <TextBlock Text="{Binding Texto}" IsVisible="{Binding HayTexto}" VerticalAlignment="Center" TextWrapping="Wrap" />
+      </StackPanel>
+    </DataTemplate>
+  </UserControl.Resources>
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="16,0,16,24" Spacing="10">
+      <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" AutomationProperties.Name="{x:Static e:TextosEquipo.Volver}">
+        <StackPanel Orientation="Horizontal" Spacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" /><TextBlock Text="{x:Static e:TextosEquipo.Volver}" /></StackPanel>
+      </Button>
+      <StackPanel Spacing="2" Margin="0,4,0,4">
+        <TextBlock Classes="titulo" Text="{Binding Titulo}" TextWrapping="Wrap" />
+        <TextBlock Classes="sec" TextWrapping="Wrap" Text="{Binding Subtitulo}" />
+      </StackPanel>
+
+      <!-- Qué equipo mirar: el de la partida o una plantilla -->
+      <TextBlock Classes="etiqueta" Text="{x:Static e:TextosEquipo.EtiquetaFuente}" />
+      <Border Classes="tarjeta" Padding="8,4">
+        <StackPanel>
+          <ItemsControl ItemsSource="{Binding Fuentes}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="e:FuenteItem">
+                <Button Classes="fila" Command="{Binding Elegir}" AutomationProperties.Name="{Binding Accesible}">
+                  <!-- X48: la tira de iconos va en su propia fila, a todo el ancho de la tarjeta: el chip «Viendo» comparte fila con el titulo y los 6 Pokémon caben siempre en una linea. -->
+                  <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" MinHeight="56">
+                    <StackPanel VerticalAlignment="Center" Spacing="1" Margin="8,6,8,0">
+                      <TextBlock Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+                      <TextBlock Classes="sec" Text="{Binding Datos}" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Border Grid.Column="1" Classes="insignia dorado" Padding="10,4" Margin="8,0" VerticalAlignment="Center" IsVisible="{Binding Seleccionada}">
+                      <TextBlock Text="{x:Static e:TextosEquipo.Viendo}" />
+                    </Border>
+                    <ItemsControl Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Iconos}" IsVisible="{Binding HayIconos}" ItemTemplate="{StaticResource IconoTira}" Margin="8,4,8,6">
+                      <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel ItemSpacing="4" LineSpacing="4" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                  </Grid>
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <TextBlock Classes="sec" Margin="8,4" TextWrapping="Wrap" Text="{x:Static e:TextosEquipo.SinPlantillas}" IsVisible="{Binding NoHayPlantillas}" />
+        </StackPanel>
+      </Border>
+
+      <!-- Acciones sobre lo elegido -->
+      <TextBlock Classes="etiqueta" Text="{x:Static e:TextosEquipo.EtiquetaAcciones}" />
+      <Border Classes="tarjeta" Padding="14,10">
+        <StackPanel Spacing="8">
+          <TextBlock Text="{x:Static e:TextosEquipo.NombreMarca}" FontWeight="Medium" />
+          <TextBox Classes="campo" Text="{Binding NombrePlantilla}" PlaceholderText="{x:Static e:TextosEquipo.NombreSugerencia}" MaxLength="60" AutomationProperties.Name="{x:Static e:TextosEquipo.NombreMarca}" />
+          <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding GuardarComoPlantillaCommand}" IsEnabled="{Binding PuedeGuardarEquipo}" IsVisible="{Binding EsEquipoElegido}" AutomationProperties.Name="{x:Static e:TextosEquipo.GuardarComoPlantilla}">
+            <TextBlock Text="{x:Static e:TextosEquipo.GuardarComoPlantilla}" TextAlignment="Center" TextWrapping="Wrap" />
+          </Button>
+          <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding AplicarCommand}" IsEnabled="{Binding PuedeAplicar}" IsVisible="{Binding EsPlantillaElegida}" AutomationProperties.Name="{x:Static e:TextosEquipo.AplicarALaPartida}" AutomationProperties.HelpText="{x:Static e:TextosEquipo.AplicarAyuda}">
+            <TextBlock Text="{x:Static e:TextosEquipo.AplicarALaPartida}" TextAlignment="Center" TextWrapping="Wrap" />
+          </Button>
+          <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8" IsVisible="{Binding EsPlantillaElegida}">
+            <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding RenombrarCommand}" AutomationProperties.Name="{x:Static e:TextosEquipo.RenombrarAccesible}">
+              <TextBlock Text="{x:Static e:TextosEquipo.Renombrar}" TextAlignment="Center" TextWrapping="Wrap" />
+            </Button>
+            <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding BorrarCommand}" AutomationProperties.Name="{x:Static e:TextosEquipo.BorrarAccesible}">
+              <TextBlock Text="{x:Static e:TextosEquipo.Borrar}" TextAlignment="Center" TextWrapping="Wrap" />
+            </Button>
+          </d:RejillaSinPartir>
+          <TextBlock Classes="sec" Text="{Binding Estado}" IsVisible="{Binding HayEstado}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+        </StackPanel>
+      </Border>
+
+      <!-- Sin nada que calcular -->
+      <Border Classes="insignia aviso" Padding="12,8" IsVisible="{Binding HayMensajeVacio}">
+        <TextBlock Text="{Binding MensajeVacio}" TextWrapping="Wrap" FontWeight="Bold" />
+      </Border>
+
+      <StackPanel Spacing="10" IsVisible="{Binding HayResultado}">
+        <TextBlock Classes="titulo2" Text="{Binding Encabezado}" TextWrapping="Wrap" AutomationProperties.HeadingLevel="2" />
+
+        <!-- Resumen -->
+        <TextBlock Classes="etiqueta" Text="{x:Static e:TextosEquipo.EtiquetaResumen}" />
+        <Border Classes="tarjeta" Padding="14,10">
+          <StackPanel Spacing="10">
+            <StackPanel Spacing="6">
+              <TextBlock Text="{x:Static e:TextosEquipo.PuntosDebiles}" FontWeight="Medium" TextWrapping="Wrap" />
+              <TextBlock Classes="sec" TextWrapping="Wrap" Text="{x:Static e:TextosEquipo.PuntosDebilesAyuda}" />
+              <ItemsControl ItemsSource="{Binding PuntosDebiles}" IsVisible="{Binding HayPuntosDebiles}">
+                <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel ItemSpacing="6" LineSpacing="6" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="e:ChipTipo">
+                    <Border Classes="insignia error" Padding="10,4">
+                      <StackPanel Spacing="2">
+                        <TextBlock Text="{Binding Texto}" TextWrapping="Wrap" IsVisible="{Binding !HayTipo}" />
+                        <WrapPanel ItemSpacing="6" IsVisible="{Binding HayTipo}">
+                          <d:EtiquetaTipo Tipo="{Binding TipoIndice}" Texto="{Binding NombreTipo}" />
+                          <TextBlock Text="{Binding Detalle}" IsVisible="{Binding HayDetalle}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                        </WrapPanel>
+                        <ItemsControl ItemsSource="{Binding Iconos}" IsVisible="{Binding HayIconos}" ItemTemplate="{StaticResource IconoSolo}">
+                          <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel ItemSpacing="2" LineSpacing="2" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                      </StackPanel>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <Border Classes="insignia ok" Padding="10,6" IsVisible="{Binding NingunPuntoDebil}">
+                <TextBlock Text="{x:Static e:TextosEquipo.NingunPuntoDebil}" TextWrapping="Wrap" />
+              </Border>
+            </StackPanel>
+            <Border Classes="separador" />
+            <StackPanel Spacing="6">
+              <TextBlock Text="{x:Static e:TextosEquipo.TiposSinCubrir}" FontWeight="Medium" TextWrapping="Wrap" />
+              <TextBlock Classes="sec" TextWrapping="Wrap" Text="{x:Static e:TextosEquipo.TiposSinCubrirAyuda}" />
+              <ItemsControl ItemsSource="{Binding TiposSinCubrir}" IsVisible="{Binding HaySinCubrir}">
+                <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel ItemSpacing="6" LineSpacing="6" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="e:ChipTipo">
+                    <Border Classes="insignia aviso" Padding="10,4"><Panel><TextBlock Text="{Binding Texto}" TextWrapping="Wrap" IsVisible="{Binding !HayTipo}" /><d:EtiquetaTipo Tipo="{Binding TipoIndice}" Texto="{Binding NombreTipo}" IsVisible="{Binding HayTipo}" /></Panel></Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <Border Classes="insignia ok" Padding="10,6" IsVisible="{Binding NingunSinCubrir}">
+                <TextBlock Text="{x:Static e:TextosEquipo.TodoCubierto}" TextWrapping="Wrap" />
+              </Border>
+              <Border Classes="insignia aviso" Padding="10,6" IsVisible="{Binding SinMovimientosConDano}">
+                <TextBlock Text="{x:Static e:TextosEquipo.SinMovimientosConDano}" TextWrapping="Wrap" />
+              </Border>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <!-- Pokémon -->
+        <TextBlock Classes="etiqueta" Text="{x:Static e:TextosEquipo.EtiquetaMiembros}" />
+        <Border Classes="tarjeta" Padding="14,6">
+          <ItemsControl ItemsSource="{Binding Miembros}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="e:FilaMiembroVm">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" Margin="0,6">
+                  <ContentControl Content="{Binding Icono}" ContentTemplate="{StaticResource IconoSolo}" VerticalAlignment="Center" />
+                  <StackPanel Grid.Column="1" Spacing="1" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding NombreVisible}" FontWeight="Medium" TextWrapping="Wrap" AutomationProperties.Name="{Binding Titulo}" />
+                    <ItemsControl ItemsSource="{Binding Tipos}" IsVisible="{Binding HayTipos}">
+                      <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel ItemSpacing="6" LineSpacing="4" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                      <ItemsControl.ItemTemplate><DataTemplate x:DataType="mo:TipoVm"><d:EtiquetaTipo Tipo="{Binding Indice}" Texto="{Binding Texto}" /></DataTemplate></ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TextBlock Classes="sec" Text="{Binding Habilidad}" IsVisible="{Binding HayHabilidad}" TextWrapping="Wrap" />
+                    <TextBlock Classes="sec" Text="{Binding Movimientos}" TextWrapping="Wrap" />
+                  </StackPanel>
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </Border>
+
+        <!-- Defensa -->
+        <TextBlock Classes="etiqueta" Text="{x:Static e:TextosEquipo.EtiquetaDefensa}" />
+        <TextBlock Classes="sec" TextWrapping="Wrap" Text="{x:Static e:TextosEquipo.DefensaAyuda}" />
+        <ItemsControl ItemsSource="{Binding Defensa}">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="8" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="e:FilaDefensaVm">
+              <Border Classes="tarjeta" Padding="14,10" AutomationProperties.Name="{Binding Accesible}">
+                <StackPanel Spacing="6">
+                  <WrapPanel ItemSpacing="6" LineSpacing="6">
+                    <d:EtiquetaTipo Tipo="{Binding TipoIndice}" Texto="{Binding Tipo}" />
+                    <Border Classes="insignia error" Padding="10,3" VerticalAlignment="Center" IsVisible="{Binding HayDebiles}"><TextBlock Text="{Binding Debiles}" TextWrapping="NoWrap" /></Border>
+                    <Border Classes="insignia ok" Padding="10,3" VerticalAlignment="Center" IsVisible="{Binding HayResisten}"><TextBlock Text="{Binding Resisten}" TextWrapping="NoWrap" /></Border>
+                    <Border Classes="insignia dorado" Padding="10,3" VerticalAlignment="Center" IsVisible="{Binding HayInmunes}"><TextBlock Text="{Binding Inmunes}" TextWrapping="NoWrap" /></Border>
+                    <Border Classes="insignia error" Padding="10,3" VerticalAlignment="Center" IsVisible="{Binding EsPuntoDebil}"><TextBlock Text="{x:Static e:TextosEquipo.PuntoDebil}" TextWrapping="NoWrap" /></Border>
+                    <TextBlock Classes="sec" Text="{x:Static e:TextosEquipo.TodosNeutros}" IsVisible="{Binding TodoNeutro}" />
+                  </WrapPanel>
+                  <ItemsControl ItemsSource="{Binding Grupos}" IsVisible="{Binding HayGrupos}">
+                    <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="2" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="e:GrupoDefensaVm">
+                        <Grid ColumnDefinitions="40,*" ColumnSpacing="6">
+                          <TextBlock Text="{Binding Etiqueta}" FontWeight="Bold" VerticalAlignment="Center" />
+                          <ItemsControl Grid.Column="1" ItemsSource="{Binding Miembros}" ItemTemplate="{StaticResource IconoConTexto}">
+                            <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel ItemSpacing="8" LineSpacing="2" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                          </ItemsControl>
+                        </Grid>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- Ofensiva -->
+        <TextBlock Classes="etiqueta" Text="{x:Static e:TextosEquipo.EtiquetaOfensiva}" />
+        <TextBlock Classes="sec" TextWrapping="Wrap" Text="{x:Static e:TextosEquipo.OfensivaAyuda}" />
+        <ItemsControl ItemsSource="{Binding Ofensiva}">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="8" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="e:FilaOfensivaVm">
+              <Border Classes="tarjeta" Padding="14,10" AutomationProperties.Name="{Binding Accesible}">
+                <StackPanel Spacing="6">
+                  <Grid ColumnDefinitions="*,Auto">
+                    <d:EtiquetaTipo Tipo="{Binding TipoIndice}" Texto="{Binding Tipo}" />
+                    <Border Grid.Column="1" Classes="insignia ok" Padding="10,3" IsVisible="{Binding Cubierto}"><TextBlock Text="{Binding Estado}" /></Border>
+                    <Border Grid.Column="1" Classes="insignia aviso" Padding="10,3" IsVisible="{Binding NoCubierto}"><TextBlock Text="{Binding Estado}" /></Border>
+                  </Grid>
+                  <TextBlock Classes="sec" Text="{Binding Movimientos}" IsVisible="{Binding SoloTexto}" TextWrapping="Wrap" />
+                  <ItemsControl ItemsSource="{Binding Golpes}" IsVisible="{Binding HayGolpes}" ItemTemplate="{StaticResource IconoConTexto}">
+                    <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel ItemSpacing="8" LineSpacing="2" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                  </ItemsControl>
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <TextBlock Classes="sec" Text="{Binding Nota}" TextWrapping="Wrap" />
+      </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

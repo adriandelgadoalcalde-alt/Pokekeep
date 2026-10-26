@@ -1,0 +1,57 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.QrHojaView"
+             x:DataType="vm:QrHojaViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="12" Margin="20,4,20,24">
+      <Border Background="White" CornerRadius="12" Padding="4" HorizontalAlignment="Center">
+        <Image Source="{Binding Imagen}" Width="280" Height="280" Stretch="Uniform" RenderOptions.BitmapInterpolationMode="None" AutomationProperties.Name="{DynamicResource Loc.QrHoja.CodigoQRPokemon}" />
+      </Border>
+      <TextBlock Classes="sec" Text="{Binding Pie}" TextAlignment="Center" TextWrapping="Wrap" />
+      <Border Classes="tarjeta" Padding="14,8" IsVisible="{Binding EsQr7}">
+        <StackPanel Spacing="4">
+          <TextBlock Classes="sec" TextWrapping="Wrap" Text="{DynamicResource Loc.QrHoja.Inyectarlo3DSSolLuna}" />
+          <d:EtiquetaYValor Separacion="4">
+            <TextBlock Text="{DynamicResource Loc.QrHoja.Caja}" VerticalAlignment="Center" />
+            <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Left">
+              <Button Classes="icono" Width="48" Height="48" Command="{Binding BajarCajaCommand}" AutomationProperties.Name="{DynamicResource Loc.QrHoja.BajarCaja}"><d:Icono Glifo="Minus" /></Button>
+            <TextBlock Text="{Binding Caja}" MinWidth="44" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" AutomationProperties.Name="{Binding CajaAccesible}" />
+            <Button Classes="icono" Width="48" Height="48" Command="{Binding SubirCajaCommand}" AutomationProperties.Name="{DynamicResource Loc.QrHoja.SubirCaja}"><d:Icono Glifo="Plus" /></Button>
+            </StackPanel>
+          </d:EtiquetaYValor>
+          <d:EtiquetaYValor Separacion="4">
+            <TextBlock Text="{DynamicResource Loc.Cajas.Casilla}" VerticalAlignment="Center" />
+            <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Left">
+              <Button Classes="icono" Width="48" Height="48" Command="{Binding BajarCasillaCommand}" AutomationProperties.Name="{DynamicResource Loc.QrHoja.BajarCasilla}"><d:Icono Glifo="Minus" /></Button>
+            <TextBlock Text="{Binding Casilla}" MinWidth="44" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" AutomationProperties.Name="{Binding CasillaAccesible}" />
+            <Button Classes="icono" Width="48" Height="48" Command="{Binding SubirCasillaCommand}" AutomationProperties.Name="{DynamicResource Loc.QrHoja.SubirCasilla}"><d:Icono Glifo="Plus" /></Button>
+            </StackPanel>
+          </d:EtiquetaYValor>
+          <d:EtiquetaYValor Separacion="4">
+            <TextBlock Text="{DynamicResource Loc.QrHoja.Copias}" VerticalAlignment="Center" />
+            <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Left">
+              <Button Classes="secundario" MinWidth="48" Height="48" Padding="0" Command="{Binding BajarCopiasDiezCommand}" AutomationProperties.Name="{DynamicResource Loc.QrHoja.BajarDiezCopias}"><TextBlock Text="-10" TextAlignment="Center" /></Button>
+            <Button Classes="icono" Width="48" Height="48" Command="{Binding BajarCopiasCommand}" AutomationProperties.Name="{DynamicResource Loc.QrHoja.BajarCopias}"><d:Icono Glifo="Minus" /></Button>
+            <TextBlock Text="{Binding Copias}" MinWidth="44" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" AutomationProperties.Name="{Binding CopiasAccesible}" />
+            <Button Classes="icono" Width="48" Height="48" Command="{Binding SubirCopiasCommand}" AutomationProperties.Name="{DynamicResource Loc.QrHoja.SubirCopias}"><d:Icono Glifo="Plus" /></Button>
+            <Button Classes="secundario" MinWidth="48" Height="48" Padding="0" Command="{Binding SubirCopiasDiezCommand}" AutomationProperties.Name="{DynamicResource Loc.QrHoja.SubirDiezCopias}"><TextBlock Text="+10" TextAlignment="Center" /></Button>
+            </StackPanel>
+          </d:EtiquetaYValor>
+          <Border Classes="insignia aviso" Padding="10,6" IsVisible="{Binding HayAvisoCopias}"><TextBlock Text="{Binding AvisoCopias}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" /></Border>
+        </StackPanel>
+      </Border>
+      <StackPanel Spacing="8" IsVisible="{Binding HayAcciones}">
+        <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CopiarImagenCommand}" AutomationProperties.Name="{DynamicResource Loc.QrHoja.CopiarImagenCodigoQR}">
+          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="ClipboardCopy" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.QrHoja.CopiarImagen}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+        </Button>
+        <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CompartirCommand}" AutomationProperties.Name="{DynamicResource Loc.QrHoja.CompartirImagenCodigoQR}" AutomationProperties.HelpText="{DynamicResource Loc.QrHoja.AbreHojaCompartirSistema}">
+          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Share2" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.Editor.Compartir}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+        </Button>
+      </StackPanel>
+      <TextBlock Classes="sec" Text="{Binding Estado}" IsVisible="{Binding HayEstado}" TextWrapping="Wrap" TextAlignment="Center" AutomationProperties.LiveSetting="Polite" />
+      <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding CerrarCommand}" AutomationProperties.Name="{DynamicResource Loc.Comun.Listo}"><TextBlock Text="{DynamicResource Loc.Comun.Listo}" TextAlignment="Center" /></Button>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

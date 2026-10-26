@@ -1,0 +1,15 @@
+<Project>
+  <!-- Cadena de Directory.Build.props del repo (si la hay) y, encima, el modo Android: con -p:PokekeepAndroid=true (herramientas\compilar-apk.ps1) este proyecto pasa a net10.0-android como el codigo propio de src\
+       al que referencia (App, Catalog...), con su propia carpeta de salida para no mezclar con la compilacion de escritorio. Sin esa propiedad es net10.0 y se prueba en el PC. ADR 0060. -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" Condition="'$([MSBuild]::GetPathOfFileAbove(`Directory.Build.props`, `$(MSBuildThisFileDirectory)../`))' != ''" />
+  <PropertyGroup>
+    <!-- Las salidas de una compilacion NUNCA entran en la otra (los .cs generados de obj\ y obj-android\ se duplicarian). -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj-android/**;bin-android/**</DefaultItemExcludes>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(PokekeepAndroid)' == 'true'">
+    <BaseIntermediateOutputPath>obj-android\</BaseIntermediateOutputPath>
+    <BaseOutputPath>bin-android\</BaseOutputPath>
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
+    <NuGetLockFilePath>obj-android\packages.lock.json</NuGetLockFilePath>
+  </PropertyGroup>
+</Project>

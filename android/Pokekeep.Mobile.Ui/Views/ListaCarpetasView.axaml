@@ -1,0 +1,92 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:lz="clr-namespace:Pokekeep.Mobile.Ui.Localizacion"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:v="clr-namespace:Pokekeep.Mobile.Ui.Views"
+             xmlns:g="clr-namespace:Pokekeep.Mobile.Ui.Guardados"
+             xmlns:l="clr-namespace:Pokekeep.Mobile.Ui.Herramientas.ListaCarpetas"
+             x:Class="Pokekeep.Mobile.Ui.Views.ListaCarpetasView"
+             x:DataType="l:ListaCarpetasViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="16,0,16,24" Spacing="10">
+      <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" AutomationProperties.Name="{DynamicResource Loc.ImportarHex.VolverHerramientas}">
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.ImportarHex.VolverHerramientas}" TextWrapping="Wrap" VerticalAlignment="Center" /></Grid>
+      </Button>
+      <StackPanel Spacing="2" Margin="0,4,0,4">
+        <TextBlock Classes="titulo" Text="{Binding Titulo}" />
+        <TextBlock Classes="sec" TextWrapping="Wrap" Text="{Binding Subtitulo}" />
+      </StackPanel>
+
+      <!-- Las pestañas de SAV_FolderList: Reciente / Copia de seg. / Carpetas -->
+      <Border Background="{DynamicResource SuperficieHundida}" CornerRadius="16" Padding="4">
+        <d:TiraConIndicio ClaveFondo="SuperficieHundida">
+          <StackPanel Orientation="Horizontal">
+            <RadioButton Classes="segmento" Padding="12,0" GroupName="pestana-carpetas" IsChecked="{Binding EsReciente, Mode=OneWay}" Command="{Binding VerPestanaCommand}" CommandParameter="reciente" Content="{DynamicResource Loc.ListaCarpetas.Reciente}" AutomationProperties.Name="{DynamicResource Loc.ListaCarpetas.Reciente}" AutomationProperties.HelpText="{DynamicResource Loc.ListaCarpetas.PartidasAbiertasHacePoco2}" />
+            <RadioButton Classes="segmento" Padding="12,0" GroupName="pestana-carpetas" IsChecked="{Binding EsCopias, Mode=OneWay}" Command="{Binding VerPestanaCommand}" CommandParameter="copias" Content="{DynamicResource Loc.ListaCarpetas.CopiaSeg}" AutomationProperties.Name="{DynamicResource Loc.Ajustes.Pkhex.Grupo.4}" AutomationProperties.HelpText="{DynamicResource Loc.ListaCarpetas.CopiasSeguridadApp}" />
+            <RadioButton Classes="segmento" Padding="12,0" GroupName="pestana-carpetas" IsChecked="{Binding EsCarpetas, Mode=OneWay}" Command="{Binding VerPestanaCommand}" CommandParameter="carpetas" Content="{DynamicResource Loc.ListaCarpetas.Carpetas}" AutomationProperties.Name="{DynamicResource Loc.ListaCarpetas.Carpetas}" AutomationProperties.HelpText="{DynamicResource Loc.ListaCarpetas.CarpetasDondeBuscanGuardados}" />
+          </StackPanel>
+        </d:TiraConIndicio>
+      </Border>
+
+      <StackPanel Spacing="6" IsVisible="{Binding Ocupado}">
+        <ProgressBar IsIndeterminate="{Binding FraccionIndeterminada}" Value="{Binding Fraccion}" Minimum="0" Maximum="100" AutomationProperties.Name="{DynamicResource Loc.Encuentros.ProgresoBusqueda}" />
+        <TextBlock Classes="sec" Text="{Binding TextoAvance}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+        <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CancelarCommand}" AutomationProperties.Name="{DynamicResource Loc.Encuentros.CancelarBusqueda}"><TextBlock Text="{DynamicResource Loc.Comun.Cancelar}" TextAlignment="Center" /></Button>
+      </StackPanel>
+
+      <!-- Una carpeta abierta desde «Carpetas» -->
+      <Button Classes="texto" HorizontalAlignment="Left" Padding="8,0" IsVisible="{Binding HayCarpetaAbierta}" Command="{Binding VolverACarpetasCommand}" AutomationProperties.Name="{DynamicResource Loc.ListaCarpetas.VolverListaCarpetas}">
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{lz:Formato ListaCarpetas.Carpetas2, {Binding TituloCarpetaAbierta}}" TextWrapping="Wrap" VerticalAlignment="Center" /></Grid>
+      </Button>
+
+      <!-- Guardados -->
+      <StackPanel Spacing="10" IsVisible="{Binding VerTabla}">
+        <Border Classes="tarjeta" Padding="14,10" IsVisible="{Binding HayVacio}">
+          <TextBlock Classes="sec" Text="{Binding TextoVacio}" TextWrapping="Wrap" />
+        </Border>
+        <v:TablaResultadosView DataContext="{Binding Tabla}" IsVisible="{Binding $parent[UserControl].((l:ListaCarpetasViewModel)DataContext).Tabla.HayFilas}" />
+      </StackPanel>
+
+      <!-- Carpetas -->
+      <StackPanel Spacing="10" IsVisible="{Binding VerCarpetas}">
+        <Border Classes="tarjeta" Padding="8,4">
+          <ItemsControl ItemsSource="{Binding Carpetas}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="g:CarpetaListada">
+                <Button Classes="fila" Command="{Binding $parent[UserControl].((l:ListaCarpetasViewModel)DataContext).MenuCarpetaCommand}" CommandParameter="{Binding}" AutomationProperties.Name="{Binding Nombre}" AutomationProperties.HelpText="{Binding Detalle}">
+                  <Grid ColumnDefinitions="Auto,*,Auto" MinHeight="64">
+                    <Border Width="40" Height="40" CornerRadius="12" Background="{DynamicResource SeleccionSuave}" Margin="8,0,12,0">
+                      <d:Icono Glifo="FolderOpen" Width="22" Height="22" Foreground="{DynamicResource Dorado}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1" Margin="0,6">
+                      <TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextWrapping="Wrap" />
+                      <TextBlock Classes="sec" Text="{Binding Detalle}" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <d:Icono Grid.Column="2" Glifo="ChevronRight" Width="20" Height="20" Margin="8,0" Foreground="{DynamicResource TextoSecundario}" VerticalAlignment="Center" />
+                  </Grid>
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </Border>
+        <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding AnadirCarpetaCommand}" IsEnabled="{Binding NoOcupado}" AutomationProperties.Name="{DynamicResource Loc.ListaCarpetas.AnadirCarpeta}" AutomationProperties.HelpText="{DynamicResource Loc.ListaCarpetas.AnadeCarpetaMovilOtras}">
+          <Grid ColumnDefinitions="Auto,*" HorizontalAlignment="Center" ColumnSpacing="8"><d:Icono Glifo="FolderOpen" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.Ajustes.Pkhex.AnadirCarpetaTexto}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+        </Button>
+      </StackPanel>
+
+      <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.CatalogoHerramientas.Partida}" Margin="0,8,0,0" />
+      <Border Classes="tarjeta" Padding="14,10">
+        <StackPanel Spacing="8">
+          <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CargarMasRecienteCommand}" IsEnabled="{Binding NoOcupado}" AutomationProperties.Name="{DynamicResource Loc.ListaCarpetas.CargarGuardadoReciente}" AutomationProperties.HelpText="{DynamicResource Loc.ListaCarpetas.BuscaOtrasRutasCopias}">
+            <Grid ColumnDefinitions="Auto,*" HorizontalAlignment="Center" ColumnSpacing="8"><d:Icono Glifo="RefreshCw" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.ListaCarpetas.CargarGuardadoReciente}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+          </Button>
+          <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding ExportarBakCommand}" IsEnabled="{Binding PuedeExportarBak}" AutomationProperties.Name="{DynamicResource Loc.ListaCarpetas.ExportarCopiaBAK}" AutomationProperties.HelpText="{DynamicResource Loc.ListaCarpetas.CopiaArchivoOrigenCambios}">
+            <Grid ColumnDefinitions="Auto,*" HorizontalAlignment="Center" ColumnSpacing="8"><d:Icono Glifo="Download" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.ListaCarpetas.ExportarCopiaBAK2}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+          </Button>
+          <TextBlock Classes="sec" Text="{Binding MotivoBak}" TextWrapping="Wrap" IsVisible="{Binding !PuedeExportarBak}" />
+        </StackPanel>
+      </Border>
+      <TextBlock Classes="sec" Text="{Binding Estado}" TextWrapping="Wrap" IsVisible="{Binding HayEstado}" AutomationProperties.LiveSetting="Polite" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AutoLegalidad.Catalog/AutoLegalidad.Catalog.csproj" />
+    <Project Path="src/AutoLegalidad.Catalog.Build/AutoLegalidad.Catalog.Build.csproj" />
+    <Project Path="src/AutoLegalidad.Catalog.Cli/AutoLegalidad.Catalog.Cli.csproj" />
+    <Project Path="src/AutoLegalidad.Contracts/AutoLegalidad.Contracts.csproj" />
+    <Project Path="src/AutoLegalidad.Registro/AutoLegalidad.Registro.csproj" />
+    <Project Path="src/AutoLegalidad.Engine/AutoLegalidad.Engine.csproj" />
+    <Project Path="src/AutoLegalidad.AlmSource/AutoLegalidad.AlmSource.csproj" />
+    <Project Path="src/AutoLegalidad.ALMAdapter/AutoLegalidad.ALMAdapter.csproj" />
+    <Project Path="src/AutoLegalidad.WorkerHost/AutoLegalidad.WorkerHost.csproj" />
+    <Project Path="src/AutoLegalidad.Worker/AutoLegalidad.Worker.csproj" />
+    <Project Path="src/AutoLegalidad.WorkerClient/AutoLegalidad.WorkerClient.csproj" />
+    <Project Path="src/AutoLegalidad.App/AutoLegalidad.App.csproj" />
+    <Project Path="src/AutoLegalidad.Ui/AutoLegalidad.Ui.csproj" />
+  </Folder>
+  <Project Path="fuentes/PKHeX-oficial/PKHeX.Core/PKHeX.Core.csproj" />
+</Solution>

@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.RegistrosView"
+             x:DataType="vm:RegistrosViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+  <Grid RowDefinitions="Auto,Auto,Auto,Auto" Margin="16,0,16,0">
+    <Button Grid.Row="0" Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" AutomationProperties.Name="{DynamicResource Loc.Comun.VolverMas}">
+      <StackPanel Orientation="Horizontal" Spacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Comun.VolverMas}" /></StackPanel>
+    </Button>
+    <StackPanel Grid.Row="1" Spacing="2" Margin="0,4,0,12">
+      <TextBlock Classes="titulo" Text="{DynamicResource Loc.Menu.Mas.Registros.Titulo}" />
+      <TextBlock Classes="sec" TextWrapping="Wrap" Text="{DynamicResource Loc.Registros.DiarioFallosAppInterfaz}" />
+    </StackPanel>
+    <Border Grid.Row="2" Classes="tarjeta" Padding="12" IsVisible="{Binding NoHayFilas}" VerticalAlignment="Top"><TextBlock Classes="sec" Text="{DynamicResource Loc.Registros.TodaviaRegistrosAppAnotado}" TextWrapping="Wrap" /></Border>
+    <Grid Grid.Row="2" RowDefinitions="Auto,Auto" IsVisible="{Binding HayFilas}">
+      <ItemsControl Grid.Row="0" ItemsSource="{Binding Filas}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:FilaRegistro">
+            <Button Classes="secundario" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,0,0,6" Command="{Binding $parent[ItemsControl].((vm:RegistrosViewModel)DataContext).SeleccionarCommand}" CommandParameter="{Binding}"
+                    AutomationProperties.Name="{Binding Accesible}">
+              <StackPanel Spacing="1" Margin="0,6"><TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" /><TextBlock Classes="sec" Text="{Binding Detalle}" /></StackPanel>
+            </Button>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <Border Grid.Row="1" Classes="tarjeta" Padding="12" Margin="0,6,0,0" MaxHeight="420">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"><TextBlock Text="{Binding Texto}" Margin="0,0,0,16" FontFamily="monospace" FontSize="{DynamicResource TamMini}" TextWrapping="Wrap" AutomationProperties.Name="{DynamicResource Loc.Registros.ContenidoRegistro}" /></ScrollViewer>
+      </Border>
+    </Grid>
+    <StackPanel Grid.Row="3">
+      <TextBlock Classes="sec" TextWrapping="Wrap" Text="{Binding Aviso}" IsVisible="{Binding HayAviso}" AutomationProperties.Name="{DynamicResource Loc.Registros.AvisoCompartir}" />
+      <Button Classes="primario" HorizontalAlignment="Stretch" Margin="0,12" Command="{Binding CompartirCommand}" IsEnabled="{Binding HayFilas}" AutomationProperties.Name="{DynamicResource Loc.Registros.CompartirRegistro}" AutomationProperties.HelpText="{DynamicResource Loc.Registros.AbreHojaCompartirSistema}">
+        <StackPanel Orientation="Horizontal" Spacing="8"><d:Icono Glifo="Share2" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Registros.CompartirRegistro}" /></StackPanel>
+      </Button>
+    </StackPanel>
+  </Grid>
+  </ScrollViewer>
+</UserControl>

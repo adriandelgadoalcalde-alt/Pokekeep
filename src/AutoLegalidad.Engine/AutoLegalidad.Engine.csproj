@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>AutoLegalidad.Engine</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(PKHeXCoreProject)" />
+    <ProjectReference Include="..\AutoLegalidad.Contracts\AutoLegalidad.Contracts.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.Catalog\AutoLegalidad.Catalog.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Hito 3: las pruebas contrastan los modelos de semilla internos contra el Core. -->
+    <InternalsVisibleTo Include="AutoLegalidad.IntegrationTests" />
+    <InternalsVisibleTo Include="AutoLegalidad.UnitTests" />
+  </ItemGroup>
+</Project>

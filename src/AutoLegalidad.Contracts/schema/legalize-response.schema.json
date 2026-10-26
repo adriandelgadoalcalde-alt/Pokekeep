@@ -1,0 +1,360 @@
+{
+  "type": [
+    "object",
+    "null"
+  ],
+  "properties": {
+    "protocolVersion": {
+      "type": "integer"
+    },
+    "requestId": {
+      "type": "string"
+    },
+    "releaseId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "datasetSnapshotId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "action": {
+      "enum": [
+        "Legalize",
+        "Optimize",
+        "Adjust"
+      ]
+    },
+    "status": {
+      "enum": [
+        "Success",
+        "AlreadyLegal",
+        "AlreadyOptimal",
+        "NoSolution",
+        "UnsupportedSave",
+        "UnsupportedData",
+        "SpeciesNotInDestination",
+        "NotLegalFirst",
+        "OriginPreserved",
+        "Timeout",
+        "Cancelled",
+        "VersionMismatch",
+        "InvalidInput",
+        "TargetChanged",
+        "ValidationFailed",
+        "InternalError",
+        "SuccessNeedsHome"
+      ]
+    },
+    "message": {
+      "type": "string"
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "candidateEntityBase64": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "candidateSha256": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "entityContext": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "entityRuntimeType": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "before": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "after": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reasonCode": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "sourceRef": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "field",
+          "reasonCode",
+          "reason"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "summary": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "proof": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "validatorVersion": {
+          "type": "string"
+        },
+        "validatorCommit": {
+          "type": "string"
+        },
+        "report": {
+          "type": "array",
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "passed": {
+                "type": "boolean"
+              },
+              "detail": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "name",
+              "passed"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "encounterKey": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "encounterType": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sourceRefs": {
+          "type": "array",
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "ruleProfileHash": {
+          "type": "string"
+        },
+        "roundTripValid": {
+          "type": "boolean"
+        },
+        "destinationCompatible": {
+          "type": "boolean"
+        },
+        "speciesIdentity": {
+          "type": "boolean"
+        },
+        "officialValid": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "validatorVersion",
+        "validatorCommit",
+        "report",
+        "checks",
+        "sourceRefs",
+        "ruleProfileHash",
+        "roundTripValid",
+        "destinationCompatible"
+      ],
+      "additionalProperties": false
+    },
+    "optimization": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "strategy": {
+          "type": "string"
+        },
+        "ivsBefore": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "ivsAfter": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "sumBefore": {
+          "type": "integer"
+        },
+        "sumAfter": {
+          "type": "integer"
+        },
+        "limitReason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "extremeTrainingApplied": {
+          "type": "boolean"
+        },
+        "exhaustive": {
+          "type": "boolean"
+        },
+        "basis": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "strategy",
+        "ivsBefore",
+        "ivsAfter",
+        "sumBefore",
+        "sumAfter"
+      ],
+      "additionalProperties": false
+    },
+    "elapsedMilliseconds": {
+      "type": "integer"
+    },
+    "attempts": {
+      "type": "integer"
+    },
+    "phaseReached": {
+      "enum": [
+        "None",
+        "A_CapturaYAnalisis",
+        "B_ReparacionMinima",
+        "C_Regeneracion",
+        "D_RelajacionAutomatica",
+        "E_ValidacionIndependiente"
+      ]
+    },
+    "searchComplete": {
+      "type": "boolean"
+    },
+    "operations": {
+      "type": "array",
+      "items": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "operation": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "Changed",
+              "AlreadyOptimal",
+              "NotApplicable",
+              "Failed"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "operation",
+          "status",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "finalLevel": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "protocolVersion",
+    "requestId",
+    "action",
+    "status",
+    "message"
+  ],
+  "additionalProperties": false
+}

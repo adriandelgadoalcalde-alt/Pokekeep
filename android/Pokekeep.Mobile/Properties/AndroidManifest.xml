@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto">
+  <!-- Sin INTERNET (regla 15: nada sale del dispositivo). Los permisos de primer plano llegan con el servicio :motor. -->
+  <application android:label="Pokekeep"
+               android:extractNativeLibs="false"
+               android:allowBackup="false"
+               android:fullBackupContent="false"
+               android:dataExtractionRules="@xml/reglas_extraccion"
+               android:supportsRtl="true" />
+</manifest>

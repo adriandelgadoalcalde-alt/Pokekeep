@@ -1,0 +1,30 @@
+# Fin de linea del repositorio (Android F3, ADR 0057): LF en el indice y en la copia de trabajo para todo el texto.
+# Motivo: el repo se mezclaba (399 ficheros CRLF, 914 LF); las herramientas que escriben ficheros (editores de agentes) guardan LF y reescribian
+# lineas enteras de ficheros que eran CRLF, ensuciando el diff de ficheros como CLAUDE.md o crear-avds.ps1. PowerShell 5.1, MSBuild y dotnet leen LF sin problema.
+* text=auto eol=lf
+
+# Binarios: nunca se tocan.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.ttf binary
+*.otf binary
+*.zip binary
+*.rar binary
+*.7z binary
+*.apk binary
+*.dll binary
+*.exe binary
+*.sqlite binary
+*.sav binary
+*.dsv binary
+*.trx -text
+
+# TSV de cobertura: el motivo vacío es la última columna y conserva su separador.
+docs/android/sprites-objetos-cobertura.tsv whitespace=-blank-at-eol
+
+# Referencia incrustada copiada de PKHeX: conservar sus bytes, incluidos los saltos de línea.
+android/Pokekeep.Mobile.Ui/Assets/Textos/shortcuts_es.txt -text !eol whitespace=trailing-space,space-before-tab,cr-at-eol

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Fase 1 de Android (ADR 0054): lo que SOLO usa el PC al CONSTRUIR la base de datos (importadores de EventsGallery/GO, constructor, verificador, informes y cobertura).
+         No entra en el APK: el producto (Engine, App, Worker) solo referencia AutoLegalidad.Catalog (Core, Db, Library, Snapshots, FormReach). -->
+    <RootNamespace>AutoLegalidad.Catalog</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" />
+    <ProjectReference Include="$(PKHeXCoreProject)" />
+    <ProjectReference Include="..\AutoLegalidad.Catalog\AutoLegalidad.Catalog.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.Contracts\AutoLegalidad.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- La lista de permitidos de EventsGallery viaja dentro del ensamblado del constructor. -->
+    <EmbeddedResource Include="Allowlists\*.json" LogicalName="Allowlists/%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

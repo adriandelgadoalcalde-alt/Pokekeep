@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.SelectorCajaHojaView"
+             x:DataType="vm:SelectorCajaHojaViewModel">
+  <Grid RowDefinitions="Auto,Auto,*" MinHeight="320">
+    <Grid Grid.Row="0" ColumnDefinitions="Auto,*" Margin="20,4,20,8">
+      <d:Icono Glifo="Search" Width="20" Height="20" Margin="0,0,10,0" Foreground="{DynamicResource TextoSecundario}" VerticalAlignment="Center" />
+      <TextBox Grid.Column="1" Classes="campo" Text="{Binding Filtro}" PlaceholderText="{Binding MarcadorBusqueda}" AutomationProperties.Name="{DynamicResource Loc.SelectorCajaHoja.BuscarCajaNombreNumero}" />
+    </Grid>
+    <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="20,0,12,6">
+      <TextBlock Classes="sec" Text="{Binding Subtitulo}" IsVisible="{Binding HaySubtitulo}" VerticalAlignment="Center" />
+      <Button Grid.Column="1" Classes="texto" Command="{Binding NombresYFondosCommand}" IsVisible="{Binding HayNombresYFondos}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.SelectorCajaHoja.NombreFondoCajas}" AutomationProperties.HelpText="{DynamicResource Loc.SelectorCajaHoja.CambiaNombresFondosOrden}">
+        <StackPanel Orientation="Horizontal" Spacing="6"><d:Icono Glifo="Pencil" Width="18" Height="18" /><TextBlock Text="{DynamicResource Loc.SelectorCajaHoja.NombresFondos}" TextWrapping="Wrap" MaxWidth="170" VerticalAlignment="Center" /></StackPanel>
+      </Button>
+    </Grid>
+    <ListBox Grid.Row="2" ItemsSource="{Binding Visibles}" Background="Transparent" Padding="8,0,8,16" AutomationProperties.Name="{DynamicResource Loc.Zonas.Cajas}">
+      <ListBox.Styles>
+        <Style Selector="ListBoxItem"><Setter Property="Padding" Value="0" /><Setter Property="MinHeight" Value="0" /><Setter Property="Margin" Value="0" /></Style>
+      </ListBox.Styles>
+      <ListBox.ItemTemplate>
+        <DataTemplate x:DataType="vm:FilaCaja">
+          <Button Classes="fila" Command="{Binding $parent[ListBox].((vm:SelectorCajaHojaViewModel)DataContext).ElegirCommand}" CommandParameter="{Binding}" MinHeight="64" HorizontalAlignment="Stretch" AutomationProperties.Name="{Binding Accesible}">
+            <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,6">
+              <Border Width="56" Height="42" CornerRadius="8" ClipToBounds="True" Background="{DynamicResource SuperficieHundida}" Margin="0,0,12,0" VerticalAlignment="Center">
+                <Image Source="{Binding Miniatura}" Stretch="UniformToFill" IsVisible="{Binding HayMiniatura}" RenderOptions.BitmapInterpolationMode="None" AutomationProperties.AccessibilityView="Raw" />
+              </Border>
+              <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="3">
+                <TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                <ProgressBar Value="{Binding Fraccion}" Minimum="0" Maximum="100" MinHeight="4" Height="4" AutomationProperties.AccessibilityView="Raw" />
+              </StackPanel>
+              <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center" Margin="12,0,0,0">
+                <TextBlock Classes="sec" Text="{Binding Ocupacion}" TextWrapping="NoWrap" />
+                <d:Icono Glifo="Check" Width="20" Height="20" Foreground="{DynamicResource Dorado}" IsVisible="{Binding Actual}" />
+              </StackPanel>
+            </Grid>
+          </Button>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+    <TextBlock Grid.Row="2" Text="{DynamicResource Loc.SelectorCajaHoja.CajasNombre}" Classes="sec" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding SinResultados}" />
+  </Grid>
+</UserControl>

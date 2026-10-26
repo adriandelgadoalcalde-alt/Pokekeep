@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             xmlns:v="clr-namespace:Pokekeep.Mobile.Ui.Views"
+             x:Class="Pokekeep.Mobile.Ui.Views.SubeditorHojaView"
+             x:DataType="vm:SubeditorHojaViewModel">
+  <Grid RowDefinitions="*,Auto" MinHeight="160">
+    <ScrollViewer Grid.Row="0" Name="Desplazador" VerticalScrollBarVisibility="Auto">
+      <StackPanel Spacing="12" Margin="16,0,16,16">
+        <TextBlock Classes="sec" Text="{Binding Aviso}" IsVisible="{Binding HayAviso}" />
+        <ItemsControl ItemsSource="{Binding Acciones}" IsVisible="{Binding HayAcciones}">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:AccionSubVm">
+              <Button Classes="secundario" Margin="0,0,8,8" Command="{Binding Comando}" AutomationProperties.Name="{Binding Texto}" AutomationProperties.HelpText="{Binding Ayuda}"><TextBlock Text="{Binding Texto}" TextWrapping="Wrap" /></Button>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <ItemsControl ItemsSource="{Binding Glifos}" IsVisible="{Binding HayGlifos}">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="x:String">
+              <Button Classes="secundario" Margin="0,0,6,6" MinWidth="52" Padding="0" Command="{Binding $parent[ItemsControl].((vm:SubeditorHojaViewModel)DataContext).InsertarCommand}" CommandParameter="{Binding}" AutomationProperties.Name="{Binding StringFormat='Insertar {0}'}"><TextBlock Text="{Binding}" FontSize="20" TextWrapping="NoWrap" /></Button>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <ItemsControl ItemsSource="{Binding Secciones}">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="12" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          <ItemsControl.DataTemplates>
+            <DataTemplate x:DataType="vm:SeccionPlanaVm"><v:SeccionPlanaView /></DataTemplate>
+          </ItemsControl.DataTemplates>
+        </ItemsControl>
+      </StackPanel>
+    </ScrollViewer>
+    <d:RejillaSinPartir Grid.Row="1" Name="BarraAcciones" Columns="2" Margin="16,8,16,16" ColumnSpacing="8" RowSpacing="8">
+      <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding DeshacerCommand}" AutomationProperties.Name="{DynamicResource Loc.SubeditorHoja.DeshacerCambiosVentana}" AutomationProperties.HelpText="{DynamicResource Loc.SubeditorHoja.VuelveEstabaPokemonAbrirla}"><TextBlock Text="{DynamicResource Loc.SubeditorHoja.Deshacer}" /></Button>
+      <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding HechoCommand}" AutomationProperties.Name="{DynamicResource Loc.SubeditorHoja.Hecho}"><TextBlock Text="{DynamicResource Loc.SubeditorHoja.Hecho}" /></Button>
+    </d:RejillaSinPartir>
+  </Grid>
+</UserControl>

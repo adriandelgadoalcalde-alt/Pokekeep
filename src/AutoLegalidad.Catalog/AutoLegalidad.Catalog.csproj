@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>AutoLegalidad.Catalog</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" />
+    <ProjectReference Include="$(PKHeXCoreProject)" />
+    <!-- Contratos puros (IBinaryIdentity): la identidad del Core que liga el catalogo se inyecta, no se lee de un ensamblado cargado. -->
+    <ProjectReference Include="..\AutoLegalidad.Contracts\AutoLegalidad.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Migraciones y datos de la Libreria viajan dentro del ensamblado: el catalogo no depende de rutas de ejecucion. -->
+    <EmbeddedResource Include="Migrations\*.sql" LogicalName="Migrations/%(Filename)%(Extension)" />
+    <EmbeddedResource Include="FormReach\*.json" LogicalName="FormReach/%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Library\*.tsv" LogicalName="Library/%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

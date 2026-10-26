@@ -1,0 +1,8 @@
+nombre_pkhex_en	identificador_pokeapi	motivo	generacion_pokeapi	indice_pokeapi
+Bike	bicycle	Mismo objeto: PokeAPI lo llama «Bicycle»
+Guidebook	journal	Mismo objeto clave de Sinnoh: PokeAPI lo llama Journal	4	433
+Sticker Case	seal-case	Mismo objeto clave de Sinnoh: PokeAPI lo llama Seal Case	4	434
+Sticker Bag	seal-bag	Mismo objeto clave de Sinnoh: PokeAPI lo llama Seal Bag	4	436
+Lunar Feather	lunar-wing	Mismo objeto clave: PokeAPI lo llama Lunar Wing	4	453
+Exp. All	exp-share	Gen. 1: el objeto que reparte la experiencia a todo el equipo; PokeAPI lo recoge como Exp. Share con ese id	1	75
+Pink Bow	silk-scarf	Gen. 2: el lazo rosa que sube los ataques normales; PokeAPI lo recoge como Silk Scarf con ese id	2	104

@@ -1,0 +1,13 @@
+{
+  "Startup": {
+    "ShowChangelogOnUpdate": false,
+    "TryDetectRecentSave": false,
+    "AutoLoadSaveOnStartup": 0,
+    "PluginLoadEnable": false,
+    "Language": "es"
+  },
+  "Backup": {
+    "BAKEnabled": true,
+    "BAKPrompt": true
+  }
+}

@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Proceso :motor (plan 5.3): servicio de Android que hospeda WorkerHost.Run, protocolo de marcos por socket local y la pasarela AndroidEngineGateway de la interfaz.
+       Los ficheros de Ipc\ son neutros (sin API de Android): Pokekeep.Android.UiTests los compila tambien para el PC y prueba el protocolo con motores falsos. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-android</TargetFramework>
+    <SupportedOSPlatformVersion>29</SupportedOSPlatformVersion>
+    <RootNamespace>Pokekeep.Mobile.Engine</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(PokekeepPruebas)' == 'true'">
+    <DefineConstants>$(DefineConstants);POKEKEEP_PRUEBAS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\AutoLegalidad.App\AutoLegalidad.App.csproj" />
+    <ProjectReference Include="..\..\src\AutoLegalidad.WorkerHost\AutoLegalidad.WorkerHost.csproj" />
+    <ProjectReference Include="..\..\src\AutoLegalidad.Engine\AutoLegalidad.Engine.csproj" />
+    <ProjectReference Include="..\..\src\AutoLegalidad.Catalog\AutoLegalidad.Catalog.csproj" />
+    <ProjectReference Include="..\..\src\AutoLegalidad.Contracts\AutoLegalidad.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\AutoLegalidad.Registro\AutoLegalidad.Registro.csproj" />
+    <ProjectReference Include="..\..\src\AutoLegalidad.ALMAdapter\AutoLegalidad.ALMAdapter.csproj" />
+    <ProjectReference Include="..\..\src\AutoLegalidad.AlmSource\AutoLegalidad.AlmSource.csproj" />
+    <ProjectReference Include="$(PKHeXCoreProject)" />
+  </ItemGroup>
+
+  <!-- Identidad EMBEBIDA (plan 5.4): en Android Assembly.Location esta vacio y los ensamblados viajan dentro del APK. Tras compilar los cuatro binarios que deciden el resultado de una busqueda
+       (PKHeX.Core, motor, adaptador de ALM y fuente de ALM) se calculan sus SHA-256 y se incrustan como AssemblyMetadata de ESTE ensamblado (Pokekeep.Mobile.Engine). El catalogo y la cache de soluciones
+       de Android se construyen en el PC con esos mismos valores (herramientas\construir-bd-android.ps1); si no coinciden, VersionMismatch: nunca se aceptan datos de otra version. -->
+  <Target Name="GenerarIdentidad" BeforeTargets="CoreCompile" DependsOnTargets="ResolveProjectReferences">
+    <ItemGroup>
+      <_IdBin Include="@(_ResolvedProjectReferencePaths)" Condition="'%(Filename)%(Extension)' == 'PKHeX.Core.dll' Or '%(Filename)%(Extension)' == 'AutoLegalidad.Engine.dll' Or '%(Filename)%(Extension)' == 'AutoLegalidad.ALMAdapter.dll' Or '%(Filename)%(Extension)' == 'AutoLegalidad.AlmSource.dll'" />
+    </ItemGroup>
+    <GetFileHash Files="@(_IdBin)" Algorithm="SHA256" HashEncoding="hex">
+      <Output TaskParameter="Items" ItemName="_IdHash" />
+    </GetFileHash>
+    <PropertyGroup>
+      <_ShaCore>@(_IdHash->WithMetadataValue('Filename', 'PKHeX.Core')->'%(FileHash)')</_ShaCore>
+      <_ShaMotor>@(_IdHash->WithMetadataValue('Filename', 'AutoLegalidad.Engine')->'%(FileHash)')</_ShaMotor>
+      <_ShaAdaptador>@(_IdHash->WithMetadataValue('Filename', 'AutoLegalidad.ALMAdapter')->'%(FileHash)')</_ShaAdaptador>
+      <_ShaAlm>@(_IdHash->WithMetadataValue('Filename', 'AutoLegalidad.AlmSource')->'%(FileHash)')</_ShaAlm>
+      <_IdFichero>$(IntermediateOutputPath)Identidad.g.cs</_IdFichero>
+    </PropertyGroup>
+    <Error Condition="'$(_ShaCore)' == '' Or '$(_ShaMotor)' == '' Or '$(_ShaAdaptador)' == '' Or '$(_ShaAlm)' == ''" Text="GenerarIdentidad: no se pudo calcular el SHA-256 de alguno de los cuatro binarios (core='$(_ShaCore)' motor='$(_ShaMotor)' adaptador='$(_ShaAdaptador)' alm='$(_ShaAlm)')." />
+    <ItemGroup>
+      <_IdLinea Include="// &lt;auto-generated&gt;Identidad embebida: GenerarIdentidad de Pokekeep.Mobile.Engine.csproj. No editar.&lt;/auto-generated&gt;" />
+      <_IdLinea Include="[assembly: System.Reflection.AssemblyMetadata(&quot;Pokekeep.CoreSha256&quot;, &quot;$(_ShaCore.ToUpperInvariant())&quot;)]" />
+      <_IdLinea Include="[assembly: System.Reflection.AssemblyMetadata(&quot;Pokekeep.EngineSha256&quot;, &quot;$(_ShaMotor.ToUpperInvariant())&quot;)]" />
+      <_IdLinea Include="[assembly: System.Reflection.AssemblyMetadata(&quot;Pokekeep.AdapterSha256&quot;, &quot;$(_ShaAdaptador.ToUpperInvariant())&quot;)]" />
+      <_IdLinea Include="[assembly: System.Reflection.AssemblyMetadata(&quot;Pokekeep.AlmSha256&quot;, &quot;$(_ShaAlm.ToUpperInvariant())&quot;)]" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(_IdFichero)" Lines="@(_IdLinea)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <Compile Include="$(_IdFichero)" />
+      <FileWrites Include="$(_IdFichero)" />
+    </ItemGroup>
+  </Target>
+</Project>

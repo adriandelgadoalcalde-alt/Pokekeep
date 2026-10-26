@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.TrabajandoHojaView"
+             x:DataType="vm:TrabajandoHojaViewModel">
+  <StackPanel Spacing="12" Margin="20,4,20,24">
+    <ProgressBar IsIndeterminate="True" AutomationProperties.Name="{DynamicResource Loc.AccionHoja.ProgresoOperacion}" />
+    <TextBlock Text="{Binding Texto}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+  </StackPanel>
+</UserControl>

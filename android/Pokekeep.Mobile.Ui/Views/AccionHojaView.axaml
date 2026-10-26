@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:lz="clr-namespace:Pokekeep.Mobile.Ui.Localizacion"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.AccionHojaView"
+             x:DataType="vm:AccionHojaViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="14" Margin="20,4,20,24">
+      <TextBlock Classes="sec" Text="{Binding Objetivo}" TextWrapping="Wrap" />
+
+      <!-- Trabajando: fase real del motor, tiempo transcurrido y Cancelar -->
+      <StackPanel Spacing="12" IsVisible="{Binding Trabajando}">
+        <ProgressBar IsIndeterminate="{Binding Indeterminado}" Value="{Binding Fraccion}" Minimum="0" Maximum="100" AutomationProperties.Name="{DynamicResource Loc.AccionHoja.ProgresoOperacion}" />
+        <TextBlock Name="TextoFase" Text="{Binding TextoProgreso}" FontWeight="Medium" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+        <TextBlock Name="TextoTiempo" Classes="sec" Text="{lz:Formato AccionHoja.Tiempo, {Binding Transcurrido}}" />
+        <Button Name="BotonCancelar" Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CancelarCommand}" IsEnabled="{Binding NoCancelando}" AutomationProperties.Name="{DynamicResource Loc.Comun.Cancelar}" AutomationProperties.HelpText="{DynamicResource Loc.AccionHoja.DetieneMotorCambiaNada}">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="X" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Comun.Cancelar}" /></StackPanel>
+        </Button>
+      </StackPanel>
+
+      <!-- Resultado honesto -->
+      <StackPanel Spacing="12" IsVisible="{Binding EnResultado}">
+        <Border Name="InsigniaResultado" Classes="insignia" Classes.ok="{Binding ResultadoOk}" Classes.aviso="{Binding ResultadoAviso}" Classes.error="{Binding ResultadoError}" Padding="12,10" AutomationProperties.LiveSetting="Assertive">
+          <Grid ColumnDefinitions="Auto,*">
+            <d:Icono Glifo="{Binding GlifoResultado}" Width="22" Height="22" VerticalAlignment="Top" Margin="0,1,10,0" />
+            <d:TextoEntero Grid.Column="1" Name="TitularResultado" Text="{Binding Titular}" FontWeight="Bold" TextWrapping="Wrap" VerticalAlignment="Center" />
+          </Grid>
+        </Border>
+        <ItemsControl ItemsSource="{Binding Resumen}" IsVisible="{Binding HayResumen}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="x:String"><TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,0,0,6" /></DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <TextBlock Name="DetalleResultado" Text="{Binding Detalle}" TextWrapping="Wrap" IsVisible="{Binding HayDetalle}" />
+        <TextBlock Classes="sec" Text="{lz:Formato AccionHoja.Duracion, {Binding Duracion}}" />
+        <Button Name="BotonVerCambios" Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding VerCambiosCommand}" IsVisible="{Binding HayVerCambios}" AutomationProperties.Name="{Binding TextoVerCambios}" AutomationProperties.HelpText="{DynamicResource Loc.AccionHoja.AbreTocadoAntesDespues}">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="ScrollText" Width="20" Height="20" /><TextBlock Text="{Binding TextoVerCambios}" /></StackPanel>
+        </Button>
+        <d:RejillaSinPartir Columns="{Binding ColumnasBotones}" RowSpacing="8" ColumnSpacing="8">
+          <Button Name="BotonDeshacer" Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding DeshacerCommand}" IsEnabled="{Binding PuedeDeshacer}" AutomationProperties.Name="{DynamicResource Loc.SubeditorHoja.Deshacer}" AutomationProperties.HelpText="{DynamicResource Loc.AccionHoja.DevuelvePokemonEstabaSigue}">
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="History" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.SubeditorHoja.Deshacer}" /></StackPanel>
+          </Button>
+          <Button Name="BotonCerrar" Classes="primario" HorizontalAlignment="Stretch" Command="{Binding CerrarCommand}" AutomationProperties.Name="{DynamicResource Loc.AccionHoja.CerrarResumen}" AutomationProperties.HelpText="{DynamicResource Loc.AccionHoja.CierraResumenHechoMantiene}">
+            <TextBlock Text="{DynamicResource Loc.Comun.Cerrar}" TextAlignment="Center" />
+          </Button>
+        </d:RejillaSinPartir>
+      </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

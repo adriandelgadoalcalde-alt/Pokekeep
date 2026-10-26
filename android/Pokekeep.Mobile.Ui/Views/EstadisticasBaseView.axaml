@@ -1,0 +1,82 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:mo="clr-namespace:Pokekeep.Mobile.Ui.Modelo"
+             xmlns:eb="clr-namespace:Pokekeep.Mobile.Ui.Herramientas.EstadisticasBase"
+             x:Class="Pokekeep.Mobile.Ui.Views.EstadisticasBaseView"
+             x:DataType="eb:EstadisticasBaseViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="16,0,16,24" Spacing="10">
+      <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.ImportarHex.VolverHerramientas}">
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.ImportarHex.VolverHerramientas}" TextWrapping="Wrap" VerticalAlignment="Center" /></Grid>
+      </Button>
+      <StackPanel Spacing="2" Margin="0,4,0,4">
+        <TextBlock Classes="titulo" Text="{Binding Titulo}" TextWrapping="Wrap" />
+        <TextBlock Classes="sec" TextWrapping="Wrap" Text="{Binding Subtitulo}" />
+      </StackPanel>
+
+      <TextBox Text="{Binding Tabla.Filtro}" Watermark="{DynamicResource Loc.EstadisticasBase.FiltrarEspecies}" AutomationProperties.Name="{DynamicResource Loc.EstadisticasBase.FiltrarEspeciesNombreNumero}" />
+      <d:EtiquetaYValor Separacion="8">
+        <TextBlock Classes="sec" Text="{Binding Tabla.Resumen}" VerticalAlignment="Center" TextWrapping="Wrap" AutomationProperties.Name="{Binding Tabla.Resumen}" AutomationProperties.LiveSetting="Polite" />
+        <Button Classes="secundario" Click="AlOrdenar" MinHeight="48" AutomationProperties.Name="{Binding Tabla.TextoOrden}" AutomationProperties.HelpText="{DynamicResource Loc.EstadisticasBase.CambiaColumnaOrdena}">
+          <TextBlock Text="{Binding Tabla.TextoOrden}" TextWrapping="Wrap" MaxWidth="200" />
+        </Button>
+      </d:EtiquetaYValor>
+      <Border Classes="tarjeta" Padding="14,10" IsVisible="{Binding Tabla.SinFilas}"><TextBlock Classes="sec" Text="{DynamicResource Loc.EstadisticasBase.NingunaEspecieCoincide}" TextWrapping="Wrap" /></Border>
+
+      <ItemsControl ItemsSource="{Binding Visibles}" IsVisible="{Binding Tabla.HayFilas}">
+        <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="8" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="eb:FilaEstadisticaVm">
+            <Border Classes="tarjeta" Padding="12,10" AutomationProperties.Name="{Binding Accesible}">
+              <StackPanel Spacing="8">
+                <d:EtiquetaYValor Separacion="10">
+                  <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                    <d:SpritePokemon UnSoloPokemon="True" Width="56" Height="48" Especie="{Binding Especie}" Forma="{Binding Forma}" Contexto="{Binding Contexto}" Modo="{Binding Modo}" Foreground="{DynamicResource TextoSecundario}" VerticalAlignment="Center" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                      <TextBlock Text="{Binding Nombre}" FontWeight="Bold" TextWrapping="Wrap" />
+                      <ItemsControl ItemsSource="{Binding Etiquetas}" Margin="0,2,0,0">
+                        <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel ItemSpacing="6" LineSpacing="4" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate><DataTemplate x:DataType="mo:TipoVm"><d:EtiquetaTipo Tipo="{Binding Indice}" Texto="{Binding Texto}" /></DataTemplate></ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                    </StackPanel>
+                  </Grid>
+                  <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right">
+                    <TextBlock Classes="sec" Text="{Binding Numero}" TextAlignment="Right" />
+                    <TextBlock Classes="sec" Text="{Binding Nativo}" TextAlignment="Right" />
+                  </StackPanel>
+                </d:EtiquetaYValor>
+                <ItemsControl ItemsSource="{Binding Estadisticas}">
+                  <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="6" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="eb:CeldaEstadistica">
+                      <Border Background="{Binding Fondo}" Margin="1" Padding="2,4" CornerRadius="4">
+                        <StackPanel HorizontalAlignment="Center">
+                          <TextBlock Text="{Binding Etiqueta}" FontSize="10" Foreground="Black" TextAlignment="Center" TextWrapping="Wrap" />
+                          <d:TextoEntero Text="{Binding Valor}" FontWeight="Bold" Foreground="Black" TextAlignment="Center" />
+                        </StackPanel>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <d:EtiquetaYValor Invertida="True" Separacion="10">
+                  <StackPanel Spacing="1">
+                    <TextBlock Classes="sec" Text="{Binding Captura}" />
+                    <TextBlock Classes="sec" Text="{Binding Habilidades}" />
+                  </StackPanel>
+                  <Border Background="{Binding Total.Fondo}" Padding="8,3" CornerRadius="4" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <TextBlock Text="{Binding Total.Valor, StringFormat='Total {0}'}" FontWeight="Bold" Foreground="Black" />
+                  </Border>
+                </d:EtiquetaYValor>
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+
+      <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding Tabla.MostrarMasCommand}" IsVisible="{Binding Tabla.HayMas}" MinHeight="48" AutomationProperties.Name="{Binding Tabla.TextoMas}">
+        <TextBlock Text="{Binding Tabla.TextoMas}" TextWrapping="Wrap" TextAlignment="Center" />
+      </Button>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

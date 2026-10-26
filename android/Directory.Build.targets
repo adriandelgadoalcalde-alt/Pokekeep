@@ -1,0 +1,4 @@
+<Project>
+  <!-- ADR 0068: PKHeX.Core.dll independiente de la ruta de compilacion (ver CoreDeterminista.targets de la raiz). -->
+  <Import Project="$(MSBuildThisFileDirectory)..\CoreDeterminista.targets" />
+</Project>

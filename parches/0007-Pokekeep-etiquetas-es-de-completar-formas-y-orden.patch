@@ -1,0 +1,61 @@
+From 8ed4340bcd69df3d069840581ef07e741b76164d Mon Sep 17 00:00:00 2001
+From: Pokekeep <pokekeep@invalid>
+Date: Mon, 5 Oct 2026 07:32:35 +0200
+Subject: [PATCH 07/11] =?UTF-8?q?Pokekeep:=20etiquetas=20en=20castellano?=
+ =?UTF-8?q?=20de=20las=20opciones=20=C2=ABCompletar:=20formas=C2=BB=20y=20?=
+ =?UTF-8?q?=C2=ABCompletar:=20orden=C2=BB=20en=20Ajustes?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+LocalizedTypeConverter de PKHeX muestra los enums con la clave <Tipo>.<Valor> de lang_xx.txt y, si no existe,
+el identificador. Se anaden LivingDexForms.* y LivingDexOrder.* a es, es-419 y en. El valor guardado en cfg.json
+no cambia.
+---
+ PKHeX.WinForms/Resources/text/lang_en.txt     | 5 +++++
+ PKHeX.WinForms/Resources/text/lang_es-419.txt | 5 +++++
+ PKHeX.WinForms/Resources/text/lang_es.txt     | 5 +++++
+ 3 files changed, 15 insertions(+)
+
+diff --git a/PKHeX.WinForms/Resources/text/lang_en.txt b/PKHeX.WinForms/Resources/text/lang_en.txt
+index 38ca874c6..d7c51f888 100644
+--- a/PKHeX.WinForms/Resources/text/lang_en.txt
++++ b/PKHeX.WinForms/Resources/text/lang_en.txt
+@@ -3414,3 +3414,8 @@ Main.Tab_Libreria=Library
+ Main.Menu_PokekeepCompletar=Complete the game...
+ Main.Menu_PokekeepEdicionMasiva=Bulk edit...
+ Main.mnuPokekeepBulk=Bulk edit of this Pokémon...
++LivingDexForms.OnePerSpecies=One per species (recommended)
++LivingDexForms.AllStorable=All storable forms
++LivingDexForms.OnePlusRegional=One per species + regional forms
++LivingDexOrder.National=National Pokédex
++LivingDexOrder.Regional=Regional Pokédex of the game
+diff --git a/PKHeX.WinForms/Resources/text/lang_es-419.txt b/PKHeX.WinForms/Resources/text/lang_es-419.txt
+index e9a1cf0f2..bcfb5dc66 100644
+--- a/PKHeX.WinForms/Resources/text/lang_es-419.txt
++++ b/PKHeX.WinForms/Resources/text/lang_es-419.txt
+@@ -3414,3 +3414,8 @@ Main.Tab_Libreria=Librería
+ Main.Menu_PokekeepCompletar=Completar el juego…
+ Main.Menu_PokekeepEdicionMasiva=Edición masiva…
+ Main.mnuPokekeepBulk=Edición masiva de este Pokémon…
++LivingDexForms.OnePerSpecies=Una por especie (recomendado)
++LivingDexForms.AllStorable=Todas las formas almacenables
++LivingDexForms.OnePlusRegional=Una por especie + formas regionales
++LivingDexOrder.National=Pokédex nacional
++LivingDexOrder.Regional=Pokédex regional del juego
+diff --git a/PKHeX.WinForms/Resources/text/lang_es.txt b/PKHeX.WinForms/Resources/text/lang_es.txt
+index db3de1fb5..d42189bec 100644
+--- a/PKHeX.WinForms/Resources/text/lang_es.txt
++++ b/PKHeX.WinForms/Resources/text/lang_es.txt
+@@ -3414,3 +3414,8 @@ Main.Tab_Libreria=Librería
+ Main.Menu_PokekeepCompletar=Completar el juego…
+ Main.Menu_PokekeepEdicionMasiva=Edición masiva…
+ Main.mnuPokekeepBulk=Edición masiva de este Pokémon…
++LivingDexForms.OnePerSpecies=Una por especie (recomendado)
++LivingDexForms.AllStorable=Todas las formas almacenables
++LivingDexForms.OnePlusRegional=Una por especie + formas regionales
++LivingDexOrder.National=Pokédex nacional
++LivingDexOrder.Regional=Pokédex regional del juego
+-- 
+2.55.0.windows.5
+

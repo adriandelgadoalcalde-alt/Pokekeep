@@ -1,0 +1,158 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.EventosView"
+             x:DataType="vm:EventosViewModel">
+  <!-- Una sola lista virtualizada: la cabecera (pestanas, buscador, grupos, por numero) y las filas se desplazan juntas; abajo la barra de aplicar. -->
+  <Grid RowDefinitions="*,Auto" Margin="16,0,16,0">
+    <ListBox Classes="limpia" ItemsSource="{Binding Elementos}" AutomationProperties.Name="{DynamicResource Loc.Partida.Editor.eventos.Titulo}" Padding="0,0,0,8">
+      <ListBox.DataTemplates>
+        <!-- Cabecera -->
+        <DataTemplate x:DataType="vm:EncabezadoEventos">
+          <StackPanel Spacing="8" DataContext="{Binding Vm}" x:DataType="vm:EventosViewModel">
+            <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" AutomationProperties.Name="{DynamicResource Loc.Form.Vista.EditorPartidaView.0}" AutomationProperties.HelpText="{DynamicResource Loc.Form.Vista.EditorPartidaView.1}">
+              <StackPanel Orientation="Horizontal" Spacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Form.Vista.EditorPartidaView.0}" /></StackPanel>
+            </Button>
+            <StackPanel Spacing="2">
+              <TextBlock Classes="titulo" Text="{DynamicResource Loc.Partida.Editor.eventos.Titulo}" AutomationProperties.HeadingLevel="1" />
+              <TextBlock Classes="sec" Text="{Binding Resumen}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+            </StackPanel>
+            <d:TiraConIndicio>
+              <ItemsControl ItemsSource="{Binding Paginas}">
+                <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="8" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:PaginaEventosVm">
+                    <ToggleButton Classes="chip" IsChecked="{Binding Elegida, Mode=OneWay}" Command="{Binding $parent[ItemsControl].((vm:EventosViewModel)DataContext).IrCommand}" CommandParameter="{Binding}" MinHeight="48" AutomationProperties.Name="{Binding Accesible}">
+                      <TextBlock Text="{Binding Titulo}" TextWrapping="NoWrap" />
+                    </ToggleButton>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </d:TiraConIndicio>
+
+            <!-- Buscador y filtros de las listas -->
+            <StackPanel Spacing="8" IsVisible="{Binding EnLista}">
+              <Grid ColumnDefinitions="Auto,*">
+                <d:Icono Glifo="Search" Width="20" Height="20" Margin="0,0,10,0" Foreground="{DynamicResource TextoSecundario}" VerticalAlignment="Center" />
+                <TextBox Grid.Column="1" Classes="campo" Text="{Binding Filtro}" PlaceholderText="{DynamicResource Loc.Eventos.NombreN}" AutomationProperties.Name="{DynamicResource Loc.Eventos.BuscarNombreNumero}" />
+              </Grid>
+              <d:TiraConIndicio IsVisible="{Binding HayGrupos}">
+                <ItemsControl ItemsSource="{Binding Grupos}">
+                  <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="8" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:GrupoEventosVm">
+                      <ToggleButton Classes="chip" IsChecked="{Binding Elegido, Mode=OneWay}" Command="{Binding $parent[ItemsControl].((vm:EventosViewModel)DataContext).ElegirGrupoCommand}" CommandParameter="{Binding}" MinHeight="48" AutomationProperties.Name="{Binding Accesible}">
+                        <TextBlock Text="{Binding Texto}" TextWrapping="NoWrap" />
+                      </ToggleButton>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </d:TiraConIndicio>
+              <ToggleButton Classes="chip" HorizontalAlignment="Left" IsChecked="{Binding SoloCambiadas, Mode=TwoWay}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.TablaP.SoloCambiadas}"><TextBlock Text="{DynamicResource Loc.TablaP.SoloCambiadas2}" /></ToggleButton>
+
+              <!-- Por numero -->
+              <Border Classes="tarjeta" Padding="12" IsVisible="{Binding PorNumero}">
+                <StackPanel Spacing="6">
+                  <TextBlock Classes="etiqueta" Text="{Binding TituloNumero}" AutomationProperties.HeadingLevel="2" />
+                  <d:EtiquetaYValor Separacion="8">
+                    <TextBox Classes="campo numero" Text="{Binding NumeroTexto}" MaxLength="6" TextInputOptions.ContentType="Digits" PlaceholderText="{DynamicResource Loc.Comun.NumeroAbrev}" AutomationProperties.Name="{DynamicResource Loc.Eventos.Numero}" AutomationProperties.HelpText="{Binding AyudaNumero}" />
+                    <ToggleButton Classes="chip" IsChecked="{Binding NumeroMarcada, Mode=TwoWay}" IsVisible="{Binding EnBanderas}" MinWidth="64" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Eventos.ValorMarca}"><TextBlock Text="{DynamicResource Loc.Eventos.SiNo}" /></ToggleButton>
+                  </d:EtiquetaYValor>
+                  <d:EtiquetaYValor Separacion="8" IsVisible="{Binding EnConstantes}">
+                    <TextBox Classes="campo numero" Text="{Binding NumeroValor}" MaxLength="12" TextInputOptions.ContentType="Digits" PlaceholderText="{DynamicResource Loc.EdicionLotes.Valor2}" AutomationProperties.Name="{DynamicResource Loc.Eventos.ValorConstante}" />
+                    <Button Classes="secundario" Command="{Binding PonerNumeroValorCommand}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Eventos.PonerValor}"><TextBlock Text="{DynamicResource Loc.Eventos.Poner}" /></Button>
+                  </d:EtiquetaYValor>
+                  <TextBlock Classes="sec" Text="{Binding AyudaNumero}" IsVisible="{Binding SinErrorNumero}" />
+                  <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding ErrorNumero}" IsVisible="{Binding HayErrorNumero}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
+                </StackPanel>
+              </Border>
+            </StackPanel>
+
+            <!-- Investigar -->
+            <StackPanel Spacing="8" IsVisible="{Binding EnInvestigar}">
+              <Border Classes="tarjeta" Padding="12">
+                <StackPanel Spacing="8">
+                  <TextBlock Text="{DynamicResource Loc.Eventos.ComparaPartidaOtraMismo}" TextWrapping="Wrap" />
+                  <d:EtiquetaYValor Separacion="8">
+                    <TextBlock Text="{DynamicResource Loc.Eventos.OtroGuardadoPosterior}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                    <ToggleSwitch IsChecked="{Binding OtroEsNuevo}" OnContent="" OffContent="" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Eventos.OtroGuardadoPosterior}" />
+                  </d:EtiquetaYValor>
+                  <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding ElegirOtroGuardadoCommand}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Eventos.ElegirOtroGuardado}" AutomationProperties.HelpText="{DynamicResource Loc.Eventos.EligeArchivoOtroGuardado}">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" HorizontalAlignment="Center"><d:Icono Glifo="FileUp" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.Eventos.ElegirOtroGuardado}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" /></Grid>
+                  </Button>
+                  <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CopiarResumenCommand}" IsVisible="{Binding HayDiferencia}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Eventos.CopiarResumen}" AutomationProperties.HelpText="{DynamicResource Loc.Eventos.CopiaDiferenciasPortapapeles}">
+                    <TextBlock Text="{DynamicResource Loc.Eventos.CopiarResumen2}" TextAlignment="Center" />
+                  </Button>
+                  <TextBlock Foreground="{DynamicResource Error}" Text="{Binding MotivoDiferencia}" IsVisible="{Binding HayMotivoDiferencia}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </StackPanel>
+        </DataTemplate>
+
+        <!-- Una bandera -->
+        <DataTemplate x:DataType="vm:FilaBanderaVm">
+          <Border Classes="tarjeta" Padding="10,4">
+            <Grid ColumnDefinitions="4,*,Auto" ColumnSpacing="8" MinHeight="56">
+              <Border Width="4" CornerRadius="2" Margin="0,8" Background="{DynamicResource Dorado}" IsVisible="{Binding Modificada}" AutomationProperties.AccessibilityView="Raw" />
+              <StackPanel Grid.Column="1" VerticalAlignment="Center" AutomationProperties.Name="{Binding Accesible}">
+                <TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextWrapping="Wrap" />
+                <TextBlock Classes="sec" Text="{Binding Numero}" TextWrapping="Wrap" />
+                <TextBlock Classes="sec" Text="{Binding Clave}" IsVisible="{Binding HayClave}" TextWrapping="Wrap" />
+              </StackPanel>
+              <ToggleButton Grid.Column="2" Classes="chip" IsChecked="{Binding Marcada, Mode=TwoWay}" MinWidth="64" MinHeight="48" Content="{Binding TextoMarca}" AutomationProperties.Name="{Binding Accesible}" />
+            </Grid>
+          </Border>
+        </DataTemplate>
+
+        <!-- Una constante -->
+        <DataTemplate x:DataType="vm:FilaConstanteVm">
+          <Border Classes="tarjeta" Padding="10,4">
+            <StackPanel Spacing="2">
+              <Grid ColumnDefinitions="4,*,Auto" ColumnSpacing="8" MinHeight="56">
+                <Border Width="4" CornerRadius="2" Margin="0,8" Background="{DynamicResource Dorado}" IsVisible="{Binding Modificada}" AutomationProperties.AccessibilityView="Raw" />
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" AutomationProperties.Name="{Binding Accesible}">
+                  <TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextWrapping="Wrap" />
+                  <TextBlock Classes="sec" Text="{Binding Numero}" TextWrapping="Wrap" />
+                  <TextBlock Classes="sec" Text="{Binding Clave}" IsVisible="{Binding HayClave}" TextWrapping="Wrap" />
+                </StackPanel>
+                <TextBox Grid.Column="2" Classes="campo numero" Width="110" Text="{Binding Valor}" MaxLength="12" TextInputOptions.ContentType="Digits" LostFocus="AlPerderFoco"
+                         AutomationProperties.Name="{Binding Nombre}" AutomationProperties.HelpText="{Binding Rango}" />
+              </Grid>
+              <Button Classes="chip" HorizontalAlignment="Left" Command="{Binding ElegirOpcionCommand}" IsVisible="{Binding TieneOpciones}" AutomationProperties.Name="{DynamicResource Loc.Eventos.ElegirValorNombre}" AutomationProperties.HelpText="{DynamicResource Loc.Eventos.AbreListaValoresNombre}">
+                <TextBlock Text="{Binding TextoOpcion}" TextWrapping="Wrap" />
+              </Button>
+              <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding Error}" IsVisible="{Binding HayError}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+
+        <!-- Una diferencia -->
+        <DataTemplate x:DataType="vm:LineaDiferencia">
+          <Border Classes="tarjeta" Padding="10,6">
+            <StackPanel AutomationProperties.Name="{Binding Accesible}">
+              <TextBlock Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+              <TextBlock Classes="sec" Text="{Binding Detalle}" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+      </ListBox.DataTemplates>
+    </ListBox>
+
+    <!-- Cambios sin aplicar: siempre a mano -->
+    <Border Grid.Row="1" Name="BarraAcciones" Classes="tarjeta-pendiente" Padding="12" Margin="0,4,0,0" IsVisible="{Binding HayCambios}">
+      <StackPanel Spacing="8">
+        <TextBlock Text="{Binding TextoCambios}" FontWeight="Bold" TextWrapping="Wrap" AutomationProperties.HelpText="{DynamicResource Loc.Eventos.EscribenTodosJuntosAplicar}" />
+        <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
+          <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding DescartarCommand}" AutomationProperties.Name="{DynamicResource Loc.Eventos.DescartarCambiosEventos}" AutomationProperties.HelpText="{DynamicResource Loc.Eventos.VuelveLeerEventosPartida}">
+            <TextBlock Text="{DynamicResource Loc.CompletarJuego.Descartar}" TextAlignment="Center" />
+          </Button>
+          <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding AplicarCommand}" AutomationProperties.Name="{DynamicResource Loc.Eventos.AplicarEventosPartida}" AutomationProperties.HelpText="{DynamicResource Loc.Eventos.EscribeCambiosPartidaAbierta}">
+            <TextBlock Text="{DynamicResource Loc.Editor.Aplicar}" TextAlignment="Center" />
+          </Button>
+        </d:RejillaSinPartir>
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

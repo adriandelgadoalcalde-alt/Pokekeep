@@ -1,0 +1,216 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             xmlns:v="clr-namespace:Pokekeep.Mobile.Ui.Views"
+             xmlns:h="clr-namespace:Pokekeep.Mobile.Ui.Herramientas"
+             x:Class="Pokekeep.Mobile.Ui.Views.ShellView"
+             x:DataType="vm:ShellViewModel">
+  <d:KeyboardAwareLayout Name="Teclado">
+  <Border Name="Raiz" Background="{DynamicResource Fondo}">
+    <d:RaizModal RowDefinitions="Auto,*,Auto" ModalActivo="{Binding HayHoja}">
+
+      <!-- Cabecera: marca, abrir/guardar y tarjeta de partida -->
+      <d:ColumnaCentrada Grid.Row="0" IsVisible="{Binding MostrarCabecera}"><StackPanel Name="ContenidoCabecera" Spacing="12" Margin="16,12,16,8">
+        <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
+          <Image Name="LogoCabecera" Grid.Column="0" Width="48" Height="48" Source="avares://Pokekeep.Mobile.Ui/Assets/Imagenes/icono-pokekeep-192.png" Margin="0,0,12,0"
+                 AutomationProperties.AccessibilityView="Raw" />
+          <StackPanel Grid.Column="1" VerticalAlignment="Center">
+            <d:TextoEntero Name="MarcaCabecera" FraccionMinima="0.4" Classes="titulo" Text="{DynamicResource Loc.App.Nombre}" />
+            <TextBlock Name="Lema" Classes="sec" Text="{DynamicResource Loc.App.Lema}" TextWrapping="NoWrap" />
+          </StackPanel>
+          <Button Grid.Column="2" Classes="icono" Width="48" Height="48" Margin="0,0,8,0" IsVisible="{Binding HayCambios}" Command="{Binding GuardarCommand}"
+                  AutomationProperties.Name="{DynamicResource Loc.Cabecera.Guardar}" AutomationProperties.HelpText="{DynamicResource Loc.Cabecera.Guardar.Ayuda}">
+            <d:Icono Glifo="Save" Foreground="{DynamicResource Dorado}" />
+          </Button>
+          <Button Grid.Column="3" Classes="icono" Width="48" Height="48" Command="{Binding AbrirCommand}"
+                  AutomationProperties.Name="{DynamicResource Loc.Cabecera.Abrir}" AutomationProperties.HelpText="{DynamicResource Loc.Cabecera.Abrir.Ayuda}">
+            <d:Icono Glifo="FolderOpen" Foreground="{DynamicResource Texto}" />
+          </Button>
+          <Button Grid.Column="4" Classes="icono" Width="48" Height="48" Command="{Binding AbrirGestorPartidasCommand}"
+                  AutomationProperties.Name="{DynamicResource Loc.Gestor.Todas}" AutomationProperties.HelpText="{DynamicResource Loc.Gestor.Recursivo}">
+            <d:Icono Glifo="Layers" Foreground="{DynamicResource Texto}" />
+          </Button>
+        </Grid>
+
+        <StackPanel IsVisible="{Binding HaySesion}"><StackPanel Name="TarjetaPartida"><Border Name="TarjetaCompleta" Classes="tarjeta-oscura"><Button Classes="fila" HorizontalContentAlignment="Stretch" Padding="0" Command="{Binding DesplegarRecientesCommand}" AutomationProperties.Name="{Binding ResumenPartida}" AutomationProperties.HelpText="{DynamicResource Loc.Gestor.Recientes}">
+          <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12">
+            <d:Icono Grid.Column="0" Glifo="ChevronDown" Width="22" Height="22" Foreground="#F2D9A2" VerticalAlignment="Top" Margin="0,2,0,0" />
+              <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Name="TituloPartidaTexto" Text="{Binding TituloPartida}" FontWeight="Bold" Foreground="#F4F2E8" TextWrapping="Wrap" />
+                <TextBlock Name="SubtituloPartidaTexto" Text="{Binding SubtituloPartida}" FontSize="{DynamicResource TamPequeno}" Foreground="#C9CBBE" TextWrapping="Wrap" />
+              </StackPanel>
+              <StackPanel Name="Conexion" Grid.Column="2" VerticalAlignment="Center">
+                <d:LogoPartida Name="LogoJuegoCabecera" Juego="{Binding JuegoPartida}" Idioma="{Binding IdiomaPartida}" Height="48" MinWidth="44" MaxWidth="140" ColorRespaldo="#F2D9A2" AutomationProperties.AccessibilityView="Raw" />
+              </StackPanel>
+            <Border Grid.Row="2" Grid.ColumnSpan="3" Classes="insignia dorado" Margin="0,10,0,0" HorizontalAlignment="Left" IsVisible="{Binding HayCambios}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <d:Icono Glifo="Info" />
+                <TextBlock Text="{Binding TextoCambios}" />
+              </StackPanel>
+            </Border>
+          </Grid>
+        </Button></Border>
+        <!-- Con texto grande o poco alto se conserva el nombre completo; solo ceden el logo, el lema y el espaciado. -->
+        <Border Name="TarjetaCompacta" Classes="tarjeta-oscura" Padding="12,8" IsVisible="False" AutomationProperties.Name="{Binding ResumenPartida}" >
+          <Button Classes="fila" HorizontalContentAlignment="Stretch" Padding="0" Command="{Binding DesplegarRecientesCommand}" AutomationProperties.Name="{Binding ResumenPartida}" AutomationProperties.HelpText="{DynamicResource Loc.Gestor.Recientes}"><Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
+            <d:Icono Grid.Column="0" Glifo="ChevronDown" Width="18" Height="18" Foreground="#F2D9A2" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="{Binding TituloCompactoPartida}" FontWeight="Bold" Foreground="#F4F2E8" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+            <d:LogoPartida Name="LogoJuegoCompacto" Grid.Column="2" Juego="{Binding JuegoPartida}" Idioma="{Binding IdiomaPartida}" Height="28" MinWidth="28" MaxWidth="84" ColorRespaldo="#F2D9A2" VerticalAlignment="Center" AutomationProperties.AccessibilityView="Raw" />
+            <d:Icono Grid.Column="3" Glifo="Info" Width="16" Height="16" Foreground="#F2D9A2" VerticalAlignment="Center" IsVisible="{Binding HayCambios}" />
+          </Grid>
+        </Button></Border></StackPanel></StackPanel>
+      </StackPanel></d:ColumnaCentrada>
+
+      <!-- Contenido -->
+      <d:ColumnaCentrada Grid.Row="1"><Grid RowDefinitions="Auto,*"><Panel Name="ContenidoPagina" Grid.Row="1">
+        <Panel Classes="pagina" IsVisible="{Binding MostrarPokemon}"><v:CajasView DataContext="{Binding Cajas}" /></Panel>
+        <Panel Classes="pagina" IsVisible="{Binding MostrarSinPartida}"><v:SinPartidaView /></Panel>
+        <Panel Classes="pagina" IsVisible="{Binding MostrarMochila}"><v:MochilaView DataContext="{Binding MochilaVm}" /></Panel>
+        <Panel Classes="pagina" IsVisible="{Binding MostrarPartida}"><v:PartidaView DataContext="{Binding PartidaVm}" /></Panel>
+        <Panel Classes="pagina" IsVisible="{Binding MostrarLibreria}"><v:LibreriaView DataContext="{Binding Libreria}" /></Panel>
+        <Panel Classes="pagina" IsVisible="{Binding MostrarMas}"><v:MenuView Titulo="{DynamicResource Loc.Nav.Mas}" Subtitulo="{DynamicResource Loc.Nav.Mas.Ayuda}" Entradas="{Binding MenuMas}">
+          <!-- Créditos a la vista (propietario, 19-oct): autoría de Pokekeep y PKHeX con su desarrollador y un enlace a su página. El detalle sigue en «Acerca de». -->
+          <v:MenuView.Pie>
+            <StackPanel Name="CreditosMas" Spacing="2" HorizontalAlignment="Center" Margin="0,4,0,0">
+              <TextBlock Classes="sec" Text="{DynamicResource Loc.Mas.Creditos.Pokekeep}" TextAlignment="Center" TextWrapping="Wrap" />
+              <TextBlock Classes="sec" Text="{DynamicResource Loc.Mas.Creditos.Pkhex}" TextAlignment="Center" TextWrapping="Wrap" />
+              <Button Name="EnlacePkhex" Classes="texto" HorizontalAlignment="Center" Padding="8,4" Click="AbrirPkhex" Tag="https://github.com/kwsch/PKHeX"
+                      AutomationProperties.Name="{DynamicResource Loc.Mas.Creditos.Enlace}" AutomationProperties.HelpText="{DynamicResource Loc.Mas.Creditos.Enlace.Ayuda}">
+                <TextBlock Text="{DynamicResource Loc.Mas.Creditos.Enlace}" FontSize="{DynamicResource TamPequeno}" Foreground="{DynamicResource Dorado}" TextDecorations="Underline" />
+              </Button>
+            </StackPanel>
+          </v:MenuView.Pie>
+        </v:MenuView></Panel>
+        <Panel Classes="pagina" IsVisible="{Binding Editando}"><v:EditorView DataContext="{Binding Editor}" /></Panel>
+        <Panel Classes="pagina" IsVisible="{Binding ViendoRegistros}"><v:RegistrosView DataContext="{Binding RegistrosVm}" /></Panel>
+        <Panel Classes="pagina" IsVisible="{Binding ViendoPantalla}">
+          <ContentControl Content="{Binding Pantalla}">
+            <ContentControl.DataTemplates>
+              <DataTemplate x:DataType="vm:HistorialViewModel"><v:HistorialView /></DataTemplate>
+              <DataTemplate x:DataType="vm:AjustesViewModel"><v:AjustesView /></DataTemplate>
+              <DataTemplate x:DataType="vm:AcercaDeViewModel"><v:AcercaDeView /></DataTemplate>
+              <DataTemplate x:DataType="vm:GuiaGuardadosViewModel"><v:GuiaGuardadosView /></DataTemplate>
+              <DataTemplate x:DataType="vm:AjustesPkhexGrupoViewModel"><v:AjustesPkhexGrupoView /></DataTemplate>
+              <h:VistasHerramientas />
+              <DataTemplate x:DataType="vm:EdicionMasivaViewModel"><v:EdicionMasivaView /></DataTemplate>
+              <DataTemplate x:DataType="vm:CompletarJuegoViewModel"><v:CompletarJuegoView /></DataTemplate>
+            </ContentControl.DataTemplates>
+          </ContentControl>
+        </Panel>
+      </Panel>
+        <!-- Los avisos reservan espacio: el aviso persistente de solo lectura no tapa las herramientas de la página. -->
+        <Border Name="AvisoPanel" Grid.Row="0" Classes="insignia toast" Classes.ok="{Binding AvisoOk}" Classes.aviso="{Binding AvisoAviso}" Classes.error="{Binding AvisoError}" IsVisible="{Binding HayAviso}"
+                VerticalAlignment="Top" Margin="16,8,16,0" Padding="12,8">
+          <Grid Name="FilaAviso" ColumnDefinitions="Auto,*,Auto,Auto,Auto" RowDefinitions="Auto,Auto,Auto" AutomationProperties.LiveSetting="Polite">
+            <d:Icono Grid.Column="0" Glifo="{Binding GlifoAviso}" Width="20" Height="20" Margin="0,0,10,0" VerticalAlignment="Center" />
+            <TextBlock Name="ResumenAviso" Grid.Column="1" Text="{Binding Aviso}" AutomationProperties.Name="{Binding Aviso}" IsVisible="{Binding MostrarResumenAviso}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontSize="{DynamicResource TamDato}" />
+            <Button Name="VerMasAviso" Grid.Column="3" Classes="texto" IsVisible="{Binding PuedeExpandirAviso}" Command="{Binding AlternarDetalleAvisoCommand}" Content="{Binding TextoDetalleAviso}" AutomationProperties.Name="{Binding TextoDetalleAviso}" />
+            <ScrollViewer Name="TextoAvisoScroll" Grid.Row="1" Grid.ColumnSpan="5" IsVisible="{Binding MostrarDetalleAviso}" MaxHeight="120" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+              <TextBlock Text="{Binding Aviso}" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Normal" FontSize="{DynamicResource TamDato}" />
+            </ScrollViewer>
+            <Button Name="AccionAviso" Grid.Row="2" Grid.ColumnSpan="5" Classes="texto" Command="{Binding ComandoAccionAviso}" IsVisible="{Binding HayAccionAviso}" Padding="10,4" MinWidth="48" MinHeight="48" HorizontalAlignment="Stretch" AutomationProperties.Name="{Binding TextoAccionAviso}">
+              <TextBlock Text="{Binding TextoAccionAviso}" FontWeight="Bold" TextWrapping="Wrap" />
+            </Button>
+            <Button Grid.Column="4" Classes="texto" Command="{Binding CerrarAvisoCommand}" Padding="4" MinWidth="48" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Comun.CerrarAviso}"><d:Icono Glifo="X" Width="18" Height="18" /></Button>
+          </Grid>
+        </Border>
+      </Grid></d:ColumnaCentrada>
+
+      <!-- Barra de destinos -->
+      <Border Name="Barra" Grid.Row="2" Background="{DynamicResource Superficie}" BorderBrush="{DynamicResource Separacion}" BorderThickness="0,1,0,0" Padding="8,0">
+        <Border.IsVisible>
+          <MultiBinding Converter="{x:Static BoolConverters.And}">
+            <Binding Path="!#Teclado.TecladoVisible" />
+            <Binding Path="NoHayBarraContextual" />
+          </MultiBinding>
+        </Border.IsVisible>
+        <d:ColumnaCentrada AnchoMaximo="560"><UniformGrid Columns="5">
+          <RadioButton Classes="destino" GroupName="destinos" IsChecked="{Binding EsPokemon}" Command="{Binding NavegarDestinoCommand}" CommandParameter="{x:Static vm:Destino.Pokemon}" AutomationProperties.Name="{DynamicResource Loc.Nav.Pokemon}" AutomationProperties.HelpText="{DynamicResource Loc.Nav.Pokemon.Ayuda}">
+            <StackPanel Spacing="4"><d:Icono Glifo="Grid3x3" HorizontalAlignment="Center" /><Viewbox Classes="etiquetaDestino"><TextBlock Text="{DynamicResource Loc.Nav.Pokemon}" /></Viewbox></StackPanel>
+          </RadioButton>
+          <RadioButton Classes="destino" GroupName="destinos" IsChecked="{Binding EsMochila}" Command="{Binding NavegarDestinoCommand}" CommandParameter="{x:Static vm:Destino.Mochila}" AutomationProperties.Name="{DynamicResource Loc.Nav.Mochila}" AutomationProperties.HelpText="{DynamicResource Loc.Nav.Mochila.Ayuda}">
+            <StackPanel Spacing="4"><d:Icono Glifo="Backpack" HorizontalAlignment="Center" /><Viewbox Classes="etiquetaDestino"><TextBlock Text="{DynamicResource Loc.Nav.Mochila}" /></Viewbox></StackPanel>
+          </RadioButton>
+          <RadioButton Classes="destino" GroupName="destinos" IsChecked="{Binding EsPartida}" Command="{Binding NavegarDestinoCommand}" CommandParameter="{x:Static vm:Destino.Partida}" AutomationProperties.Name="{DynamicResource Loc.Nav.Partida}" AutomationProperties.HelpText="{DynamicResource Loc.Nav.Partida.Ayuda}">
+            <StackPanel Spacing="4"><d:Icono Glifo="IdCard" HorizontalAlignment="Center" /><Viewbox Classes="etiquetaDestino"><TextBlock Text="{DynamicResource Loc.Nav.Partida}" /></Viewbox></StackPanel>
+          </RadioButton>
+          <RadioButton Classes="destino" GroupName="destinos" IsChecked="{Binding EsLibreria}" Command="{Binding NavegarDestinoCommand}" CommandParameter="{x:Static vm:Destino.Libreria}" AutomationProperties.Name="{DynamicResource Loc.Nav.Libreria}" AutomationProperties.HelpText="{DynamicResource Loc.Nav.Libreria.Ayuda}">
+            <StackPanel Spacing="4"><d:Icono Glifo="BookOpen" HorizontalAlignment="Center" /><Viewbox Classes="etiquetaDestino"><TextBlock Text="{DynamicResource Loc.Nav.Libreria}" /></Viewbox></StackPanel>
+          </RadioButton>
+          <RadioButton Classes="destino" GroupName="destinos" IsChecked="{Binding EsMas}" Command="{Binding NavegarDestinoCommand}" CommandParameter="{x:Static vm:Destino.Mas}" AutomationProperties.Name="{DynamicResource Loc.Nav.Mas}" AutomationProperties.HelpText="{DynamicResource Loc.Nav.Mas.Ayuda}">
+            <StackPanel Spacing="4"><d:Icono Glifo="Ellipsis" HorizontalAlignment="Center" /><Viewbox Classes="etiquetaDestino"><TextBlock Text="{DynamicResource Loc.Nav.Mas}" /></Viewbox></StackPanel>
+          </RadioButton>
+        </UniformGrid></d:ColumnaCentrada>
+      </Border>
+
+      <!-- Barra de acciones contextual (seleccion multiple o colocar): ocupa el sitio de la barra de destinos, asi la rejilla de arriba no se mueve al entrar ni salir -->
+      <Border Name="BarraContextual" Grid.Row="2" IsVisible="{Binding HayBarraContextual}" Background="{DynamicResource Superficie}" BorderBrush="{DynamicResource Separacion}" BorderThickness="0,1,0,0" Padding="8,0">
+        <d:ColumnaCentrada AnchoMaximo="560">
+          <Panel DataContext="{Binding Cajas}" x:DataType="vm:CajasViewModel">
+            <UniformGrid Columns="5" IsVisible="{Binding BarraSeleccion}" MinHeight="64">
+              <Button Classes="texto" Command="{Binding MoverSeleccionCommand}" IsEnabled="{Binding HayMarcadas}" MinHeight="64" Padding="0" AutomationProperties.Name="{DynamicResource Loc.Seleccion.Mover}" AutomationProperties.HelpText="{DynamicResource Loc.Seleccion.MoverAyuda}">
+                <StackPanel Spacing="2"><d:Icono Glifo="ArrowLeftRight" HorizontalAlignment="Center" /><TextBlock Text="{DynamicResource Loc.Seleccion.Mover}" IsVisible="{Binding EtiquetasEnBarra}" FontSize="{DynamicResource TamNav}" HorizontalAlignment="Center" TextWrapping="NoWrap" /></StackPanel>
+              </Button>
+              <Button Classes="texto" Command="{Binding CopiarSeleccionCommand}" IsEnabled="{Binding HayMarcadas}" MinHeight="64" Padding="0" AutomationProperties.Name="{DynamicResource Loc.Seleccion.Copiar}" AutomationProperties.HelpText="{DynamicResource Loc.Seleccion.CopiarAyuda}">
+                <StackPanel Spacing="2"><d:Icono Glifo="Copy" HorizontalAlignment="Center" /><TextBlock Text="{DynamicResource Loc.Seleccion.Copiar}" IsVisible="{Binding EtiquetasEnBarra}" FontSize="{DynamicResource TamNav}" HorizontalAlignment="Center" TextWrapping="NoWrap" /></StackPanel>
+              </Button>
+              <Button Classes="texto" Command="{Binding ExportarSeleccionCommand}" IsEnabled="{Binding HayMarcadas}" MinHeight="64" Padding="0" AutomationProperties.Name="{DynamicResource Loc.Seleccion.Exportar}" AutomationProperties.HelpText="{DynamicResource Loc.Seleccion.ExportarAyuda}">
+                <StackPanel Spacing="2"><d:Icono Glifo="FileDown" HorizontalAlignment="Center" /><TextBlock Text="{DynamicResource Loc.Seleccion.Exportar}" IsVisible="{Binding EtiquetasEnBarra}" FontSize="{DynamicResource TamNav}" HorizontalAlignment="Center" TextWrapping="NoWrap" /></StackPanel>
+              </Button>
+              <Button Classes="texto" Command="{Binding BorrarSeleccionCommand}" IsEnabled="{Binding HayMarcadas}" MinHeight="64" Padding="0" AutomationProperties.Name="{DynamicResource Loc.Seleccion.Borrar}" AutomationProperties.HelpText="{DynamicResource Loc.Seleccion.BorrarAyuda}">
+                <StackPanel Spacing="2"><d:Icono Glifo="Trash2" HorizontalAlignment="Center" /><TextBlock Text="{DynamicResource Loc.Seleccion.Borrar}" IsVisible="{Binding EtiquetasEnBarra}" FontSize="{DynamicResource TamNav}" HorizontalAlignment="Center" TextWrapping="NoWrap" /></StackPanel>
+              </Button>
+              <Button Classes="texto" Command="{Binding AbrirMenuSeleccionCommand}" MinHeight="64" Padding="0" AutomationProperties.Name="{DynamicResource Loc.Nav.Mas}" AutomationProperties.HelpText="{DynamicResource Loc.Seleccion.MasAyuda}">
+                <StackPanel Spacing="2"><d:Icono Glifo="EllipsisVertical" HorizontalAlignment="Center" /><TextBlock Text="{DynamicResource Loc.Nav.Mas}" IsVisible="{Binding EtiquetasEnBarra}" FontSize="{DynamicResource TamNav}" HorizontalAlignment="Center" TextWrapping="NoWrap" /></StackPanel>
+              </Button>
+            </UniformGrid>
+            <Grid ColumnDefinitions="*,Auto" IsVisible="{Binding BarraColocar}" MinHeight="64" Margin="8,4" ColumnSpacing="8">
+              <TextBlock Classes="sec" Text="{Binding AyudaColocar}" VerticalAlignment="Center" TextWrapping="Wrap" />
+              <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                <Button Classes="primario" Command="{Binding ColocarEnEstaCajaCommand}" IsVisible="{Binding VariosOrigenes}" AutomationProperties.Name="{Binding TextoBotonColocarAqui}">
+                  <TextBlock Text="{Binding TextoBotonColocarAqui}" TextAlignment="Center" TextWrapping="Wrap" />
+                </Button>
+                <Button Classes="secundario" Command="{Binding CancelarColocacionCommand}" AutomationProperties.Name="{DynamicResource Loc.Comun.Cancelar}" AutomationProperties.HelpText="{DynamicResource Loc.Seleccion.CancelarAyuda}">
+                  <TextBlock Text="{DynamicResource Loc.Comun.Cancelar}" TextAlignment="Center" />
+                </Button>
+              </StackPanel>
+            </Grid>
+          </Panel>
+        </d:ColumnaCentrada>
+      </Border>
+
+      <!-- Hoja inferior (bottom sheet) sobre un velo -->
+      <Panel Classes="hoja" d:RaizModal.EsModal="True" Grid.RowSpan="3" IsVisible="{Binding HayHoja}">
+        <Button Classes="velo" Background="{DynamicResource Velo}" Command="{Binding TocarVeloCommand}" IsEnabled="{Binding Hoja.CierraConFondo}" AutomationProperties.Name="{DynamicResource Loc.Comun.CerrarHoja}" Padding="0" BorderThickness="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"><Button.Template><ControlTemplate><Border Background="{TemplateBinding Background}" /></ControlTemplate></Button.Template></Button>
+        <d:ColumnaCentrada AnchoMaximo="640" VerticalAlignment="Bottom"><Border Name="PanelHoja" Classes="panel-hoja" VerticalAlignment="Bottom" Background="{DynamicResource Superficie}" CornerRadius="28,28,0,0" BorderBrush="{DynamicResource Separacion}" BorderThickness="1,1,1,0" MaxHeight="620">
+          <Grid RowDefinitions="Auto,Auto,*" Margin="0,0,0,0">
+            <Border Grid.Row="0" Width="40" Height="4" CornerRadius="2" Background="{DynamicResource Separacion}" HorizontalAlignment="Center" Margin="0,10,0,6" AutomationProperties.AccessibilityView="Raw" />
+            <Grid Name="FilaTituloHoja" Grid.Row="1" ColumnDefinitions="*,Auto" Margin="20,4,8,4">
+              <d:TextoEntero Classes="titulo2" Text="{Binding Hoja.Titulo}" VerticalAlignment="Center" TextWrapping="Wrap" AutomationProperties.HeadingLevel="1" />
+              <Button Grid.Column="1" Classes="texto" Command="{Binding Hoja.CerrarCommand}" IsVisible="{Binding Hoja.CierraConFondo}" Padding="4" MinWidth="48" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Comun.Cerrar}"><d:Icono Glifo="X" Width="20" Height="20" /></Button>
+            </Grid>
+            <ContentControl Grid.Row="2" Content="{Binding Hoja}">
+              <ContentControl.DataTemplates>
+                <DataTemplate x:DataType="vm:AccionHojaViewModel"><v:AccionHojaView /></DataTemplate>
+                <DataTemplate x:DataType="vm:CambiosHojaViewModel"><v:CambiosHojaView /></DataTemplate>
+                <DataTemplate x:DataType="vm:FichaLibreriaHojaViewModel"><v:FichaLibreriaHojaView /></DataTemplate>
+                <DataTemplate x:DataType="vm:SelectorHojaViewModel"><v:SelectorHojaView /></DataTemplate>
+                <DataTemplate x:DataType="vm:MenuHojaViewModel"><v:MenuHojaView /></DataTemplate>
+                <DataTemplate x:DataType="vm:ConfirmarHojaViewModel"><v:ConfirmarHojaView /></DataTemplate>
+                <DataTemplate x:DataType="vm:InformeHojaViewModel"><v:InformeHojaView /></DataTemplate>
+                <DataTemplate x:DataType="vm:QrHojaViewModel"><v:QrHojaView /></DataTemplate>
+                <DataTemplate x:DataType="vm:TrabajandoHojaViewModel"><v:TrabajandoHojaView /></DataTemplate>
+                <DataTemplate x:DataType="vm:SelectorCajaHojaViewModel"><v:SelectorCajaHojaView /></DataTemplate>
+                <DataTemplate x:DataType="vm:DisenoCajaHojaViewModel"><v:DisenoCajaHojaView /></DataTemplate>
+                  <DataTemplate x:DataType="vm:SubeditorHojaViewModel"><v:SubeditorHojaView /></DataTemplate>
+                <DataTemplate x:DataType="vm:NumeroHojaViewModel"><v:NumeroHojaView /></DataTemplate>
+              </ContentControl.DataTemplates>
+            </ContentControl>
+          </Grid>
+        </Border></d:ColumnaCentrada>
+      </Panel>
+    </d:RaizModal>
+  </Border>
+  </d:KeyboardAwareLayout>
+</UserControl>

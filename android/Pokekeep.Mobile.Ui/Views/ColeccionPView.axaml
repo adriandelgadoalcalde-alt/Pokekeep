@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             xmlns:v="clr-namespace:Pokekeep.Mobile.Ui.Views"
+             x:Class="Pokekeep.Mobile.Ui.Views.ColeccionPView"
+             x:DataType="vm:ColeccionPVm">
+  <UserControl.Styles><Style Selector="Button.apagado"><Setter Property="Opacity" Value="0.35" /></Style></UserControl.Styles>
+  <!-- uso10 (auditoría de vistas): el selector vuelve a quedarse FIJO arriba como en uso8 (cambiar de elemento sin volver a subir),
+       pero en su propio desplazamiento con tope del 40 % del alto (ColeccionPView.axaml.cs): con texto x2 nunca deja a los campos
+       una ventana menor que el objetivo táctil (lo que buscaba X65) y se conserva todo el texto. -->
+  <Grid RowDefinitions="Auto,*">
+  <ScrollViewer Name="ZonaSelector" Grid.Row="0" VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="6" Margin="0,0,0,8" IsVisible="{Binding HayElementos}">
+      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+        <Button Classes="chip" Command="{Binding AnteriorCommand}" Classes.apagado="{Binding !PuedeAnterior}" MinWidth="48" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.ColeccionP.Anterior}" AutomationProperties.HelpText="{DynamicResource Loc.ColeccionP.PasaElementoAnterior}">
+          <d:Icono Glifo="ChevronLeft" Width="20" Height="20" />
+        </Button>
+        <Button Grid.Column="1" Classes="fila" Command="{Binding ElegirCommand}" MinHeight="52" AutomationProperties.Name="{Binding Accesible}" AutomationProperties.HelpText="{DynamicResource Loc.ColeccionP.AbreListaElementosBuscador}">
+          <StackPanel VerticalAlignment="Center" Spacing="1">
+            <TextBlock Classes="sec" Text="{Binding Posicion}" HorizontalAlignment="Center" />
+            <TextBlock Text="{Binding Titulo}" FontWeight="Medium" Foreground="{DynamicResource Dorado}" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" />
+          </StackPanel>
+        </Button>
+        <Button Grid.Column="2" Classes="chip" Command="{Binding SiguienteCommand}" Classes.apagado="{Binding !PuedeSiguiente}" MinWidth="48" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.ColeccionP.Siguiente}" AutomationProperties.HelpText="{DynamicResource Loc.ColeccionP.PasaElementoSiguiente}">
+          <d:Icono Glifo="ChevronRight" Width="20" Height="20" />
+        </Button>
+      </Grid>
+      <TextBlock Classes="sec" Text="{Binding Editados}" IsVisible="{Binding HayEditados}" TextWrapping="Wrap" />
+    </StackPanel>
+  </ScrollViewer>
+  <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+  <StackPanel>
+    <TextBlock Classes="sec" Text="{Binding Vacia}" TextWrapping="Wrap" Margin="0,16" IsVisible="{Binding NoHayElementos}" />
+      <ItemsControl ItemsSource="{Binding Secciones}" Margin="0,0,0,16" IsVisible="{Binding HayElementos}">
+        <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="12" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:SeccionPVm">
+            <Border Classes="tarjeta" IsVisible="{Binding Visible}">
+              <StackPanel Spacing="2">
+                <TextBlock Classes="etiqueta" Text="{Binding Titulo}" IsVisible="{Binding HayTitulo}" AutomationProperties.HeadingLevel="2" />
+                <ItemsControl ItemsSource="{Binding Campos}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:CampoPVm"><v:CampoPView /></DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+  </StackPanel>
+  </ScrollViewer>
+  </Grid>
+</UserControl>

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>AutoLegalidad.ALMAdapter</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(PKHeXCoreProject)" />
+    <ProjectReference Include="..\AutoLegalidad.Engine\AutoLegalidad.Engine.csproj" />
+    <!-- ALM queda DENTRO del adaptador: ningun tipo de ALM sale de este ensamblado (prueba de superficie publica). -->
+    <ProjectReference Include="..\AutoLegalidad.AlmSource\AutoLegalidad.AlmSource.csproj" />
+  </ItemGroup>
+</Project>

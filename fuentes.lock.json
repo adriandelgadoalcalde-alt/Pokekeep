@@ -1,0 +1,10 @@
+{
+  "descripcion": "Third-party sources pinned by commit. They are not in Git: herramientas/obtener-fuentes.ps1 downloads them into fuentes/ and herramientas/verificar-fuentes.ps1 checks them. / Fuentes de terceros fijadas por commit. No estan en Git: herramientas/obtener-fuentes.ps1 las descarga en fuentes/ y herramientas/verificar-fuentes.ps1 las comprueba.",
+  "pareja_estable": "26.10.18",
+  "fuentes": [
+    { "carpeta": "PKHeX-oficial", "rol": "base", "origen": "https://github.com/kwsch/PKHeX.git", "tag": "26.10.18", "commit": "bfe89c74a3f5265805e364b79bc04ad38ebbc5ea", "licencia": "GPL-3.0-or-later" },
+    { "carpeta": "ALM-estable", "rol": "base", "origen": "https://github.com/santacrab2/PKHeX-Plugins.git", "tag": "26.10.18", "commit": "b13c011bb0c4c3d475ca7f0a30b880f5b24dbed7", "licencia": "MIT" },
+    { "carpeta": "EventsGallery", "rol": "datos", "origen": "https://github.com/projectpokemon/EventsGallery.git", "commit": "154d81be88453f6f78ec1d6d86e85fe0f2f5c240", "licencia": "no declarada" },
+    { "carpeta": "PoGoEncTool", "rol": "datos/herramienta aparte", "origen": "https://github.com/projectpokemon/PoGoEncTool.git", "commit": "662c2379b8f9542be07cf03db75fef9267bdb867", "licencia": "AGPL-3.0" }
+  ]
+}

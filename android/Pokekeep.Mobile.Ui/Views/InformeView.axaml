@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:v="clr-namespace:Pokekeep.Mobile.Ui.Views"
+             xmlns:i="clr-namespace:Pokekeep.Mobile.Ui.Herramientas.Informe"
+             x:Class="Pokekeep.Mobile.Ui.Views.InformeView"
+             x:DataType="i:InformeViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="16,0,16,24" Spacing="10">
+      <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" AutomationProperties.Name="{DynamicResource Loc.ImportarHex.VolverHerramientas}">
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.ImportarHex.VolverHerramientas}" TextWrapping="Wrap" VerticalAlignment="Center" /></Grid>
+      </Button>
+      <StackPanel Spacing="2" Margin="0,4,0,4">
+        <TextBlock Classes="titulo" Text="{Binding Titulo}" />
+        <TextBlock Classes="sec" TextWrapping="Wrap" Text="{Binding Subtitulo}" />
+      </StackPanel>
+
+      <Border Classes="tarjeta" Padding="14,10">
+        <StackPanel Spacing="8">
+          <TextBlock Classes="sec" TextWrapping="Wrap" Text="{DynamicResource Loc.Informe.LeeCajasEquipoDemas}" />
+          <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding GenerarCommand}" IsEnabled="{Binding NoOcupado}" AutomationProperties.Name="{DynamicResource Loc.Informe.CrearInforme}">
+            <TextBlock Text="{DynamicResource Loc.Informe.CrearInforme}" TextAlignment="Center" TextWrapping="Wrap" />
+          </Button>
+          <StackPanel Spacing="6" IsVisible="{Binding Ocupado}">
+            <ProgressBar IsIndeterminate="{Binding FraccionIndeterminada}" Value="{Binding Fraccion}" Minimum="0" Maximum="100" AutomationProperties.Name="{DynamicResource Loc.Informe.ProgresoInforme}" />
+            <TextBlock Classes="sec" Text="{Binding TextoAvance}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+            <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CancelarCommand}" AutomationProperties.Name="{DynamicResource Loc.Informe.CancelarInforme}"><TextBlock Text="{DynamicResource Loc.Comun.Cancelar}" TextAlignment="Center" /></Button>
+          </StackPanel>
+          <TextBlock Classes="sec" Text="{Binding Estado}" IsVisible="{Binding HayEstado}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+        </StackPanel>
+      </Border>
+
+      <StackPanel Spacing="10" IsVisible="{Binding HayInforme}">
+        <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding GuardarCsvCommand}" AutomationProperties.Name="{DynamicResource Loc.Informe.GuardarCSV}" AutomationProperties.HelpText="{DynamicResource Loc.Informe.GuardaTodasColumnasPokemon}">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="FileDown" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Informe.GuardarCSV2}" /></StackPanel>
+        </Button>
+        <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CopiarTablaCommand}" AutomationProperties.Name="{DynamicResource Loc.Informe.CopiarTabla}" AutomationProperties.HelpText="{DynamicResource Loc.Informe.CopiaPokemonVenTabla}">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="ClipboardCopy" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Informe.CopiarTabla2}" /></StackPanel>
+        </Button>
+        <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CopiarTextoCommand}" AutomationProperties.Name="{DynamicResource Loc.Informe.CopiarTexto}" AutomationProperties.HelpText="{DynamicResource Loc.Informe.CopiaPokemonVenTexto}">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Copy" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Informe.CopiarTexto}" /></StackPanel>
+        </Button>
+        <TextBlock Classes="sec" Text="{Binding Mensaje}" IsVisible="{Binding HayMensaje}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+        <v:TablaResultadosView DataContext="{Binding Tabla}" />
+      </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

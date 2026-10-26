@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">Pokekeep — icono de la familia Keep</title>
+  <desc id="desc">Hexágono dorado sobre grafito. Una P geométrica integra una Poké Ball en su ojo.</desc>
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="0.75" y2="1">
+      <stop stop-color="#F3D9A1"/>
+      <stop offset="1" stop-color="#CAAE76"/>
+    </linearGradient>
+    <linearGradient id="graphite" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#28251F"/>
+      <stop offset="1" stop-color="#161512"/>
+    </linearGradient>
+  </defs>
+  
+  <path d="M512 116 855 314V710L512 908 169 710V314Z" fill="#211E19" stroke="url(#gold)" stroke-width="38" stroke-linejoin="round"/>
+  <path d="M377 720V310H535C633 310 696 365 696 448S633 586 535 586H451V720ZM451 376V520H528C586 520 619 494 619 448S586 376 528 376Z" fill="url(#gold)" fill-rule="evenodd"/>
+  <path d="M451 448H619" stroke="#E5C991" stroke-width="14"/>
+  <circle cx="535" cy="448" r="29" fill="#211E19" stroke="url(#gold)" stroke-width="13"/>
+  <circle cx="535" cy="448" r="9" fill="#F3D9A1"/>
+</svg>

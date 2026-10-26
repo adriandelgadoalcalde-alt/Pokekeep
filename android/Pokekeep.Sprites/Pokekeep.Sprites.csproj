@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Sprites de Pokekeep (Fase 3, ADR 0057): atlas con los recursos de PKHeX.Drawing.PokeSprite y SpriteComposer que calca su composicion pixel a pixel (GDI+ incluido).
+       net10.0 puro (solo PKHeX.Core; PNG gestionado): corre igual en el PC (pruebas de igualdad) y en Android. Ninguna dependencia de Avalonia. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Pokekeep.Sprites</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(PKHeXCoreProject)" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Pokekeep.Sprites.Tests" />
+    <InternalsVisibleTo Include="Pokekeep.Sprites.Build" />
+  </ItemGroup>
+</Project>

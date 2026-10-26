@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.HistorialView"
+             x:DataType="vm:HistorialViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="16,0,16,24" Spacing="10">
+      <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" AutomationProperties.Name="{DynamicResource Loc.Comun.VolverMas}">
+        <StackPanel Orientation="Horizontal" Spacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Comun.VolverMas}" /></StackPanel>
+      </Button>
+      <StackPanel Spacing="2" Margin="0,4,0,4">
+        <TextBlock Classes="titulo" Text="{DynamicResource Loc.Menu.Mas.Historial.Titulo}" />
+        <TextBlock Classes="sec" TextWrapping="Wrap" Text="{DynamicResource Loc.Historial.HasHechoPartidaDesde}" />
+      </StackPanel>
+      <d:RejillaSinPartir Columns="{Binding ColumnasBotones}" RowSpacing="8" ColumnSpacing="8" IsVisible="{Binding HaySesion}">
+        <Button Name="BotonDeshacer" Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding DeshacerCommand}" IsEnabled="{Binding PuedeDeshacer}" AutomationProperties.Name="{DynamicResource Loc.SubeditorHoja.Deshacer}" AutomationProperties.HelpText="{DynamicResource Loc.Historial.DeshaceUltimaOperacionHistorial}">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Undo2" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.SubeditorHoja.Deshacer}" /></StackPanel>
+        </Button>
+        <Button Name="BotonRehacer" Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding RehacerCommand}" IsEnabled="{Binding PuedeRehacer}" AutomationProperties.Name="{DynamicResource Loc.Cajas.Rehacer}" AutomationProperties.HelpText="{DynamicResource Loc.Historial.VuelveAplicarUltimaOperacion}">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Redo2" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Cajas.Rehacer}" /></StackPanel>
+        </Button>
+      </d:RejillaSinPartir>
+      <TextBlock Classes="sec" Text="{Binding Resumen}" IsVisible="{Binding HaySesion}" AutomationProperties.LiveSetting="Polite" />
+      <Border Classes="tarjeta" Padding="14" IsVisible="{Binding Vacio}"><TextBlock Name="TextoVacio" Classes="sec" Text="{Binding TextoVacio}" TextWrapping="Wrap" /></Border>
+      <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Historial.HECHOSESIONRecienteArriba}" IsVisible="{Binding HayHechas}" Margin="0,6,0,0" TextWrapping="Wrap" />
+      <ItemsControl ItemsSource="{Binding Hechas}" IsVisible="{Binding HayHechas}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:FilaHistorial">
+            <Border Classes="tarjeta" Padding="12,10" Margin="0,0,0,6" AutomationProperties.Name="{Binding Accesible}">
+              <StackPanel Spacing="2"><TextBlock Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" /><TextBlock Classes="sec" Text="{Binding Detalle}" TextWrapping="Wrap" /></StackPanel>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Historial.DESHECHOPuedeRehacer}" IsVisible="{Binding HayDeshechas}" Margin="0,6,0,0" />
+      <ItemsControl ItemsSource="{Binding Deshechas}" IsVisible="{Binding HayDeshechas}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:FilaHistorial">
+            <Border Background="{DynamicResource SuperficieHundida}" BorderBrush="{DynamicResource Separacion}" BorderThickness="1" CornerRadius="12" Padding="12,10" Margin="0,0,0,6" AutomationProperties.Name="{Binding Accesible}">
+              <StackPanel Spacing="2"><TextBlock Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" Foreground="{DynamicResource TextoSecundario}" /><TextBlock Text="{Binding Detalle}" TextWrapping="Wrap" FontSize="{DynamicResource TamPequeno}" Foreground="{DynamicResource TextoApagado}" /></StackPanel>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

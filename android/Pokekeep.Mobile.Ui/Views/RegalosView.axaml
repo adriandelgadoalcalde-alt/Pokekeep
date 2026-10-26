@@ -1,0 +1,104 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.RegalosView"
+             x:DataType="vm:RegalosViewModel">
+  <!-- Una sola lista virtualizada: cabecera, ranuras del album, tarjetas recibidas; abajo la barra de aplicar. -->
+  <Grid RowDefinitions="*,Auto" Margin="16,0,16,0">
+    <ListBox Classes="limpia" ItemsSource="{Binding Elementos}" AutomationProperties.Name="{DynamicResource Loc.Partida.Editor.regalos.Titulo}" Padding="0,0,0,8">
+      <ListBox.DataTemplates>
+        <!-- Cabecera -->
+        <DataTemplate x:DataType="vm:EncabezadoRegalos">
+          <StackPanel Spacing="8" DataContext="{Binding Vm}" x:DataType="vm:RegalosViewModel">
+            <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" AutomationProperties.Name="{DynamicResource Loc.Form.Vista.EditorPartidaView.0}" AutomationProperties.HelpText="{DynamicResource Loc.Form.Vista.EditorPartidaView.1}">
+              <StackPanel Orientation="Horizontal" Spacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Form.Vista.EditorPartidaView.0}" /></StackPanel>
+            </Button>
+            <StackPanel Spacing="2">
+              <TextBlock Classes="titulo" Text="{DynamicResource Loc.Partida.Editor.regalos.Titulo}" AutomationProperties.HeadingLevel="1" />
+              <TextBlock Classes="sec" Text="{Binding Resumen}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+            </StackPanel>
+            <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
+              <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding ImportarPrimeraCommand}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Regalos.ImportarTarjeta}" AutomationProperties.HelpText="{DynamicResource Loc.Regalos.EligeArchivoTarjetaColoca}">
+                <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center"><d:Icono Glifo="FileUp" Width="18" Height="18" /><TextBlock Text="{DynamicResource Loc.Form.Fama3.Importar}" /></StackPanel>
+              </Button>
+              <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding MarcarUsadasCommand}" IsVisible="{Binding AdmiteUsada}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Regalos.MarcarTodasUsadas}" AutomationProperties.HelpText="{DynamicResource Loc.Regalos.MarcaTodasTarjetasAlbum}">
+                <TextBlock Text="{DynamicResource Loc.Regalos.TodasUsadas}" TextAlignment="Center" TextWrapping="Wrap" />
+              </Button>
+            </d:RejillaSinPartir>
+            <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding MarcarSinUsarCommand}" IsVisible="{Binding AdmiteUsada}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Regalos.MarcarTodasUsar}" AutomationProperties.HelpText="{DynamicResource Loc.Regalos.MarcaTodasTarjetasAlbum2}">
+              <TextBlock Text="{DynamicResource Loc.Regalos.TodasUsar}" TextAlignment="Center" />
+            </Button>
+          </StackPanel>
+        </DataTemplate>
+
+        <!-- Una ranura -->
+        <DataTemplate x:DataType="vm:FilaRegaloVm">
+          <Border Classes="tarjeta" Padding="10,6">
+            <StackPanel Spacing="4">
+              <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" MinHeight="56">
+                <Image Width="56" Height="48" Source="{Binding Imagen}" IsVisible="{Binding HayImagen}" RenderOptions.BitmapInterpolationMode="None" AutomationProperties.AccessibilityView="Raw" />
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1" AutomationProperties.Name="{Binding Accesible}"><!-- sin imagen la columna Auto no ocupa sitio -->
+                  <TextBlock Classes="sec" Text="{Binding Etiqueta}" TextWrapping="Wrap" />
+                  <TextBlock Text="{Binding Contenido}" FontWeight="Medium" TextWrapping="Wrap" />
+                  <TextBlock Classes="sec" Text="{Binding Titulo}" TextWrapping="Wrap" IsVisible="{Binding Llena}" />
+                </StackPanel>
+              </Grid>
+              <TextBlock Text="{Binding Detalle}" TextWrapping="Wrap" IsVisible="{Binding DetalleVisible}" />
+              <WrapPanel IsVisible="{Binding Llena}">
+                <ToggleButton Classes="chip" IsChecked="{Binding DetalleVisible, Mode=TwoWay}" MinHeight="48" Margin="0,0,8,0" AutomationProperties.Name="{DynamicResource Loc.Regalos.VerDetalle}"><TextBlock Text="{DynamicResource Loc.Regalos.Detalle}" /></ToggleButton>
+                <ToggleButton Classes="chip" IsChecked="{Binding Usada, Mode=TwoWay}" IsVisible="{Binding AdmiteUsada}" MinHeight="48" Margin="0,0,8,0" AutomationProperties.Name="{DynamicResource Loc.Regalos.TarjetaUsada}"><TextBlock Text="{DynamicResource Loc.Regalos.Usada}" /></ToggleButton>
+                <Button Classes="chip" Command="{Binding ExportarCommand}" Margin="0,0,8,0" AutomationProperties.Name="{DynamicResource Loc.Regalos.ExportarTarjeta}" AutomationProperties.HelpText="{DynamicResource Loc.Regalos.GuardaTarjetaArchivo}"><TextBlock Text="{DynamicResource Loc.Editor.Exportar}" /></Button>
+                <Button Classes="chip" Command="{Binding QrCommand}" Margin="0,0,8,0" AutomationProperties.Name="{DynamicResource Loc.Regalos.CodigoQRTarjeta2}" AutomationProperties.HelpText="{DynamicResource Loc.Regalos.EnsenaCodigoQRTarjeta}"><TextBlock Text="QR" /></Button>
+                <Button Classes="chip" Command="{Binding BorrarCommand}" AutomationProperties.Name="{DynamicResource Loc.Regalos.BorrarTarjeta}" AutomationProperties.HelpText="{DynamicResource Loc.Regalos.VaciaRanuraSubeDemas}"><TextBlock Text="{DynamicResource Loc.Seleccion.Borrar}" /></Button>
+              </WrapPanel>
+              <Button Classes="secundario" Command="{Binding ImportarCommand}" IsVisible="{Binding Vacia}" HorizontalAlignment="Stretch" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Regalos.ImportarTarjetaRanura}" AutomationProperties.HelpText="{DynamicResource Loc.Regalos.EligeArchivoTarjetaRanura}">
+                <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center"><d:Icono Glifo="FileUp" Width="18" Height="18" /><TextBlock Text="{DynamicResource Loc.GoPark.ImportarAqui}" /></StackPanel>
+              </Button>
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+
+        <!-- Cabecera de las recibidas -->
+        <DataTemplate x:DataType="vm:CabeceraRecibidas">
+          <StackPanel Spacing="6" Margin="0,12,0,4" DataContext="{Binding Vm}" x:DataType="vm:RegalosViewModel">
+            <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Regalos.TarjetasRecibidas}" AutomationProperties.HeadingLevel="2" />
+            <TextBlock Classes="sec" Text="{DynamicResource Loc.Regalos.JuegoVolveraEntregarEstas}" TextWrapping="Wrap" />
+            <d:EtiquetaYValor Separacion="8">
+              <TextBox Classes="campo numero" Text="{Binding NumeroNuevo}" MaxLength="5" TextInputOptions.ContentType="Digits" Watermark="{DynamicResource Loc.Comun.NumeroAbrev}" AutomationProperties.Name="{DynamicResource Loc.Regalos.NumeroTarjeta}" AutomationProperties.HelpText="{Binding MaximoTexto}" />
+              <Button Classes="primario" Command="{Binding AnadirRecibidaCommand}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Regalos.AnadirTarjetaRecibida}"><TextBlock Text="{DynamicResource Loc.Form.Anadir}" /></Button>
+            </d:EtiquetaYValor>
+            <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding ErrorNumero}" IsVisible="{Binding HayErrorNumero}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
+          </StackPanel>
+        </DataTemplate>
+
+        <!-- Una recibida -->
+        <DataTemplate x:DataType="vm:RecibidaVm">
+          <Border Classes="tarjeta" Padding="10,2">
+            <d:EtiquetaYValor Separacion="0" MinHeight="48">
+              <TextBlock Text="{Binding Texto}" VerticalAlignment="Center" />
+              <Button Classes="icono" Width="48" Height="48" Command="{Binding QuitarCommand}" AutomationProperties.Name="{Binding Accesible}" AutomationProperties.HelpText="{DynamicResource Loc.Regalos.QuitaTarjetaRecibidas}">
+                <d:Icono Glifo="Trash2" Width="20" Height="20" />
+              </Button>
+            </d:EtiquetaYValor>
+          </Border>
+        </DataTemplate>
+      </ListBox.DataTemplates>
+    </ListBox>
+
+    <!-- Cambios sin aplicar: siempre a mano -->
+    <Border Grid.Row="1" Name="BarraAcciones" Classes="tarjeta-pendiente" Padding="12" Margin="0,4,0,0" IsVisible="{Binding HayCambios}">
+      <StackPanel Spacing="8">
+        <TextBlock Text="{Binding TextoCambios}" FontWeight="Bold" TextWrapping="Wrap" AutomationProperties.HelpText="{DynamicResource Loc.Regalos.EscribenAplicarLuegoPueden}" />
+        <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
+          <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding DescartarCommand}" AutomationProperties.Name="{DynamicResource Loc.Regalos.DescartarCambiosRegalos}" AutomationProperties.HelpText="{DynamicResource Loc.Regalos.VuelveLeerRegalosPartida}">
+            <TextBlock Text="{DynamicResource Loc.CompletarJuego.Descartar}" TextAlignment="Center" />
+          </Button>
+          <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding AplicarCommand}" AutomationProperties.Name="{DynamicResource Loc.Regalos.AplicarRegalosPartida}" AutomationProperties.HelpText="{DynamicResource Loc.Eventos.EscribeCambiosPartidaAbierta}">
+            <TextBlock Text="{DynamicResource Loc.Editor.Aplicar}" TextAlignment="Center" />
+          </Button>
+        </d:RejillaSinPartir>
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

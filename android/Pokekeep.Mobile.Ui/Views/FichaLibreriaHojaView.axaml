@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.FichaLibreriaHojaView"
+             x:DataType="vm:FichaLibreriaHojaViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="12" Margin="20,4,20,24">
+      <Grid ColumnDefinitions="Auto,*">
+        <Border Width="84" Height="84" Classes="casilla ocupada" Margin="0,0,12,0" Classes.atenuada="{Binding Fila.Atenuada}">
+          <d:SpritePokemon UnSoloPokemon="True" Margin="3" Grande="True" Especie="{Binding Fila.Entrada.Especie}" Forma="{Binding Fila.FormaSprite}" ArgumentoForma="{Binding Fila.ArgumentoForma}" VersionJuego="{Binding Fila.VersionJuego}" Modo="{Binding Fila.Modo}" Genero="{Binding Fila.Entrada.Genero}" Brillante="{Binding Fila.Entrada.Brillante}" Contexto="{Binding Fila.Contexto}" Foreground="{DynamicResource TextoSecundario}" />
+        </Border>
+        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
+          <TextBlock Text="{Binding Fila.Titulo}" FontWeight="Bold" TextWrapping="Wrap" />
+          <Border Classes="insignia" Classes.ok="{Binding Fila.EtiquetaOk}" Classes.aviso="{Binding Fila.EtiquetaAviso}" HorizontalAlignment="Left">
+            <StackPanel Orientation="Horizontal" Spacing="6"><d:Icono Glifo="{Binding Fila.Glifo}" /><TextBlock Text="{Binding Fila.Etiqueta}" TextWrapping="NoWrap" /></StackPanel>
+          </Border>
+        </StackPanel>
+      </Grid>
+      <Border Classes="tarjeta" Padding="14,10">
+        <ItemsControl ItemsSource="{Binding Lineas}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:LineaFichaVm"><TextBlock Text="{Binding Texto}" TextWrapping="Wrap" Margin="0,3" FontWeight="{Binding Peso}" /></DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
+      <TextBlock Name="AvisoFicha" Classes="sec" Text="{Binding Aviso}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+      <Button Name="BotonAnadir" Classes="primario" HorizontalAlignment="Stretch" Command="{Binding AnadirCommand}" IsEnabled="{Binding PuedeAnadir}" AutomationProperties.Name="{DynamicResource Loc.Libreria.Vista.12}" AutomationProperties.HelpText="{DynamicResource Loc.FichaLibreriaHoja.GeneraPokemonMotorColoca}">
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Plus" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Libreria.Vista.12}" /></StackPanel>
+      </Button>
+      <Button Name="BotonElegirCasilla" Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding ElegirCasillaCommand}" IsEnabled="{Binding PuedeElegirCasilla}" AutomationProperties.Name="{DynamicResource Loc.FichaLibreriaHoja.ElegirCasilla}" AutomationProperties.HelpText="{DynamicResource Loc.FichaLibreriaHoja.EligesCasillaVaciaCajas}">
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Box" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.FichaLibreriaHoja.ElegirCasilla2}" /></StackPanel>
+      </Button>
+      <Button Name="BotonExportarJson" Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding ExportarJsonCommand}" IsEnabled="{Binding !Exportando}" AutomationProperties.Name="{DynamicResource Loc.FichaLibreriaHoja.ExportarFichaJSON}" AutomationProperties.HelpText="{DynamicResource Loc.FichaLibreriaHoja.GuardaFichaDatosCatalogo}">
+        <Grid ColumnDefinitions="Auto,*" HorizontalAlignment="Center" ColumnSpacing="8"><d:Icono Glifo="FileDown" Width="20" Height="20" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.FichaLibreriaHoja.ExportarFichaJSON2}" TextWrapping="Wrap" TextAlignment="Center" /></Grid>
+      </Button>
+      <Button Name="BotonExportarTexto" Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding ExportarTextoCommand}" IsEnabled="{Binding !Exportando}" AutomationProperties.Name="{DynamicResource Loc.FichaLibreriaHoja.ExportarFichaTextoLegible}" AutomationProperties.HelpText="{DynamicResource Loc.FichaLibreriaHoja.GuardaFichaTextoLegible}">
+        <Grid ColumnDefinitions="Auto,*" HorizontalAlignment="Center" ColumnSpacing="8"><d:Icono Glifo="FileText" Width="20" Height="20" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.FichaLibreriaHoja.ExportarFichaTexto}" TextWrapping="Wrap" TextAlignment="Center" /></Grid>
+      </Button>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

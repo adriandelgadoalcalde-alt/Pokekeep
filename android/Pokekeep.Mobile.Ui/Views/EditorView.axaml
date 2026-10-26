@@ -1,0 +1,197 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             xmlns:v="clr-namespace:Pokekeep.Mobile.Ui.Views"
+             xmlns:mo="clr-namespace:Pokekeep.Mobile.Ui.Modelo"
+             x:Class="Pokekeep.Mobile.Ui.Views.EditorView"
+             x:DataType="vm:EditorViewModel">
+  <UserControl.DataTemplates>
+    <!-- Seccion plana: una tarjeta con sus campos -->
+    <DataTemplate x:DataType="vm:SeccionPlanaVm">
+      <v:SeccionPlanaView />
+    </DataTemplate>
+
+    <!-- Tabla de estadisticas: PS, Ataque... con valor final, IV, EV, AV, GV e hiperentrenamiento segun el formato -->
+    <DataTemplate x:DataType="vm:SeccionStatsVm">
+      <Border Classes="tarjeta" IsVisible="{Binding Visible}">
+        <StackPanel Spacing="6" d:AnchoDisponible.Medir="True">
+          <TextBlock Classes="etiqueta" Text="{Binding Titulo}" IsVisible="{Binding HayTitulo}" AutomationProperties.HeadingLevel="2" />
+          <!-- Con texto grande (x1,3 o mas), o si sus columnas no caben en el ancho real (IV, EV y HT o GV en 384 dp), la tabla no cabe: cada estadistica pasa a dos lineas (nombre y valor final; debajo, sus campos con su rotulo) -->
+          <ItemsControl ItemsSource="{Binding Filas}" IsVisible="{Binding Apilada}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:FilaStatVm">
+                <StackPanel Spacing="4" Margin="0,4">
+                  <Border Classes="separador" />
+                  <Grid ColumnDefinitions="*,Auto" AutomationProperties.Name="{Binding NombreAccesible}">
+                    <StackPanel>
+                      <StackPanel Orientation="Horizontal" Spacing="4"><TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextWrapping="NoWrap" /><TextBlock Text="{Binding Senal}" FontWeight="Bold" Classes="dorado" /></StackPanel>
+                      <TextBlock Classes="sec" Text="{Binding Base.Valor, StringFormat='Base {0}'}" IsVisible="{Binding Base.Visible}" />
+                    </StackPanel>
+                    <TextBlock Grid.Column="1" Text="{Binding FinalTexto}" FontWeight="Bold" VerticalAlignment="Center" AutomationProperties.Name="{Binding FinalAccesible}" />
+                  </Grid>
+                  <WrapPanel>
+                    <StackPanel Width="104" Margin="0,0,8,4" IsVisible="{Binding Iv.Visible}"><TextBlock Classes="etiqueta" Text="IV" /><TextBox Classes="campo numero" Text="{Binding Iv.Valor}" IsEnabled="{Binding Iv.EsEditable}" MaxLength="3" TextInputOptions.ContentType="Digits" AutomationProperties.Name="{Binding Iv.Etiqueta}" AutomationProperties.HelpText="{Binding Iv.Ayuda}" /></StackPanel>
+                    <StackPanel Width="104" Margin="0,0,8,4" IsVisible="{Binding Ev.Visible}"><TextBlock Classes="etiqueta" Text="EV" /><TextBox Classes="campo numero" Text="{Binding Ev.Valor}" IsEnabled="{Binding Ev.EsEditable}" MaxLength="5" TextInputOptions.ContentType="Digits" AutomationProperties.Name="{Binding Ev.Etiqueta}" AutomationProperties.HelpText="{Binding Ev.Ayuda}" /></StackPanel>
+                    <StackPanel Width="104" Margin="0,0,8,4" IsVisible="{Binding Av.Visible}"><TextBlock Classes="etiqueta" Text="AV" /><TextBox Classes="campo numero" Text="{Binding Av.Valor}" IsEnabled="{Binding Av.EsEditable}" MaxLength="3" TextInputOptions.ContentType="Digits" AutomationProperties.Name="{Binding Av.Etiqueta}" AutomationProperties.HelpText="{Binding Av.Ayuda}" /></StackPanel>
+                    <StackPanel Width="104" Margin="0,0,8,4" IsVisible="{Binding Gv.Visible}"><TextBlock Classes="etiqueta" Text="GV" /><TextBox Classes="campo numero" Text="{Binding Gv.Valor}" IsEnabled="{Binding Gv.EsEditable}" MaxLength="2" TextInputOptions.ContentType="Digits" AutomationProperties.Name="{Binding Gv.Etiqueta}" AutomationProperties.HelpText="{Binding Gv.Ayuda}" /></StackPanel>
+                    <StackPanel Width="72" Margin="0,0,8,4" IsVisible="{Binding Ht.Visible}"><TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Editor.HiperentrAbrev}" /><ToggleButton Classes="chip" IsChecked="{Binding Ht.Marcado, Mode=TwoWay}" MinWidth="48" Content="H" AutomationProperties.Name="{Binding Ht.Accesible}" AutomationProperties.HelpText="{DynamicResource Loc.Editor.HiperentrenamientoCuentaEstadisticasFinale}" /></StackPanel>
+                  </WrapPanel>
+                </StackPanel>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="6" IsVisible="{Binding NoApilada}">
+            <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Editor.Estadistica}" />
+            <TextBlock Grid.Column="1" Classes="etiqueta" Text="{DynamicResource Loc.Editor.Final}" Width="48" TextAlignment="Center" />
+            <TextBlock Grid.Column="2" Classes="etiqueta" Text="IV" Width="56" TextAlignment="Center" />
+            <TextBlock Grid.Column="3" Classes="etiqueta" Text="EV" Width="68" TextAlignment="Center" IsVisible="{Binding HayEv}" />
+            <TextBlock Grid.Column="4" Classes="etiqueta" Text="AV" Width="56" TextAlignment="Center" IsVisible="{Binding HayAv}" />
+            <TextBlock Grid.Column="5" Classes="etiqueta" Text="GV" Width="52" TextAlignment="Center" IsVisible="{Binding HayGv}" />
+            <TextBlock Grid.Column="6" Classes="etiqueta" Text="HT" Width="48" TextAlignment="Center" IsVisible="{Binding HayHt}" />
+          </Grid>
+          <ItemsControl ItemsSource="{Binding Filas}" IsVisible="{Binding NoApilada}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:FilaStatVm">
+                <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="6" Margin="0,2">
+                  <StackPanel VerticalAlignment="Center" AutomationProperties.Name="{Binding NombreAccesible}">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                      <TextBlock Text="{Binding Nombre}" FontWeight="Medium" FontSize="{DynamicResource TamDato}" TextWrapping="NoWrap" />
+                      <TextBlock Text="{Binding Senal}" FontWeight="Bold" Classes="dorado" />
+                    </StackPanel>
+                    <TextBlock Classes="sec" FontSize="{DynamicResource TamMini}" Text="{Binding Base.Valor, StringFormat='Base {0}'}" IsVisible="{Binding Base.Visible}" />
+                  </StackPanel>
+                  <TextBlock Grid.Column="1" Width="48" Text="{Binding FinalTexto}" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" AutomationProperties.Name="{Binding FinalAccesible}" />
+                  <TextBox Grid.Column="2" Width="56" Classes="campo numero" Text="{Binding Iv.Valor}" IsEnabled="{Binding Iv.EsEditable}" IsVisible="{Binding Iv.Visible}" MaxLength="3" TextInputOptions.ContentType="Digits"
+                           AutomationProperties.Name="{Binding Iv.Etiqueta}" AutomationProperties.HelpText="{Binding Iv.Ayuda}" />
+                  <TextBox Grid.Column="3" Width="68" Classes="campo numero" Text="{Binding Ev.Valor}" IsEnabled="{Binding Ev.EsEditable}" IsVisible="{Binding Ev.Visible}" MaxLength="5" TextInputOptions.ContentType="Digits"
+                           AutomationProperties.Name="{Binding Ev.Etiqueta}" AutomationProperties.HelpText="{Binding Ev.Ayuda}" />
+                  <TextBox Grid.Column="4" Width="56" Classes="campo numero" Text="{Binding Av.Valor}" IsEnabled="{Binding Av.EsEditable}" IsVisible="{Binding Av.Visible}" MaxLength="3" TextInputOptions.ContentType="Digits"
+                           AutomationProperties.Name="{Binding Av.Etiqueta}" AutomationProperties.HelpText="{Binding Av.Ayuda}" />
+                  <TextBox Grid.Column="5" Width="52" Classes="campo numero" Text="{Binding Gv.Valor}" IsEnabled="{Binding Gv.EsEditable}" IsVisible="{Binding Gv.Visible}" MaxLength="2" TextInputOptions.ContentType="Digits"
+                           AutomationProperties.Name="{Binding Gv.Etiqueta}" AutomationProperties.HelpText="{Binding Gv.Ayuda}" />
+                  <ToggleButton Grid.Column="6" Classes="chip" Width="48" MinWidth="48" IsChecked="{Binding Ht.Marcado, Mode=TwoWay}" IsVisible="{Binding Ht.Visible}" AutomationProperties.Name="{Binding Ht.Accesible}" AutomationProperties.HelpText="{DynamicResource Loc.Editor.HiperentrenamientoCuentaEstadisticasFinale}">
+                    <TextBlock Text="H" HorizontalAlignment="Center" />
+                  </ToggleButton>
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <Border Classes="insignia error" IsVisible="{Binding HayAvisoEv}" HorizontalAlignment="Left">
+            <StackPanel Orientation="Horizontal" Spacing="6"><d:Icono Glifo="TriangleAlert" /><TextBlock Text="{Binding AvisoEv}" TextWrapping="Wrap" /></StackPanel>
+          </Border>
+          <ItemsControl ItemsSource="{Binding Resto}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:CampoVm"><v:CampoView /></DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Border>
+    </DataTemplate>
+
+    <!-- Movimientos actuales: movimiento con su PP y sus PP Ups -->
+    <DataTemplate x:DataType="vm:SeccionMovsVm">
+      <Border Classes="tarjeta" IsVisible="{Binding Visible}">
+        <StackPanel Spacing="4">
+          <TextBlock Classes="etiqueta" Text="{Binding Titulo}" IsVisible="{Binding HayTitulo}" AutomationProperties.HeadingLevel="2" />
+          <ItemsControl ItemsSource="{Binding Filas}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:FilaMovVm">
+                <StackPanel Spacing="2">
+                  <Border Classes="separador" Margin="0,4,0,0" />
+                  <v:CampoView DataContext="{Binding Mov}" />
+                  <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8" IsVisible="{Binding Pp.Visible}" Margin="0,0,0,6">
+                    <TextBlock Classes="sec" Text="PP" VerticalAlignment="Center" />
+                    <TextBox Grid.Column="1" Classes="campo numero" Text="{Binding Pp.Valor}" MaxLength="2" TextInputOptions.ContentType="Digits" AutomationProperties.Name="{Binding Pp.Etiqueta}" AutomationProperties.HelpText="{DynamicResource Loc.Catalogo.PuntosPoderActuales}" />
+                    <TextBlock Grid.Column="2" Classes="sec" Text="PP Ups" VerticalAlignment="Center" />
+                    <TextBox Grid.Column="3" Classes="campo numero" Text="{Binding PpUps.Valor}" IsEnabled="{Binding PpUps.EsEditable}" MaxLength="1" TextInputOptions.ContentType="Digits" AutomationProperties.Name="{Binding PpUps.Etiqueta}" AutomationProperties.HelpText="{Binding PpUps.Ayuda}" />
+                  </Grid>
+                </StackPanel>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Border>
+    </DataTemplate>
+  </UserControl.DataTemplates>
+
+  <Grid RowDefinitions="*,Auto">
+    <ScrollViewer Name="Desplazador" Grid.Row="0" VerticalScrollBarVisibility="Auto">
+      <StackPanel Spacing="16" Margin="16,0,16,24">
+        <Grid ColumnDefinitions="*,Auto">
+          <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" AutomationProperties.Name="{DynamicResource Loc.Editor.VolverPokemon}" AutomationProperties.HelpText="{DynamicResource Loc.Editor.VuelveCajasConservandoSeleccion}">
+            <StackPanel Orientation="Horizontal" Spacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Editor.VolverPokemon}" /></StackPanel>
+          </Button>
+          <Button Grid.Column="1" Classes="icono" Command="{Binding MenuCommand}" AutomationProperties.Name="{DynamicResource Loc.Cajas.Opciones}" AutomationProperties.HelpText="{DynamicResource Loc.Editor.ImportarExportarLegalidadModo}"><d:Icono Glifo="EllipsisVertical" Width="22" Height="22" /></Button>
+        </Grid>
+        <StackPanel Spacing="2">
+          <TextBlock Classes="titulo" Text="{DynamicResource Loc.Editor.EditarPokemon}" />
+          <TextBlock Classes="sec" Text="{DynamicResource Loc.Editor.EditorCompletoDentroPokekeep}" />
+        </StackPanel>
+
+        <Grid ColumnDefinitions="Auto,*">
+          <d:SpritePokemon UnSoloPokemon="True" Grande="True" Width="88" Height="88" Margin="0,0,16,0" Contexto="{Binding Contexto}" Especie="{Binding Especie}" Forma="{Binding Forma}" ArgumentoForma="{Binding ArgumentoForma}" VersionJuego="{Binding VersionJuego}" Modo="{Binding Modo}" Genero="{Binding Genero}" Brillante="{Binding Brillante}" Huevo="{Binding Huevo}" Foreground="{DynamicResource TextoSecundario}" />
+          <StackPanel Grid.Column="1" Spacing="6" VerticalAlignment="Center">
+            <TextBlock Classes="titulo2" Text="{Binding NombreEspecie}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+            <WrapPanel ItemSpacing="6" LineSpacing="4" AutomationProperties.Name="{Binding Subtitulo}">
+              <ItemsControl ItemsSource="{Binding Tipos}" Name="TiposEditor">
+                <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel ItemSpacing="6" LineSpacing="4" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate><DataTemplate x:DataType="mo:TipoVm"><d:EtiquetaTipo Tipo="{Binding Indice}" Texto="{Binding Texto}" /></DataTemplate></ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <TextBlock Classes="sec" Text="{Binding Juego}" VerticalAlignment="Center" TextWrapping="Wrap" />
+            </WrapPanel>
+            <Button Classes="fila" HorizontalAlignment="Left" Command="{Binding LegalidadCommand}" IsVisible="{Binding LegalidadVisible}" MinHeight="48" Padding="0" AutomationProperties.Name="{Binding TextoEstado}" AutomationProperties.HelpText="{DynamicResource Loc.Editor.AbreInformeLegalidadCompleto}">
+              <Border Classes="insignia" Classes.ok="{Binding EsLegal}" Classes.error="{Binding EsIlegal}" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Spacing="6"><d:Icono Glifo="{Binding GlifoEstado}" /><TextBlock Text="{Binding TextoEstado}" /></StackPanel>
+              </Border>
+            </Button>
+          </StackPanel>
+        </Grid>
+
+        <Border Classes="insignia aviso" IsVisible="{Binding SoloLectura}" HorizontalAlignment="Left">
+          <StackPanel Orientation="Horizontal" Spacing="6"><d:Icono Glifo="Lock" /><TextBlock Text="{Binding TextoSoloLectura}" TextWrapping="Wrap" /></StackPanel>
+        </Border>
+
+        <Border Classes="insignia" Classes.ok="{Binding EsMensajeOk}" Classes.error="{Binding EsMensajeError}" Classes.aviso="{Binding EsMensajeAviso}" IsVisible="{Binding HayMensaje}" HorizontalAlignment="Stretch">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Text="{Binding Mensaje}" TextWrapping="Wrap" VerticalAlignment="Center" AutomationProperties.LiveSetting="Polite" />
+            <Button Grid.Column="1" Classes="icono" Command="{Binding CerrarMensajeCommand}" MinWidth="40" MinHeight="40" AutomationProperties.Name="{DynamicResource Loc.Editor.CerrarAviso}"><d:Icono Glifo="X" Width="16" Height="16" /></Button>
+          </Grid>
+        </Border>
+
+        <!-- Pestanas desplazables, en una sola linea -->
+        <Border Background="{DynamicResource SuperficieHundida}" CornerRadius="16" Padding="4">
+          <d:TiraConIndicio ClaveFondo="SuperficieHundida">
+            <ItemsControl ItemsSource="{Binding Pestanas}">
+              <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:PestanaVm">
+                  <RadioButton Classes="segmento" Padding="12,0" GroupName="pestana-editor" IsChecked="{Binding Activa, Mode=TwoWay}" Content="{Binding Titulo}" AutomationProperties.Name="{Binding Titulo}" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </d:TiraConIndicio>
+        </Border>
+
+        <ItemsControl ItemsSource="{Binding Secciones}">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="16" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+        </ItemsControl>
+      </StackPanel>
+    </ScrollViewer>
+
+    <!-- Barra de acciones fija: tres botones del diseno aprobado; «Legalidad» es la insignia de arriba y el menu -->
+    <Border Name="BarraAcciones" Grid.Row="1" Background="{DynamicResource Superficie}" BorderBrush="{DynamicResource Separacion}" BorderThickness="0,1,0,0" Padding="12,10">
+      <d:RejillaSinPartir Columns="3" ColumnSpacing="8" RowSpacing="8">
+        <Button Classes="secundario" HorizontalAlignment="Stretch" Padding="4,6" MinHeight="64" Command="{Binding LegalizarCommand}" AutomationProperties.Name="{DynamicResource Loc.Cajas.LegalizarAutomaticamente}" AutomationProperties.HelpText="{DynamicResource Loc.Editor.HaceLegalPokemonPuede}">
+          <StackPanel Spacing="4"><d:Icono Glifo="WandSparkles" Width="20" Height="20" HorizontalAlignment="Center" /><TextBlock Text="{Binding TextoLegalizar}" FontSize="{DynamicResource TamNav}" TextAlignment="Center" TextWrapping="Wrap" /></StackPanel>
+        </Button>
+        <Button Classes="secundario" HorizontalAlignment="Stretch" Padding="4,6" MinHeight="64" Command="{Binding OptimizarCommand}" AutomationProperties.Name="{DynamicResource Loc.Editor.OptimizarStats}" AutomationProperties.HelpText="{DynamicResource Loc.Cajas.SubeEstadisticasDentroLegal}">
+          <StackPanel Spacing="4"><d:Icono Glifo="Sparkles" Width="20" Height="20" HorizontalAlignment="Center" /><TextBlock Text="{Binding TextoOptimizar}" FontSize="{DynamicResource TamNav}" TextAlignment="Center" TextWrapping="Wrap" /></StackPanel>
+        </Button>
+        <Button Classes="primario" HorizontalAlignment="Stretch" Padding="4,6" MinHeight="64" Command="{Binding AplicarCommand}" IsVisible="{Binding PuedeAplicar}" AutomationProperties.Name="{DynamicResource Loc.Editor.AplicarCasilla}" AutomationProperties.HelpText="{DynamicResource Loc.Editor.LlevaBorradorCasillaSesion}">
+          <StackPanel Spacing="4"><d:Icono Glifo="Check" Width="20" Height="20" HorizontalAlignment="Center" /><TextBlock Text="{Binding TextoAplicar}" FontSize="{DynamicResource TamNav}" TextAlignment="Center" TextWrapping="Wrap" /></StackPanel>
+        </Button>
+      </d:RejillaSinPartir>
+    </Border>
+  </Grid>
+</UserControl>

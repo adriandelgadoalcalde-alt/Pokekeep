@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels" x:Class="Pokekeep.Mobile.Ui.Views.GuiaGuardadosView" x:DataType="vm:GuiaGuardadosViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="16,8,16,24" Spacing="16">
+      <Button Classes="texto" Command="{Binding VolverCommand}" HorizontalAlignment="Left" AutomationProperties.Name="{DynamicResource Loc.Comun.VolverMas}"><TextBlock Text="{DynamicResource Loc.Comun.VolverMas}" TextWrapping="Wrap" /></Button>
+      <TextBlock Classes="titulo" Text="{Binding Titulo}" TextWrapping="Wrap" AutomationProperties.HeadingLevel="1" />
+      <TextBlock Classes="sec" Text="{Binding Introduccion}" TextWrapping="Wrap" />
+      <TextBox Classes="campo" Text="{Binding Busqueda}" MinHeight="48" PlaceholderText="{DynamicResource Loc.Cajas.Buscar2}" PlaceholderForeground="{DynamicResource TextoSecundario}" AutomationProperties.Name="{DynamicResource Loc.GuiaGuardados.BuscarEmuladorFormatoGuia}" />
+      <ItemsControl ItemsSource="{Binding Secciones}">
+        <ItemsControl.ItemTemplate><DataTemplate x:DataType="vm:SeccionGuia">
+          <Border Classes="tarjeta" Margin="0,0,0,12"><StackPanel Spacing="10">
+            <TextBlock Classes="titulo2" Text="{Binding Titulo}" TextWrapping="Wrap" AutomationProperties.HeadingLevel="2" />
+            <TextBlock Text="{Binding Formato}" FontWeight="Medium" Foreground="{DynamicResource Dorado}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding Pasos}" TextWrapping="Wrap" />
+            <TextBlock Classes="sec" Text="{Binding Fuente}" TextWrapping="Wrap" FontSize="{DynamicResource TamPequeno}" />
+          </StackPanel></Border>
+        </DataTemplate></ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

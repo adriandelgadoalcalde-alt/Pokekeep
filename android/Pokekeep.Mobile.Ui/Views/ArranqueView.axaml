@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.ArranqueView"
+             x:DataType="vm:ArranqueViewModel">
+  <Border Background="{DynamicResource Fondo}">
+    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16" Width="280">
+      <Image Width="96" Height="96" Source="avares://Pokekeep.Mobile.Ui/Assets/Imagenes/icono-pokekeep-512.png" AutomationProperties.AccessibilityView="Raw" />
+      <TextBlock Classes="titulo" Text="{DynamicResource Loc.App.Nombre}" HorizontalAlignment="Center" />
+      <ProgressBar Minimum="0" Maximum="100" Value="{Binding Fraccion}" IsIndeterminate="{Binding Indeterminado}" Foreground="{DynamicResource Dorado}" Background="{DynamicResource Separacion}" Height="6" CornerRadius="3"
+                   AutomationProperties.Name="{DynamicResource Loc.Arranque.ProgresoPreparacion}" />
+      <TextBlock Classes="sec" Text="{Binding Mensaje}" TextAlignment="Center" TextWrapping="Wrap" />
+      <Border Classes="insignia error" IsVisible="{Binding HayError}" HorizontalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Spacing="6"><d:Icono Glifo="TriangleAlert" /><TextBlock Text="{Binding Error}" TextWrapping="Wrap" MaxWidth="240" /></StackPanel>
+      </Border>
+    </StackPanel>
+  </Border>
+</UserControl>

@@ -1,0 +1,31 @@
+-- 0001 (rollback): elimina el esquema base v1 completo, en orden inverso de dependencias.
+-- SPDX-License-Identifier: GPL-3.0-or-later
+DROP INDEX IF EXISTS ix_coverage_result;
+DROP INDEX IF EXISTS ix_coverage_tuple;
+DROP INDEX IF EXISTS ix_validation_operation;
+DROP INDEX IF EXISTS ix_operation_time;
+DROP INDEX IF EXISTS ix_pogo_window;
+DROP INDEX IF EXISTS ix_availability;
+DROP INDEX IF EXISTS ix_encounter_source;
+DROP INDEX IF EXISTS ix_encounter_lookup;
+DROP TABLE IF EXISTS coverage_result;
+DROP TABLE IF EXISTS coverage_case;
+DROP TABLE IF EXISTS validation;
+DROP TABLE IF EXISTS change;
+DROP TABLE IF EXISTS operation;
+DROP TABLE IF EXISTS pogo_window;
+DROP TABLE IF EXISTS encounter_target;
+DROP TABLE IF EXISTS encounter;
+DROP TABLE IF EXISTS availability;
+DROP TABLE IF EXISTS species_form;
+DROP TABLE IF EXISTS species_name;
+DROP TABLE IF EXISTS species;
+DROP TABLE IF EXISTS game;
+DROP TABLE IF EXISTS release;
+DROP TABLE IF EXISTS snapshot_source;
+DROP TABLE IF EXISTS dataset_snapshot;
+DROP TABLE IF EXISTS artifact_origin;
+DROP TABLE IF EXISTS artifact;
+DROP TABLE IF EXISTS source_version;
+DROP TABLE IF EXISTS source;
+DROP TABLE IF EXISTS schema_version;

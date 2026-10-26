@@ -1,0 +1,149 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:lz="clr-namespace:Pokekeep.Mobile.Ui.Localizacion"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:v="clr-namespace:Pokekeep.Mobile.Ui.Views"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             xmlns:e="clr-namespace:Pokekeep.Mobile.Ui.Herramientas.Encuentros"
+             x:Class="Pokekeep.Mobile.Ui.Views.EncuentrosView"
+             x:DataType="e:EncuentrosViewModel">
+  <UserControl.DataTemplates>
+    <DataTemplate x:DataType="e:FilaCriterioOpcion">
+      <StackPanel Spacing="4" Margin="0,6" AutomationProperties.Name="{Binding Accesible}">
+        <TextBlock Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+        <Button Classes="secundario" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" MinHeight="48" Command="{Binding AbrirCommand}" AutomationProperties.Name="{Binding Titulo}" AutomationProperties.HelpText="{Binding Descripcion}">
+          <d:EtiquetaYValor Separacion="0"><TextBlock Text="{Binding ValorTexto}" TextWrapping="Wrap" VerticalAlignment="Center" /><d:Icono Glifo="ChevronDown" Width="18" Height="18" /></d:EtiquetaYValor>
+        </Button>
+      </StackPanel>
+    </DataTemplate>
+    <DataTemplate x:DataType="e:FilaCriterioNumero">
+      <StackPanel Spacing="4" Margin="0,6" AutomationProperties.Name="{Binding Accesible}">
+        <TextBlock Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+        <TextBox Classes="campo numero" Text="{Binding Texto}" LostFocus="AlPerderFoco" MinHeight="48" AutomationProperties.Name="{Binding Titulo}" AutomationProperties.HelpText="{Binding Descripcion}" />
+        <TextBlock Classes="sec" Text="{Binding Descripcion}" TextWrapping="Wrap" />
+        <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding Error}" TextWrapping="Wrap" IsVisible="{Binding HayError}" AutomationProperties.LiveSetting="Polite" />
+      </StackPanel>
+    </DataTemplate>
+    <DataTemplate x:DataType="e:FilaMutacion">
+      <d:EtiquetaYValor Separacion="0" Margin="0,4" AutomationProperties.Name="{Binding Texto}">
+        <TextBlock Text="{Binding Texto}" TextWrapping="Wrap" VerticalAlignment="Center" />
+        <ToggleButton Classes="chip" IsChecked="{Binding Activa}" MinWidth="64" MinHeight="48" AutomationProperties.Name="{Binding Texto}"><TextBlock Text="{DynamicResource Loc.Comun.Si}" /></ToggleButton>
+      </d:EtiquetaYValor>
+    </DataTemplate>
+    <DataTemplate x:DataType="e:TipoEncuentro">
+      <d:EtiquetaYValor Separacion="0" Margin="0,4" AutomationProperties.Name="{Binding Texto}">
+        <TextBlock Text="{Binding Texto}" TextWrapping="Wrap" VerticalAlignment="Center" />
+        <ToggleButton Classes="chip" IsChecked="{Binding Marcado}" MinWidth="64" MinHeight="48" AutomationProperties.Name="{Binding Texto}"><TextBlock Text="{DynamicResource Loc.Comun.Incluir}" /></ToggleButton>
+      </d:EtiquetaYValor>
+    </DataTemplate>
+    <DataTemplate x:DataType="vm:FilaPkhexInterruptor">
+      <StackPanel Spacing="4" Margin="0,8" AutomationProperties.Name="{Binding Accesible}">
+        <d:EtiquetaYValor Separacion="0">
+          <TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextWrapping="Wrap" VerticalAlignment="Center" />
+          <ToggleButton Classes="chip" IsChecked="{Binding Activo}" MinWidth="64" MinHeight="48" AutomationProperties.Name="{Binding Nombre}" AutomationProperties.HelpText="{Binding Descripcion}"><TextBlock Text="{Binding ValorTexto}" /></ToggleButton>
+        </d:EtiquetaYValor>
+        <TextBlock Classes="sec" Text="{Binding Descripcion}" TextWrapping="Wrap" IsVisible="{Binding HayDescripcion}" />
+      </StackPanel>
+    </DataTemplate>
+    <DataTemplate x:DataType="vm:FilaPkhexEntero">
+      <StackPanel Spacing="4" Margin="0,8" AutomationProperties.Name="{Binding Accesible}">
+        <d:EtiquetaYValor Separacion="4">
+          <TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextWrapping="Wrap" VerticalAlignment="Center" />
+          <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Left">
+            <Button Classes="icono" Width="48" Height="48" Command="{Binding BajarCommand}" IsEnabled="{Binding PuedeBajar}" AutomationProperties.Name="{lz:Formato Ajustes.Bajar, {Binding Nombre}}"><d:Icono Glifo="Minus" /></Button>
+          <TextBlock Text="{Binding ValorTexto}" MinWidth="44" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" AutomationProperties.Name="{lz:Formato Ajustes.Valor, {Binding ValorTexto}}" />
+          <Button Classes="icono" Width="48" Height="48" Command="{Binding SubirCommand}" IsEnabled="{Binding PuedeSubir}" AutomationProperties.Name="{lz:Formato Ajustes.Subir, {Binding Nombre}}"><d:Icono Glifo="Plus" /></Button>
+          </StackPanel>
+        </d:EtiquetaYValor>
+        <TextBlock Classes="sec" Text="{Binding Descripcion}" TextWrapping="Wrap" IsVisible="{Binding HayDescripcion}" />
+      </StackPanel>
+    </DataTemplate>
+  </UserControl.DataTemplates>
+
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="16,0,16,24" Spacing="10">
+      <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.ImportarHex.VolverHerramientas}">
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.ImportarHex.VolverHerramientas}" TextWrapping="Wrap" VerticalAlignment="Center" /></Grid>
+      </Button>
+      <StackPanel Spacing="2" Margin="0,4,0,4">
+        <TextBlock Classes="titulo" Text="{Binding Titulo}" TextWrapping="Wrap" />
+        <TextBlock Classes="sec" TextWrapping="Wrap" Text="{Binding Subtitulo}" />
+      </StackPanel>
+
+      <d:RejillaSinPartir Columns="2" RowSpacing="8" ColumnSpacing="8">
+        <RadioButton Classes="segmento" GroupName="pestana-encuentros" IsChecked="{Binding EnGeneral, Mode=OneWay}" Command="{Binding VerPestanaCommand}" CommandParameter="general" MinHeight="48" Content="{DynamicResource Loc.Cajas.General}" AutomationProperties.Name="{DynamicResource Loc.BaseDatosPkm.PestanaGeneral}" />
+        <RadioButton Classes="segmento" GroupName="pestana-encuentros" IsChecked="{Binding EnAvanzado, Mode=OneWay}" Command="{Binding VerPestanaCommand}" CommandParameter="avanzado" MinHeight="48" Content="{DynamicResource Loc.Ajustes.Pkhex.Grupo.22}" AutomationProperties.Name="{DynamicResource Loc.BaseDatosPkm.PestanaAvanzado}" />
+        <RadioButton Classes="segmento" GroupName="pestana-encuentros" IsChecked="{Binding EnCriterios, Mode=OneWay}" Command="{Binding VerPestanaCommand}" CommandParameter="criterios" MinHeight="48" Content="{DynamicResource Loc.Encuentros.Criterios}" AutomationProperties.Name="{DynamicResource Loc.Encuentros.PestanaCriterios}" />
+        <RadioButton Classes="segmento" GroupName="pestana-encuentros" IsChecked="{Binding EnAjustes, Mode=OneWay}" Command="{Binding VerPestanaCommand}" CommandParameter="ajustes" MinHeight="48" Content="{DynamicResource Loc.Subeditores.Ajustes}" AutomationProperties.Name="{DynamicResource Loc.BaseDatosPkm.PestanaAjustes}" />
+      </d:RejillaSinPartir>
+
+      <!-- General -->
+      <Border Classes="tarjeta" Padding="14,8" IsVisible="{Binding EnGeneral}">
+        <StackPanel Spacing="2">
+          <ContentControl Content="{Binding Especie}" />
+          <ItemsControl ItemsSource="{Binding Movimientos}" />
+          <ContentControl Content="{Binding Version}" />
+          <ContentControl Content="{Binding Huevo}" />
+          <ContentControl Content="{Binding Variocolor}" />
+          <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Encuentros.TiposEncuentro}" Margin="0,8,0,0" />
+          <ItemsControl ItemsSource="{Binding Tipos}" />
+        </StackPanel>
+      </Border>
+
+      <!-- Avanzado -->
+      <Border Classes="tarjeta" Padding="14,8" IsVisible="{Binding EnAvanzado}">
+        <StackPanel Spacing="6">
+          <TextBlock Classes="sec" TextWrapping="Wrap" Text="{DynamicResource Loc.Encuentros.InstruccionesFiltroEditorLotes}" />
+          <TextBox Text="{Binding Instrucciones}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="96" AutomationProperties.Name="{DynamicResource Loc.BaseDatosPkm.InstruccionesFiltro}" />
+          <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.BaseDatosPkm.AnadirCondicion}" Margin="0,6,0,0" />
+          <ContentControl Content="{Binding Propiedad}" />
+          <ContentControl Content="{Binding Prefijo}" />
+          <TextBox Text="{Binding ValorInstruccion}" Watermark="{DynamicResource Loc.BaseDatosPkm.ValorOpcional}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.BaseDatosPkm.ValorCondicion}" />
+          <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding AnadirInstruccionCommand}" AutomationProperties.Name="{DynamicResource Loc.BaseDatosPkm.AnadirCondicionInstrucciones}">
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Plus" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Form.Anadir}" /></StackPanel>
+          </Button>
+        </StackPanel>
+      </Border>
+
+      <!-- Criterios -->
+      <Border Classes="tarjeta" Padding="14,8" IsVisible="{Binding EnCriterios}">
+        <StackPanel Spacing="2">
+          <TextBlock Classes="sec" TextWrapping="Wrap" Text="{DynamicResource Loc.Encuentros.SeraPokemonGenereAplican}" />
+          <ContentControl Content="{Binding Referencia}" />
+          <d:RejillaSinPartir Columns="2" RowSpacing="8" ColumnSpacing="8" Margin="0,6">
+            <Button Classes="secundario" MinHeight="48" HorizontalAlignment="Stretch" Command="{Binding CriteriosDelEditorCommand}" AutomationProperties.Name="{DynamicResource Loc.Encuentros.TomarCriteriosPokemonReferencia}"><TextBlock Text="{DynamicResource Loc.Encuentros.PokemonReferencia2}" TextWrapping="Wrap" TextAlignment="Center" /></Button>
+            <Button Classes="secundario" MinHeight="48" HorizontalAlignment="Stretch" Command="{Binding CriteriosReiniciarCommand}" AutomationProperties.Name="{DynamicResource Loc.Encuentros.ReiniciarCriterios}"><TextBlock Text="{DynamicResource Loc.Form.Rtc.Reiniciar}" TextAlignment="Center" /></Button>
+          </d:RejillaSinPartir>
+          <ItemsControl ItemsSource="{Binding Criterios.Opciones}" />
+          <ItemsControl ItemsSource="{Binding Criterios.Numeros}" />
+          <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Encuentros.CambiosPermitidos}" Margin="0,8,0,0" />
+          <ItemsControl ItemsSource="{Binding Criterios.Mutaciones}" />
+        </StackPanel>
+      </Border>
+
+      <!-- Ajustes -->
+      <Border Classes="tarjeta" Padding="14,6" IsVisible="{Binding EnAjustes}">
+        <StackPanel>
+          <ItemsControl ItemsSource="{Binding FilasAjustes}" />
+          <TextBlock Classes="sec" Text="{Binding TextoPagina}" TextWrapping="Wrap" Margin="0,4,0,8" />
+        </StackPanel>
+      </Border>
+
+      <!-- Buscar -->
+      <d:RejillaSinPartir Columns="2" RowSpacing="8" ColumnSpacing="8">
+        <Button Classes="primario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding BuscarCommand}" IsEnabled="{Binding PuedeBuscar}" AutomationProperties.Name="{DynamicResource Loc.Encuentros.BuscarEncuentros}">
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"><d:Icono Glifo="Search" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Comun.Buscar}" /></StackPanel>
+        </Button>
+        <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding ReiniciarFiltrosCommand}" AutomationProperties.Name="{DynamicResource Loc.BaseDatosPkm.ReiniciarFiltros}"><TextBlock Text="{DynamicResource Loc.BaseDatosPkm.ReiniciarFiltros}" TextWrapping="Wrap" TextAlignment="Center" /></Button>
+      </d:RejillaSinPartir>
+      <TextBlock Classes="sec" Text="{Binding MotivoBusqueda}" TextWrapping="Wrap" IsVisible="{Binding HayMotivoBusqueda}" AutomationProperties.LiveSetting="Polite" />
+      <StackPanel Spacing="6" IsVisible="{Binding Ocupado}">
+        <ProgressBar IsIndeterminate="{Binding FraccionIndeterminada}" Value="{Binding Fraccion}" Minimum="0" Maximum="100" AutomationProperties.Name="{DynamicResource Loc.Encuentros.ProgresoBusqueda}" />
+        <TextBlock Classes="sec" Text="{Binding TextoAvance}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+        <Button Classes="secundario" HorizontalAlignment="Stretch" MinHeight="48" Command="{Binding CancelarCommand}" AutomationProperties.Name="{DynamicResource Loc.Encuentros.CancelarBusqueda}"><TextBlock Text="{DynamicResource Loc.Comun.Cancelar}" TextAlignment="Center" /></Button>
+      </StackPanel>
+      <TextBlock Classes="sec" Text="{Binding Resultado}" FontWeight="Bold" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+      <v:TablaResultadosView DataContext="{Binding Tabla}" IsVisible="{Binding $parent[UserControl].((e:EncuentrosViewModel)DataContext).HayResultados}" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

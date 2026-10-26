@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Capa de plataforma de Android: datos (assets a FilesDir con SHA-256), catalogo de la Libreria, SAF, registro e identidad. net10.0-android. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-android</TargetFramework>
+    <SupportedOSPlatformVersion>29</SupportedOSPlatformVersion>
+    <RootNamespace>Pokekeep.Mobile.Platform</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Pokekeep.Mobile.Ui\Pokekeep.Mobile.Ui.csproj" />
+    <ProjectReference Include="..\Pokekeep.Mobile.Operaciones\Pokekeep.Mobile.Operaciones.csproj" />
+    <ProjectReference Include="..\Pokekeep.Mobile.Engine\Pokekeep.Mobile.Engine.csproj" />
+    <ProjectReference Include="..\..\src\AutoLegalidad.App\AutoLegalidad.App.csproj" />
+    <ProjectReference Include="..\..\src\AutoLegalidad.Catalog\AutoLegalidad.Catalog.csproj" />
+    <ProjectReference Include="..\..\src\AutoLegalidad.Contracts\AutoLegalidad.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\AutoLegalidad.Registro\AutoLegalidad.Registro.csproj" />
+  </ItemGroup>
+</Project>

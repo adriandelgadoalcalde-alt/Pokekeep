@@ -1,0 +1,60 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.TablaPView"
+             x:DataType="vm:TablaPVm">
+  <!-- Tabla larga con buscador: el buscador fijo arriba y una lista virtualizada debajo -->
+  <Grid Name="RaizTabla" RowDefinitions="Auto,*">
+    <StackPanel Name="CabeceraTabla" Grid.Row="0" Spacing="8" Margin="0,0,0,8">
+      <Grid ColumnDefinitions="Auto,*">
+        <d:Icono Glifo="Search" Width="20" Height="20" Margin="0,0,10,0" Foreground="{DynamicResource TextoSecundario}" VerticalAlignment="Center" />
+        <TextBox Name="FiltroTabla" Grid.Column="1" Classes="campo" PlaceholderText="{Binding Marcador}" AutomationProperties.Name="{DynamicResource Loc.TablaP.FiltrarFilas}" />
+      </Grid>
+      <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+        <TextBlock Classes="sec" Text="{Binding Resumen}" VerticalAlignment="Center" AutomationProperties.LiveSetting="Polite" />
+        <ToggleButton Grid.Column="1" Classes="chip" IsChecked="{Binding AyudaVisible, Mode=TwoWay}" IsVisible="{Binding HayAyuda}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.TablaP.AyudaLista}" AutomationProperties.HelpText="{DynamicResource Loc.TablaP.MuestraUOcultaFunciona}"><TextBlock Text="{DynamicResource Loc.TablaP.Ayuda}" /></ToggleButton>
+        <ToggleButton Grid.Column="2" Classes="chip" IsChecked="{Binding SoloCambiadas, Mode=TwoWay}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.TablaP.SoloCambiadas}"><TextBlock Text="{DynamicResource Loc.TablaP.SoloCambiadas2}" /></ToggleButton>
+      </Grid>
+      <TextBlock Classes="sec" Text="{Binding Ayuda}" IsVisible="{Binding MostrarAyuda}" TextWrapping="Wrap" />
+      <ItemsControl ItemsSource="{Binding Acciones}" IsVisible="{Binding HayAcciones}">
+        <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:AccionTablaPVm">
+            <Button Classes="chip" Command="{Binding Comando}" MinHeight="48" Margin="0,0,8,4" AutomationProperties.Name="{Binding Texto}" AutomationProperties.HelpText="{Binding Ayuda}"><TextBlock Text="{Binding Texto}" /></Button>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding AvisoAccion}" IsVisible="{Binding HayAviso}" TextWrapping="Wrap" />
+    </StackPanel>
+    <ListBox Name="FilasTabla" Grid.Row="1" Classes="limpia" AutomationProperties.Name="{DynamicResource Loc.TablaP.FilasTabla}" Padding="0,0,0,8">
+      <ListBox.DataTemplates>
+        <DataTemplate x:DataType="vm:FilaTablaPVm">
+          <Border Classes="tarjeta" Padding="10,4">
+            <StackPanel Spacing="2">
+              <d:EtiquetaYValor Separacion="8" Interlinea="2" MinHeight="56">
+                <Grid ColumnDefinitions="4,Auto,*" ColumnSpacing="8">
+                  <Border Width="4" CornerRadius="2" Margin="0,8" Background="{DynamicResource Dorado}" IsVisible="{Binding Modificado}" AutomationProperties.AccessibilityView="Raw" />
+                  <d:SpritePokemon Grid.Column="1" Width="48" Height="44" VerticalAlignment="Center" IsVisible="{Binding HayEspecie}" Especie="{Binding Especie}" Foreground="{DynamicResource TextoSecundario}" />
+                  <StackPanel Grid.Column="2" VerticalAlignment="Center" AutomationProperties.Name="{Binding Accesible}">
+                    <TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextWrapping="Wrap" />
+                    <TextBlock Classes="sec" Text="{Binding Detalle}" IsVisible="{Binding HayDetalle}" />
+                    <TextBlock Classes="sec" Text="{Binding Numero}" IsVisible="{Binding HayNumero}" />
+                  </StackPanel>
+                </Grid>
+                <Panel HorizontalAlignment="Right">
+                  <TextBox Classes="campo numero" Width="110" Text="{Binding Valor}" IsVisible="{Binding EsNumero}" TextInputOptions.ContentType="Digits" MaxLength="20" LostFocus="AlPerderFoco"
+                           AutomationProperties.Name="{Binding Nombre}" AutomationProperties.HelpText="{Binding Rango}" />
+                  <ToggleButton Classes="chip" IsChecked="{Binding Marcado, Mode=TwoWay}" IsVisible="{Binding EsMarcaEditable}" MinWidth="64" MinHeight="48" Content="{Binding TextoMarca}" AutomationProperties.Name="{Binding Accesible}" />
+                  <TextBlock Text="{Binding TextoFijo}" FontWeight="Medium" VerticalAlignment="Center" IsVisible="{Binding EsFija}" AutomationProperties.Name="{Binding Accesible}" />
+                </Panel>
+              </d:EtiquetaYValor>
+              <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding Error}" IsVisible="{Binding HayError}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+      </ListBox.DataTemplates>
+    </ListBox>
+    <TextBlock Grid.Row="1" Classes="sec" Text="{DynamicResource Loc.TablaP.FilasTexto}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,16" IsVisible="{Binding SinResultados}" />
+  </Grid>
+</UserControl>

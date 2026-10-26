@@ -1,0 +1,22 @@
+CÓDIGO FUENTE CORRESPONDIENTE (GPL-3.0) - PKHeX-Pokekeep {{VERSION}}
+=====================================================================
+
+Esta carpeta cumple la obligación de la GPL de ofrecer el código fuente de lo que contiene el paquete.
+
+1. Pokekeep (código propio, motor, interfaz, Worker, catálogo, herramientas de construcción y los
+   parches sobre PKHeX.WinForms en la carpeta «parches»):
+   Pokekeep-fuente.zip  (git archive del repositorio, rama {{RAMA}}, commit {{COMMIT}}).
+   Sin los datos construidos (base de datos, caché de soluciones), sin documentación ni capturas y
+   sin las herramientas de auditoría de privacidad del propietario (llevan sus patrones como literales).
+
+2. PKHeX {{CORE}}:
+   https://github.com/kwsch/PKHeX  (etiqueta 26.10.18). El código del paquete es ese commit
+   MÁS los parches de «parches\*.patch» sobre PKHeX.WinForms (aplicados con «git am»).
+   La construcción está descrita en herramientas\construir-portable.ps1 y construir-winforms.ps1.
+
+3. ALM (PKHeX-Plugins) 26.10.18, commit b13c011bb0c4c3d475ca7f0a30b880f5b24dbed7 (MIT):
+   https://github.com/santacrab2/PKHeX-Plugins. Su código fuente aislado se compila en
+   AutoLegalidad.AlmSource (ver src\AutoLegalidad.AlmSource en Pokekeep-fuente.zip).
+
+Reproducibilidad: el paquete se compila con -p:SourceRevisionId=bfe89c74a3f5 y PathMap, de modo que
+los binarios no llevan rutas de la máquina de construcción.

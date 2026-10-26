@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:h="clr-namespace:Pokekeep.Mobile.Ui.Herramientas.ImportarHex"
+             x:Class="Pokekeep.Mobile.Ui.Views.ImportarHexView"
+             x:DataType="h:ImportarHexViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="16,0,16,24" Spacing="10">
+      <Button Classes="texto" HorizontalAlignment="Left" Command="{Binding VolverCommand}" Padding="8,0" AutomationProperties.Name="{DynamicResource Loc.ImportarHex.VolverHerramientas}">
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" VerticalAlignment="Center" /><d:TextoEntero Grid.Column="1" Text="{DynamicResource Loc.ImportarHex.VolverHerramientas}" TextWrapping="Wrap" VerticalAlignment="Center" /></Grid>
+      </Button>
+      <StackPanel Spacing="2" Margin="0,4,0,4">
+        <TextBlock Classes="titulo" Text="{Binding Titulo}" />
+        <TextBlock Classes="sec" TextWrapping="Wrap" Text="{Binding Subtitulo}" />
+      </StackPanel>
+
+      <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.ImportarHex.TextoHexadecimal}" />
+      <Border Classes="tarjeta" Padding="14,10">
+        <StackPanel Spacing="8">
+          <TextBox Text="{Binding Texto}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="120" MaxHeight="240" FontFamily="monospace"
+                   Watermark="{DynamicResource Loc.ImportarHex.Ejemplo}" AutomationProperties.Name="{DynamicResource Loc.ImportarHex.TextoHexadecimal}" AutomationProperties.HelpText="{DynamicResource Loc.ImportarHex.BytesArchivoHexadecimalEspacios}" />
+          <TextBlock Classes="sec" Text="{Binding Resumen}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+          <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding PegarCommand}" IsEnabled="{Binding PuedePegar}" AutomationProperties.Name="{DynamicResource Loc.ImportarHex.PegarPortapapeles}">
+            <TextBlock Text="{DynamicResource Loc.ImportarHex.PegarPortapapeles}" TextAlignment="Center" TextWrapping="Wrap" />
+          </Button>
+          <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding AbrirCommand}" AutomationProperties.Name="{DynamicResource Loc.ImportarHex.AbrirArchivo}">
+            <TextBlock Text="{DynamicResource Loc.ImportarHex.AbrirArchivo}" TextAlignment="Center" TextWrapping="Wrap" />
+          </Button>
+          <Border Classes="insignia" Classes.error="{Binding MensajeEsError}" Padding="12,8" IsVisible="{Binding HayMensaje}">
+            <TextBlock Text="{Binding Mensaje}" TextWrapping="Wrap" FontWeight="Bold" AutomationProperties.LiveSetting="Polite" />
+          </Border>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

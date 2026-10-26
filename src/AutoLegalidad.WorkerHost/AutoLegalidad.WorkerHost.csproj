@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Android F1 (ADR 0054): la logica del Worker (WorkerHost.Run, cache de soluciones, precalculo) como BIBLIOTECA, separada del ejecutable pokekeep-worker (solo Program.cs).
+         La referencian el ejecutable de escritorio, AutoLegalidad.App (InProcessEngineGateway) y, en Android, el servicio :motor. Un ejecutable no se puede referenciar sin arrastrar su runtimeconfig. -->
+    <RootNamespace>AutoLegalidad.Worker</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AutoLegalidad.Contracts\AutoLegalidad.Contracts.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.Registro\AutoLegalidad.Registro.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.Engine\AutoLegalidad.Engine.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.ALMAdapter\AutoLegalidad.ALMAdapter.csproj" />
+  </ItemGroup>
+</Project>

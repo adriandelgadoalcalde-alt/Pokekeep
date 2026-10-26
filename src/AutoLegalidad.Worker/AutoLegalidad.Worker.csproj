@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>AutoLegalidad.Worker</RootNamespace>
+    <AssemblyName>pokekeep-worker</AssemblyName>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AutoLegalidad.WorkerHost\AutoLegalidad.WorkerHost.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.Contracts\AutoLegalidad.Contracts.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.Registro\AutoLegalidad.Registro.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.Engine\AutoLegalidad.Engine.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.ALMAdapter\AutoLegalidad.ALMAdapter.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,68 @@
+{
+  "type": [
+    "object",
+    "null"
+  ],
+  "properties": {
+    "protocolVersion": {
+      "type": "integer"
+    },
+    "contractsVersion": {
+      "type": "string"
+    },
+    "engineVersion": {
+      "type": "string"
+    },
+    "policyVersion": {
+      "type": "string"
+    },
+    "coreVersion": {
+      "type": "string"
+    },
+    "coreCommit": {
+      "type": "string"
+    },
+    "coreDllSha256": {
+      "type": "string"
+    },
+    "almVersion": {
+      "type": "string"
+    },
+    "almCommit": {
+      "type": "string"
+    },
+    "adapterVersion": {
+      "type": "string"
+    },
+    "releaseId": {
+      "type": "string"
+    },
+    "ruleProfileHash": {
+      "type": "string"
+    },
+    "datasetSnapshotId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "schemaVersion": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "protocolVersion",
+    "contractsVersion",
+    "engineVersion",
+    "policyVersion",
+    "coreVersion",
+    "coreCommit",
+    "coreDllSha256",
+    "almVersion",
+    "almCommit",
+    "adapterVersion",
+    "releaseId",
+    "ruleProfileHash"
+  ],
+  "additionalProperties": false
+}

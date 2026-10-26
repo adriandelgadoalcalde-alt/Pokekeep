@@ -1,0 +1,120 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.MochilaView"
+             x:DataType="vm:MochilaViewModel">
+  <!-- Una sola lista virtualizada: cabecera, objetos del bolsillo y pie se desplazan juntos (con texto grande la cabecera no cabe fija). Abajo, la barra de aplicar cuando hay borrador. -->
+  <Grid RowDefinitions="*,Auto" Margin="16,8,16,0">
+    <ListBox Classes="limpia" ItemsSource="{Binding Elementos}" AutomationProperties.Name="{DynamicResource Loc.Nav.Mochila}" Padding="0,0,0,8">
+      <ListBox.DataTemplates>
+        <!-- Cabecera -->
+        <DataTemplate x:DataType="vm:EncabezadoMochila">
+          <StackPanel Spacing="8" DataContext="{Binding Vm}" x:DataType="vm:MochilaViewModel">
+            <StackPanel Spacing="2">
+              <TextBlock Classes="titulo" Text="{DynamicResource Loc.Nav.Mochila}" AutomationProperties.HeadingLevel="1" />
+              <TextBlock Classes="sec subtitulo-pestana" Text="{DynamicResource Loc.Mochila.Subtitulo}" />
+            </StackPanel>
+            <Border Classes="tarjeta" Padding="12" IsVisible="{Binding SinMochila}">
+              <TextBlock Text="{Binding MotivoSinMochila}" TextWrapping="Wrap" />
+            </Border>
+            <StackPanel Spacing="8" IsVisible="{Binding ConMochila}">
+              <d:TiraConIndicio>
+                <ItemsControl ItemsSource="{Binding Bolsillos}">
+                  <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="8" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:BolsilloChipVm">
+                      <ToggleButton Classes="chip" IsChecked="{Binding Elegido, Mode=OneWay}" Command="{Binding $parent[ItemsControl].((vm:MochilaViewModel)DataContext).ElegirCommand}" CommandParameter="{Binding}"
+                                    MinHeight="48" AutomationProperties.Name="{Binding Accesible}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                          <Image Source="{Binding ImagenIngredientes}" IsVisible="{Binding MostrarIngredientes}" Width="24" Height="24" Stretch="Uniform" RenderOptions.BitmapInterpolationMode="None" />
+                          <TextBlock Text="{Binding Titulo}" TextWrapping="NoWrap" VerticalAlignment="Center" />
+                        </StackPanel>
+                      </ToggleButton>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </d:TiraConIndicio>
+              <Grid Classes="resumen-acciones" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="8">
+                <TextBlock Classes="sec" Text="{Binding Resumen}" VerticalAlignment="Center" AutomationProperties.LiveSetting="Polite" />
+                <Button Classes="secundario boton-acciones" Command="{Binding AbrirAccionesCommand}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Mochila.AccionesNombre}" AutomationProperties.HelpText="{DynamicResource Loc.Mochila.AccionesAyuda}">
+                  <StackPanel Orientation="Horizontal" Spacing="6"><d:Icono Glifo="SlidersHorizontal" Width="18" Height="18" /><TextBlock Text="{DynamicResource Loc.Mochila.Acciones}" /></StackPanel>
+                </Button>
+              </Grid>
+              <Border Classes="insignia aviso" IsVisible="{Binding HayAvisoDescartados}" HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Horizontal" Spacing="6"><d:Icono Glifo="TriangleAlert" /><TextBlock Text="{Binding AvisoDescartados}" TextWrapping="Wrap" /></StackPanel>
+              </Border>
+              <d:EtiquetaYValor Separacion="0" IsVisible="{Binding MostrarFiltro}">
+                <TextBlock Text="{DynamicResource Loc.Mochila.Filtro}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                <ToggleSwitch IsChecked="{Binding SoloConCantidad}" OnContent="" OffContent="" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Mochila.Filtro}" />
+              </d:EtiquetaYValor>
+              <TextBlock Classes="sec" Text="{Binding VacioTexto}" TextAlignment="Center" Margin="24,12" IsVisible="{Binding NoHayFilas}" />
+            </StackPanel>
+          </StackPanel>
+        </DataTemplate>
+
+        <!-- Un objeto -->
+        <DataTemplate x:DataType="vm:FilaObjetoVm">
+          <Border Classes="tarjeta" Padding="10,6">
+            <StackPanel Spacing="4">
+              <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8" MinHeight="56">
+                <Panel Width="36" Height="36" VerticalAlignment="Center">
+                  <d:IconoObjetoImagen Source="{Binding Imagen}" StretchDirection="DownOnly" HorizontalAlignment="Center" VerticalAlignment="Center" AutomationProperties.AccessibilityView="Raw" />
+                  <d:Icono Glifo="Package" Width="26" Height="26" Foreground="{DynamicResource TextoSecundario}" IsVisible="{Binding MostrarGlifo}" />
+                </Panel>
+                <Button Grid.Column="1" Classes="fila" Command="{Binding CambiarCommand}" IsVisible="{Binding PuedeCambiarObjeto}" HorizontalContentAlignment="Left" MinHeight="48" AutomationProperties.Name="{Binding Nombre}" AutomationProperties.HelpText="{DynamicResource Loc.Mochila.CambiarAyuda}">
+                  <StackPanel VerticalAlignment="Center">
+                    <d:TextoAjustado Text="{Binding Nombre}" TamanoPreferido="{DynamicResource TamCuerpo}" FraccionMinima="0.7" FontWeight="Medium" TextWrapping="NoWrap" />
+                    <TextBlock Classes="sec" Text="{Binding TextoMaximo}" TextWrapping="NoWrap" />
+                  </StackPanel>
+                </Button>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" IsVisible="{Binding ObjetoFijo}" AutomationProperties.Name="{Binding Nombre}">
+                  <d:TextoAjustado Text="{Binding Nombre}" TamanoPreferido="{DynamicResource TamCuerpo}" FraccionMinima="0.7" FontWeight="Medium" TextWrapping="NoWrap" />
+                  <TextBlock Classes="sec" Text="{Binding TextoMaximo}" TextWrapping="NoWrap" />
+                </StackPanel>
+                <TextBox Grid.Column="2" Classes="campo numero" Width="84" Text="{Binding Cantidad}" MaxLength="5" TextInputOptions.ContentType="Digits" GotFocus="AlEnfocar" LostFocus="AlPerderFoco"
+                         AutomationProperties.Name="{DynamicResource Loc.Mochila.Cantidad}" AutomationProperties.HelpText="{Binding TextoMaximo}" />
+                <Button Grid.Column="3" Classes="icono" Width="48" Height="48" Command="{Binding QuitarCommand}" IsVisible="{Binding PuedeQuitar}" AutomationProperties.Name="{DynamicResource Loc.Mochila.Quitar}" AutomationProperties.HelpText="{DynamicResource Loc.Mochila.QuitarAyuda}">
+                  <d:Icono Glifo="Trash2" Width="20" Height="20" />
+                </Button>
+              </Grid>
+              <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding Error}" IsVisible="{Binding HayError}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
+              <WrapPanel IsVisible="{Binding HayMarcas}">
+                <ToggleButton Classes="chip" IsChecked="{Binding Favorito, Mode=TwoWay}" IsVisible="{Binding TieneFavorito}" MinHeight="48" Margin="0,0,8,0" AutomationProperties.Name="{DynamicResource Loc.Mochila.Favorito}"><TextBlock Text="{DynamicResource Loc.Mochila.Favorito}" /></ToggleButton>
+                <ToggleButton Classes="chip" IsChecked="{Binding Nuevo, Mode=TwoWay}" IsVisible="{Binding TieneNuevo}" MinHeight="48" Margin="0,0,8,0" AutomationProperties.Name="{DynamicResource Loc.Mochila.NuevoNombre}"><TextBlock Text="{DynamicResource Loc.Mochila.Nuevo}" /></ToggleButton>
+                <ToggleButton Classes="chip" IsChecked="{Binding NuevoTienda, Mode=TwoWay}" IsVisible="{Binding TieneNuevoTienda}" MinHeight="48" Margin="0,0,8,0" AutomationProperties.Name="{DynamicResource Loc.Mochila.NuevoTiendaNombre}"><TextBlock Text="{DynamicResource Loc.Mochila.NuevoTienda}" /></ToggleButton>
+                <ToggleButton Classes="chip" IsChecked="{Binding Sostenido, Mode=TwoWay}" IsVisible="{Binding TieneSostenido}" MinHeight="48" Margin="0,0,8,0" AutomationProperties.Name="{DynamicResource Loc.Mochila.SostenidoNombre}"><TextBlock Text="{DynamicResource Loc.Mochila.Sostenido}" /></ToggleButton>
+                <ToggleButton Classes="chip" IsChecked="{Binding Libre, Mode=TwoWay}" IsVisible="{Binding TieneLibre}" MinHeight="48" Margin="0,0,8,0" AutomationProperties.Name="{DynamicResource Loc.Mochila.Libre}"><TextBlock Text="{DynamicResource Loc.Mochila.Libre}" /></ToggleButton>
+              </WrapPanel>
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+
+        <!-- Pie: anadir objeto -->
+        <DataTemplate x:DataType="vm:PieMochila">
+          <StackPanel Spacing="4" Margin="0,4,0,8" DataContext="{Binding Vm}" x:DataType="vm:MochilaViewModel">
+            <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding AnadirCommand}" IsEnabled="{Binding PuedeAnadir}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Mochila.Anadir}" AutomationProperties.HelpText="{DynamicResource Loc.Mochila.AnadirAyuda}">
+              <StackPanel Orientation="Horizontal" Spacing="8"><d:Icono Glifo="Plus" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Mochila.Anadir}" /></StackPanel>
+            </Button>
+            <TextBlock Classes="sec" Text="{Binding MotivoNoAnadir}" IsVisible="{Binding NoPuedeAnadir}" />
+          </StackPanel>
+        </DataTemplate>
+      </ListBox.DataTemplates>
+    </ListBox>
+
+    <!-- Cambios sin aplicar: siempre a mano, aunque la lista este desplazada -->
+    <Border Grid.Row="1" Name="BarraAcciones" Classes="tarjeta-pendiente" Padding="12" Margin="0,4,0,0" IsVisible="{Binding HayCambios}">
+      <StackPanel Spacing="8">
+        <TextBlock Text="{DynamicResource Loc.Mochila.Pendiente}" FontWeight="Bold" TextWrapping="Wrap" AutomationProperties.HelpText="{DynamicResource Loc.Mochila.PendienteAyuda}" />
+        <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
+          <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding DescartarCommand}" AutomationProperties.Name="{DynamicResource Loc.Mochila.DescartarNombre}" AutomationProperties.HelpText="{DynamicResource Loc.Mochila.DescartarAyuda}">
+            <TextBlock Text="{DynamicResource Loc.Mochila.Descartar}" TextAlignment="Center" />
+          </Button>
+          <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding AplicarCommand}" AutomationProperties.Name="{DynamicResource Loc.Mochila.AplicarNombre}" AutomationProperties.HelpText="{DynamicResource Loc.Mochila.AplicarAyuda}">
+            <TextBlock Text="{DynamicResource Loc.Mochila.Aplicar}" TextAlignment="Center" />
+          </Button>
+        </d:RejillaSinPartir>
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

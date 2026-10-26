@@ -1,0 +1,171 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             xmlns:v="clr-namespace:Pokekeep.Mobile.Ui.Views"
+             x:Class="Pokekeep.Mobile.Ui.Views.PartidaView"
+             x:DataType="vm:PartidaViewModel">
+  <Panel>
+    <!-- Menu de Partida -->
+    <ScrollViewer VerticalScrollBarVisibility="Auto" IsVisible="{Binding EnMenu}">
+      <StackPanel Spacing="16" Margin="16,8,16,24">
+        <StackPanel Spacing="2">
+          <TextBlock Classes="titulo" Text="{DynamicResource Loc.Partida.Vista.Titulo}" AutomationProperties.HeadingLevel="1" />
+          <TextBlock Classes="sec subtitulo-pestana" Text="{DynamicResource Loc.Partida.Vista.Subtitulo}" />
+        </StackPanel>
+
+        <TextBox Classes="campo" Text="{Binding FiltroHerramientas}" PlaceholderText="{DynamicResource Loc.Partida.Vista.Buscar}" AutomationProperties.Name="{DynamicResource Loc.Partida.Vista.BuscarAccesible}" />
+        <ItemsControl ItemsSource="{Binding ResultadosBusqueda}"><ItemsControl.ItemTemplate><DataTemplate x:DataType="vm:ResultadoPartida">
+          <Button Classes="fila" Command="{Binding Abrir}" AutomationProperties.Name="{Binding Titulo}"><StackPanel><TextBlock Text="{Binding Titulo}" FontWeight="Bold" TextWrapping="Wrap" /><TextBlock Classes="sec" Text="{Binding Descripcion}" TextWrapping="Wrap" /></StackPanel></Button>
+        </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+        <!-- Cambios sin guardar (cabecera de Partida) -->
+        <Border Classes="tarjeta-pendiente" Padding="14" IsVisible="{Binding HayCambios}">
+          <StackPanel Spacing="10">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <d:Icono Glifo="Info" Width="20" Height="20" Foreground="{DynamicResource Dorado}" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding TextoCambios}" FontWeight="Bold" TextWrapping="Wrap" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Classes="sec" Text="{DynamicResource Loc.Partida.Vista.CopiaSesion}" />
+            <TextBlock Text="{Binding TextoBorradores}" IsVisible="{Binding HayBorradores}" TextWrapping="Wrap" FontWeight="Medium" />
+            <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
+              <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding GuardarCommand}" AutomationProperties.Name="{DynamicResource Loc.Partida.Vista.GuardarAccesible}" AutomationProperties.HelpText="{DynamicResource Loc.Partida.Vista.GuardarAyuda}">
+                <TextBlock Text="{DynamicResource Loc.Partida.Vista.Guardar}" TextAlignment="Center" />
+              </Button>
+              <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding ExportarCommand}" AutomationProperties.Name="{DynamicResource Loc.Partida.Vista.ExportarAccesible}" AutomationProperties.HelpText="{DynamicResource Loc.Partida.Vista.ExportarAyuda}">
+                <TextBlock Text="{DynamicResource Loc.Partida.Vista.Exportar}" TextAlignment="Center" TextWrapping="Wrap" />
+              </Button>
+            </d:RejillaSinPartir>
+          </StackPanel>
+        </Border>
+        <Border Classes="tarjeta" Padding="14" IsVisible="{Binding NoHayCambios}">
+          <!-- Rejilla (no StackPanel horizontal): un StackPanel horizontal da ancho infinito al texto y el nombre largo del archivo no se partia -->
+          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+            <d:Icono Glifo="CircleCheck" Width="20" Height="20" Foreground="{DynamicResource Dorado}" VerticalAlignment="Center" />
+            <StackPanel Grid.Column="1">
+              <TextBlock Text="{Binding TextoCambios}" FontWeight="Medium" TextWrapping="Wrap" />
+              <TextBlock Classes="sec" Text="{Binding Archivo}" TextWrapping="Wrap" />
+              <TextBlock Text="{Binding TextoBorradores}" IsVisible="{Binding HayBorradores}" TextWrapping="Wrap" FontWeight="Medium" />
+            </StackPanel>
+          </Grid>
+        </Border>
+
+        <!-- Archivo -->
+        <StackPanel Spacing="6">
+          <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Partida.Vista.Archivo}" Margin="8,0" AutomationProperties.HeadingLevel="2" />
+          <Border Classes="tarjeta" Padding="8,4">
+            <ItemsControl ItemsSource="{Binding AccionesArchivo}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:EntradaMenu">
+                  <Panel>
+                    <Button Classes="fila" IsVisible="{Binding Accionable}" Command="{Binding Comando}" AutomationProperties.Name="{Binding Titulo}" AutomationProperties.HelpText="{Binding Descripcion}">
+                      <Grid ColumnDefinitions="Auto,*,Auto" MinHeight="64">
+                        <Border Width="40" Height="40" CornerRadius="12" Background="{DynamicResource SeleccionSuave}" Margin="8,0,12,0">
+                          <d:Icono Glifo="{Binding Glifo}" Width="22" Height="22" Foreground="{DynamicResource Dorado}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
+                          <d:TextoEntero Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+                          <TextBlock Classes="sec" Text="{Binding Descripcion}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <d:Icono Grid.Column="2" Glifo="ChevronRight" Width="20" Height="20" Margin="8,0" Foreground="{DynamicResource TextoSecundario}" VerticalAlignment="Center" />
+                      </Grid>
+                    </Button>
+                    <Grid IsVisible="{Binding Pronto}" ColumnDefinitions="Auto,*" MinHeight="64" Margin="0,2" AutomationProperties.Name="{Binding Titulo}" AutomationProperties.HelpText="{Binding Descripcion}">
+                      <Border Width="40" Height="40" CornerRadius="12" Background="{DynamicResource SuperficieHundida}" Margin="8,0,12,0">
+                        <d:Icono Glifo="{Binding Glifo}" Width="22" Height="22" Foreground="{DynamicResource TextoSecundario}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                      </Border>
+                      <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1" Margin="0,6,8,6">
+                        <d:TextoEntero Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+                        <TextBlock Classes="sec" Text="{DynamicResource Loc.Partida.Vista.NoDisponible}" TextWrapping="Wrap" />
+                      </StackPanel>
+                    </Grid>
+                  </Panel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </Border>
+        </StackPanel>
+
+        <!-- Editores -->
+        <StackPanel Spacing="6" IsVisible="{Binding HaySesion}">
+          <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Partida.Vista.Editar}" Margin="8,0" AutomationProperties.HeadingLevel="2" />
+          <Border Classes="tarjeta" Padding="8,4">
+            <ItemsControl ItemsSource="{Binding Editores}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:EntradaEditorVm">
+                  <Panel>
+                    <Button Classes="fila" IsVisible="{Binding Aplica}" Command="{Binding Comando}" CommandParameter="{Binding Id}" AutomationProperties.Name="{Binding Titulo}" AutomationProperties.HelpText="{Binding Descripcion}">
+                      <Grid ColumnDefinitions="Auto,*,Auto" MinHeight="64">
+                        <Border Width="40" Height="40" CornerRadius="12" Background="{DynamicResource SeleccionSuave}" Margin="8,0,12,0">
+                          <d:Icono Glifo="{Binding Glifo}" Width="22" Height="22" Foreground="{DynamicResource Dorado}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
+                          <d:TextoEntero Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+                          <TextBlock Classes="sec" Text="{Binding Descripcion}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <d:Icono Grid.Column="2" Glifo="ChevronRight" Width="20" Height="20" Margin="8,0" Foreground="{DynamicResource TextoSecundario}" VerticalAlignment="Center" />
+                      </Grid>
+                    </Button>
+                    <!-- No aplica a este juego: texto normal con el motivo (nunca un boton desactivado con texto casi invisible) -->
+                    <Grid IsVisible="{Binding NoAplica}" ColumnDefinitions="Auto,*" MinHeight="64" Margin="0,2" AutomationProperties.Name="{Binding Accesible}">
+                      <Border Width="40" Height="40" CornerRadius="12" Background="{DynamicResource SuperficieHundida}" Margin="8,0,12,0">
+                        <d:Icono Glifo="{Binding Glifo}" Width="22" Height="22" Foreground="{DynamicResource TextoSecundario}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                      </Border>
+                      <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1" Margin="0,6,8,6">
+                        <d:TextoEntero Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+                        <TextBlock Classes="sec" Text="{Binding Motivo}" TextWrapping="Wrap" />
+                      </StackPanel>
+                    </Grid>
+                  </Panel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </Border>
+        </StackPanel>
+
+        <!-- Especificos del juego: solo los del formato abierto -->
+        <StackPanel Spacing="6" IsVisible="{Binding HayEspecificos}">
+          <TextBlock Classes="etiqueta" Text="{DynamicResource Loc.Partida.Vista.Especificos}" Margin="8,0" AutomationProperties.HeadingLevel="2" />
+          <Border Classes="tarjeta" Padding="8,4">
+            <ItemsControl ItemsSource="{Binding Especificos}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:EntradaEditorVm">
+                  <Panel>
+                    <Button Classes="fila" IsVisible="{Binding Aplica}" Command="{Binding Comando}" CommandParameter="{Binding Id}" AutomationProperties.Name="{Binding Titulo}" AutomationProperties.HelpText="{Binding Descripcion}">
+                      <Grid ColumnDefinitions="Auto,*,Auto" MinHeight="64">
+                        <Border Width="40" Height="40" CornerRadius="12" Background="{DynamicResource SeleccionSuave}" Margin="8,0,12,0">
+                          <d:Icono Glifo="{Binding Glifo}" Width="22" Height="22" Foreground="{DynamicResource Dorado}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
+                          <d:TextoEntero Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+                          <TextBlock Classes="sec" Text="{Binding Descripcion}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <d:Icono Grid.Column="2" Glifo="ChevronRight" Width="20" Height="20" Margin="8,0" Foreground="{DynamicResource TextoSecundario}" VerticalAlignment="Center" />
+                      </Grid>
+                    </Button>
+                    <!-- No aplica a este juego: texto normal con el motivo (nunca un boton desactivado con texto casi invisible) -->
+                    <Grid IsVisible="{Binding NoAplica}" ColumnDefinitions="Auto,*" MinHeight="64" Margin="0,2" AutomationProperties.Name="{Binding Accesible}">
+                      <Border Width="40" Height="40" CornerRadius="12" Background="{DynamicResource SuperficieHundida}" Margin="8,0,12,0">
+                        <d:Icono Glifo="{Binding Glifo}" Width="22" Height="22" Foreground="{DynamicResource TextoSecundario}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                      </Border>
+                      <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1" Margin="0,6,8,6">
+                        <d:TextoEntero Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+                        <TextBlock Classes="sec" Text="{Binding Motivo}" TextWrapping="Wrap" />
+                      </StackPanel>
+                    </Grid>
+                  </Panel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </Border>
+        </StackPanel>
+      </StackPanel>
+    </ScrollViewer>
+
+    <!-- Editor abierto -->
+    <v:EditorPartidaView DataContext="{Binding Editor}" IsVisible="{Binding $parent[UserControl].((vm:PartidaViewModel)DataContext).EnEditorDeCampos}" />
+    <v:ImagenesView DataContext="{Binding Imagenes}" IsVisible="{Binding $parent[UserControl].((vm:PartidaViewModel)DataContext).EnImagenes}" />
+    <v:GoParkView DataContext="{Binding GoPark}" IsVisible="{Binding $parent[UserControl].((vm:PartidaViewModel)DataContext).EnGoPark}" />
+    <v:EventosView DataContext="{Binding Eventos}" IsVisible="{Binding $parent[UserControl].((vm:PartidaViewModel)DataContext).EnEventos}" />
+    <v:RegalosView DataContext="{Binding Regalos}" IsVisible="{Binding $parent[UserControl].((vm:PartidaViewModel)DataContext).EnRegalos}" />
+  </Panel>
+</UserControl>

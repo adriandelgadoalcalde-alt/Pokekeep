@@ -1,0 +1,53 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             xmlns:v="clr-namespace:Pokekeep.Mobile.Ui.Views"
+             x:Class="Pokekeep.Mobile.Ui.Views.MenuView"
+             x:Name="Esta">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="16" Margin="16,8,16,24">
+      <StackPanel Spacing="2">
+        <TextBlock Classes="titulo" Text="{Binding #Esta.Titulo}" />
+        <TextBlock Classes="sec" Text="{Binding #Esta.Subtitulo}" TextWrapping="Wrap" />
+      </StackPanel>
+      <Border Classes="tarjeta" Padding="8,4">
+        <ItemsControl ItemsSource="{Binding #Esta.Entradas}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:EntradaMenu">
+              <Panel>
+                <!-- Accionable -->
+                <Button Classes="fila" IsVisible="{Binding Accionable}" Command="{Binding Comando}" AutomationProperties.Name="{Binding Titulo}" AutomationProperties.HelpText="{Binding Descripcion}">
+                  <Grid ColumnDefinitions="Auto,*,Auto" MinHeight="64">
+                    <Border Width="40" Height="40" CornerRadius="12" Background="{DynamicResource SeleccionSuave}" Margin="8,0,12,0">
+                      <d:Icono Glifo="{Binding Glifo}" Width="22" Height="22" Foreground="{DynamicResource Dorado}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
+                      <d:TextoEntero Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
+                      <TextBlock Classes="sec" Text="{Binding Descripcion}" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <d:Icono Grid.Column="2" Glifo="ChevronRight" Width="20" Height="20" Margin="8,0" Foreground="{DynamicResource TextoSecundario}" VerticalAlignment="Center" />
+                  </Grid>
+                </Button>
+                <!-- Aun no disponible: lo dice -->
+<Grid IsVisible="{Binding Pronto}" ColumnDefinitions="Auto,*" MinHeight="64" Margin="0,2" AutomationProperties.Name="{Binding Titulo}" AutomationProperties.HelpText="{Binding Descripcion}">
+                  <Border Width="40" Height="40" CornerRadius="12" Background="{DynamicResource SeleccionSuave}" Margin="8,0,12,0">
+                    <d:Icono Glifo="{Binding Glifo}" Width="22" Height="22" Foreground="{DynamicResource Dorado}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                  </Border>
+                  <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1" Margin="0,6,8,6">
+                    <WrapPanel>
+                      <TextBlock Text="{Binding Titulo}" FontWeight="Medium" Margin="0,0,8,0" />
+                      <Border Classes="insignia" VerticalAlignment="Center"><TextBlock Text="{DynamicResource Loc.Menu.Pronto}" /></Border>
+                    </WrapPanel>
+                    <TextBlock Classes="sec" Text="{Binding Descripcion}" TextWrapping="Wrap" />
+                  </StackPanel>
+                </Grid>
+              </Panel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
+      <ContentControl Content="{Binding #Esta.Pie}" IsVisible="{Binding #Esta.Pie, Converter={x:Static ObjectConverters.IsNotNull}}" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

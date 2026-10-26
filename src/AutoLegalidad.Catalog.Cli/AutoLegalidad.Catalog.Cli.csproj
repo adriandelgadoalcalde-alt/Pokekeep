@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>AutoLegalidad.Catalog.Cli</RootNamespace>
+    <AssemblyName>pokekeep-catalogo</AssemblyName>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AutoLegalidad.Catalog\AutoLegalidad.Catalog.csproj" />
+    <ProjectReference Include="..\AutoLegalidad.Catalog.Build\AutoLegalidad.Catalog.Build.csproj" />
+  </ItemGroup>
+</Project>
