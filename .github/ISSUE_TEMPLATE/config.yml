@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and help / Preguntas y ayuda
+    url: https://github.com/adriandelgadoalcalde-alt/Pokekeep/discussions
+    about: How to use Pokekeep, getting your save, legality doubts. / Cómo usar Pokekeep, sacar tu partida, dudas de legalidad.
+  - name: Website and FAQ / Web y preguntas frecuentes
+    url: https://adriandelgadoalcalde-alt.github.io/Pokekeep/
+    about: Downloads for Android and Windows, video and frequent questions. / Descargas para Android y Windows, vídeo y preguntas frecuentes.

@@ -1,0 +1,25 @@
+name: Idea or request / Idea o petición
+description: Something Pokekeep could do better. / Algo que Pokekeep podría hacer mejor.
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: version
+    attributes:
+      label: Which version? / ¿Qué versión?
+      options:
+        - Android
+        - Windows
+        - Both / Las dos
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like? / ¿Qué te gustaría?
+      description: What you want to do, not only how. / Qué quieres hacer, no solo cómo.
+    validations:
+      required: true
+  - type: textarea
+    id: ahora
+    attributes:
+      label: How do you do it today? / ¿Cómo lo haces ahora?

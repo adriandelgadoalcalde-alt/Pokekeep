@@ -1,0 +1,55 @@
+name: Bug report / Informe de fallo
+description: Something doesn't work as it should. / Algo no funciona como debería.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. English or Spanish, both are fine. Please don't attach your save file unless you want it to be public.
+        Gracias por tomarte el tiempo. En español o en inglés, como prefieras. No adjuntes tu partida salvo que quieras que sea pública.
+  - type: dropdown
+    id: version
+    attributes:
+      label: Which version? / ¿Qué versión?
+      options:
+        - Android
+        - Windows
+    validations:
+      required: true
+  - type: input
+    id: numero
+    attributes:
+      label: Pokekeep version / Versión de Pokekeep
+      description: More > About Pokekeep (Android) or Options > About Pokekeep (Windows). / Más > Acerca de Pokekeep (Android) u Opciones > Acerca de Pokekeep (Windows).
+      placeholder: "1.0.1"
+    validations:
+      required: true
+  - type: input
+    id: juego
+    attributes:
+      label: Game / Juego
+      placeholder: "Pokémon Scarlet / Pokémon Escarlata"
+  - type: textarea
+    id: pasos
+    attributes:
+      label: What did you do? / ¿Qué hiciste?
+      description: Step by step. / Paso a paso.
+      placeholder: |
+        1. Open the save / Abrir la partida
+        2. Box 3, slot 4 > Legalize automatically / Caja 3, casilla 4 > Legalizar automáticamente
+    validations:
+      required: true
+  - type: textarea
+    id: esperado
+    attributes:
+      label: What did you expect, and what happened? / ¿Qué esperabas y qué pasó?
+    validations:
+      required: true
+  - type: textarea
+    id: registro
+    attributes:
+      label: Log (optional) / Registro (opcional)
+      description: |
+        Windows: the latest file in the `registros` folder next to `PKHeX.exe` (Options > Open log folder). It doesn't contain trainer names or IDs.
+        Windows: el último archivo de la carpeta `registros`, junto a `PKHeX.exe` (Opciones > Abrir carpeta de registros). No lleva nombres ni ID de entrenador.
+      render: text

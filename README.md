@@ -7,7 +7,7 @@ portable PKHeX for Windows. Both add “Legalize automatically”, which makes a
 the game allows it, its shininess, gender, nature and moves. Every result is checked with PKHeX’s legality analysis before it is
 written to the save.
 
-The current version is 1.0.0, released on 24 October 2026.
+The current version is 1.0.1, released on 26 October 2026. Website, video and FAQ: **[adriandelgadoalcalde-alt.github.io/Pokekeep](https://adriandelgadoalcalde-alt.github.io/Pokekeep/)**.
 
 ## Android screenshots
 
@@ -52,13 +52,17 @@ It does not prove how the Pokémon was obtained, or that it existed exactly like
 
 Both are on this repository’s **Releases** page, with their SHA-256.
 
-**Android.** `Pokekeep-1.0.0.apk`, for Android 10 or later. It is about 700 MB because it carries the images of every game. To
+**Android.** `Pokekeep-1.0.1.apk`, for Android 10 or later. It is about 700 MB because it carries the images of every game. To
 install it, allow your browser or file manager to install unknown apps. It asks for notifications and a foreground service, so long
 operations keep running if you switch apps. It does not ask for Internet access. It works on a copy of the save and does not write
-the original file until you save.
+the original file until you save. You can also install and update it with [Obtainium](https://github.com/ImranR98/Obtainium): add
+`https://github.com/adriandelgadoalcalde-alt/Pokekeep` as a source.
 
-**Windows.** `PKHeX-Pokekeep-1.0.0.zip`, for 64-bit Windows 10 or 11. Unzip it and open `PKHeX.exe`; nothing needs to be installed,
+**Windows.** `PKHeX-Pokekeep-1.0.1.zip`, for 64-bit Windows 10 or 11. Unzip it and open `PKHeX.exe`; nothing needs to be installed,
 not even .NET.
+
+Found a bug or have an idea? [Open an issue](https://github.com/adriandelgadoalcalde-alt/Pokekeep/issues/new/choose) or start a
+[discussion](https://github.com/adriandelgadoalcalde-alt/Pokekeep/discussions), in English or Spanish.
 
 ## Building from source
 
@@ -90,7 +94,7 @@ It makes a shallow clone of each source at its pinned commit into `fuentes\` and
 powershell -NoProfile -ExecutionPolicy Bypass -File herramientas\construir-portable.ps1 -SinInforme
 ```
 
-The result is the folder `distribucion\PKHeX-Pokekeep\`; add `-Zip` to also get `distribucion\PKHeX-Pokekeep-1.0.0.zip`. The script
+The result is the folder `distribucion\PKHeX-Pokekeep\`; add `-Zip` to also get `distribucion\PKHeX-Pokekeep-1.0.1.zip`. The script
 applies the patches in `parches\` to PKHeX.WinForms, publishes a self-contained build, builds the catalog database from the pinned
 sources and writes a SHA-256 manifest of every file. `PKHeX.Core.dll` is compiled deterministically (`CoreDeterminista.targets`): the
 same commit gives the same file from any folder.
