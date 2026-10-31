@@ -36,7 +36,7 @@
 <link rel="preload" href="../fonts/sora.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../fonts/atkinson-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../img/es/1-cajas.webp" as="image" type="image/webp" fetchpriority="high">
+<link rel="preload" href="../img/es/1-cajas.webp" imagesrcset="../img/es/1-cajas-360.webp 360w, ../img/es/1-cajas-540.webp 540w, ../img/es/1-cajas.webp 720w" imagesizes="308px" as="image" type="image/webp" fetchpriority="high">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -116,9 +116,9 @@
       "installUrl": "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/latest",
       "releaseNotes": "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/tag/v1.0.1",
       "isBasedOn": {
-        "@type": "SoftwareApplication",
+        "@type": "SoftwareSourceCode",
         "name": "PKHeX",
-        "url": "https://github.com/kwsch/PKHeX"
+        "codeRepository": "https://github.com/kwsch/PKHeX"
       },
       "featureList": [
         "Legalizar automáticamente, con el resultado comprobado por el análisis de legalidad de PKHeX antes de escribirlo",
@@ -489,7 +489,7 @@ footer .fila { display: flex; flex-wrap: wrap; gap: 8px 22px; }
         <a href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/latest">Novedades y SHA-256</a></p>
     </div>
     <div class="telefono">
-      <img src="../img/es/1-cajas.webp" alt="Pokekeep en Android: la caja 9 de una partida de Platino, con un aviso de legalidad en Celebi" width="720" height="1440" fetchpriority="high" decoding="async">
+      <img src="../img/es/1-cajas.webp" srcset="../img/es/1-cajas-360.webp 360w, ../img/es/1-cajas-540.webp 540w, ../img/es/1-cajas.webp 720w" sizes="308px" alt="Pokekeep en Android: la caja 9 de una partida de Platino, con un aviso de legalidad en Celebi" width="720" height="1440" fetchpriority="high" decoding="async">
     </div>
   </div>
 </section>
@@ -503,19 +503,19 @@ footer .fila { display: flex; flex-wrap: wrap; gap: 8px 22px; }
     </div>
     <div class="galeria">
       <figure>
-        <img src="../img/es/4-legalizar.webp" alt="Resultado de Legalizar automáticamente, con lo que cambió" loading="lazy" decoding="async" width="720" height="1440">
+        <img src="../img/es/4-legalizar.webp" srcset="../img/es/4-legalizar-360.webp 360w, ../img/es/4-legalizar-540.webp 540w, ../img/es/4-legalizar.webp 720w" sizes="(max-width: 640px) 44vw, 260px" alt="Resultado de Legalizar automáticamente, con lo que cambió" loading="lazy" decoding="async" width="720" height="1440">
         <figcaption><strong>Legalizar automáticamente</strong>Un Pokémon o todos los ilegales de la partida. Te dice qué cambió, y se puede deshacer.</figcaption>
       </figure>
       <figure>
-        <img src="../img/es/2-ficha.webp" alt="Editor del Pokémon con las etiquetas de tipo" loading="lazy" decoding="async" width="720" height="1440">
+        <img src="../img/es/2-ficha.webp" srcset="../img/es/2-ficha-360.webp 360w, ../img/es/2-ficha-540.webp 540w, ../img/es/2-ficha.webp 720w" sizes="(max-width: 640px) 44vw, 260px" alt="Editor del Pokémon con las etiquetas de tipo" loading="lazy" decoding="async" width="720" height="1440">
         <figcaption><strong>El editor completo</strong>Estadísticas, movimientos, cintas, origen y entrenador, con las etiquetas de tipo en los colores de Escarlata y Púrpura.</figcaption>
       </figure>
       <figure>
-        <img src="../img/es/6-libreria.webp" alt="Librería de Pokémon que se pueden conseguir en el juego cargado" loading="lazy" decoding="async" width="720" height="1440">
+        <img src="../img/es/6-libreria.webp" srcset="../img/es/6-libreria-360.webp 360w, ../img/es/6-libreria-540.webp 540w, ../img/es/6-libreria.webp 720w" sizes="(max-width: 640px) 44vw, 260px" alt="Librería de Pokémon que se pueden conseguir en el juego cargado" loading="lazy" decoding="async" width="720" height="1440">
         <figcaption><strong>Librería</strong>Todo lo que se puede conseguir en el juego cargado, eventos incluidos, listo para ponerlo en una caja.</figcaption>
       </figure>
       <figure>
-        <img src="../img/es/3-vista-escarlata.webp" alt="Vista previa sacada de Escarlata" loading="lazy" decoding="async" width="720" height="1440">
+        <img src="../img/es/3-vista-escarlata.webp" srcset="../img/es/3-vista-escarlata-360.webp 360w, ../img/es/3-vista-escarlata-540.webp 540w, ../img/es/3-vista-escarlata.webp 720w" sizes="(max-width: 640px) 44vw, 260px" alt="Vista previa sacada de Escarlata" loading="lazy" decoding="async" width="720" height="1440">
         <figcaption><strong>El aspecto de cada juego</strong>Vistas previas e iconos de caja sacados de cada juego, de la primera generación a Leyendas <span class="nb">Z-A</span>.</figcaption>
       </figure>
     </div>

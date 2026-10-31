@@ -36,7 +36,7 @@
 <link rel="preload" href="fonts/sora.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/atkinson-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="img/en/1-cajas.webp" as="image" type="image/webp" fetchpriority="high">
+<link rel="preload" href="img/en/1-cajas.webp" imagesrcset="img/en/1-cajas-360.webp 360w, img/en/1-cajas-540.webp 540w, img/en/1-cajas.webp 720w" imagesizes="308px" as="image" type="image/webp" fetchpriority="high">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -116,9 +116,9 @@
       "installUrl": "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/latest",
       "releaseNotes": "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/tag/v1.0.1",
       "isBasedOn": {
-        "@type": "SoftwareApplication",
+        "@type": "SoftwareSourceCode",
         "name": "PKHeX",
-        "url": "https://github.com/kwsch/PKHeX"
+        "codeRepository": "https://github.com/kwsch/PKHeX"
       },
       "featureList": [
         "Legalize automatically, checked with PKHeX’s legality analysis before writing",
@@ -489,7 +489,7 @@ footer .fila { display: flex; flex-wrap: wrap; gap: 8px 22px; }
         <a href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/latest">Release notes and SHA-256</a></p>
     </div>
     <div class="telefono">
-      <img src="img/en/1-cajas.webp" alt="Pokekeep on Android: box 9 of a Platinum save, with a legality warning on Celebi" width="720" height="1440" fetchpriority="high" decoding="async">
+      <img src="img/en/1-cajas.webp" srcset="img/en/1-cajas-360.webp 360w, img/en/1-cajas-540.webp 540w, img/en/1-cajas.webp 720w" sizes="308px" alt="Pokekeep on Android: box 9 of a Platinum save, with a legality warning on Celebi" width="720" height="1440" fetchpriority="high" decoding="async">
     </div>
   </div>
 </section>
@@ -503,19 +503,19 @@ footer .fila { display: flex; flex-wrap: wrap; gap: 8px 22px; }
     </div>
     <div class="galeria">
       <figure>
-        <img src="img/en/4-legalizar.webp" alt="Result of Legalize automatically, listing what changed" loading="lazy" decoding="async" width="720" height="1440">
+        <img src="img/en/4-legalizar.webp" srcset="img/en/4-legalizar-360.webp 360w, img/en/4-legalizar-540.webp 540w, img/en/4-legalizar.webp 720w" sizes="(max-width: 640px) 44vw, 260px" alt="Result of Legalize automatically, listing what changed" loading="lazy" decoding="async" width="720" height="1440">
         <figcaption><strong>Legalize automatically</strong>One Pokémon or every illegal one in the save. It tells you what changed, and you can undo it.</figcaption>
       </figure>
       <figure>
-        <img src="img/en/2-ficha.webp" alt="Pokémon editor with type badges" loading="lazy" decoding="async" width="720" height="1440">
+        <img src="img/en/2-ficha.webp" srcset="img/en/2-ficha-360.webp 360w, img/en/2-ficha-540.webp 540w, img/en/2-ficha.webp 720w" sizes="(max-width: 640px) 44vw, 260px" alt="Pokémon editor with type badges" loading="lazy" decoding="async" width="720" height="1440">
         <figcaption><strong>The full editor</strong>Stats, moves, ribbons, origin and trainer, with type badges in Scarlet and Violet colors.</figcaption>
       </figure>
       <figure>
-        <img src="img/en/6-libreria.webp" alt="Library of Pokémon obtainable in the loaded game" loading="lazy" decoding="async" width="720" height="1440">
+        <img src="img/en/6-libreria.webp" srcset="img/en/6-libreria-360.webp 360w, img/en/6-libreria-540.webp 540w, img/en/6-libreria.webp 720w" sizes="(max-width: 640px) 44vw, 260px" alt="Library of Pokémon obtainable in the loaded game" loading="lazy" decoding="async" width="720" height="1440">
         <figcaption><strong>Library</strong>Everything obtainable in the loaded game, events included, ready to drop into a box.</figcaption>
       </figure>
       <figure>
-        <img src="img/en/3-vista-escarlata.webp" alt="Preview taken from Scarlet" loading="lazy" decoding="async" width="720" height="1440">
+        <img src="img/en/3-vista-escarlata.webp" srcset="img/en/3-vista-escarlata-360.webp 360w, img/en/3-vista-escarlata-540.webp 540w, img/en/3-vista-escarlata.webp 720w" sizes="(max-width: 640px) 44vw, 260px" alt="Preview taken from Scarlet" loading="lazy" decoding="async" width="720" height="1440">
         <figcaption><strong>Each game’s own look</strong>Previews and box icons taken from each game, from Gen 1 to Legends: <span class="nb">Z-A</span>.</figcaption>
       </figure>
     </div>
