@@ -1,7 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
   <url>
     <loc>https://adriandelgadoalcalde-alt.github.io/Pokekeep/</loc>
-    <lastmod>2026-10-27</lastmod>
+    <lastmod>2026-10-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adriandelgadoalcalde-alt.github.io/Pokekeep/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adriandelgadoalcalde-alt.github.io/Pokekeep/"/>
+    <image:image><image:loc>https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/og.png</image:loc></image:image>
+    <image:image><image:loc>https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/en/4-legalizar.webp</image:loc></image:image>
+    <image:image><image:loc>https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/en/2-ficha.webp</image:loc></image:image>
+    <image:image><image:loc>https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/en/6-libreria.webp</image:loc></image:image>
+    <image:image><image:loc>https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/en/3-vista-escarlata.webp</image:loc></image:image>
+    <image:image><image:loc>https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/windows-legalizar.webp</image:loc></image:image>
+    <video:video>
+      <video:thumbnail_loc>https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/en/video-poster.webp</video:thumbnail_loc>
+      <video:title>Pokekeep: from illegal to legal on your phone</video:title>
+      <video:description>A 22-second demo of the Pokekeep Android app: open a Platinum save, spot the legality warning on a Pokémon and legalize it with one tap.</video:description>
+      <video:content_loc>https://adriandelgadoalcalde-alt.github.io/Pokekeep/video/pokekeep-en.mp4</video:content_loc>
+      <video:duration>22</video:duration>
+      <video:publication_date>2026-10-26T11:32:00+01:00</video:publication_date>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/</loc>
+    <lastmod>2026-10-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adriandelgadoalcalde-alt.github.io/Pokekeep/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adriandelgadoalcalde-alt.github.io/Pokekeep/"/>
+    <image:image><image:loc>https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/og.png</image:loc></image:image>
+    <image:image><image:loc>https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/es/4-legalizar.webp</image:loc></image:image>
+    <image:image><image:loc>https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/es/2-ficha.webp</image:loc></image:image>
+    <image:image><image:loc>https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/es/6-libreria.webp</image:loc></image:image>
+    <image:image><image:loc>https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/es/3-vista-escarlata.webp</image:loc></image:image>
+    <image:image><image:loc>https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/windows-legalizar.webp</image:loc></image:image>
+    <video:video>
+      <video:thumbnail_loc>https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/es/video-poster.webp</video:thumbnail_loc>
+      <video:title>Pokekeep: de ilegal a legal en el móvil</video:title>
+      <video:description>Demostración de 22 segundos de la app de Pokekeep para Android: se abre una partida de Platino, se ve el aviso de legalidad de un Pokémon y se legaliza con un toque.</video:description>
+      <video:content_loc>https://adriandelgadoalcalde-alt.github.io/Pokekeep/video/pokekeep-es.mp4</video:content_loc>
+      <video:duration>22</video:duration>
+      <video:publication_date>2026-10-26T11:32:00+01:00</video:publication_date>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
   </url>
 </urlset>
