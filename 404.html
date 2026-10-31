@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found · Página no encontrada · Pokekeep</title>
+<meta name="description" content="Page not found. Go to Pokekeep in English or in Spanish. / Página no encontrada. Ve a Pokekeep en inglés o en español.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F5F3ED" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151714" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="/Pokekeep/img/icono.png">
+<link rel="preload" href="/Pokekeep/fonts/sora.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face { font-family: "Sora"; src: url(/Pokekeep/fonts/sora.woff2) format("woff2"); font-weight: 100 800; font-style: normal; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible"; src: url(/Pokekeep/fonts/atkinson-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible"; src: url(/Pokekeep/fonts/atkinson-400-italic.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible"; src: url(/Pokekeep/fonts/atkinson-700.woff2) format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url(/Pokekeep/fonts/jetbrains-mono.woff2) format("woff2"); font-weight: 100 800; font-style: normal; font-display: swap; }
+@font-face { font-family: "Sora Fallback"; src: local("Arial"); size-adjust: 110%; ascent-override: 88%; descent-override: 26%; line-gap-override: 0%; }
+@font-face { font-family: "Atkinson Fallback"; src: local("Arial"); size-adjust: 98%; ascent-override: 97%; descent-override: 30%; line-gap-override: 0%; }
+:root {
+  --fondo: #F5F3ED; --superficie: #FFFEFA; --hundida: #EDEBE2; --texto: #252821; --texto-2: #62665A; --linea: #E2E3D8;
+  --oro: #69572E; --oro-suave: #F1E8D3; --grafito: #25231D; --oro-sobre-grafito: #F2D9A2; --ok: #245F46; --ok-fondo: #E3F0E8;
+  --sombra: 0 1px 2px rgba(37,35,29,.06), 0 12px 32px -12px rgba(37,35,29,.18);
+  --serif: "Sora", "Sora Fallback", "Segoe UI", system-ui, sans-serif; --cuerpo: "Atkinson Hyperlegible", "Atkinson Fallback", "Segoe UI", system-ui, sans-serif; --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fondo: #151714; --superficie: #22241E; --hundida: #1B1D18; --texto: #F4F2E8; --texto-2: #B4B7A9; --linea: #3B3E32;
+    --oro: #EBD19A; --oro-suave: #383222; --grafito: #0E0F0C; --oro-sobre-grafito: #F2D9A2; --ok: #8FD3B0; --ok-fondo: #1F3329;
+    --sombra: 0 1px 2px rgba(0,0,0,.4), 0 16px 40px -16px rgba(0,0,0,.7); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --fondo: #151714; --superficie: #22241E; --hundida: #1B1D18; --texto: #F4F2E8; --texto-2: #B4B7A9; --linea: #3B3E32;
+  --oro: #EBD19A; --oro-suave: #383222; --grafito: #0E0F0C; --oro-sobre-grafito: #F2D9A2; --ok: #8FD3B0; --ok-fondo: #1F3329;
+  --sombra: 0 1px 2px rgba(0,0,0,.4), 0 16px 40px -16px rgba(0,0,0,.7); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 76px; }
+body { overflow-x: hidden; margin: 0; background: var(--fondo); color: var(--texto); font: 400 1.0625rem/1.6 var(--cuerpo); }
+a { color: var(--oro); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--oro); outline-offset: 3px; border-radius: 6px; }
+img { max-width: 100%; height: auto; display: block; }
+.saltar { position: absolute; left: 12px; top: -64px; z-index: 30; padding: 10px 14px; border-radius: 8px; background: var(--grafito); color: var(--oro-sobre-grafito); text-decoration: none; }
+.saltar:focus { top: 12px; }
+.ancho { width: min(1120px, 100%); margin: 0 auto; padding: 0 20px; }
+h1, h2, h3 { font-family: var(--serif); line-height: 1.15; text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h2 { font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.3rem); font-weight: 650; }
+h3 { font-size: 1.2rem; font-weight: 600; }
+p { margin: 0; }
+.nb { white-space: nowrap; }
+.etiqueta { font: 500 .78rem/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--oro); }
+
+/* Cabecera */
+header.barra { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--fondo) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--linea); }
+.barra .ancho { display: flex; align-items: center; gap: 14px; height: 64px; }
+.marca { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--texto); font: 650 1.15rem var(--serif); }
+.marca img { width: 34px; height: 34px; border-radius: 9px; }
+.barra nav { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+.barra nav a { color: var(--texto-2); text-decoration: none; padding: 8px 10px; border-radius: 8px; font-size: .95rem; }
+.barra nav a:hover { color: var(--texto); background: var(--hundida); }
+.idioma { display: inline-flex; border: 1px solid var(--linea); border-radius: 999px; padding: 3px; background: var(--superficie); }
+.barra nav .idioma a { color: var(--texto-2); font: 500 .8rem var(--mono); padding: 6px 10px; border-radius: 999px; }
+.barra nav .idioma a:hover { background: var(--hundida); color: var(--texto); }
+.barra nav .idioma a[aria-current="page"] { background: var(--grafito); color: var(--oro-sobre-grafito); }
+@media (max-width: 720px) { .barra nav a.opcional { display: none; } }
+
+/* Portada */
+.portada { padding: 56px 0 40px; position: relative; overflow: hidden; }
+.portada .ancho { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 48px; align-items: center; }
+.portada h1 { font-size: clamp(2.3rem, 1.5rem + 3.4vw, 3.9rem); font-weight: 700; margin-top: 14px; }
+.portada h1 em { font-style: normal; color: var(--oro); }
+.portada .entradilla { margin-top: 18px; font-size: 1.15rem; color: var(--texto-2); max-width: 34em; }
+.sello { display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; padding: 7px 12px; border-radius: 8px; background: var(--ok-fondo); color: var(--ok); font: 500 .85rem var(--mono); }
+.descargas { margin-top: 28px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 560px; }
+.boton { display: flex; flex-direction: column; gap: 4px; padding: 16px 18px; border-radius: 14px; text-decoration: none; border: 1px solid var(--linea); background: var(--superficie); color: var(--texto); box-shadow: var(--sombra); transition: transform .15s ease, border-color .15s ease; }
+.boton:hover { transform: translateY(-2px); border-color: var(--oro); }
+.boton.principal { background: var(--grafito); color: #F4F2E8; border-color: var(--grafito); }
+.boton .sistema { font: 600 1.05rem var(--serif); }
+.boton .detalle { font: 400 .82rem var(--mono); color: var(--texto-2); }
+.boton.principal .detalle { color: #C9C3B0; }
+.boton .sistema b { color: var(--oro-sobre-grafito); font-weight: 600; }
+.boton:not(.principal) .sistema b { color: var(--oro); }
+.notas-descarga { margin-top: 12px; font-size: .9rem; color: var(--texto-2); }
+.telefono { justify-self: center; width: min(330px, 80vw); aspect-ratio: 720 / 1440; border-radius: 42px; padding: 11px; background: var(--grafito); box-shadow: var(--sombra), inset 0 0 0 2px #3a372d; position: relative; }
+.telefono img { width: 100%; height: 100%; object-fit: cover; border-radius: 32px; }
+.hex { position: absolute; z-index: -1; width: 520px; height: 520px; right: -90px; top: -60px; opacity: .55; }
+@media (max-width: 880px) { .portada .ancho { grid-template-columns: minmax(0, 1fr); } .telefono { margin-top: 12px; } .hex { display: none; } }
+@media (max-width: 520px) { .descargas { grid-template-columns: minmax(0, 1fr); } }
+
+/* Secciones */
+section { padding: 64px 0; }
+section.alterna { background: var(--superficie); border-block: 1px solid var(--linea); }
+.cabeza { max-width: 44em; margin-bottom: 36px; display: grid; gap: 10px; }
+.cabeza p { color: var(--texto-2); font-size: 1.1rem; }
+.pie-seccion { margin-top: 26px; color: var(--texto-2); }
+.galeria { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.galeria figure { margin: 0; display: grid; gap: 10px; align-content: start; }
+.galeria img { width: 100%; border-radius: 18px; border: 1px solid var(--linea); box-shadow: var(--sombra); aspect-ratio: 1 / 2; object-fit: cover; object-position: top; background: var(--hundida); }
+.galeria figcaption { font-size: .95rem; color: var(--texto-2); }
+.galeria figcaption strong { display: block; color: var(--texto); font-family: var(--serif); font-weight: 600; font-size: 1rem; }
+@media (max-width: 900px) { .galeria { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.juegos { margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.juegos > div { padding: 18px 20px; border-radius: 16px; border: 1px solid var(--linea); background: var(--superficie); display: grid; gap: 6px; align-content: start; }
+.juegos dt { font: 500 .78rem/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--oro); }
+.juegos dd { margin: 0; color: var(--texto); overflow-wrap: anywhere; }
+@media (max-width: 900px) { .juegos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .juegos { grid-template-columns: minmax(0, 1fr); } }
+
+.pasos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; counter-reset: paso; }
+.paso { padding: 22px; border-radius: 16px; background: var(--fondo); border: 1px solid var(--linea); display: grid; gap: 10px; align-content: start; }
+.paso::before { counter-increment: paso; content: counter(paso); width: 36px; height: 40px; display: grid; place-items: center; font: 700 1rem var(--serif); color: var(--oro-sobre-grafito); background: var(--grafito); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+.paso p { color: var(--texto-2); }
+@media (max-width: 860px) { .pasos { grid-template-columns: minmax(0, 1fr); } }
+
+.windows { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: 36px; align-items: center; }
+.windows img { border-radius: 12px; border: 1px solid var(--linea); box-shadow: var(--sombra); }
+.windows ul { margin: 16px 0 0; padding-left: 1.1em; color: var(--texto-2); display: grid; gap: 6px; }
+@media (max-width: 860px) { .windows { grid-template-columns: minmax(0, 1fr); } }
+
+.video { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 36px; align-items: center; }
+.video video { width: min(300px, 70vw); aspect-ratio: 9 / 16; border-radius: 22px; background: var(--grafito); box-shadow: var(--sombra); }
+@media (max-width: 760px) { .video { grid-template-columns: minmax(0, 1fr); justify-items: center; } }
+
+.instalar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.instalar ol { margin: 0; padding-left: 1.25em; color: var(--texto-2); display: grid; gap: 8px; }
+.instalar li::marker { color: var(--oro); font-weight: 700; }
+@media (max-width: 760px) { .instalar { grid-template-columns: minmax(0, 1fr); } }
+
+.eleccion { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.opcion { padding: 22px; border-radius: 16px; border: 1px solid var(--linea); background: var(--superficie); display: grid; gap: 8px; align-content: start; }
+.opcion.nuestra { border-color: var(--oro); background: var(--oro-suave); }
+.opcion p { color: var(--texto-2); }
+@media (max-width: 760px) { .eleccion { grid-template-columns: minmax(0, 1fr); } }
+
+.preguntas { display: grid; gap: 10px; max-width: 52em; }
+details { border: 1px solid var(--linea); border-radius: 14px; background: var(--superficie); padding: 4px 18px; }
+summary { cursor: pointer; list-style: none; padding: 14px 0; font: 600 1.02rem var(--serif); display: flex; justify-content: space-between; gap: 16px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; color: var(--oro); font-family: var(--mono); }
+details[open] summary::after { content: "–"; }
+details p { padding: 0 0 16px; color: var(--texto-2); }
+code { font: .9em var(--mono); background: var(--hundida); padding: 2px 6px; border-radius: 5px; word-break: break-word; }
+
+footer { padding: 40px 0 56px; color: var(--texto-2); font-size: .92rem; }
+footer .ancho { display: grid; gap: 10px; }
+footer .fila { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+
+.aviso-idioma { position: fixed; z-index: 20; left: 12px; right: 12px; bottom: 12px; max-width: 520px; margin: 0 auto; display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 16px; border-radius: 14px; background: var(--grafito); color: #F4F2E8; box-shadow: var(--sombra); font-size: .95rem; }
+.aviso-idioma span { flex: 1 1 auto; }
+.aviso-idioma a { color: var(--oro-sobre-grafito); font-weight: 700; white-space: nowrap; }
+.aviso-idioma button { flex: none; width: 36px; height: 36px; border: 0; border-radius: 10px; background: transparent; color: #F4F2E8; font: 400 1.4rem/1 var(--cuerpo); cursor: pointer; }
+.aviso-idioma button:hover { background: rgba(255,255,255,.12); }
+@media (prefers-reduced-motion: reduce) { .boton { transition: none; } .boton:hover { transform: none; } }
+
+main.perdida { padding: 72px 0 96px; }
+.perdida .ancho { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; max-width: 880px; }
+.perdida .opcion { gap: 12px; padding: 28px; }
+.perdida .boton { margin-top: 6px; align-self: start; padding: 12px 18px; }
+.perdida h1 { font-size: 1.9rem; }
+@media (max-width: 720px) { .perdida .ancho { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body>
+<header class="barra">
+  <div class="ancho">
+    <a class="marca" href="/Pokekeep/"><img src="/Pokekeep/img/icono.png" alt="" width="34" height="34">Pokekeep</a>
+  </div>
+</header>
+<main class="perdida">
+  <div class="ancho">
+    <div class="opcion nuestra" lang="en">
+      <p class="etiqueta">404</p>
+      <h1>Page not found</h1>
+      <p>The page you asked for doesn’t exist, or it has moved. Pokekeep is a Pokémon save editor for Android and Windows, built on PKHeX.</p>
+      <a class="boton principal" href="/Pokekeep/" hreflang="en"><span class="sistema">Go to Pokekeep in English</span></a>
+    </div>
+    <div class="opcion" lang="es">
+      <p class="etiqueta">404</p>
+      <h1>Página no encontrada</h1>
+      <p>La página que buscas no existe o ha cambiado de sitio. Pokekeep es un editor de partidas de Pokémon para Android y Windows, basado en PKHeX.</p>
+      <a class="boton" href="/Pokekeep/es/" hreflang="es"><span class="sistema">Ir a Pokekeep en español</span></a>
+    </div>
+  </div>
+</main>
+</body>
+</html>
