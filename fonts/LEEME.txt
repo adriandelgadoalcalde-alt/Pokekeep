@@ -1,0 +1,13 @@
+Fuentes de la web / Web fonts
+
+Sora, Atkinson Hyperlegible y JetBrains Mono, subconjunto latino en WOFF2, descargadas de Google Fonts y servidas desde aquí
+para no depender de un tercero al cargar la página. Las tres se publican con la licencia SIL Open Font License 1.1
+(https://openfontlicense.org).
+
+Sora, Atkinson Hyperlegible and JetBrains Mono, Latin subset in WOFF2, downloaded from Google Fonts and served from here so the
+page doesn't depend on a third party to load. All three are published under the SIL Open Font License 1.1
+(https://openfontlicense.org).
+
+- Sora: copyright The Sora Project Authors.
+- Atkinson Hyperlegible: copyright Braille Institute of America, Inc.
+- JetBrains Mono: copyright The JetBrains Mono Project Authors.
