@@ -1,0 +1,24 @@
+{
+  "name": "Pokekeep",
+  "short_name": "Pokekeep",
+  "description": "Pokémon save editor for Android and Windows, built on PKHeX.",
+  "lang": "en",
+  "id": "/Pokekeep/",
+  "start_url": "/Pokekeep/",
+  "scope": "/Pokekeep/",
+  "display": "browser",
+  "background_color": "#151714",
+  "theme_color": "#151714",
+  "icons": [
+    {
+      "src": "img/icono.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "img/icono-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

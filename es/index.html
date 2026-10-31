@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pokekeep: editor de partidas de Pokémon para Android y Windows (PKHeX)</title>
+<meta name="description" content="Editor de partidas de Pokémon gratis para el móvil y Windows, basado en PKHeX. Legaliza cualquier Pokémon con un toque, de Rojo y Azul a Leyendas Z-A.">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="canonical" href="https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/">
+<link rel="alternate" hreflang="en" href="https://adriandelgadoalcalde-alt.github.io/Pokekeep/">
+<link rel="alternate" hreflang="es" href="https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/">
+<link rel="alternate" hreflang="x-default" href="https://adriandelgadoalcalde-alt.github.io/Pokekeep/">
+<meta name="theme-color" content="#F5F3ED" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151714" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pokekeep">
+<meta property="og:title" content="Pokekeep: editor de partidas de Pokémon para móvil y Windows">
+<meta property="og:description" content="Basado en PKHeX. «Legalizar automáticamente» deja legal cualquier Pokémon con un toque, y el propio PKHeX comprueba el resultado. Gratis y de código abierto.">
+<meta property="og:url" content="https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/">
+<meta property="og:locale" content="es_ES">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:image" content="https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Logotipo de Pokekeep con el texto «PKHeX with automatic legality» junto a la app de Android con una caja de Pokémon de una partida de Platino">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pokekeep: editor de partidas de Pokémon para móvil y Windows">
+<meta name="twitter:description" content="Basado en PKHeX. «Legalizar automáticamente» deja legal cualquier Pokémon con un toque, y el propio PKHeX comprueba el resultado. Gratis y de código abierto.">
+<meta name="twitter:image" content="https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/og.png">
+<meta name="twitter:image:alt" content="Logotipo de Pokekeep con el texto «PKHeX with automatic legality» junto a la app de Android con una caja de Pokémon de una partida de Platino">
+<link rel="icon" type="image/png" sizes="192x192" href="../img/icono.png">
+<link rel="apple-touch-icon" sizes="512x512" href="../img/icono-512.png">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="sitemap" type="application/xml" href="../sitemap.xml">
+<link rel="preload" href="../fonts/sora.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../fonts/atkinson-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../img/es/1-cajas.webp" as="image" type="image/webp" fetchpriority="high">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/#website",
+      "url": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/",
+      "name": "Pokekeep",
+      "inLanguage": [
+        "en",
+        "es"
+      ],
+      "description": "Pokémon save editor for Android and Windows, built on PKHeX / Editor de partidas de Pokémon para Android y Windows, basado en PKHeX",
+      "publisher": {
+        "@type": "Person",
+        "name": "IncrediBad",
+        "url": "https://github.com/adriandelgadoalcalde-alt"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/#webpage",
+      "url": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/",
+      "name": "Pokekeep: editor de partidas de Pokémon para Android y Windows (PKHeX)",
+      "description": "Editor de partidas de Pokémon gratis para el móvil y Windows, basado en PKHeX. Legaliza cualquier Pokémon con un toque, de Rojo y Azul a Leyendas Z-A.",
+      "inLanguage": "es",
+      "isPartOf": {
+        "@id": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/#website"
+      },
+      "about": {
+        "@id": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/#app"
+      },
+      "mainEntity": {
+        "@id": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/#app"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "contentUrl": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/og.png"
+      },
+      "datePublished": "2026-10-26",
+      "dateModified": "2026-10-31",
+      "video": {
+        "@id": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/#video"
+      },
+      "translationOfWork": {
+        "@type": "WebPage",
+        "@id": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/#webpage"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/#app",
+      "name": "Pokekeep",
+      "alternateName": "PKHeX Pokekeep",
+      "description": "Editor de partidas de Pokémon gratuito para Android y Windows, basado en PKHeX, con legalidad automática: «Legalizar automáticamente» corrige solo lo que marca PKHeX y comprueba el resultado con las propias reglas de PKHeX antes de escribirlo.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Android 10 o posterior, Windows 10 y 11 (64 bits)",
+      "softwareVersion": "1.0.1",
+      "datePublished": "2026-10-26",
+      "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR"
+      },
+      "inLanguage": [
+        "es",
+        "en"
+      ],
+      "url": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/",
+      "downloadUrl": [
+        "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.0.1/Pokekeep-1.0.1.apk",
+        "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.0.1/PKHeX-Pokekeep-1.0.1.zip"
+      ],
+      "installUrl": "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/latest",
+      "releaseNotes": "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/tag/v1.0.1",
+      "isBasedOn": {
+        "@type": "SoftwareApplication",
+        "name": "PKHeX",
+        "url": "https://github.com/kwsch/PKHeX"
+      },
+      "featureList": [
+        "Legalizar automáticamente, con el resultado comprobado por el análisis de legalidad de PKHeX antes de escribirlo",
+        "Editor completo del Pokémon: estadísticas, movimientos, cintas, origen, entrenador y recuerdos",
+        "Librería con todo lo que se puede conseguir en el juego cargado, eventos incluidos",
+        "Edición masiva y «Completar el juego»",
+        "Mochila, datos de la partida, banco de Pokémon y cobertura de tipos del equipo",
+        "Abre partidas de todos los juegos que admite PKHeX, de Rojo y Azul a Leyendas Z-A",
+        "Trabaja sobre una copia de la partida hasta que guardas; la app de Android no pide acceso a Internet"
+      ],
+      "author": {
+        "@type": "Person",
+        "name": "IncrediBad",
+        "url": "https://github.com/adriandelgadoalcalde-alt"
+      },
+      "image": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/og.png",
+      "screenshot": [
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/es/4-legalizar.webp",
+          "caption": "Resultado de Legalizar automáticamente, con lo que cambió",
+          "encodingFormat": "image/webp"
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/es/2-ficha.webp",
+          "caption": "Editor del Pokémon con las etiquetas de tipo",
+          "encodingFormat": "image/webp"
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/es/6-libreria.webp",
+          "caption": "Librería de Pokémon que se pueden conseguir en el juego cargado",
+          "encodingFormat": "image/webp"
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/es/3-vista-escarlata.webp",
+          "caption": "Vista previa sacada de Escarlata",
+          "encodingFormat": "image/webp"
+        }
+      ]
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "@id": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/#codigo",
+      "name": "Código fuente de Pokekeep",
+      "codeRepository": "https://github.com/adriandelgadoalcalde-alt/Pokekeep",
+      "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+      "targetProduct": {
+        "@id": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/#app"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "IncrediBad",
+        "url": "https://github.com/adriandelgadoalcalde-alt"
+      }
+    },
+    {
+      "@type": "VideoObject",
+      "@id": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/#video",
+      "name": "Pokekeep: de ilegal a legal en el móvil",
+      "description": "Demostración de 22 segundos de la app de Pokekeep para Android: se abre una partida de Platino, se ve el aviso de legalidad de un Pokémon y se legaliza con un toque.",
+      "thumbnailUrl": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/img/es/video-poster.webp",
+      "uploadDate": "2026-10-26T11:32:00+01:00",
+      "duration": "PT22S",
+      "contentUrl": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/video/pokekeep-es.mp4",
+      "encodingFormat": "video/mp4",
+      "inLanguage": "es",
+      "isFamilyFriendly": true,
+      "isPartOf": {
+        "@id": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/#webpage"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/#faq",
+      "url": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/#faq",
+      "inLanguage": "es",
+      "isPartOf": {
+        "@id": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/#website"
+      },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Qué es Pokekeep?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pokekeep es un editor de partidas de Pokémon gratuito basado en PKHeX. Tiene una app para Android y un PKHeX portable para Windows. Las dos añaden «Legalizar automáticamente», que deja legal un Pokémon según las reglas de PKHeX y conserva su especie y, cuando el juego lo permite, su variocolor, sexo, naturaleza y movimientos."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Es seguro Pokekeep?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El código es abierto (GPL-3.0) y el repositorio tiene los scripts para compilar las dos versiones desde las fuentes. Cada versión publica el SHA-256 de sus archivos, así que puedes comprobar tu descarga. La app de Android no pide acceso a Internet y trabaja sobre una copia de tu partida hasta que guardas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Funciona sin root?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí, no hace falta root. La app de Android abre el archivo de partida con el selector de archivos del propio Android, y la versión de Windows es un programa portable que se descomprime. Solo necesitas el archivo de partida, y la pregunta siguiente explica cómo sacarlo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cómo saco mi partida?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "En un emulador, es el archivo de partida de su carpeta. En una consola, hace falta un gestor de partidas en una consola modificada para copiarla. Pokekeep edita el archivo; no se comunica con la consola."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué juegos admite?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Todos los que admite PKHeX 26.10.18, de Rojo y Azul a Leyendas Pokémon: Z-A, incluidos Escarlata y Púrpura, Espada y Escudo, Diamante Brillante y Perla Reluciente, Leyendas Pokémon: Arceus y Let’s Go. La lista por generaciones está más arriba."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿En qué se diferencia de PKHeX y de PKSM?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pokekeep para Windows es PKHeX con dos botones más («Legalizar automáticamente» y «Optimizar stats»), una pestaña Librería y operaciones masivas. La app de Android es una app aparte para móviles que usa el mismo motor, PKHeX.Core. PKSM edita directamente en una consola modificada, mientras que Pokekeep trabaja con archivos de partida. Hay una comparación más larga más arriba."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Es oficial?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Pokekeep es una herramienta hecha por fans y no tiene relación con Nintendo, Creatures Inc., GAME FREAK inc. ni The Pokémon Company."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Los Pokémon legales funcionan online?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pokekeep los deja legales según las reglas de PKHeX, que son las mejores reglas públicas que hay. Los servicios online pueden hacer sus propias comprobaciones, así que no podemos prometer nada sobre el juego online. Úsalo bajo tu responsabilidad."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Por qué ocupa tanto el APK?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Unos 700 MB, porque lleva las vistas previas y los iconos de todos los juegos para funcionar sin conexión."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cómo lo actualizo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Instala el APK nuevo encima del anterior: se conservan los ajustes, el historial y el banco. O añade https://github.com/adriandelgadoalcalde-alt/Pokekeep a Obtainium y te avisará cuando haya una versión nueva."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Android dice que la app no es segura o la bloquea",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pokekeep no está en Google Play, así que Android pide permitir instalaciones desde el navegador o el gestor de archivos. Puedes comparar el SHA-256 del archivo con el de las notas de la versión."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "He encontrado un fallo o tengo una idea",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Abre una incidencia en GitHub o una conversación. En español o en inglés, como prefieras."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+@font-face { font-family: "Sora"; src: url(../fonts/sora.woff2) format("woff2"); font-weight: 100 800; font-style: normal; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible"; src: url(../fonts/atkinson-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible"; src: url(../fonts/atkinson-400-italic.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible"; src: url(../fonts/atkinson-700.woff2) format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url(../fonts/jetbrains-mono.woff2) format("woff2"); font-weight: 100 800; font-style: normal; font-display: swap; }
+@font-face { font-family: "Sora Fallback"; src: local("Arial"); size-adjust: 110%; ascent-override: 88%; descent-override: 26%; line-gap-override: 0%; }
+@font-face { font-family: "Atkinson Fallback"; src: local("Arial"); size-adjust: 98%; ascent-override: 97%; descent-override: 30%; line-gap-override: 0%; }
+:root {
+  --fondo: #F5F3ED; --superficie: #FFFEFA; --hundida: #EDEBE2; --texto: #252821; --texto-2: #62665A; --linea: #E2E3D8;
+  --oro: #69572E; --oro-suave: #F1E8D3; --grafito: #25231D; --oro-sobre-grafito: #F2D9A2; --ok: #245F46; --ok-fondo: #E3F0E8;
+  --sombra: 0 1px 2px rgba(37,35,29,.06), 0 12px 32px -12px rgba(37,35,29,.18);
+  --serif: "Sora", "Sora Fallback", "Segoe UI", system-ui, sans-serif; --cuerpo: "Atkinson Hyperlegible", "Atkinson Fallback", "Segoe UI", system-ui, sans-serif; --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fondo: #151714; --superficie: #22241E; --hundida: #1B1D18; --texto: #F4F2E8; --texto-2: #B4B7A9; --linea: #3B3E32;
+    --oro: #EBD19A; --oro-suave: #383222; --grafito: #0E0F0C; --oro-sobre-grafito: #F2D9A2; --ok: #8FD3B0; --ok-fondo: #1F3329;
+    --sombra: 0 1px 2px rgba(0,0,0,.4), 0 16px 40px -16px rgba(0,0,0,.7); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --fondo: #151714; --superficie: #22241E; --hundida: #1B1D18; --texto: #F4F2E8; --texto-2: #B4B7A9; --linea: #3B3E32;
+  --oro: #EBD19A; --oro-suave: #383222; --grafito: #0E0F0C; --oro-sobre-grafito: #F2D9A2; --ok: #8FD3B0; --ok-fondo: #1F3329;
+  --sombra: 0 1px 2px rgba(0,0,0,.4), 0 16px 40px -16px rgba(0,0,0,.7); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 76px; }
+body { overflow-x: hidden; margin: 0; background: var(--fondo); color: var(--texto); font: 400 1.0625rem/1.6 var(--cuerpo); }
+a { color: var(--oro); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--oro); outline-offset: 3px; border-radius: 6px; }
+img { max-width: 100%; height: auto; display: block; }
+.saltar { position: absolute; left: 12px; top: -64px; z-index: 30; padding: 10px 14px; border-radius: 8px; background: var(--grafito); color: var(--oro-sobre-grafito); text-decoration: none; }
+.saltar:focus { top: 12px; }
+.ancho { width: min(1120px, 100%); margin: 0 auto; padding: 0 20px; }
+h1, h2, h3 { font-family: var(--serif); line-height: 1.15; text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h2 { font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.3rem); font-weight: 650; }
+h3 { font-size: 1.2rem; font-weight: 600; }
+p { margin: 0; }
+.nb { white-space: nowrap; }
+.etiqueta { font: 500 .78rem/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--oro); }
+
+/* Cabecera */
+header.barra { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--fondo) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--linea); }
+.barra .ancho { display: flex; align-items: center; gap: 14px; height: 64px; }
+.marca { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--texto); font: 650 1.15rem var(--serif); }
+.marca img { width: 34px; height: 34px; border-radius: 9px; }
+.barra nav { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+.barra nav a { color: var(--texto-2); text-decoration: none; padding: 8px 10px; border-radius: 8px; font-size: .95rem; }
+.barra nav a:hover { color: var(--texto); background: var(--hundida); }
+.idioma { display: inline-flex; border: 1px solid var(--linea); border-radius: 999px; padding: 3px; background: var(--superficie); }
+.barra nav .idioma a { color: var(--texto-2); font: 500 .8rem var(--mono); padding: 6px 10px; border-radius: 999px; }
+.barra nav .idioma a:hover { background: var(--hundida); color: var(--texto); }
+.barra nav .idioma a[aria-current="page"] { background: var(--grafito); color: var(--oro-sobre-grafito); }
+@media (max-width: 720px) { .barra nav a.opcional { display: none; } }
+
+/* Portada */
+.portada { padding: 56px 0 40px; position: relative; overflow: hidden; }
+.portada .ancho { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 48px; align-items: center; }
+.portada h1 { font-size: clamp(2.3rem, 1.5rem + 3.4vw, 3.9rem); font-weight: 700; margin-top: 14px; }
+.portada h1 em { font-style: normal; color: var(--oro); }
+.portada .entradilla { margin-top: 18px; font-size: 1.15rem; color: var(--texto-2); max-width: 34em; }
+.sello { display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; padding: 7px 12px; border-radius: 8px; background: var(--ok-fondo); color: var(--ok); font: 500 .85rem var(--mono); }
+.descargas { margin-top: 28px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 560px; }
+.boton { display: flex; flex-direction: column; gap: 4px; padding: 16px 18px; border-radius: 14px; text-decoration: none; border: 1px solid var(--linea); background: var(--superficie); color: var(--texto); box-shadow: var(--sombra); transition: transform .15s ease, border-color .15s ease; }
+.boton:hover { transform: translateY(-2px); border-color: var(--oro); }
+.boton.principal { background: var(--grafito); color: #F4F2E8; border-color: var(--grafito); }
+.boton .sistema { font: 600 1.05rem var(--serif); }
+.boton .detalle { font: 400 .82rem var(--mono); color: var(--texto-2); }
+.boton.principal .detalle { color: #C9C3B0; }
+.boton .sistema b { color: var(--oro-sobre-grafito); font-weight: 600; }
+.boton:not(.principal) .sistema b { color: var(--oro); }
+.notas-descarga { margin-top: 12px; font-size: .9rem; color: var(--texto-2); }
+.telefono { justify-self: center; width: min(330px, 80vw); aspect-ratio: 720 / 1440; border-radius: 42px; padding: 11px; background: var(--grafito); box-shadow: var(--sombra), inset 0 0 0 2px #3a372d; position: relative; }
+.telefono img { width: 100%; height: 100%; object-fit: cover; border-radius: 32px; }
+.hex { position: absolute; z-index: -1; width: 520px; height: 520px; right: -90px; top: -60px; opacity: .55; }
+@media (max-width: 880px) { .portada .ancho { grid-template-columns: minmax(0, 1fr); } .telefono { margin-top: 12px; } .hex { display: none; } }
+@media (max-width: 520px) { .descargas { grid-template-columns: minmax(0, 1fr); } }
+
+/* Secciones */
+section { padding: 64px 0; }
+section.alterna { background: var(--superficie); border-block: 1px solid var(--linea); }
+.cabeza { max-width: 44em; margin-bottom: 36px; display: grid; gap: 10px; }
+.cabeza p { color: var(--texto-2); font-size: 1.1rem; }
+.pie-seccion { margin-top: 26px; color: var(--texto-2); }
+.galeria { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.galeria figure { margin: 0; display: grid; gap: 10px; align-content: start; }
+.galeria img { width: 100%; border-radius: 18px; border: 1px solid var(--linea); box-shadow: var(--sombra); aspect-ratio: 1 / 2; object-fit: cover; object-position: top; background: var(--hundida); }
+.galeria figcaption { font-size: .95rem; color: var(--texto-2); }
+.galeria figcaption strong { display: block; color: var(--texto); font-family: var(--serif); font-weight: 600; font-size: 1rem; }
+@media (max-width: 900px) { .galeria { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.juegos { margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.juegos > div { padding: 18px 20px; border-radius: 16px; border: 1px solid var(--linea); background: var(--superficie); display: grid; gap: 6px; align-content: start; }
+.juegos dt { font: 500 .78rem/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--oro); }
+.juegos dd { margin: 0; color: var(--texto); overflow-wrap: anywhere; }
+@media (max-width: 900px) { .juegos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .juegos { grid-template-columns: minmax(0, 1fr); } }
+
+.pasos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; counter-reset: paso; }
+.paso { padding: 22px; border-radius: 16px; background: var(--fondo); border: 1px solid var(--linea); display: grid; gap: 10px; align-content: start; }
+.paso::before { counter-increment: paso; content: counter(paso); width: 36px; height: 40px; display: grid; place-items: center; font: 700 1rem var(--serif); color: var(--oro-sobre-grafito); background: var(--grafito); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+.paso p { color: var(--texto-2); }
+@media (max-width: 860px) { .pasos { grid-template-columns: minmax(0, 1fr); } }
+
+.windows { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: 36px; align-items: center; }
+.windows img { border-radius: 12px; border: 1px solid var(--linea); box-shadow: var(--sombra); }
+.windows ul { margin: 16px 0 0; padding-left: 1.1em; color: var(--texto-2); display: grid; gap: 6px; }
+@media (max-width: 860px) { .windows { grid-template-columns: minmax(0, 1fr); } }
+
+.video { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 36px; align-items: center; }
+.video video { width: min(300px, 70vw); aspect-ratio: 9 / 16; border-radius: 22px; background: var(--grafito); box-shadow: var(--sombra); }
+@media (max-width: 760px) { .video { grid-template-columns: minmax(0, 1fr); justify-items: center; } }
+
+.instalar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.instalar ol { margin: 0; padding-left: 1.25em; color: var(--texto-2); display: grid; gap: 8px; }
+.instalar li::marker { color: var(--oro); font-weight: 700; }
+@media (max-width: 760px) { .instalar { grid-template-columns: minmax(0, 1fr); } }
+
+.eleccion { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.opcion { padding: 22px; border-radius: 16px; border: 1px solid var(--linea); background: var(--superficie); display: grid; gap: 8px; align-content: start; }
+.opcion.nuestra { border-color: var(--oro); background: var(--oro-suave); }
+.opcion p { color: var(--texto-2); }
+@media (max-width: 760px) { .eleccion { grid-template-columns: minmax(0, 1fr); } }
+
+.preguntas { display: grid; gap: 10px; max-width: 52em; }
+details { border: 1px solid var(--linea); border-radius: 14px; background: var(--superficie); padding: 4px 18px; }
+summary { cursor: pointer; list-style: none; padding: 14px 0; font: 600 1.02rem var(--serif); display: flex; justify-content: space-between; gap: 16px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; color: var(--oro); font-family: var(--mono); }
+details[open] summary::after { content: "–"; }
+details p { padding: 0 0 16px; color: var(--texto-2); }
+code { font: .9em var(--mono); background: var(--hundida); padding: 2px 6px; border-radius: 5px; word-break: break-word; }
+
+footer { padding: 40px 0 56px; color: var(--texto-2); font-size: .92rem; }
+footer .ancho { display: grid; gap: 10px; }
+footer .fila { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+
+.aviso-idioma { position: fixed; z-index: 20; left: 12px; right: 12px; bottom: 12px; max-width: 520px; margin: 0 auto; display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 16px; border-radius: 14px; background: var(--grafito); color: #F4F2E8; box-shadow: var(--sombra); font-size: .95rem; }
+.aviso-idioma span { flex: 1 1 auto; }
+.aviso-idioma a { color: var(--oro-sobre-grafito); font-weight: 700; white-space: nowrap; }
+.aviso-idioma button { flex: none; width: 36px; height: 36px; border: 0; border-radius: 10px; background: transparent; color: #F4F2E8; font: 400 1.4rem/1 var(--cuerpo); cursor: pointer; }
+.aviso-idioma button:hover { background: rgba(255,255,255,.12); }
+@media (prefers-reduced-motion: reduce) { .boton { transition: none; } .boton:hover { transform: none; } }
+</style>
+</head>
+<body>
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+<header class="barra">
+  <div class="ancho">
+    <a class="marca" href="./"><img src="../img/icono.png" alt="" width="34" height="34">Pokekeep</a>
+    <nav aria-label="Secciones">
+      <a class="opcional" href="#features">Qué hace</a>
+      <a class="opcional" href="#games">Juegos</a>
+      <a class="opcional" href="#install">Instalar</a>
+      <a class="opcional" href="#faq">Preguntas</a>
+      <a href="https://github.com/adriandelgadoalcalde-alt/Pokekeep">GitHub</a>
+      <span class="idioma" role="group" aria-label="Idioma / Language"><a href="../" hreflang="en" lang="en">EN</a><a href="./" hreflang="es" lang="es" aria-current="page">ES</a></span>
+    </nav>
+  </div>
+</header>
+
+<main id="contenido">
+<section class="portada">
+  <svg class="hex" viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,3 93,27 93,73 50,97 7,73 7,27" fill="none" stroke="var(--oro)" stroke-width=".6"/><polygon points="50,15 82,33 82,67 50,85 18,67 18,33" fill="none" stroke="var(--oro)" stroke-width=".35"/></svg>
+  <div class="ancho">
+    <div>
+      <p class="etiqueta">Editor de partidas de Pokémon · Android y Windows</p>
+      <h1>Cualquier Pokémon, legal <em>con un toque</em>.</h1>
+      <p class="entradilla">Pokekeep es PKHeX con un botón «Legalizar automáticamente», en el móvil y en Windows. Corrige solo lo que marca PKHeX, y no escribe nada hasta que el propio PKHeX dice que el resultado es legal.</p>
+      <p class="sello" id="sello">✓ Comprobado con PKHeX.Core 26.10.18</p>
+      <div class="descargas">
+        <a class="boton principal" id="descarga-apk" href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.0.1/Pokekeep-1.0.1.apk">
+          <span class="sistema"><b>Android</b> 10+</span>
+          <span class="detalle">APK · unos 700 MB · <span class="ver">v1.0.1</span></span>
+        </a>
+        <a class="boton" id="descarga-zip" href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.0.1/PKHeX-Pokekeep-1.0.1.zip">
+          <span class="sistema"><b>Windows</b> 10/11 · 64 bits</span>
+          <span class="detalle">ZIP portable · 119 MB · <span class="ver">v1.0.1</span></span>
+        </a>
+      </div>
+      <p class="notas-descarga">Gratis y de código abierto (GPL-3.0). Sin cuenta, sin anuncios, y la app de Android no pide acceso a Internet.
+        <a href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/latest">Novedades y SHA-256</a></p>
+    </div>
+    <div class="telefono">
+      <img src="../img/es/1-cajas.webp" alt="Pokekeep en Android: la caja 9 de una partida de Platino, con un aviso de legalidad en Celebi" width="720" height="1440" fetchpriority="high" decoding="async">
+    </div>
+  </div>
+</section>
+
+<section id="features" class="alterna">
+  <div class="ancho">
+    <div class="cabeza">
+      <p class="etiqueta">La app de Android</p>
+      <h2>Todo lo que edita PKHeX, pensado para el móvil</h2>
+      <p>Abre partidas de todos los juegos que admite PKHeX, de Rojo y Azul a Leyendas <span class="nb">Z-A</span>, y trabaja sobre una copia hasta que guardas.</p>
+    </div>
+    <div class="galeria">
+      <figure>
+        <img src="../img/es/4-legalizar.webp" alt="Resultado de Legalizar automáticamente, con lo que cambió" loading="lazy" decoding="async" width="720" height="1440">
+        <figcaption><strong>Legalizar automáticamente</strong>Un Pokémon o todos los ilegales de la partida. Te dice qué cambió, y se puede deshacer.</figcaption>
+      </figure>
+      <figure>
+        <img src="../img/es/2-ficha.webp" alt="Editor del Pokémon con las etiquetas de tipo" loading="lazy" decoding="async" width="720" height="1440">
+        <figcaption><strong>El editor completo</strong>Estadísticas, movimientos, cintas, origen y entrenador, con las etiquetas de tipo en los colores de Escarlata y Púrpura.</figcaption>
+      </figure>
+      <figure>
+        <img src="../img/es/6-libreria.webp" alt="Librería de Pokémon que se pueden conseguir en el juego cargado" loading="lazy" decoding="async" width="720" height="1440">
+        <figcaption><strong>Librería</strong>Todo lo que se puede conseguir en el juego cargado, eventos incluidos, listo para ponerlo en una caja.</figcaption>
+      </figure>
+      <figure>
+        <img src="../img/es/3-vista-escarlata.webp" alt="Vista previa sacada de Escarlata" loading="lazy" decoding="async" width="720" height="1440">
+        <figcaption><strong>El aspecto de cada juego</strong>Vistas previas e iconos de caja sacados de cada juego, de la primera generación a Leyendas <span class="nb">Z-A</span>.</figcaption>
+      </figure>
+    </div>
+    <p class="pie-seccion">Además: edición masiva, «Completar el juego», Mochila, datos de la partida, banco de Pokémon y cobertura de tipos del equipo. Español e inglés, tema claro y oscuro, letra grande y TalkBack.</p>
+  </div>
+</section>
+
+<section id="games">
+  <div class="ancho">
+    <div class="cabeza">
+      <p class="etiqueta">Compatibilidad</p>
+      <h2>Juegos compatibles: de Rojo y Azul a Leyendas Pokémon: <span class="nb">Z-A</span></h2>
+      <p>Pokekeep abre las partidas de todos los juegos que admite PKHeX 26.10.18. La app de Android y la versión de Windows comparten esta lista.</p>
+    </div>
+    <dl class="juegos">
+      <div><dt>Generación 1</dt><dd>Rojo, Verde (Japón), Azul, Amarillo</dd></div>
+      <div><dt>Generación 2</dt><dd>Oro, Plata, Cristal</dd></div>
+      <div><dt>Generación 3</dt><dd>Rubí, Zafiro, Esmeralda, Rojo Fuego, Verde Hoja, Colosseum, XD</dd></div>
+      <div><dt>Generación 4</dt><dd>Diamante, Perla, Platino, Oro HeartGold, Plata SoulSilver</dd></div>
+      <div><dt>Generación 5</dt><dd>Negro, Blanco, Negro 2, Blanco 2</dd></div>
+      <div><dt>Generación 6</dt><dd>X, Y, Rubí Omega, Zafiro Alfa</dd></div>
+      <div><dt>Generación 7</dt><dd>Sol, Luna, Ultrasol, Ultraluna, Let’s Go Pikachu, Let’s Go Eevee</dd></div>
+      <div><dt>Generación 8</dt><dd>Espada, Escudo, Diamante Brillante, Perla Reluciente, Leyendas Pokémon: Arceus</dd></div>
+      <div><dt>Generación 9</dt><dd>Escarlata, Púrpura, Leyendas Pokémon: <span class="nb">Z-A</span></dd></div>
+    </dl>
+    <p class="pie-seccion">Cada versión trae un informe de cobertura que recoge, juego por juego, qué se puede generar y qué no.</p>
+  </div>
+</section>
+
+<section id="legality" class="alterna">
+  <div class="ancho">
+    <div class="cabeza">
+      <p class="etiqueta">Cómo funciona la legalidad</p>
+      <h2>PKHeX decide. Pokekeep solo hace el trabajo.</h2>
+      <p>Pokekeep no cambia ninguna regla de PKHeX. Si PKHeX encuentra algo inválido, el resultado no se escribe.</p>
+    </div>
+    <div class="pasos">
+      <div class="paso"><h3>Corrige solo lo marcado</h3><p>Empieza por lo que señala el análisis de legalidad de PKHeX, bytes de basura de los nombres incluidos, y no toca PID, IV, entrenador ni apodo si están bien.</p></div>
+      <div class="paso"><h3>Regenera si hace falta</h3><p>Si corregir no basta, vuelve a crear el Pokémon desde un encuentro legal del mismo juego con Auto Legality Mod, y conserva especie, variocolor, sexo, naturaleza y movimientos cuando el juego lo permite.</p></div>
+      <div class="paso"><h3>Comprueba otra vez y escribe</h3><p>Cada resultado vuelve a pasar por PKHeX.Core antes de llegar a tu partida. Cada cambio se puede deshacer.</p></div>
+    </div>
+    <p class="pie-seccion">«Legal» quiere decir aquí que PKHeX no encuentra nada inválido. No demuestra cómo se consiguió el Pokémon ni que existiera tal cual en una distribución real.</p>
+  </div>
+</section>
+
+<section id="windows">
+  <div class="ancho windows">
+    <img src="../img/windows-legalizar.webp" alt="Pokekeep en Windows: PKHeX con los botones Legalizar automáticamente y Optimizar stats, tras legalizar un Starly" loading="lazy" decoding="async" width="864" height="572">
+    <div>
+      <p class="etiqueta">En Windows</p>
+      <h2 style="margin-top:10px">Es PKHeX, con dos botones más</h2>
+      <ul>
+        <li>«Legalizar automáticamente» y «Optimizar stats» en el editor y en el menú de cada casilla.</li>
+        <li>Una pestaña Librería y operaciones masivas para toda la partida.</li>
+        <li>Portable: se descomprime y se abre <code>PKHeX.exe</code>. Sin instalar nada y sin .NET.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="video" class="alterna">
+  <div class="ancho video">
+    <video controls muted playsinline preload="none" poster="../img/es/video-poster.webp" width="540" height="960" aria-label="Vídeo de Pokekeep: legalizar un Pokémon en Android"><source src="../video/pokekeep-es.mp4" type="video/mp4"></video>
+    <div class="cabeza" style="margin:0">
+      <p class="etiqueta">En 22 segundos</p>
+      <h2>De ilegal a legal, en el móvil</h2>
+      <p>Abres la partida, ves el aviso, tocas una vez. La app de verdad, con sus pantallas reales.</p>
+    </div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="ancho">
+    <div class="cabeza">
+      <p class="etiqueta">Descarga</p>
+      <h2>Instalar Pokekeep en Android o Windows</h2>
+      <p>Las dos descargas están en la página de Versiones de GitHub, cada una con su SHA-256.</p>
+    </div>
+    <div class="instalar">
+      <div class="opcion">
+        <h3>Android</h3>
+        <ol>
+          <li>Descarga el APK con el botón de la parte de arriba o desde la <a href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/latest">página de Versiones</a>.</li>
+          <li>Cuando Android lo pida, permite al navegador o al gestor de archivos instalar apps de origen desconocido. Pokekeep no está en Google Play.</li>
+          <li>Abre el archivo e instálalo. Hace falta Android 10 o posterior y ocupa unos 700 MB.</li>
+          <li>Para actualizar, instala el APK nuevo encima del anterior: se conservan los ajustes, el historial y el banco. O añade <code>https://github.com/adriandelgadoalcalde-alt/Pokekeep</code> como fuente en <a href="https://github.com/ImranR98/Obtainium">Obtainium</a> y te avisará cuando haya una versión nueva.</li>
+        </ol>
+      </div>
+      <div class="opcion">
+        <h3>Windows</h3>
+        <ol>
+          <li>Descarga el ZIP portable (119 MB) con el botón de la parte de arriba. Es para Windows 10 u 11 de 64 bits.</li>
+          <li>Descomprímelo en una carpeta.</li>
+          <li>Abre <code>PKHeX.exe</code>. No hay que instalar nada, ni siquiera .NET.</li>
+        </ol>
+      </div>
+    </div>
+    <p class="pie-seccion">Puedes comparar el SHA-256 de cada archivo con el de las notas de la versión.</p>
+  </div>
+</section>
+
+<section id="compare" class="alterna">
+  <div class="ancho">
+    <div class="cabeza">
+      <p class="etiqueta">¿Qué herramienta?</p>
+      <h2>Pokekeep, PKHeX, Auto Legality Mod o PKSM</h2>
+      <p>Cada una sirve para algo distinto. Una guía honesta:</p>
+    </div>
+    <div class="eleccion">
+      <div class="opcion nuestra"><h3>Pokekeep</h3><p>Si quieres editar en el móvil, o quieres un botón que corrija solo lo que falla y compruebe el resultado con las propias reglas de PKHeX.</p></div>
+      <div class="opcion"><h3>PKHeX</h3><p>Si quieres control manual total en Windows. Pokekeep para Windows <em>es</em> PKHeX: no pierdes nada si cambias, ni si te quedas.</p></div>
+      <div class="opcion"><h3>PKHeX + Auto Legality Mod</h3><p>Si ya trabajas con sets de Showdown dentro de PKHeX. Pokekeep usa Auto Legality Mod por dentro cuando hay que regenerar un Pokémon.</p></div>
+      <div class="opcion"><h3>PKSM</h3><p>Si quieres editar directamente en una consola modificada, sin mover partidas. Pokekeep trabaja con archivos de partida en Android o Windows.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="ancho">
+    <div class="cabeza"><p class="etiqueta">Preguntas</p><h2>Antes de descargar</h2></div>
+    <div class="preguntas">
+      <details><summary>¿Qué es Pokekeep?</summary><p>Pokekeep es un editor de partidas de Pokémon gratuito basado en <a href="https://github.com/kwsch/PKHeX">PKHeX</a>. Tiene una app para Android y un PKHeX portable para Windows. Las dos añaden «Legalizar automáticamente», que deja legal un Pokémon según las reglas de PKHeX y conserva su especie y, cuando el juego lo permite, su variocolor, sexo, naturaleza y movimientos.</p></details>
+      <details><summary>¿Es seguro Pokekeep?</summary><p>El código es abierto (GPL-3.0) y el repositorio tiene los scripts para compilar las dos versiones desde las fuentes. Cada versión publica el SHA-256 de sus archivos, así que puedes comprobar tu descarga. La app de Android no pide acceso a Internet y trabaja sobre una copia de tu partida hasta que guardas.</p></details>
+      <details><summary>¿Funciona sin root?</summary><p>Sí, no hace falta root. La app de Android abre el archivo de partida con el selector de archivos del propio Android, y la versión de Windows es un programa portable que se descomprime. Solo necesitas el archivo de partida, y la pregunta siguiente explica cómo sacarlo.</p></details>
+      <details><summary>¿Cómo saco mi partida?</summary><p>En un emulador, es el archivo de partida de su carpeta. En una consola, hace falta un gestor de partidas en una consola modificada para copiarla. Pokekeep edita el archivo; no se comunica con la consola.</p></details>
+      <details><summary>¿Qué juegos admite?</summary><p>Todos los que admite PKHeX 26.10.18, de Rojo y Azul a Leyendas Pokémon: <span class="nb">Z-A</span>, incluidos Escarlata y Púrpura, Espada y Escudo, Diamante Brillante y Perla Reluciente, Leyendas Pokémon: Arceus y Let’s Go. La <a href="#games">lista por generaciones</a> está más arriba.</p></details>
+      <details><summary>¿En qué se diferencia de PKHeX y de PKSM?</summary><p>Pokekeep para Windows es PKHeX con dos botones más («Legalizar automáticamente» y «Optimizar stats»), una pestaña Librería y operaciones masivas. La app de Android es una app aparte para móviles que usa el mismo motor, PKHeX.Core. PKSM edita directamente en una consola modificada, mientras que Pokekeep trabaja con archivos de partida. Hay una <a href="#compare">comparación más larga</a> más arriba.</p></details>
+      <details><summary>¿Es oficial?</summary><p>No. Pokekeep es una herramienta hecha por fans y no tiene relación con Nintendo, Creatures Inc., GAME FREAK inc. ni The Pokémon Company.</p></details>
+      <details><summary>¿Los Pokémon legales funcionan online?</summary><p>Pokekeep los deja legales según las reglas de PKHeX, que son las mejores reglas públicas que hay. Los servicios online pueden hacer sus propias comprobaciones, así que no podemos prometer nada sobre el juego online. Úsalo bajo tu responsabilidad.</p></details>
+      <details><summary>¿Por qué ocupa tanto el APK?</summary><p>Unos 700 MB, porque lleva las vistas previas y los iconos de todos los juegos para funcionar sin conexión.</p></details>
+      <details><summary>¿Cómo lo actualizo?</summary><p>Instala el APK nuevo encima del anterior: se conservan los ajustes, el historial y el banco. O añade <code>https://github.com/adriandelgadoalcalde-alt/Pokekeep</code> a Obtainium y te avisará cuando haya una versión nueva.</p></details>
+      <details><summary>Android dice que la app no es segura o la bloquea</summary><p>Pokekeep no está en Google Play, así que Android pide permitir instalaciones desde el navegador o el gestor de archivos. Puedes comparar el SHA-256 del archivo con el de las notas de la versión.</p></details>
+      <details><summary>He encontrado un fallo o tengo una idea</summary><p>Abre una <a href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/issues/new/choose">incidencia en GitHub</a> o una <a href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/discussions">conversación</a>. En español o en inglés, como prefieras.</p></details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="ancho">
+    <div class="fila">
+      <a href="https://github.com/adriandelgadoalcalde-alt/Pokekeep">GitHub</a>
+      <a href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/latest">Versiones</a>
+      <a href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/blob/main/CREDITOS.md">Créditos</a>
+      <a href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/blob/main/LICENSE">Licencia (GPL-3.0)</a>
+      <a href="../" hreflang="en" lang="en">Read in English</a>
+    </div>
+    <div class="fila">
+      <span>Otras herramientas Keep:</span>
+      <a href="https://github.com/adriandelgadoalcalde-alt/Terrakeep">Terrakeep, editor de personajes y mundos de Terraria</a>
+      <a href="https://github.com/adriandelgadoalcalde-alt/TerrakeepMod">TerrakeepMod, editor dentro de la partida para tModLoader</a>
+    </div>
+    <p>Pokekeep se basa en <a href="https://github.com/kwsch/PKHeX">PKHeX</a>, de Kurt «kwsch» y colaboradores, y usa <a href="https://github.com/santacrab2/PKHeX-Plugins">Auto Legality Mod</a>. Pokémon y sus nombres son de Nintendo, Creatures Inc. y GAME FREAK inc.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var AQUI = "es";
+  var OTRO = { codigo: "en", href: "../", texto: "This page is also available in English.", enlace: "View in English", cerrar: "Close" };
+  function guardar(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function leer(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+
+  // Un enlace de idioma recuerda la elección. No hay redirección automática: solo un aviso discreto.
+  Array.prototype.forEach.call(document.querySelectorAll('.idioma a, footer a[hreflang]'), function (a) {
+    a.addEventListener('click', function () { guardar('pokekeep-idioma', a.getAttribute('hreflang')); });
+  });
+  try {
+    var preferido = String((navigator.languages && navigator.languages[0]) || navigator.language || '').toLowerCase();
+    var prefiereEs = /^es\b/.test(preferido);
+    var sugerir = (AQUI === 'en' && prefiereEs) || (AQUI === 'es' && !prefiereEs && preferido !== '');
+    var elegido = leer('pokekeep-idioma');
+    if (sugerir && elegido !== AQUI && leer('pokekeep-aviso') !== '1') {
+      var caja = document.createElement('div');
+      caja.className = 'aviso-idioma'; caja.setAttribute('role', 'region'); caja.setAttribute('lang', OTRO.codigo);
+      caja.setAttribute('aria-label', OTRO.codigo === 'es' ? 'Idioma' : 'Language');
+      var texto = document.createElement('span'); texto.textContent = OTRO.texto;
+      var enlace = document.createElement('a'); enlace.href = OTRO.href; enlace.setAttribute('hreflang', OTRO.codigo); enlace.textContent = OTRO.enlace;
+      enlace.addEventListener('click', function () { guardar('pokekeep-idioma', OTRO.codigo); });
+      var cerrar = document.createElement('button'); cerrar.type = 'button'; cerrar.setAttribute('aria-label', OTRO.cerrar); cerrar.textContent = '\u00d7';
+      cerrar.addEventListener('click', function () { guardar('pokekeep-aviso', '1'); caja.parentNode.removeChild(caja); });
+      caja.appendChild(texto); caja.appendChild(enlace); caja.appendChild(cerrar);
+      document.body.appendChild(caja);
+    }
+  } catch (e) {}
+
+  // Los botones de descarga apuntan a la última release real (el HTML trae la 1.0.1 por si la API no responde).
+  // Se consulta en la primera interacción, no al cargar: así los rastreadores y las pruebas automáticas no gastan
+  // el límite de peticiones anónimas de la API de GitHub.
+  var consultado = false;
+  function actualizarDescargas() {
+    if (consultado) return; consultado = true;
+    ['scroll', 'pointermove', 'pointerdown', 'touchstart', 'keydown', 'focusin'].forEach(function (n) { window.removeEventListener(n, actualizarDescargas, true); });
+    fetch('https://api.github.com/repos/adriandelgadoalcalde-alt/Pokekeep/releases/latest').then(function (r) { return r.ok ? r.json() : null; }).then(function (rel) {
+      if (!rel || !rel.assets) return;
+      var apk = rel.assets.find(function (a) { return /\.apk$/i.test(a.name); });
+      var zip = rel.assets.find(function (a) { return /^PKHeX-Pokekeep-.*\.zip$/i.test(a.name); });
+      if (apk) document.getElementById('descarga-apk').href = apk.browser_download_url;
+      if (zip) document.getElementById('descarga-zip').href = zip.browser_download_url;
+      Array.prototype.forEach.call(document.querySelectorAll('.ver'), function (s) { s.textContent = rel.tag_name; });
+    }).catch(function () {});
+  }
+  ['scroll', 'pointermove', 'pointerdown', 'touchstart', 'keydown', 'focusin'].forEach(function (n) { window.addEventListener(n, actualizarDescargas, { capture: true, passive: true }); });
+})();
+</script>
+</body>
+</html>
