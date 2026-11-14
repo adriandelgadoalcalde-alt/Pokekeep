@@ -69,7 +69,7 @@
       </Border>
       </ScrollViewer>
       <TextBlock Classes="sec" Text="{DynamicResource Loc.Libreria.Vista.8}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="16,32,16,0" IsVisible="{Binding SinResultados}" />
-      <ListBox Name="Lista" Classes="limpia" ItemsSource="{Binding Filas}" IsVisible="{Binding HayLista}" Margin="8,4,8,0" AutomationProperties.Name="{DynamicResource Loc.Libreria.Vista.9}" SelectionMode="Single">
+      <ListBox Name="Lista" Classes="limpia" ItemsSource="{Binding Filas}" IsVisible="{Binding HayLista}" Margin="8,6,8,0" AutomationProperties.Name="{DynamicResource Loc.Libreria.Vista.9}" SelectionMode="Single">
         <ListBox.Styles>
           <Style Selector="ListBoxItem"><Setter Property="Padding" Value="0" /><Setter Property="MinHeight" Value="0" /><Setter Property="Margin" Value="0,0,0,8" /></Style>
         </ListBox.Styles>
@@ -105,8 +105,9 @@
       </ListBox>
     </Panel>
 
-    <!-- Paginación de 50 en 50 -->
-    <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto" Margin="16,4,16,8" IsVisible="{Binding HayLista}">
+    <!-- Paginación de 50 en 50. Los huecos cabecera-lista y lista-paginación son de 6 dp (antes 4): a escala 1,3125 los de 4 redondeaban a 3,81 y 4,19,
+         justo alrededor del umbral «demasiado cerca» de KeepQA (4), y en la lista de eventos uno de los dos saltaba (R-014, 14-nov-2026). Con 8 dp la lista se quedaba sin alto en 800x360 apaisado a x1,29. -->
+    <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto" Margin="16,6,16,8" IsVisible="{Binding HayLista}">
       <Button Name="BotonAnterior" Classes="secundario" MinHeight="48" MinWidth="48" Command="{Binding AnteriorCommand}" IsEnabled="{Binding PuedeAnterior}" AutomationProperties.Name="{DynamicResource Loc.Libreria.Vista.14}"><d:Icono Glifo="ChevronLeft" Width="20" Height="20" /></Button>
       <TextBlock Grid.Column="1" Name="TextoPagina" Classes="sec" Text="{Binding TextoPagina}" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" AutomationProperties.LiveSetting="Polite" />
       <Button Name="BotonSiguiente" Grid.Column="2" Classes="secundario" MinHeight="48" MinWidth="48" Command="{Binding SiguienteCommand}" IsEnabled="{Binding PuedeSiguiente}" AutomationProperties.Name="{DynamicResource Loc.Libreria.Vista.15}"><d:Icono Glifo="ChevronRight" Width="20" Height="20" /></Button>

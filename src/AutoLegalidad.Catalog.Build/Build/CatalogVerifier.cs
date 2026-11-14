@@ -38,6 +38,11 @@ public static class CatalogVerifier
 
         try { new Migrator(c).VerifyIntegrity(); }
         catch (MigrationTamperedException ex) { problems.Add(ex.Message); }
+        // R-014 (14-nov-2026): la 1.1.0 salió con catálogos en la versión 7 del esquema (sin event_offer) y «Añadir evento» quedó vacío sin avisar.
+        // Un catálogo por debajo de la última migración no es válido para este ejecutable.
+        var version = new Migrator(c).CurrentVersion();
+        if (version < MigrationCatalog.Latest)
+            problems.Add($"El catálogo está en la versión {version} del esquema y este ejecutable espera la {MigrationCatalog.Latest}: hay que reconstruirlo.");
 
         var integrity = CatalogDatabase.Scalar(c, "PRAGMA integrity_check;");
         if (integrity != "ok") problems.Add("integrity_check: " + integrity);

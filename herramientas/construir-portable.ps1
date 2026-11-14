@@ -14,7 +14,7 @@
   La BD, la cache y el ZIP son artefactos de release (ADR 0005 y 0104): estan en .gitignore y NO se suben al repo, solo a la release.
 #>
 param(
-    [string]$Version = '1.1.0',
+    [string]$Version = '1.1.1',
     [string]$Salida,
     [string]$BD,
     [string]$Soluciones,
@@ -118,6 +118,12 @@ if ($ReconstruirBD -or -not (Test-Path $BD)) {
 }
 if (-not (Test-Path $BD)) { throw "Falta la base de datos $BD." }
 if (Test-Path "$BD-wal") { throw "La base de datos tiene un -wal pendiente: $BD-wal" }
+# R-014 (14-nov-2026): la 1.1.0 empaquetó datos\portable\autolegalidad.sqlite del 23-oct (esquema 7, sin event_offer) y «Añadir evento» salía vacío.
+$comprobador = Join-Path $PSScriptRoot 'comprobar-esquema-catalogo.py'
+if ((Test-Path $comprobador) -and $Python) {
+    & $Python $comprobador $BD
+    if ($LASTEXITCODE -ne 0) { throw 'El catálogo del portable no está en la última versión del esquema: construir-portable.ps1 -ReconstruirBD.' }
+} else { Write-Host 'Sin Python o sin comprobar-esquema-catalogo.py: no se comprueba la versión del catálogo del portable.' -ForegroundColor Yellow }
 
 $dataDir = Join-Path $Salida 'Pokekeep\datos'
 New-Item -ItemType Directory -Force $dataDir | Out-Null

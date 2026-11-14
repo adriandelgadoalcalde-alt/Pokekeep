@@ -75,6 +75,16 @@ if (-not $SoloIdentidad) {
         if (-not $m.Success -or $m.Groups[1].Value -ne $esperado.($par[0])) { throw "APK con motor distinto de los datos: $($par[0]) del APK $($m.Groups[1].Value.Substring(0, [Math]::Min(12, $m.Groups[1].Value.Length))), de los datos $($esperado.($par[0]).Substring(0, 12)). Recompila sin propiedades globales que cambien el Core o reconstruye los datos (construir-bd-android.ps1)." }
     }
 }
+# R-014 (14-nov-2026): la 1.1.0 llevó datos\android\autolegalidad.sqlite del 23-oct (esquema 7, sin event_offer) y «Añadir evento» salía vacío.
+# El catálogo que viaja en el APK tiene que estar en la última migración del código.
+if (-not $SoloIdentidad -and -not $Demo -and -not $Pruebas) {
+    $comprobador = Join-Path $PSScriptRoot 'comprobar-esquema-catalogo.py'
+    $py = if ($env:POKEKEEP_PYTHON) { $env:POKEKEEP_PYTHON } else { (Get-Command python.exe -ErrorAction SilentlyContinue | Select-Object -First 1).Source }
+    if ((Test-Path $comprobador) -and $py) {
+        & $py $comprobador (Join-Path $repo 'datos\android\autolegalidad.sqlite')
+        if ($LASTEXITCODE -ne 0) { throw 'El catálogo de Android no está en la última versión del esquema: herramientas\construir-bd-android.ps1.' }
+    } else { Write-Host 'Sin Python o sin comprobar-esquema-catalogo.py: no se comprueba la versión del catálogo del APK.' -ForegroundColor Yellow }
+}
 Write-Host "APK: $($apk.FullName) ($([math]::Round($apk.Length/1MB,1)) MB)"
 # X65/F13: ningún APK de producto arm64 Release se entrega sin auditar el
 # artefacto firmado. Los APK de demostración/instrumentación no son producto.

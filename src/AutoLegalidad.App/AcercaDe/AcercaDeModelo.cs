@@ -42,6 +42,11 @@ public static class AcercaDeModelo
 
     /// <summary>De la más reciente a la más antigua. Resumido de <c>bitacora.md</c>; cada versión con su fecha real de publicación.</summary>
     public static IReadOnlyList<NovedadVersion> Novedades => [
+        new("1.1.1", FechaVisible("15-nov-2026"), AppIdioma.T("«Añadir evento» ya enseña los eventos.", "“Add event” now shows the events."),
+        [
+            AppIdioma.T("La 1.1.0 llevaba en el APK y en el ZIP un catálogo anterior a «Añadir evento», y la lista salía vacía en todos los juegos. Ahora va el catálogo actual, con las tarjetas de Regalo Misterioso de Gen 4 en todos los juegos que las reciben.", "1.1.0 shipped an older catalog in the APK and the ZIP, from before “Add event”, so the list was empty in every game. Both now carry the current catalog, with Gen 4 Mystery Gift cards in every game that can receive them."),
+            AppIdioma.T("Librería de Android: un poco más de aire entre la cabecera, la lista y la paginación.", "Android Library: a little more room between the header, the list and the page buttons."),
+        ]),
         new("1.1.0", FechaVisible("14-nov-2026"), AppIdioma.T("Desafíos al máximo, insignias del Pokéathlon y Pokémon de evento en la casilla vacía.", "Challenges at max, Pokéathlon medals and event Pokémon in empty slots."),
         [
             AppIdioma.T("Frente Batalla, Metro, Maison, Árbol y torres: «Ir al jefe» deja la racha justo antes del combate contra el jefe (plata u oro) y «Máximo» la sube al tope del juego. «Ir al jefe» usa el combate del jefe del código de los juegos o de las guías públicas y deja la racha en el último punto donde el juego puede guardar; en las torres que van por rango, el botón explica por qué no.", "Battle Frontier, Subway, Maison, Tree and towers: “Go to boss” sets the streak right before the boss battle (silver or gold) and “Max” raises it to the game’s cap. “Go to boss” uses the boss battle from the games’ code or public guides and leaves the streak at the last point where the game can save; in towers that go by rank, the button explains why not."),
