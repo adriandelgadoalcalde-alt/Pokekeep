@@ -22,6 +22,8 @@
     <PackageReference Include="ZXing.Net" />
     <ProjectReference Include="$(PKHeXCoreProject)" />
     <ProjectReference Include="..\Pokekeep.Sprites\Pokekeep.Sprites.csproj" />
+    <!-- R-013: rachas, jefes y maximos de los desafios (biblioteca comun con el escritorio; solo depende de PKHeX.Core). -->
+    <ProjectReference Include="..\..\src\AutoLegalidad.Desafios\AutoLegalidad.Desafios.csproj" />
   </ItemGroup>
   <ItemGroup>
     <AvaloniaResource Include="Assets\Fonts\*.ttf" />

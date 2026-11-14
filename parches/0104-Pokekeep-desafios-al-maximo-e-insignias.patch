@@ -1,0 +1,400 @@
+From 237f7449e1c680a98845bcf2462ab3cb2b795ff7 Mon Sep 17 00:00:00 2001
+From: Pokekeep <pokekeep@invalid>
+Date: Sat, 14 Nov 2026 17:15:46 +0100
+Subject: [PATCH] =?UTF-8?q?Pokekeep:=20desaf=C3=ADos=20al=20m=C3=A1ximo=20?=
+ =?UTF-8?q?e=20insignias=20en=20el=20escritorio=20(R-013)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Botones «Ir al jefe» y «Máximo» por instalación y modo, y «Todo al jefe» y «Todo al máximo» por pestaña, en una pestaña «Desafíos» de los editores de Esmeralda (SAV_Misc3), Gen 4 (SAV_Misc4) y Metro Batalla (SAV_Misc5). Formulario nuevo
+(botón «Desafíos…» en las herramientas de la partida) para lo que PKHeX no editaba: Torre de DBPR, PWT y PB del Metro de N2B2, Colina Entrenador, Maison, Árbol Batalla, Torre de EpEs y Royale de Z-A.
+Pokéathlon: «Todo al máximo» y «Elegir Pokémon…» en el editor de participantes. Insignias del Pokéathlon en la ficha del Pokémon (solo HGSS) y «Insignias» en vez de «Medallas» en español.
+La lógica vive en AutoLegalidad.Desafios y los controles en AutoLegalidad.Ui.Desafios; aquí solo se alojan.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01K7SsmyJLJN7mL9bZmtPKMP
+---
+ .../Controls/PKM Editor/PKMEditor.cs          | 24 ++++++++++
+ .../Controls/SAV Editor/SAVEditor.cs          | 20 ++++++++
+ PKHeX.WinForms/Pokekeep/PokekeepDesafios.cs   | 46 +++++++++++++++++++
+ PKHeX.WinForms/Resources/text/lang_es-419.txt |  2 +-
+ PKHeX.WinForms/Resources/text/lang_es.txt     | 10 ++--
+ .../Subforms/Save Editors/Gen3/SAV_Misc3.cs   | 13 ++++++
+ .../PokeathlonParticipant4Editor.cs           | 25 ++++++++++
+ .../Subforms/Save Editors/Gen4/SAV_Misc4.cs   |  7 +++
+ .../Save Editors/Gen4/SAV_Pokeathlon4.cs      | 35 ++++++++++++++
+ .../Subforms/Save Editors/Gen5/SAV_Misc5.cs   |  4 ++
+ 10 files changed, 180 insertions(+), 6 deletions(-)
+ create mode 100644 PKHeX.WinForms/Pokekeep/PokekeepDesafios.cs
+
+diff --git a/PKHeX.WinForms/Controls/PKM Editor/PKMEditor.cs b/PKHeX.WinForms/Controls/PKM Editor/PKMEditor.cs
+index f58ff4858..972a02771 100644
+--- a/PKHeX.WinForms/Controls/PKM Editor/PKMEditor.cs	
++++ b/PKHeX.WinForms/Controls/PKM Editor/PKMEditor.cs	
+@@ -25,6 +25,7 @@ public sealed partial class PKMEditor : UserControl, IMainEditor
+     public PKMEditor()
+     {
+         InitializeComponent();
++        InicializarInsigniasPokekeep();
+ 
+         // Commonly reused Control arrays
+         Moves = [MC_Move1, MC_Move2, MC_Move3, MC_Move4];
+@@ -371,6 +372,28 @@ private void LoadFieldsFromPKM(PKM pk, bool focus = true, bool skipConversionChe
+         UpdateSprite();
+         NotifyWasExported(PreparePKM());
+         RefreshFontWarningButton();
++        ActualizarInsigniasPokekeep();
++    }
++
++    // Pokekeep (R-013): apartado «Insignias del Pokéathlon» (solo HGSS) con las cinco casillas de la especie abierta y «Dar las cinco».
++    private AutoLegalidad.Ui.Desafios.PanelInsignias? InsigniasPokekeep;
++
++    private void InicializarInsigniasPokekeep()
++    {
++        // Última fila de la tabla de EO/Varios (la tabla ocupa toda la página y se desplaza con ella): el apartado va debajo de los demás campos y ocupa las dos columnas.
++        InsigniasPokekeep = new AutoLegalidad.Ui.Desafios.PanelInsignias(PokekeepDesafios.Espanol) { Dock = DockStyle.Fill, Margin = new Padding(6, 8, 6, 6) };
++        var fila = TLP_OTMisc.RowCount;
++        TLP_OTMisc.RowCount = fila + 1;
++        TLP_OTMisc.RowStyles.Add(new RowStyle(SizeType.AutoSize));
++        TLP_OTMisc.Controls.Add(InsigniasPokekeep, 0, fila);
++        TLP_OTMisc.SetColumnSpan(InsigniasPokekeep, 2);
++    }
++
++    private void ActualizarInsigniasPokekeep()
++    {
++        if (InsigniasPokekeep is null || SaveFileRequested is null)
++            return;
++        InsigniasPokekeep.Actualizar(RequestSaveFile, Entity.Species);
+     }
+ 
+     public void UpdateLegality(LegalityAnalysis? la = null, UpdateLegalityArgs args = 0)
+@@ -1273,6 +1296,7 @@ private void UpdateSpecies(object sender, EventArgs e)
+             UpdateNickname(sender, e);
+ 
+         UpdateLegality();
++        ActualizarInsigniasPokekeep();
+     }
+ 
+     private void UpdateOriginGame(object sender, EventArgs e)
+diff --git a/PKHeX.WinForms/Controls/SAV Editor/SAVEditor.cs b/PKHeX.WinForms/Controls/SAV Editor/SAVEditor.cs
+index f794c602b..124a138a7 100644
+--- a/PKHeX.WinForms/Controls/SAV Editor/SAVEditor.cs	
++++ b/PKHeX.WinForms/Controls/SAV Editor/SAVEditor.cs	
+@@ -70,6 +70,8 @@ public void ReloadSlots()
+     public SAVEditor()
+     {
+         InitializeComponent();
++        B_PokekeepDesafios.Click += B_PokekeepDesafios_Click;
++        FLP_SAVtools.Controls.Add(B_PokekeepDesafios);
+ 
+         L_SlotOccupied = [L_DC1, L_DC2];
+         TB_SlotEXP = [TB_Daycare1XP, TB_Daycare2XP];
+@@ -645,6 +647,22 @@ private static void OpenDialog(Form f)
+     private void B_OpenGiftRibbons_Click(object sender, EventArgs e) => OpenDialog(new SAV_GiftRibbons((IGiftRibbons)SAV));
+     private void B_OpenApricorn_Click(object sender, EventArgs e) => OpenDialog(new SAV_Apricorn((SAV4HGSS)SAV));
+     private void B_OpenPokeathlon_Click(object sender, EventArgs e) => OpenDialog(new SAV_Pokeathlon4((SAV4HGSS)SAV));
++
++    // Pokekeep (R-013): desafíos que PKHeX no tenía editor (Torre de DBPR, PWT, PB del Metro, Colina Entrenador, Maison, Árbol Batalla, Torre de EpEs, Royale de Z-A).
++    private readonly Button B_PokekeepDesafios = new()
++    {
++        Name = "B_PokekeepDesafios",
++        Size = new System.Drawing.Size(128, 44),
++        Margin = new Padding(2),
++        UseVisualStyleBackColor = true,
++        Visible = false,
++    };
++
++    private void B_PokekeepDesafios_Click(object? sender, EventArgs e)
++    {
++        if (PokekeepDesafios.CrearFormulario(SAV) is { } form)
++            OpenDialog(form);
++    }
+     private void B_OpenTrainerInfo_Click(object sender, EventArgs e) => OpenDialog(GetTrainerEditor(SAV));
+     private void B_OpenOPowers_Click(object sender, EventArgs e) => OpenDialog(new SAV_OPower((ISaveBlock6Main)SAV));
+     private void B_OpenHoneyTreeEditor_Click(object sender, EventArgs e) => OpenDialog(new SAV_HoneyTree((SAV4Sinnoh)SAV));
+@@ -1360,6 +1378,8 @@ private void ToggleViewSubEditors(SaveFile sav)
+         B_OpenSealStickers.Visible = B_Poffins.Visible = sav is SAV8BS;
+         B_OpenApricorn.Visible = sav is SAV4HGSS;
+         B_OpenPokeathlon.Visible = sav is SAV4HGSS;
++        B_PokekeepDesafios.Visible = PokekeepDesafios.Disponible(sav); // Pokekeep (R-013)
++        B_PokekeepDesafios.Text = PokekeepDesafios.TextoBoton;
+         B_OpenRTCEditor.Visible = (sav.Generation == 2 && sav is not SAV2Stadium) || sav is SAV3 { SmallBlock: ISaveBlock3SmallHoenn };
+         B_MailBox.Visible = sav is SAV2 or SAV2Stadium or SAV3 or SAV4 or SAV5;
+ 
+diff --git a/PKHeX.WinForms/Pokekeep/PokekeepDesafios.cs b/PKHeX.WinForms/Pokekeep/PokekeepDesafios.cs
+new file mode 100644
+index 000000000..7b68012ae
+--- /dev/null
++++ b/PKHeX.WinForms/Pokekeep/PokekeepDesafios.cs
+@@ -0,0 +1,46 @@
++using System;
++using System.Collections.Generic;
++using System.Linq;
++using System.Windows.Forms;
++using AutoLegalidad.Desafios;
++using AutoLegalidad.Ui.Desafios;
++using PKHeX.Core;
++
++namespace PKHeX.WinForms;
++
++/// <summary>
++/// Pokekeep (R-013): puntos de integración de los desafíos al máximo en los formularios de PKHeX. La lógica vive en AutoLegalidad.Desafios y los controles en AutoLegalidad.Ui.Desafios;
++/// aquí solo se alojan en los formularios que ya editan rachas (pestaña «Desafíos») y se abre el formulario nuevo de lo que no tenía editor.
++/// </summary>
++internal static class PokekeepDesafios
++{
++    /// <summary>true si el idioma de PKHeX es el español (el desafío sigue al selector de idioma de PKHeX, no a la configuración de Pokekeep).</summary>
++    public static bool Espanol => TextosDesafiosUi.EsEspanol(Main.CurrentLanguage);
++
++    /// <summary>
++    /// Añade al final del <paramref name="tabs"/> una pestaña «Desafíos» con los botones «Ir al jefe» y «Máximo» de las instalaciones que cumplan <paramref name="filtro"/>.
++    /// <paramref name="antes"/> vuelca a la partida lo que el formulario lleva en sus controles; <paramref name="despues"/> los vuelve a leer para enseñar los valores nuevos.
++    /// </summary>
++    public static PanelDesafios? AgregarPestana(TabControl tabs, SaveFile sav, Func<InstalacionDesafio, bool> filtro, Action? antes, Action? despues)
++    {
++        var instalaciones = CatalogoDesafios.Para(sav).Where(filtro).ToList();
++        if (instalaciones.Count == 0)
++            return null;
++        var es = Espanol;
++        var panel = new PanelDesafios(() => sav, instalaciones, es, editable: false, antes, despues);
++        var pagina = new TabPage(TextosDesafiosUi.Desafios(es)) { Name = "Tab_PokekeepDesafios", UseVisualStyleBackColor = true, Padding = new System.Windows.Forms.Padding(4) };
++        pagina.Controls.Add(panel);
++        tabs.TabPages.Add(pagina);
++        // Los formularios de PKHeX son pequeños: con la pestaña nueva se agranda el cuadro hasta un tamaño en el que quepan los botones sin recortes.
++        if (tabs.FindForm() is { } form)
++            form.ClientSize = new System.Drawing.Size(Math.Max(form.ClientSize.Width, 700), Math.Max(form.ClientSize.Height, 480));
++        return panel;
++    }
++
++    /// <summary>Abre el formulario de desafíos que PKHeX no tenía (Torre de DBPR, PWT, PB del Metro, Colina Entrenador, Maison, Árbol Batalla, Torre de EpEs y Royale de Z-A).</summary>
++    public static Form? CrearFormulario(SaveFile sav) => FormDesafios.Aplica(sav) ? new FormDesafios(sav, Espanol) : null;
++
++    public static bool Disponible(SaveFile sav) => FormDesafios.Aplica(sav);
++
++    public static string TextoBoton => TextosDesafiosUi.DesafiosPuntos(Espanol);
++}
+diff --git a/PKHeX.WinForms/Resources/text/lang_es-419.txt b/PKHeX.WinForms/Resources/text/lang_es-419.txt
+index bcfb5dc66..ab96950e9 100644
+--- a/PKHeX.WinForms/Resources/text/lang_es-419.txt
++++ b/PKHeX.WinForms/Resources/text/lang_es-419.txt
+@@ -2252,7 +2252,7 @@ SAV_Pokeathlon4.Tab_Connection=Conexión
+ SAV_Pokeathlon4.Tab_Counters=Contadores
+ SAV_Pokeathlon4.Tab_Courses=Cursos
+ SAV_Pokeathlon4.Tab_General=General
+-SAV_Pokeathlon4.Tab_Medals=Medallas
++SAV_Pokeathlon4.Tab_Medals=Insignias
+ SAV_Pokeathlon4.Tab_SelfEvent=Evento propio
+ SAV_Pokebean.B_All=Todos
+ SAV_Pokebean.B_Cancel=Cancelar
+diff --git a/PKHeX.WinForms/Resources/text/lang_es.txt b/PKHeX.WinForms/Resources/text/lang_es.txt
+index d42189bec..b0400127c 100644
+--- a/PKHeX.WinForms/Resources/text/lang_es.txt
++++ b/PKHeX.WinForms/Resources/text/lang_es.txt
+@@ -1078,8 +1078,8 @@ PokeathlonEvent4.RelayRun=Carrera de Relevos
+ PokeathlonEvent4.RingDrop=Caída de Anillos
+ PokeathlonEvent4.SnowThrow=Lanzamiento de Nieve
+ PokeathlonStat4.Jump=Salto
+-PokeathlonStat4.Power=Potencia
+-PokeathlonStat4.Skill=Técnica
++PokeathlonStat4.Power=Fortaleza
++PokeathlonStat4.Skill=Precisión
+ PokeathlonStat4.Speed=Velocidad
+ PokeathlonStat4.Stamina=Resistencia
+ PokeSize.L=L
+@@ -2186,8 +2186,8 @@ SAV_Pokeathlon4.B_MedalsGiveAll=Dar todo
+ SAV_Pokeathlon4.B_Save=Guardar
+ SAV_Pokeathlon4.CHK_IsShiny=Variocolor
+ SAV_Pokeathlon4.DGV_Jump=Salto
+-SAV_Pokeathlon4.DGV_Power=Potencia
+-SAV_Pokeathlon4.DGV_Skill=Técnica
++SAV_Pokeathlon4.DGV_Power=Fortaleza
++SAV_Pokeathlon4.DGV_Skill=Precisión
+ SAV_Pokeathlon4.DGV_Species=Especie
+ SAV_Pokeathlon4.DGV_Speed=Velocidad
+ SAV_Pokeathlon4.DGV_Sprite=Sprite
+@@ -2252,7 +2252,7 @@ SAV_Pokeathlon4.Tab_Connection=Conexión
+ SAV_Pokeathlon4.Tab_Counters=Contadores
+ SAV_Pokeathlon4.Tab_Courses=Cursos
+ SAV_Pokeathlon4.Tab_General=General
+-SAV_Pokeathlon4.Tab_Medals=Medallas
++SAV_Pokeathlon4.Tab_Medals=Insignias
+ SAV_Pokeathlon4.Tab_SelfEvent=Evento propio
+ SAV_Pokebean.B_All=Todos
+ SAV_Pokebean.B_Cancel=Cancelar
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_Misc3.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_Misc3.cs
+index 34cb4e612..c7d2d7360 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_Misc3.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_Misc3.cs	
+@@ -3,6 +3,7 @@
+ using System.Linq;
+ using System.Text;
+ using System.Windows.Forms;
++using AutoLegalidad.Desafios;
+ using PKHeX.Core;
+ using PKHeX.Drawing.PokeSprite;
+ 
+@@ -80,6 +81,18 @@ public SAV_Misc3(SAV3 sav)
+         { TB_RivalName.Visible = L_TrainerName.Visible = GB_TCM.Visible = false; }
+ 
+         NUD_Coins.Value = Math.Min(NUD_Coins.Maximum, SAV.Coin);
++
++        // Pokekeep (R-013): pestaña «Desafíos» con «Ir al jefe» y «Máximo» de cada instalación del Frente de Batalla.
++        if (SAV is SAV3E)
++            PokekeepDesafios.AgregarPestana(TC_Misc, SAV, i => i is Frente3Esmeralda, SaveBattleFrontier, RefrescarDesafios);
++    }
++
++    /// <summary>Pokekeep (R-013): tras «Ir al jefe» o «Máximo» los controles del Frente enseñan lo que ha quedado en la partida.</summary>
++    private void RefrescarDesafios()
++    {
++        CHK_ActivatePass.Checked = SAV.GetEventFlag(BattleFrontier3.FrontierPassFlagIndex);
++        SetFrontierSymbols();
++        LoadStatsFromSave();
+     }
+ 
+     private void B_Save_Click(object sender, EventArgs e)
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen4/Pokeathlon/PokeathlonParticipant4Editor.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen4/Pokeathlon/PokeathlonParticipant4Editor.cs
+index 79ec167a4..5189df0a9 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen4/Pokeathlon/PokeathlonParticipant4Editor.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen4/Pokeathlon/PokeathlonParticipant4Editor.cs	
+@@ -1,5 +1,8 @@
+ using System.Globalization;
+ using System.Windows.Forms;
++using System;
++using AutoLegalidad.Desafios;
++using AutoLegalidad.Ui.Desafios;
+ using PKHeX.Core;
+ 
+ namespace PKHeX.WinForms;
+@@ -17,6 +20,28 @@ public PokeathlonParticipant4Editor()
+         TB_PID.TextChanged += (_, _) => WriteBack();
+         TB_TID16.TextChanged += (_, _) => WriteBack();
+         TB_SID16.TextChanged += (_, _) => WriteBack();
++
++        // Pokekeep (R-013): «Elegir Pokémon…», una lista con el equipo y las cajas de la partida.
++        B_PokekeepElegir = new System.Windows.Forms.Button { Name = "B_PokekeepElegirPokemon", Text = TextosDesafiosUi.ElegirPokemon(PokekeepDesafios.Espanol), AutoSize = true, AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink, Margin = new System.Windows.Forms.Padding(14, 3, 3, 3) };
++        B_PokekeepElegir.Click += B_PokekeepElegir_Click;
++        FLP_Meta.Controls.Add(B_PokekeepElegir);
++    }
++
++    private readonly System.Windows.Forms.Button B_PokekeepElegir;
++
++    /// <summary>Pokekeep (R-013): la partida de la que «Elegir Pokémon…» saca el equipo y las cajas (la pone el formulario que aloja el editor).</summary>
++    public SaveFile? Partida { get; set; }
++
++    private void B_PokekeepElegir_Click(object? sender, EventArgs e)
++    {
++        if (Partida is null)
++            return;
++        using var selector = new SelectorPokemonForm(Partida, PokekeepDesafios.Espanol);
++        if (selector.ShowDialog(FindForm()) != DialogResult.OK || selector.Elegido is not { } pk)
++            return;
++        var participante = new PokeathlonParticipant4(new byte[PokeathlonParticipant4.SIZE]);
++        ParticipantePokeathlon.Desde(pk).Aplicar(participante);
++        LoadObject(participante);
+     }
+ 
+     public void LoadObject(PokeathlonParticipant4 entity)
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Misc4.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Misc4.cs
+index c616f709c..8335bd552 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Misc4.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Misc4.cs	
+@@ -4,6 +4,7 @@
+ using System.Globalization;
+ using System.Linq;
+ using System.Windows.Forms;
++using AutoLegalidad.Desafios;
+ using PKHeX.Core;
+ using static System.Buffers.Binary.BinaryPrimitives;
+ using static PKHeX.WinForms.PoketchDotMatrix;
+@@ -94,8 +95,14 @@ public SAV_Misc4(SAV4 sav)
+             pokeGear4Editor1.Initialize(hgss);
+             TC_Misc.Controls.Remove(Tab_Poffins);
+         }
++
++        // Pokekeep (R-013): pestaña «Desafíos» con «Ir al jefe» y «Máximo» de las instalaciones del Frente de Batalla de esta partida.
++        PokekeepDesafios.AgregarPestana(TC_Misc, SAV, i => i is Frente4, null, RefrescarDesafios);
+     }
+ 
++    /// <summary>Pokekeep (R-013): tras «Ir al jefe» o «Máximo» los controles del Frente enseñan lo que ha quedado en la partida (los valores se escriben directamente en la copia de la partida al cambiar cada control).</summary>
++    private void RefrescarDesafios() => ChangeStat(CB_Stats2, EventArgs.Empty);
++
+     private void B_Save_Click(object sender, EventArgs e)
+     {
+         SaveMain();
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Pokeathlon4.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Pokeathlon4.cs
+index 1e49dce94..e33d81052 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Pokeathlon4.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Pokeathlon4.cs	
+@@ -1,3 +1,5 @@
++using AutoLegalidad.Desafios;
++using AutoLegalidad.Ui.Desafios;
+ using PKHeX.Core;
+ using PKHeX.Drawing.PokeSprite;
+ using System;
+@@ -61,7 +63,40 @@ public SAV_Pokeathlon4(SAV4HGSS sav)
+ 
+         WinFormsUtil.TranslateInterface(this, Main.CurrentLanguage);
+ 
++        // Pokekeep (R-013): «Elegir Pokémon…» en los participantes de los cursos y «Todo al máximo» del Pokéathlon.
++        foreach (var participante in CourseParticipantEditors)
++            participante.Partida = SAV;
++        var espanol = PokekeepDesafios.Espanol;
++        B_PokekeepTodoMaximo = new Button { Name = "B_PokekeepTodoMaximo", Text = TextosDesafiosUi.TodoAlMaximoPokeathlon(espanol), AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink };
++        B_PokekeepTodoMaximo.Click += B_PokekeepTodoMaximo_Click;
++        L_PokekeepEstado = new Label { Name = "L_PokekeepEstado", AutoSize = true, Margin = new Padding(3, 8, 8, 0), MaximumSize = new Size(380, 0) };
++        FLP_Buttons.Controls.Add(B_PokekeepTodoMaximo);
++        FLP_Buttons.Controls.Add(L_PokekeepEstado);
++
++        LoadData();
++    }
++
++    private readonly Button B_PokekeepTodoMaximo;
++    private readonly Label L_PokekeepEstado;
++
++    /// <summary>
++    /// Pokekeep (R-013): lleva todo el Pokéathlon al máximo (insignias de las 493 especies, récords de curso, mejores puntuaciones, puntos, tarjetas de datos, tienda diaria, contadores y fama) con
++    /// <see cref="Pokeathlon4Maximo"/>. Primero vuelca a la copia de la partida lo que ya hay en los controles y después los vuelve a leer, para que se vea lo que ha quedado.
++    /// </summary>
++    private void B_PokekeepTodoMaximo_Click(object? sender, EventArgs e)
++    {
++        SaveCurrentViews();
++        SaveGeneral();
++        SaveMedals();
++        SaveCounters();
++        SaveBestScores();
++        var resultados = Pokeathlon4Maximo.Instancia.MaximoTodo(SAV);
+         LoadData();
++        var cambios = resultados.Sum(r => r.Cambios.Count);
++        var espanol = PokekeepDesafios.Espanol;
++        L_PokekeepEstado.Text = cambios == 0
++            ? (espanol ? "Todo estaba ya al máximo." : "Everything was already at maximum.")
++            : (espanol ? $"Todo al máximo: {cambios} valores cambiados. Guardad para aplicarlo." : $"All to maximum: {cambios} values changed. Save to apply it.");
+     }
+ 
+     private void B_Save_Click(object sender, EventArgs e)
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen5/SAV_Misc5.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen5/SAV_Misc5.cs
+index 87e1436fb..3b9345c3c 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen5/SAV_Misc5.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen5/SAV_Misc5.cs	
+@@ -3,6 +3,7 @@
+ using System.IO;
+ using System.Linq;
+ using System.Windows.Forms;
++using AutoLegalidad.Desafios;
+ using PKHeX.Core;
+ using PKHeX.Drawing.PokeSprite;
+ using static System.Buffers.Binary.BinaryPrimitives;
+@@ -37,6 +38,9 @@ public SAV_Misc5(SAV5 sav)
+         ReadEntralink();
+         ReadMusical();
+         ReadRecord();
++
++        // Pokekeep (R-013): pestaña «Desafíos» con «Ir al jefe» y «Máximo» de cada modo del Metro Batalla.
++        PokekeepDesafios.AgregarPestana(TC_Misc, SAV, i => i is Metro5, SaveSubway, ReadSubway);
+     }
+ 
+     private void B_Cancel_Click(object sender, EventArgs e) => Close();
+-- 
+2.55.0.windows.5
+

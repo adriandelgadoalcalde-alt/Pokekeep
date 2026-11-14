@@ -251,7 +251,7 @@ public sealed partial class CampoPVm : ObservableObject
     {
         var m = M;
         var esEspecie = EsEspecie;
-        IReadOnlyList<OpcionSelector> Opciones() => [.. m.Opciones(Def).Select(o => new OpcionSelector(o.Id, o.Texto, null, esEspecie ? o.Id : 0))];
+        IReadOnlyList<OpcionSelector> Opciones() => [.. m.Opciones(Def).Select(o => new OpcionSelector(o.Id, o.Texto, null, esEspecie ? o.Id : Def.EspecieDeOpcion?.Invoke(m.Ctx, o.Id) ?? 0))];
         var actual = m.Borrador(Def.Id) is long l ? (int)l : -1;
         _ed.AbrirHoja(new SelectorHojaViewModel(Def.TituloSelector ?? Def.Etiqueta, Opciones(), actual, o =>
         {
@@ -359,8 +359,10 @@ public sealed partial class EditorPartidaViewModel : ObservableObject
         {
             var r = Modelo.EjecutarInmediata(campo.Def);
             Reconstruir();
-            if (r.SinCambios) _informar(IdiomaInterfaz.T("Form.NadaCambio"), "aviso", "Info", null, null);
-            else _informar(IdiomaInterfaz.F("Form.Hecho", campo.Etiqueta), "ok", "CircleCheck", null, null);
+            // R-013: una accion que cuenta lo que ha hecho («Racha actual 0 → 28») lo deja en Ctx.Aviso; si no, el aviso de siempre.
+            var cuenta = Modelo.Ctx.Aviso; Modelo.Ctx.Aviso = null;
+            if (r.SinCambios) _informar(cuenta ?? IdiomaInterfaz.T("Form.NadaCambio"), "aviso", "Info", null, null);
+            else _informar(cuenta ?? IdiomaInterfaz.F("Form.Hecho", campo.Etiqueta), "ok", "CircleCheck", null, null);
         }
         catch (Exception ex) when (ex is ArgumentException or InvalidOperationException or IndexOutOfRangeException or FormatException or OverflowException or KeyNotFoundException or NotSupportedException)
         {

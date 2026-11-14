@@ -30,13 +30,14 @@ public static partial class CatalogoEspecificos
     /// <summary>Todas las entradas, por orden alfabetico del titulo (WinForms ordena sus botones por texto).</summary>
     public static IReadOnlyList<EntradaEspecificaP> Todas { get; } = Construir();
 
-    private static EditorDefP? Crear(string id, SaveFile sav) => EditoresGen1a3(id, sav) ?? EditoresGen4(id, sav) ?? EditoresGen5(id, sav) ?? EditoresGen6y7(id, sav) ?? EditoresGen8y9(id, sav);
+    private static EditorDefP? Crear(string id, SaveFile sav)
+        => DesafiosForm.ConDesafios(id, sav, FormulariosDesafios.Crear(id, sav) ?? EditoresGen1a3(id, sav) ?? EditoresGen4(id, sav) ?? EditoresGen5(id, sav) ?? EditoresGen6y7(id, sav) ?? EditoresGen8y9(id, sav));
 
     private static EntradaEspecificaP E(string id, string titulo, string desc, string glifo, string bloque, string[] censo, string regla, Func<SaveFile, bool> habilitada, bool enPartida = true)
         => new(id, titulo, desc, glifo, bloque, censo, regla, habilitada, sav => AplicaEditor(id, sav), sav => Crear(id, sav), enPartida);
 
     /// <summary>Cada bloque tiene su <c>Aplica&lt;Gen&gt;</c> en su fichero; el primero que diga que si, decide (una entrada multiformato tiene un caso en cada bloque).</summary>
-    private static bool AplicaEditor(string id, SaveFile sav) => AplicaGen1a3(id, sav) || AplicaGen4(id, sav) || AplicaGen5(id, sav) || AplicaGen6y7(id, sav) || AplicaGen8y9(id, sav);
+    private static bool AplicaEditor(string id, SaveFile sav) => AplicaGen1a3(id, sav) || AplicaGen4(id, sav) || AplicaGen5(id, sav) || AplicaGen6y7(id, sav) || AplicaGen8y9(id, sav) || FormulariosDesafios.Aplica(id, sav);
 
     private static IReadOnlyList<EntradaEspecificaP> Construir() =>
     [
@@ -96,6 +97,12 @@ public static partial class CatalogoEspecificos
         E("moda", "Partida.Especifico.moda.Titulo", "Partida.Especifico.moda.Descripcion", "Sparkles", "8b-2", ["PK-SAV-188", "PK-SAV-189"], $"{Win}: B_OpenFashion, sav is SAV9SV or SAV9ZA", sav => sav is SAV9SV or SAV9ZA),
         E("donuts", "Partida.Especifico.donuts.Titulo", "Partida.Especifico.donuts.Descripcion", "Egg", "8b-2", ["PK-SAV-183", "PK-SAV-184", "PK-SAV-186", "PK-SAV-187"], $"{Win}: B_Donuts, sav is SAV9ZA {{ SaveRevision: >= 1 }}", sav => sav is SAV9ZA { SaveRevision: >= 1 }),
         E("eventos9a", "Partida.Especifico.eventos9a.Titulo", "Partida.Especifico.eventos9a.Descripcion", "ListChecks", "8b-2", ["PK-SAV-185", "PK-SAV-190", "PK-SAV-191"], $"{Win}: B_OpenEventFlags, sav is SAV9ZA", sav => sav is SAV9ZA),
+        // ---- Desafíos de R-013: formularios propios de Pokekeep (PKHeX no los tiene; no hay paridad con el oficial) ----
+        E("colina", "Partida.Especifico.colina.Titulo", "Partida.Especifico.colina.Descripcion", "Swords", "R-013", [], "Solo Pokekeep (R-013): SAV3E, la Colina Entrenador no tiene formulario en PKHeX", sav => sav is SAV3E),
+        E("metropb", "Partida.Especifico.metropb.Titulo", "Partida.Especifico.metropb.Descripcion", "Swords", "R-013", [], "Solo Pokekeep (R-013): SAV5, BattleSubway5.BP no tiene formulario en PKHeX", sav => sav is SAV5),
+        E("pwt", "Partida.Especifico.pwt.Titulo", "Partida.Especifico.pwt.Descripcion", "Swords", "R-013", [], "Solo Pokekeep (R-013): SAV5B2W2, PWTBlock5 no tiene formulario en PKHeX", sav => sav is SAV5B2W2),
+        E("torredbpr", "Partida.Especifico.torredbpr.Titulo", "Partida.Especifico.torredbpr.Descripcion", "Swords", "R-013", [], "Solo Pokekeep (R-013): SAV8BS, la Torre de Batalla de DBPR no tiene formulario en PKHeX", sav => sav is SAV8BS),
+        E("royale", "Partida.Especifico.royale.Titulo", "Partida.Especifico.royale.Descripcion", "Swords", "R-013", [], "Solo Pokekeep (R-013): SAV9ZA, la Royale de Z-A no tiene formulario en PKHeX", sav => sav is SAV9ZA),
         // «Adaptar» (no es un boton de Especificos: vive en Mas > Herramientas > Bloques del guardado, avanzado).
         E("bloques8", "Partida.Especifico.bloques8.Titulo", "Partida.Especifico.bloques8.Descripcion", "Layers", "8b-2", ["PK-SAV-150", "PK-SAV-151", "PK-SAV-152"], $"SAVEditor.cs B_Blocks_Click: ISCBlockArray => SAV_BlockDump8", sav => sav is ISCBlockArray, enPartida: false),
     ];

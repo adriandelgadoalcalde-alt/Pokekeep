@@ -297,7 +297,8 @@ public sealed class ModeloEditorPartida
     {
         if (HayCambios) return new InformePartida(ResultadoPartida.SinCambios, MotivoPendientes, 0);
         if (accion.Escribir is null || accion.Motivo?.Invoke(Ctx) is not null) return new InformePartida(ResultadoPartida.SinCambios, string.Empty, 0);
-        var inf = EscrituraPartida.Aplicar(Sesion, $"{Def.Titulo}: {accion.TextoEtiqueta(Ctx)}", () => accion.Escribir(Ctx, true));
+        Ctx.Aviso = null;
+        var inf = EscrituraPartida.Aplicar(Sesion, accion.TextoHistorial?.Invoke(Ctx) ?? $"{Def.Titulo}: {accion.TextoEtiqueta(Ctx)}", () => accion.Escribir(Ctx, true));
         Cargar();
         return inf;
     }

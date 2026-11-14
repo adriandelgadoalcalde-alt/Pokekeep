@@ -35,7 +35,7 @@ public sealed partial class FichaViewModel : ObservableObject
         var t = sesion.Textos;
         NombreEspecie = t.Species[pk.Species];
         Apodo = pk.IsNicknamed ? pk.Nickname : NombreEspecie;
-        Numero = $"N.º {pk.Species:0000}";
+        Numero = IdiomaInterfaz.F("Ficha.Numero", pk.Species);
         Nivel = IdiomaInterfaz.F("Cajas.Nivel2", pk.CurrentLevel);
         Especie = pk.Species; Forma = pk.Form; Genero = pk.Gender; Brillante = pk.IsShiny; Huevo = pk.IsEgg; Objeto = ObjetosPkm.IdIcono(pk); Contexto = (int)pk.Context;
         NombreObjeto = ObjetosPkm.Nombre(t, pk, sesion.Guardado.Version) is { Length: > 0 } nombreObjeto ? nombreObjeto : IdiomaInterfaz.T("Ficha.Objeto");

@@ -62,6 +62,15 @@ public sealed class LibraryView : UserControl
     private bool _loading;
     private object? _env;
     private bool _homeSettingAtLoad;
+    private SplitContainer? _split;
+    private TableLayoutPanel? _filters;
+
+    // R-014 «Añadir evento»: la misma vista, filtrada a los eventos que ofrece el juego de la partida abierta, en dos grupos, y con la casilla vacía elegida como destino.
+    private bool _modoEventos;
+    private bool _espanolEventos = true;
+    private ISlotInfo? _casillaEvento;
+    private string ViaEvento => _kind.SelectedIndex == 1 ? EventQueries.Transfer : EventQueries.Native;
+    private string TE(string es, string en) => _espanolEventos ? es : en;
 
     /// <summary>Fila arrastrada ahora mismo desde la lista (la recoge el destino de la suelta en la caja).</summary>
     public static LibraryRow? DraggedRow { get; private set; }
@@ -134,6 +143,44 @@ public sealed class LibraryView : UserControl
     public IReadOnlyList<LibraryRow> Rows => _rows;
     public LibraryRow? SelectedRow => _list.SelectedIndices.Count == 1 && _list.SelectedIndices[0] < _rows.Count ? _rows[_list.SelectedIndices[0]] : null;
 
+    /// <summary>true si la vista está en el modo «Añadir evento».</summary>
+    public bool ModoEventos => _modoEventos;
+    /// <summary>Casilla vacía donde se coloca lo que se añade en el modo «Añadir evento» (null: primera casilla libre).</summary>
+    public ISlotInfo? CasillaEvento => _casillaEvento;
+    /// <summary>Selector de grupo del modo «Añadir evento»: «Repartidos en este juego» y «De juegos anteriores (transferencia)».</summary>
+    public ComboBox GroupBox => _kind;
+
+    /// <summary>
+    /// Pasa la vista al modo «Añadir evento» (R-014): solo los eventos que ofrece el juego de la partida abierta, primero los repartidos en él y, aparte, los de juegos anteriores que admite por transferencia;
+    /// se esconden el árbol y los filtros de generación y forma (no tienen sentido) y se conservan la búsqueda, el idioma, la región y «solo disponibles». Lo que se añade va a <paramref name="casilla"/>.
+    /// </summary>
+    public void ActivarModoEventos(ISlotInfo? casilla, bool espanol)
+    {
+        _modoEventos = true;
+        _casillaEvento = casilla;
+        _espanolEventos = espanol;
+        _loading = true;
+        if (_split is not null) _split.Panel1Collapsed = true;
+        _gen.Visible = false;
+        _form.Visible = false;
+        // Sin los filtros de generación y forma, el selector de grupo (con su texto largo) ocupa las dos primeras columnas y la región, la misma fila que antes ocupaba la forma.
+        if (_filters is { } tabla)
+        {
+            tabla.SetCellPosition(_kind, new TableLayoutPanelCellPosition(0, 1));
+            tabla.SetColumnSpan(_kind, 2);
+            tabla.SetCellPosition(_region, new TableLayoutPanelCellPosition(0, 2));
+            tabla.SetColumnSpan(_region, 2);
+        }
+        _kind.Items.Clear();
+        _kind.Items.Add(TE("Repartidos en este juego", "Given out in this game"));
+        _kind.Items.Add(TE("De juegos anteriores (transferencia)", "From earlier games (transfer)"));
+        _kind.SelectedIndex = 0;
+        _search.PlaceholderText = TE("Buscar: nombre, n.º de Pokédex, título del evento, idioma…", "Search: name, Pokédex no., event title, language…");
+        _loading = false;
+        _env = null;
+        RefreshTarget();
+    }
+
     /// <summary>Avisa de que se abrió, cambió o cerró una partida: recarga la Librería para el nuevo destino.</summary>
     public void NotifySaveChanged()
     {
@@ -194,7 +241,7 @@ public sealed class LibraryView : UserControl
     // ============================================================================================ Diseño
     private void BuildLayout()
     {
-        var filters = new TableLayoutPanel { Dock = DockStyle.Top, AutoSize = true, ColumnCount = 3, RowCount = 3, Padding = new Padding(0, 0, 0, 2) };
+        var filters = _filters = new TableLayoutPanel { Dock = DockStyle.Top, AutoSize = true, ColumnCount = 3, RowCount = 3, Padding = new Padding(0, 0, 0, 2) };
         for (var i = 0; i < 3; i++) filters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
         filters.Controls.Add(_search, 0, 0);
         filters.SetColumnSpan(_search, 2);
@@ -216,7 +263,7 @@ public sealed class LibraryView : UserControl
         _list.Columns[StateColumn].DisplayIndex = 1;
         _list.Columns[RegionColumn].DisplayIndex = 3;      // Hito 5d: la región se ve justo después del origen, antes de la procedencia (que es larga)
 
-        var split = new SplitContainer { Size = new Size(440, 200), Dock = DockStyle.Fill, FixedPanel = FixedPanel.Panel1, Panel1MinSize = 80, Panel2MinSize = 160, SplitterDistance = 118 };
+        var split = _split = new SplitContainer { Size = new Size(440, 200), Dock = DockStyle.Fill, FixedPanel = FixedPanel.Panel1, Panel1MinSize = 80, Panel2MinSize = 160, SplitterDistance = 118 };
         split.Panel1.Controls.Add(_tree);
         split.Panel2.Controls.Add(_list);
 
@@ -339,8 +386,8 @@ public sealed class LibraryView : UserControl
             GameId = _gameId,
             GcDestination = _gcDestination,
             Text = text.Length == 0 ? null : text,
-            Kind = _kind.SelectedIndex > 0 ? LibraryNames.Kinds[_kind.SelectedIndex - 1].Kind : null,
-            Generation = _gen.SelectedIndex > 0 ? _gen.SelectedIndex : null,
+            Kind = !_modoEventos && _kind.SelectedIndex > 0 ? LibraryNames.Kinds[_kind.SelectedIndex - 1].Kind : null,
+            Generation = !_modoEventos && _gen.SelectedIndex > 0 ? _gen.SelectedIndex : null,
             Species = _species > 0 ? _species : null,
             Form = _species > 0 && _form.SelectedIndex > 0 && int.TryParse(_form.SelectedItem?.ToString()?.Split(':')[0], out var f) ? f : null,
             EventLanguage = _lang.SelectedIndex > 0 ? _data.EventLanguages()[_lang.SelectedIndex - 1] : null,
@@ -356,8 +403,17 @@ public sealed class LibraryView : UserControl
         if (_gameId == 0 || !_data.IsAvailable) return;
         _filter = BuildFilter();
         _homeSettingAtLoad = _coordinator.Settings.AllowHomeTrackerless;
-        _rows = _data.Query(_filter);
-        _total = _data.Count(_filter with { Limit = 1, Offset = 0 });
+        if (_modoEventos)
+        {
+            _rows = _data.EventosParaJuego(_filter, ViaEvento);
+            _total = _data.ContarEventos(_filter with { Limit = 1, Offset = 0 }, ViaEvento);
+            ActualizarCuentasDeGrupo();
+        }
+        else
+        {
+            _rows = _data.Query(_filter);
+            _total = _data.Count(_filter with { Limit = 1, Offset = 0 });
+        }
         _list.BeginUpdate();
         _list.Items.Clear();
         _images.Images.Clear();
@@ -396,6 +452,20 @@ public sealed class LibraryView : UserControl
             _list.Items[0].Selected = true;
         else
             ShowSelection();
+    }
+
+    /// <summary>Pone en el selector de grupo cuántos eventos tiene cada uno con los filtros de ahora.</summary>
+    private void ActualizarCuentasDeGrupo()
+    {
+        var sinPagina = _filter with { Limit = 1, Offset = 0 };
+        var nativos = _data.ContarEventos(sinPagina, EventQueries.Native);
+        var transferencia = _data.ContarEventos(sinPagina, EventQueries.Transfer);
+        var seleccionado = _kind.SelectedIndex;
+        _loading = true;
+        _kind.Items[0] = TE($"Repartidos en este juego ({nativos:N0})", $"Given out in this game ({nativos:N0})");
+        _kind.Items[1] = TE($"De juegos anteriores (transferencia) ({transferencia:N0})", $"From earlier games (transfer) ({transferencia:N0})");
+        _kind.SelectedIndex = seleccionado;
+        _loading = false;
     }
 
     private void UpdatePager()
@@ -531,6 +601,12 @@ public sealed class LibraryView : UserControl
         var av = _coordinator.GetLibraryAvailability(row);
         if (!av.Enabled) return (false, av.Reason ?? string.Empty);
         var sav = _coordinator.Host.Env.SAV;
+        if (_modoEventos && _casillaEvento is { } elegida)
+        {
+            if (!elegida.IsEmpty(sav)) return (false, TE("La casilla elegida ya no está vacía.", "The chosen slot is no longer empty."));
+            if (!elegida.CanWriteTo(sav)) return (false, Textos.CasillaBloqueada);
+            return (true, TE("Se colocará en la casilla vacía que elegiste.", "It will be placed in the empty slot you chose.") + (row.HomeRequired ? " " + Textos.NecesitaHomeConAjuste : string.Empty));
+        }
         var free = PokekeepCoordinator.FindFreeSlot(sav, _coordinator.Host.CurrentBox);
         return free is null ? (false, Textos.NoHayHueco) : (true, $"Se colocará en la primera casilla libre de la caja {_coordinator.Host.CurrentBox + 1}, o suéltalo en una casilla vacía." + (row.HomeRequired ? " " + Textos.NecesitaHomeConAjuste : string.Empty));
     }
@@ -607,8 +683,11 @@ public sealed class LibraryView : UserControl
         if (row is null) return;
         var (enabled, _) = AddState();
         if (!enabled) return;
-        await _coordinator.AddLibraryEntryAsync(row).ConfigureAwait(true);
+        var resultado = await _coordinator.AddLibraryEntryAsync(row, _modoEventos ? _casillaEvento : null).ConfigureAwait(true);
         UpdateAddButton();
+        // «Añadir evento» elige una casilla concreta: una vez colocado, la ventana ya cumplió y se cierra (la casilla ya no está vacía).
+        if (_modoEventos && _casillaEvento is not null && resultado.Kind is OutcomeKind.Applied or OutcomeKind.AppliedNeedsHome && FindForm() is LibraryWindow ventana)
+            ventana.Close();
     }
 
     private void OnItemDrag(object? sender, ItemDragEventArgs e)

@@ -26,6 +26,8 @@ public sealed record EntradaLibreria(
     /// <summary>Parámetro especial de forma cuando el catálogo lo identifica; cero para las recetas sin ese dato.</summary>
     public uint ArgumentoForma { get; init; }
     public int NumeroPokedex { get; init; }
+    /// <summary>R-014: en la lista de eventos de un juego, <c>nativo</c> (el juego recibió esa distribución) o <c>transferencia</c> (de un juego anterior); null en la Librería normal.</summary>
+    public string? Via { get; init; }
 
     /// <summary>Atenuada: no existe en la partida, no se puede generar todavía o está bloqueada por HOME. Va con su motivo.</summary>
     public bool Atenuada => !Disponible || !Anadible || BloqueoHome is not null;
@@ -85,6 +87,13 @@ public interface ICatalogoLibreria
 
     IReadOnlyList<EntradaLibreria> Consultar(FiltroLibreria filtro);
     long Contar(FiltroLibreria filtro);
+
+    /// <summary>
+    /// R-014 «Añadir evento»: los eventos que ofrece el juego del filtro (<see cref="FiltroLibreria.Juego"/>), con los mismos filtros de texto, idioma y región y la misma paginación; primero los
+    /// nativos (<see cref="EntradaLibreria.Via"/> = <c>nativo</c>) y después los de juegos anteriores por transferencia. <paramref name="via"/> limita a uno de los dos.
+    /// </summary>
+    IReadOnlyList<EntradaLibreria> EventosParaJuego(FiltroLibreria filtro, string? via = null) => [];
+    long ContarEventos(FiltroLibreria filtro, string? via = null) => 0;
 
     /// <summary>Compatibilidad con la consulta simple de F2-F5.</summary>
     IReadOnlyList<EntradaLibreria> Buscar(string? texto, int juegoDestino, bool soloDisponibles, int limite, int desplazamiento)

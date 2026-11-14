@@ -81,6 +81,15 @@ internal static partial class Catalogo
                 F.Entero("PK-ED-075", IdiomaInterfaz.T("CatalogoCosmetico.HumorAlCaminar"), c => ((G4PKM)c.Pk).WalkingMood, (c, v) => ((G4PKM)c.Pk).WalkingMood = (sbyte)v, -128, 127, visible: c => c.Formato == 4 && c.Pk is G4PKM),
                 F.Entero("PK-ED-076", IdiomaInterfaz.T("Catalogo.FamaPokeStar"), c => ((PK5)c.Pk).PokeStarFame, (c, v) => ((PK5)c.Pk).PokeStarFame = (byte)v, 0, 100, visible: c => c.Pk is PK5),
             ], c => c.Pk is PB7 || c.Formato is 4 or 5),
+            new(IdiomaInterfaz.T("Catalogo.InsigniasPokeathlon"),
+            [
+                .. Enumerable.Range(0, (int)PokeathlonStat4.Count).Select(i =>
+                    F.Casilla("PK-ED-R013", NombreCursoPokeathlon(i), c => (c.Insignias.Leer(c.Sav, c.Pk.Species) & (1 << i)) != 0,
+                        (c, v) => { var e = c.Pk.Species; var bits = c.Insignias.Leer(c.Sav, e); c.Insignias.Poner(e, (byte)(v ? bits | (1 << i) : bits & ~(1 << i))); return null; },
+                        visible: c => BorradorInsignias.Aplica(c.Sav, c.Pk.Species), ayuda: IdiomaInterfaz.T("Catalogo.InsigniasPokeathlonAyuda")) with { Indice = i }),
+                F.Accion("PK-ED-R013", IdiomaInterfaz.T("Catalogo.InsigniasDarLasCinco"), c => c.Insignias.Poner(c.Pk.Species, AutoLegalidad.Desafios.InsigniasPokeathlon.Todas),
+                    visible: c => BorradorInsignias.Aplica(c.Sav, c.Pk.Species), ayuda: IdiomaInterfaz.T("Catalogo.InsigniasDarLasCincoAyuda")) with { Indice = 5 },
+            ], c => BorradorInsignias.Aplica(c.Sav, c.Pk.Species)),
             new(IdiomaInterfaz.T("Catalogo.HojasBrillantes"),
             [
                 .. Enumerable.Range(0, 5).Select(i =>
@@ -92,6 +101,9 @@ internal static partial class Catalogo
     }
 
     // ---- Auxiliares ----
+    /// <summary>Los cinco cursos del Pokéathlon por su atributo, en el orden de <see cref="PokeathlonStat4"/> (el de los bits de las insignias).</summary>
+    private static string NombreCursoPokeathlon(int i) => IdiomaInterfaz.T("Catalogo.InsigniaPokeathlon." + i);
+
     private static string TamanoTexto(byte valor, bool detallado)
     {
         if (detallado) return PokeSizeDetailedUtil.GetSizeRating(valor) switch

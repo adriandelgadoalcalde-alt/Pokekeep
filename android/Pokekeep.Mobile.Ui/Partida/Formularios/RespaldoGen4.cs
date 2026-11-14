@@ -33,5 +33,8 @@ internal static class RespaldoGen4
         // «General» es igual en castellano y en ingles: lang_es.txt lo deja asi y la prueba de localizacion lo señalaria como sin traducir.
         ["SAV_Pokeathlon4.Tab_General"] = "General",
         ["SAV_Pokeathlon4.L_Gender"] = "Género",
+
+        // Insignias (R-013): en el juego son «insignias» y lang_es.txt las llama «Medallas» (el nombre del PKHeX en castellano); la app usa el del juego en la pestaña. En inglés no cambia.
+        ["SAV_Pokeathlon4.Tab_Medals"] = "Insignias",
     };
 }

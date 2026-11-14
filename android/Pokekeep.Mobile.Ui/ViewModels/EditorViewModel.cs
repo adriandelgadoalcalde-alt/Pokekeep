@@ -9,6 +9,7 @@ using Pokekeep.Mobile.Ui.Herramientas.Showdown;
 using Pokekeep.Mobile.Ui.Editor;
 using Pokekeep.Mobile.Ui.Almacen;
 using Pokekeep.Mobile.Ui.Modelo;
+using Pokekeep.Mobile.Ui.Partida;
 using Pokekeep.Mobile.Ui.Localizacion;
 
 namespace Pokekeep.Mobile.Ui.ViewModels;
@@ -417,8 +418,23 @@ public sealed partial class EditorViewModel : ObservableObject, IAnfitrionEditor
         Informar(Avanzado ? IdiomaInterfaz.T("Editor.ModoAvanzadoActivadoListas") : IdiomaInterfaz.T("Editor.ModoAvanzadoDesactivado"), "aviso");
     }
 
+    /// <summary>
+    /// R-013: las insignias del Pokéathlon editadas van a la partida justo después de colocar el Pokémon, como UNA entrada más del historial («Insignias del Pokéathlon · Pikachu»).
+    /// Son dos entradas y no una porque la colocación del Pokémon la hace el servicio de casillas y queda registrada antes: Deshacer las quita en dos pasos.
+    /// </summary>
+    private void AplicarInsignias()
+    {
+        var pendientes = Modelo.Insignias.Pendientes(_sesion.Guardado);
+        if (pendientes.Count == 0) return;
+        var nombre = Modelo.Contexto.F.NombreEspecie(Modelo.Borrador.Species);
+        EscrituraPartida.Aplicar(_sesion, IdiomaInterfaz.F("Catalogo.InsigniasHistorial", nombre),
+            () => { foreach (var (especie, bits) in pendientes) AutoLegalidad.Desafios.InsigniasPokeathlon.Escribir(_sesion.Guardado, especie, bits); });
+        Modelo.Insignias.Limpiar();
+    }
+
     private void DescartarCambios()
     {
+        Modelo.Insignias.Limpiar();
         Original.Data.CopyTo(Modelo.Borrador.Data);
         Modelo.Contexto.StatsManuales = false;
         Informar(IdiomaInterfaz.T("Editor.CambiosDescartados"), "ok");
@@ -634,6 +650,7 @@ public sealed partial class EditorViewModel : ObservableObject, IAnfitrionEditor
         var info = _casilla.Info is SlotInfoParty p ? new SlotInfoParty(p.Slot) : _casilla.Info;
         var r = _sesion.Casillas.Colocar(info, Modelo.Preparar());
         if (!r.Correcto) { Informar(r.Mensaje, "error"); return; }
+        AplicarInsignias();
         Mensaje = string.Empty;
         HayCambios = false;
         _aplicado?.Invoke(r with { Mensaje = IdiomaInterfaz.T("Editor.CambiosAplicadosCasillaPuedes") });

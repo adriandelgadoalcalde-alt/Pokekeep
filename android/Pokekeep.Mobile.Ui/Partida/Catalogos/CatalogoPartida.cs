@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Pokekeep contributors
+using AutoLegalidad.Desafios;
 using PKHeX.Core;
+using Pokekeep.Mobile.Ui.Partida.Formularios;
 using Pokekeep.Mobile.Ui.Localizacion;
 
 namespace Pokekeep.Mobile.Ui.Partida.Catalogos;
@@ -21,10 +23,10 @@ public static class CatalogoPartida
     {
         SAV4BR br => Entrenador4BR.Crear(br),
         _ when !(sav.HasParty || sav is SAV7b) => null,
-        SAV6 s6 => Entrenador6.Crear(s6),
-        SAV7 s7 => Entrenador7.Crear(s7),
+        SAV6 s6 => DesafiosP.ConDesafios(Entrenador6.Crear(s6), s6, i => i is Maison6),
+        SAV7 s7 => DesafiosP.ConDesafios(Entrenador7.Crear(s7), s7, i => i is Arbol7),
         SAV7b b7 => Entrenador7b.Crear(b7),
-        SAV8SWSH sw => Entrenador8.Crear(sw),
+        SAV8SWSH sw => DesafiosP.ConDesafios(Entrenador8.Crear(sw), sw, i => i is Torre8),
         SAV8LA la => EntrenadorSwitch.Crear8a(la),
         SAV8BS bs => EntrenadorSwitch.Crear8b(bs),
         SAV9SV sv => EntrenadorSwitch.Crear9(sv),

@@ -47,6 +47,30 @@ public sealed class ContextoEditor(PKM pk, SaveFile sav, FuentesEditor fuentes)
     public int IndiceByteExtra { get; set; }
     /// <summary>Acciones que un campo pide a la pantalla (abrir un subeditor, una hoja de seleccion...). Las rellena el ViewModel; las pruebas del host las dejan nulas.</summary>
     public IAnfitrionEditor? Anfitrion { get; set; }
+    /// <summary>Las insignias del Pokéathlon que se editan en el borrador (son de la PARTIDA, no del Pokémon): lo comparte el modelo con cada contexto que reconstruye.</summary>
+    public BorradorInsignias Insignias { get; set; } = new();
+}
+
+/// <summary>
+/// R-013: las insignias del Pokéathlon de HeartGold y SoulSilver por especie (<see cref="AutoLegalidad.Desafios.InsigniasPokeathlon"/>). Viven en la partida, no en el Pokémon, así que el editor las deja en un borrador aparte
+/// (como el resto de sus campos) y solo se escriben al «Aplicar a la casilla»; «Descartar cambios» las tira con lo demás.
+/// </summary>
+public sealed class BorradorInsignias
+{
+    private readonly Dictionary<ushort, byte> _bits = [];
+
+    /// <summary>Hay editor de insignias para este Pokémon: HeartGold o SoulSilver y una especie que el Pokéathlon conoce (1 a 493).</summary>
+    public static bool Aplica(SaveFile sav, ushort especie) => sav is SAV4HGSS && especie is >= 1 and <= (int)Species.Arceus;
+
+    public byte Leer(SaveFile sav, ushort especie) => _bits.TryGetValue(especie, out var b) ? b : AutoLegalidad.Desafios.InsigniasPokeathlon.Leer(sav, especie);
+
+    public void Poner(ushort especie, byte bits) => _bits[especie] = (byte)(bits & AutoLegalidad.Desafios.InsigniasPokeathlon.Todas);
+
+    /// <summary>Lo que el borrador cambia respecto de la partida (especie, bits nuevos).</summary>
+    public IReadOnlyList<(ushort Especie, byte Bits)> Pendientes(SaveFile sav)
+        => [.. _bits.Where(kv => Aplica(sav, kv.Key) && AutoLegalidad.Desafios.InsigniasPokeathlon.Leer(sav, kv.Key) != kv.Value).OrderBy(kv => kv.Key).Select(kv => (kv.Key, kv.Value))];
+
+    public void Limpiar() => _bits.Clear();
 }
 
 /// <summary>Lo que el modelo del editor pide a la pantalla: abrir un subeditor, avisar de algo.</summary>

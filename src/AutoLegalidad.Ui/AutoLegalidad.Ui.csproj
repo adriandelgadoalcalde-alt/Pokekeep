@@ -17,6 +17,8 @@
     <ProjectReference Include="..\AutoLegalidad.App\AutoLegalidad.App.csproj" />
     <ProjectReference Include="..\AutoLegalidad.Contracts\AutoLegalidad.Contracts.csproj" />
     <ProjectReference Include="..\AutoLegalidad.Registro\AutoLegalidad.Registro.csproj" />
+    <!-- R-013: rachas, jefes y maximos de los desafios (sin interfaz; la usa el parche 0104 del escritorio). -->
+    <ProjectReference Include="..\AutoLegalidad.Desafios\AutoLegalidad.Desafios.csproj" />
     <ProjectReference Include="..\AutoLegalidad.WorkerClient\AutoLegalidad.WorkerClient.csproj" />
     <ProjectReference Include="..\AutoLegalidad.Catalog\AutoLegalidad.Catalog.csproj" />
   </ItemGroup>

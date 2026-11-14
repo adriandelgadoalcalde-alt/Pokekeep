@@ -37,9 +37,12 @@ public sealed class ModeloEntidad
     {
         Borrador = borrador;
         Fuentes = fuentes ?? FuentesEditor.Crear(sav, Ajustes.Pkhex.ProgramaPkhex.HaX);   // en modo HaX (Program.HaX) el editor abre ya en modo avanzado (bloque 10-1)
-        Contexto = new ContextoEditor(borrador, sav, Fuentes);
+        Contexto = new ContextoEditor(borrador, sav, Fuentes) { Insignias = Insignias };
         Original = borrador.Data.ToArray();
     }
+
+    /// <summary>Las insignias del Pokéathlon editadas (de la partida, no del Pokémon): se escriben al aplicar a la casilla.</summary>
+    public BorradorInsignias Insignias { get; } = new();
 
     public PKM Borrador { get; }
     public FuentesEditor Fuentes { get; private set; }
@@ -50,7 +53,11 @@ public sealed class ModeloEntidad
     /// <summary>Se dispara tras cada escritura correcta (la pantalla relee los campos).</summary>
     public event Action? Cambiado;
 
-    public bool HayCambios => !Borrador.Data.SequenceEqual(Original);
+    /// <summary>Hay algo por aplicar: el Pokémon ha cambiado o hay insignias del Pokéathlon distintas de las de la partida.</summary>
+    public bool HayCambios => HayCambiosPokemon || Insignias.Pendientes(Contexto.Sav).Count > 0;
+
+    /// <summary>Los bytes del Pokémon han cambiado (sin contar las insignias, que son de la partida).</summary>
+    public bool HayCambiosPokemon => !Borrador.Data.SequenceEqual(Original);
 
     /// <summary>Una escritura hecha fuera de los campos (un boton de un subeditor, el motor) avisa a la pantalla.</summary>
     public void NotificarCambio() => Cambiado?.Invoke();
@@ -64,7 +71,7 @@ public sealed class ModeloEntidad
         var anfitrion = Contexto.Anfitrion;
         var manuales = Contexto.StatsManuales;
         Fuentes = FuentesEditor.Crear(Contexto.Sav, avanzado);
-        Contexto = new ContextoEditor(Borrador, Contexto.Sav, Fuentes) { Anfitrion = anfitrion, StatsManuales = manuales && avanzado };
+        Contexto = new ContextoEditor(Borrador, Contexto.Sav, Fuentes) { Anfitrion = anfitrion, StatsManuales = manuales && avanzado, Insignias = Insignias };
         Cambiado?.Invoke();
     }
 
@@ -75,7 +82,7 @@ public sealed class ModeloEntidad
         Contexto = new ContextoEditor(Borrador, Contexto.Sav, Fuentes)
         {
             Anfitrion = Contexto.Anfitrion, StatsManuales = Contexto.StatsManuales,
-            IndiceByteExtra = Contexto.IndiceByteExtra,
+            IndiceByteExtra = Contexto.IndiceByteExtra, Insignias = Insignias,
         };
     }
 
@@ -135,7 +142,7 @@ public sealed class ModeloEntidad
     /// </summary>
     public PKM Preparar()
     {
-        if (!HayCambios) return Borrador.Clone();
+        if (!HayCambiosPokemon) return Borrador.Clone();
         Reglas.Preparar(Borrador);
         return Borrador.Clone();
     }

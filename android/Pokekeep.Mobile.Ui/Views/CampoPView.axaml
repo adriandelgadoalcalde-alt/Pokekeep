@@ -80,8 +80,8 @@
       <d:EtiquetaYValor MinHeight="52" IsVisible="{Binding EsAccion}">
         <StackPanel VerticalAlignment="Center">
           <TextBlock Text="{Binding Etiqueta}" TextWrapping="Wrap" />
-          <TextBlock Classes="sec" Text="{Binding Detalle}" IsVisible="{Binding HayDetalle}" />
-          <TextBlock Classes="sec" Text="{Binding Motivo}" IsVisible="{Binding EsFijo}" />
+          <TextBlock Classes="sec" Text="{Binding Detalle}" TextWrapping="Wrap" IsVisible="{Binding HayDetalle}" />
+          <TextBlock Classes="sec" Text="{Binding Motivo}" TextWrapping="Wrap" IsVisible="{Binding EsFijo}" />
         </StackPanel>
         <ToggleButton Classes="chip" IsChecked="{Binding Marcado, Mode=OneWay}" HorizontalAlignment="Left" Command="{Binding AlternarCommand}" IsVisible="{Binding EsEditable}" MinWidth="88" MinHeight="48" Content="{Binding TextoMarca}" AutomationProperties.Name="{Binding Accesible}" AutomationProperties.HelpText="{Binding Ayuda}" />
       </d:EtiquetaYValor>

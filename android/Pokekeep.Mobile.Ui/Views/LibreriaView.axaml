@@ -10,7 +10,7 @@
     <ScrollViewer Name="Cabecera" Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
     <StackPanel Margin="16,8,16,0">
       <StackPanel Spacing="2" Margin="0,0,0,10">
-        <TextBlock Classes="titulo" Text="{DynamicResource Loc.Libreria.Vista.0}" />
+        <TextBlock Name="TituloLibreria" Classes="titulo" Text="{Binding TituloVista}" />
         <TextBlock Classes="sec" Text="{Binding Subtitulo}" TextWrapping="Wrap" />
       </StackPanel>
       <TextBox Name="Buscador" Classes="campo" Text="{Binding Texto}" PlaceholderText="{Binding TextoDeBusqueda}" IsEnabled="{Binding HayLista}"
@@ -19,12 +19,20 @@
           <d:Icono Glifo="Search" Width="20" Height="20" Margin="12,0,0,0" Foreground="{DynamicResource TextoSecundario}" />
         </TextBox.InnerLeftContent>
       </TextBox>
+      <WrapPanel Name="GruposEventos" IsVisible="{Binding ModoEventos}" Margin="0,6,0,6">
+        <ToggleButton Name="GrupoNativo" Classes="chip" Margin="0,0,8,6" IsChecked="{Binding GrupoEsNativo, Mode=OneWay}" Command="{Binding VerNativosCommand}" AutomationProperties.Name="{Binding EtiquetaGrupoNativo}">
+          <TextBlock Text="{Binding EtiquetaGrupoNativo}" TextWrapping="Wrap" />
+        </ToggleButton>
+        <ToggleButton Name="GrupoTransferencia" Classes="chip" Margin="0,0,8,6" IsChecked="{Binding GrupoEsTransferencia, Mode=OneWay}" Command="{Binding VerTransferenciaCommand}" AutomationProperties.Name="{Binding EtiquetaGrupoTransferencia}">
+          <TextBlock Text="{Binding EtiquetaGrupoTransferencia}" TextWrapping="Wrap" />
+        </ToggleButton>
+      </WrapPanel>
       <d:TiraConIndicio IsVisible="{Binding HayLista}" Margin="0,2,0,0">
         <StackPanel Orientation="Horizontal" Spacing="8">
-          <Button Name="FiltroGeneracion" Classes="filtro" Classes.activo="{Binding GeneracionActiva}" Command="{Binding AbrirGeneracionCommand}" AutomationProperties.Name="{l:Formato Libreria.Filtro.Generacion, {Binding EtiquetaGeneracion}}">
+          <Button Name="FiltroGeneracion" IsVisible="{Binding NoModoEventos}" Classes="filtro" Classes.activo="{Binding GeneracionActiva}" Command="{Binding AbrirGeneracionCommand}" AutomationProperties.Name="{l:Formato Libreria.Filtro.Generacion, {Binding EtiquetaGeneracion}}">
             <StackPanel Orientation="Horizontal" Spacing="6"><TextBlock Text="{Binding EtiquetaGeneracion}" TextWrapping="NoWrap" /><d:Icono Glifo="ChevronDown" /></StackPanel>
           </Button>
-          <Button Name="FiltroOrigen" Classes="filtro" Classes.activo="{Binding OrigenActivo}" Command="{Binding AbrirOrigenCommand}" AutomationProperties.Name="{l:Formato Libreria.Filtro.Origen, {Binding EtiquetaOrigen}}">
+          <Button Name="FiltroOrigen" IsVisible="{Binding NoModoEventos}" Classes="filtro" Classes.activo="{Binding OrigenActivo}" Command="{Binding AbrirOrigenCommand}" AutomationProperties.Name="{l:Formato Libreria.Filtro.Origen, {Binding EtiquetaOrigen}}">
             <StackPanel Orientation="Horizontal" Spacing="6"><TextBlock Text="{Binding EtiquetaOrigen}" TextWrapping="NoWrap" /><d:Icono Glifo="ChevronDown" /></StackPanel>
           </Button>
           <Button Name="FiltroEspecie" Classes="filtro" Classes.activo="{Binding EspecieActiva}" Command="{Binding AbrirEspecieCommand}" AutomationProperties.Name="{l:Formato Libreria.Filtro.Especie, {Binding EtiquetaEspecie}}">

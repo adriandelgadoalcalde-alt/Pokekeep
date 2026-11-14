@@ -74,6 +74,12 @@
       "autolegalidad.contracts": {
         "type": "Project"
       },
+      "autolegalidad.desafios": {
+        "type": "Project",
+        "dependencies": {
+          "PKHeX.Core": "[26.10.18, )"
+        }
+      },
       "autolegalidad.engine": {
         "type": "Project",
         "dependencies": {

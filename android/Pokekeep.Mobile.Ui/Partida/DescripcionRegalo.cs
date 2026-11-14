@@ -28,7 +28,7 @@ public static class DescripcionRegalo
         if (g.IsEmpty) return string.Empty;
         if (g is PGT { IsEntity: false, IsItem: false }) return IdiomaInterfaz.T("DescripcionRegalo.TarjetaPGT");
         var tit = g.CardTitle?.Replace('　', ' ').Trim() ?? string.Empty;
-        return g.CardID > 0 ? $"N.º {g.CardID:0000}{(tit.Length > 0 ? " · " + tit : string.Empty)}" : tit;
+        return g.CardID > 0 ? $"{IdiomaInterfaz.F("DescripcionRegalo.Numero", g.CardID)}{(tit.Length > 0 ? " · " + tit : string.Empty)}" : tit;
     }
 
     private static string Especie(GameStrings t, ushort sp) => sp < t.Species.Count ? t.Species[sp] : IdiomaInterfaz.F("DescripcionRegalo.Especie", sp);

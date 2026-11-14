@@ -70,7 +70,7 @@ public sealed partial class EstadisticasBaseViewModel : HerramientaViewModel
         Filas = ModeloEstadisticasBase.Filas(sav, sesion.Textos, GameInfo.GenderSymbolUnicode);
         List<ColumnaTabla> columnas =
         [
-            new("numero", "N.º", o => ((FilaEstadistica)o).Numero, o => ((FilaEstadistica)o).Clave),
+            new("numero", IdiomaInterfaz.T("EstadisticasBase.Columna.Numero"), o => ((FilaEstadistica)o).Numero, o => ((FilaEstadistica)o).Clave),
             new("nombre", IdiomaInterfaz.T("EstadisticasBase.Nombre"), o => ((FilaEstadistica)o).Nombre),
             new("nativo", IdiomaInterfaz.T("EstadisticasBase.Nativo"), o => ((FilaEstadistica)o).Nativo ? IdiomaInterfaz.T("Comun.Si") : IdiomaInterfaz.T("Comun.No"), Visible: false),
             new("bst", "Total", o => Tres(((FilaEstadistica)o).Bst), o => ((FilaEstadistica)o).Bst),

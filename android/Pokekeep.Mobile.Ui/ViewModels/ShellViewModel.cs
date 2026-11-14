@@ -284,6 +284,13 @@ public sealed partial class ShellViewModel : ObservableObject, IAnfitrionCajas, 
     public IAlmacenCarpetas? Carpetas => _servicios?.Carpetas;
     string? IAnfitrionCajas.CarpetaPreferenciasInterfaz => _servicios?.CarpetaPrivada;
     public void IrALibreria() => Destino = Destino.Libreria;
+
+    /// <summary>R-014 «Añadir evento»: pantalla con los eventos del juego (la Librería en modo eventos) para la casilla vacía tocada.</summary>
+    public void AbrirEventos(Pokekeep.Mobile.Ui.Cajas.CasillaRef destino)
+    {
+        var casilla = destino.Info is SlotInfoBox caja ? new DestinoCasilla(false, caja.Box, caja.Slot) : (DestinoCasilla?)null;
+        Pantalla = new PantallaEventosViewModel(new LibreriaViewModel(Sesion, _catalogo, this, eventos: true, destinoEvento: casilla), CerrarPantalla);
+    }
     void IAnfitrionCajas.AbrirHoja(HojaViewModel hoja) => AbrirHoja(hoja);
     void IAnfitrionCajas.CerrarHoja() => CerrarHoja();
     void IAnfitrionCajas.Informar(string texto, string clase, string glifo, string? textoAccion, ICommand? accion) => Informar(texto, clase, glifo, textoAccion, accion);

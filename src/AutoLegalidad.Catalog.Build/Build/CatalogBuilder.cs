@@ -130,6 +130,12 @@ public static class CatalogBuilder
         log?.Invoke($"Libreria: {lib.Entries} entradas ({lib.Addable} ofrecibles, {lib.Dimmed} atenuadas, {lib.WithEventTitleEs} eventos con titulo en español; {lib.HomeRequired} solo con el ajuste de HOME; {lib.BlockedByRule} atenuadas por regla del catalogo y {lib.BlockedByMeasurement} por medicion del banco).");
         Lap("libreria");
 
+        // R-014 («Añadir evento»): que eventos ofrece cada juego, de forma nativa o por transferencia; el Core decide con LegalityAnalysis.
+        var offers = Events.EventOfferBuilder.Compute(c, core.ReleaseId, log);
+        Events.EventOfferBuilder.Persist(c, offers.Offers);
+        log?.Invoke("Ofertas de eventos: " + Events.EventOfferBuilder.Describe(offers));
+        Lap("ofertas_eventos");
+
         var verify = CatalogVerifier.Verify(c);
         Lap("verificacion");
         var stats = CatalogStats.Collect(c);
@@ -138,6 +144,13 @@ public static class CatalogBuilder
         stats["core"] = new Dictionary<string, object?> { ["tag"] = core.Tag, ["commit"] = core.Commit, ["dll_sha256"] = core.DllSha256, ["content_digest"] = ds.ContentDigest };
         if (trackingStats is not null) stats["ventanas_evento_tracking_detalle"] = trackingStats.ToDictionary(k => k.Key, k => k.Value);
         if (regionStats is not null) stats["region_eventos_detalle"] = regionStats.ToDictionary(k => k.Key, k => k.Value);
+        stats["ofertas_eventos"] = new Dictionary<string, object?>
+        {
+            ["tarjetas"] = offers.Cards, ["tarjetas_sin_plantilla_del_core"] = offers.CardsWithoutTemplate, ["juegos_destino"] = offers.Destinations,
+            ["ofertas_nativas"] = offers.Offers.Count(o => o.Via == Events.EventOfferBuilder.Native), ["ofertas_por_transferencia"] = offers.Offers.Count(o => o.Via == Events.EventOfferBuilder.Transfer),
+            ["ofertas_solo_con_home"] = offers.Offers.Count(o => o.HomeRequired), ["nativas_que_el_core_no_da_por_validas"] = offers.NativeInvalid,
+            ["motivos_de_las_no_validas"] = offers.NativeInvalidReasons.ToDictionary(k => k.Key, k => (object?)k.Value), ["motivos_por_juego_y_tipo"] = offers.NativeInvalidDetail.ToDictionary(k => k.Key, k => (object?)k.Value), ["intentos_de_transferencia"] = offers.TransferAttempts,
+        };
         stats["core_encuentros_crudos"] = ds.RawEncounterItems;
         stats["core_encuentros_sin_juego_resuelto"] = ds.UnresolvedEncounters;
         stats["core_tipos_sin_clasificar"] = ds.UnclassifiedTypes.ToList<object?>();

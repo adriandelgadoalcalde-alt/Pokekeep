@@ -204,11 +204,10 @@ public sealed class CoreDataSet
             var type = gift.GetType().Name;
             var key = CoreMgdbIndex.KeyFor(type, sha);
             if (!seen.Add(key)) { dup++; continue; }
-            var games = ResolveGames(gift.Version, gift.Context);
-            // Una tarjeta con RestrictVersion solo la recibe el juego que el Core admite (WC6.cs:25-34 CanBeReceivedByVersion; EncounterPossible6.cs:230-237 la usa al enumerar): la Libreria y la matriz
-            // no deben ofrecerla en X/Y si solo es de Omega Rubi/Zafiro Alfa. El motor y el catalogo comparten asi el mismo criterio del Core.
-            if (gift is IRestrictVersion restrict)
-                games = [.. games.Where(g => restrict.CanBeReceivedByVersion((GameVersion)g.Id))];
+            // Una tarjeta no es de UN juego (R-014): el Core guarda la version de su Pokemon de muestra, pero los juegos que la reciben salen de su propia comprobacion por tarjeta
+            // (WC6.cs:25-34 CanBeReceivedByVersion; EncounterPossible6.cs:230-237 la usa al enumerar): la Libreria y la matriz no deben ofrecerla en X/Y si solo es de Omega Rubi/Zafiro Alfa,
+            // ni dejar a SoulSilver, Perla y Platino sin las tarjetas de Gen 4 que PCD.CardCompatibility les da. El motor y el catalogo comparten asi el mismo criterio del Core.
+            var games = GiftReceivers.Games(gift);
             var desc = CanonicalJson.Serialize(GiftInfo.Describe(gift, type, sha, source.ReleaseDate));
             output.Add(new EncounterRow(
                 key, source.SourceVersionId, null, gift.Species, gift.Form, OriginGame(gift.Version, gift.Generation), gift.Context.ToString(),

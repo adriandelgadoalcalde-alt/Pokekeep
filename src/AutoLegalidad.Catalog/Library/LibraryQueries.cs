@@ -6,11 +6,15 @@ using Microsoft.Data.Sqlite;
 
 namespace AutoLegalidad.Catalog.Library;
 
-/// <summary>Una fila de la Libreria lista para pintar (la UI del Hito 4 usa estas consultas tal cual).</summary>
+/// <summary>
+/// Una fila de la Libreria lista para pintar (la UI del Hito 4 usa estas consultas tal cual). <c>Via</c> solo viene rellena en las filas de <see cref="EventQueries"/> (R-014):
+/// <c>nativo</c> (el juego recibió la tarjeta) o <c>transferencia</c> (se crea en un juego anterior y se transfiere); en la Librería normal es null.
+/// </summary>
 public sealed record LibraryRow(string EntryKey, int GameId, string GameName, int SpeciesId, int FormId, int DexNumber, string NameEs, string? FormName, string Kind,
     string Variant, bool Available, string? DimReason, bool Addable, string Status, string? EventTitleEs, string? EventTitle, string? EventLanguage, string? EventStartDate,
     string SourceLabel, string? EncounterKey, bool HomeRequired = false, string? DimSource = null, string? EventTitleEsSource = null,
-    string? ShinyRule = null, int? FixedGender = null, bool Gigantamax = false, int OriginGame = 0, string? EventRegion = null, string? EventRegionSource = null);
+    string? ShinyRule = null, int? FixedGender = null, bool Gigantamax = false, int OriginGame = 0, string? EventRegion = null, string? EventRegionSource = null,
+    string? Via = null);
 
 /// <summary>Filtros de la Libreria: se combinan con AND.</summary>
 public sealed record LibraryFilter
@@ -44,7 +48,7 @@ public sealed record LibraryFilter
 /// <summary>Consultas de la Libreria (navegacion + buscador). Usan los indices de <c>library_entry</c> y el FTS5 <c>library_search</c>; responden en milisegundos.</summary>
 public static class LibraryQueries
 {
-    private const string Columns = """
+    internal const string Columns = """
         e.entry_key, e.game_id, e.game_name, e.species_id, e.form_id, e.dex_number, e.name_es, e.form_name, e.kind, e.variant_key, e.availability, e.dim_reason, e.addable,
         e.status, e.event_title_es, e.event_title, e.event_language, e.event_start_date, e.source_label, e.encounter_key, e.home_required, e.dim_source, e.event_title_es_source, e.shiny_rule, e.fixed_gender, e.gigantamax,
         COALESCE((SELECT x.origin_game FROM encounter x WHERE x.encounter_key = e.encounter_key), 0), e.event_region, e.event_region_source
@@ -64,13 +68,24 @@ public static class LibraryQueries
         return string.Join(' ', tokens.Select(t => "\"" + t + "\"*"));
     }
 
-    private static SqliteCommand Build(SqliteConnection c, LibraryFilter f, bool count)
+    private static SqliteCommand Build(SqliteConnection c, LibraryFilter f, bool count) => Build(c, f, count, events: false);
+
+    /// <summary>
+    /// <paramref name="events"/> (R-014): la consulta parte de <c>event_offer</c> (los eventos que el juego ofrece) y la une con la fila de la Librería de su tarjeta; los filtros de texto, idioma, región,
+    /// fechas, especie y forma son los mismos. «Solo ofrecibles» y «solo añadibles» se miran en la fila de la tarjeta: una tarjeta atenuada en la Librería (no está en la base de PKHeX o la medición la rechaza) tampoco es añadible como evento.
+    /// </summary>
+    internal static SqliteCommand Build(SqliteConnection c, LibraryFilter f, bool count, bool events, string? via = null)
     {
-        var where = new List<string> { "e.game_id = $game" };
+        var where = new List<string> { events ? "eo.game_id = $game" : "e.game_id = $game" };
         var cmd = c.CreateCommand();
         cmd.Parameters.AddWithValue("$game", f.GameId);
-        var join = string.Empty;
+        var join = events ? "JOIN event_offer eo ON eo.entry_key = e.entry_key" : string.Empty;
         var order = "e.species_id, e.form_id, e.kind, e.variant_key";
+        if (events)
+        {
+            order = "CASE eo.via WHEN 'nativo' THEN 0 ELSE 1 END, e.event_start_date DESC, e.species_id, e.form_id, e.entry_key";
+            if (via is not null) { where.Add("eo.via = $via"); cmd.Parameters.AddWithValue("$via", via); }
+        }
 
         if (!string.IsNullOrWhiteSpace(f.Text))
         {
@@ -87,10 +102,10 @@ public static class LibraryQueries
                     where.Add("0");
                 else
                 {
-                    join = "JOIN library_search s ON s.rowid = e.rowid";
+                    join += " JOIN library_search s ON s.rowid = e.rowid";
                     where.Add("library_search MATCH $q");
                     cmd.Parameters.AddWithValue("$q", fts);
-                    order = "s.rank, " + order;
+                    order = events ? order.Replace("e.event_start_date DESC", "s.rank, e.event_start_date DESC") : "s.rank, " + order;
                 }
             }
         }
@@ -104,20 +119,20 @@ public static class LibraryQueries
         if (f.EventTo is not null) { where.Add("e.event_start_date <= $to"); cmd.Parameters.AddWithValue("$to", f.EventTo); }
         if (f.OnlyAvailable) where.Add("e.availability = 'Available'");
         if (f.OnlyAddable) where.Add("e.addable = 1");
-        if (GameCubeIds.IsGameCube(f.GcDestination) && f.OnlyAddable)
+        if (!events && GameCubeIds.IsGameCube(f.GcDestination) && f.OnlyAddable)
         {
             where.Add($"(COALESCE((SELECT x.origin_game FROM encounter x WHERE x.encounter_key = e.encounter_key), 0) NOT IN ({GameCubeIds.Colosseum}, {GameCubeIds.Xd}) OR (SELECT x.origin_game FROM encounter x WHERE x.encounter_key = e.encounter_key) = $gc)");
             cmd.Parameters.AddWithValue("$gc", f.GcDestination);
         }
-        if (f.OnlyAddable && CriaSinHuevo.SqlExclusion(f.GameId, f.GcDestination) is { } noEggs) where.Add(noEggs);   // Hito 5c: la cría sin huevo en el Core no se ofrece (en ningún juego)
-        if (f.ExcludeHomeRequired) where.Add("e.home_required = 0");
+        if (!events && f.OnlyAddable && CriaSinHuevo.SqlExclusion(f.GameId, f.GcDestination) is { } noEggs) where.Add(noEggs);   // Hito 5c: la cría sin huevo en el Core no se ofrece (en ningún juego)
+        if (f.ExcludeHomeRequired) where.Add(events ? "(e.home_required = 0 AND eo.home_required = 0)" : "e.home_required = 0");
 
         if (count)
         {
             cmd.CommandText = $"SELECT count(*) FROM library_entry e {join} WHERE {string.Join(" AND ", where)}";
             return cmd;
         }
-        cmd.CommandText = $"SELECT {Columns} FROM library_entry e {join} WHERE {string.Join(" AND ", where)} ORDER BY {order} LIMIT $limit OFFSET $offset";
+        cmd.CommandText = $"SELECT {Columns}{(events ? ", eo.via, eo.home_required, eo.game_id" : string.Empty)} FROM library_entry e {join} WHERE {string.Join(" AND ", where)} ORDER BY {order} LIMIT $limit OFFSET $offset";
         cmd.Parameters.AddWithValue("$limit", f.Limit);
         cmd.Parameters.AddWithValue("$offset", f.Offset);
         return cmd;
@@ -129,10 +144,14 @@ public static class LibraryQueries
         var rows = new List<LibraryRow>();
         using var r = cmd.ExecuteReader();
         while (r.Read())
-            rows.Add(WrongGameCube(new LibraryRow(r.GetString(0), r.GetInt32(1), r.GetString(2), r.GetInt32(3), r.GetInt32(4), r.GetInt32(5), r.GetString(6), Str(r, 7), r.GetString(8), r.GetString(9),
-                r.GetString(10) == "Available", Str(r, 11), r.GetInt32(12) == 1, r.GetString(13), Str(r, 14), Str(r, 15), Str(r, 16), Str(r, 17), r.GetString(18), Str(r, 19), r.GetInt32(20) == 1, Str(r, 21), Str(r, 22), Str(r, 23), r.IsDBNull(24) ? null : r.GetInt32(24), r.GetInt32(25) == 1, r.GetInt32(26), Str(r, 27), Str(r, 28)), f.GcDestination));
+            rows.Add(WrongGameCube(ReadRow(r), f.GcDestination));
         return rows;
     }
+
+    /// <summary>Lee la fila con las columnas de <see cref="Columns"/> (índices 0 a 28).</summary>
+    internal static LibraryRow ReadRow(SqliteDataReader r) =>
+        new(r.GetString(0), r.GetInt32(1), r.GetString(2), r.GetInt32(3), r.GetInt32(4), r.GetInt32(5), r.GetString(6), Str(r, 7), r.GetString(8), r.GetString(9),
+            r.GetString(10) == "Available", Str(r, 11), r.GetInt32(12) == 1, r.GetString(13), Str(r, 14), Str(r, 15), Str(r, 16), Str(r, 17), r.GetString(18), Str(r, 19), r.GetInt32(20) == 1, Str(r, 21), Str(r, 22), Str(r, 23), r.IsDBNull(24) ? null : r.GetInt32(24), r.GetInt32(25) == 1, r.GetInt32(26), Str(r, 27), Str(r, 28));
 
     /// <summary>Texto del motivo cuando el origen de la entrada es del OTRO juego del GameCube (Colosseum y XD no comparten encuentros, solo la entrada de la Librería).</summary>
     public const string OnlyXdReason = "Este origen solo existe en Pokémon XD: el destino es Pokémon Colosseum";
@@ -206,5 +225,5 @@ public static class LibraryQueries
         return Model.CanonicalJson.SerializeIndented(detail);
     }
 
-    private static string? Str(SqliteDataReader r, int i) => r.IsDBNull(i) ? null : r.GetString(i);
+    internal static string? Str(SqliteDataReader r, int i) => r.IsDBNull(i) ? null : r.GetString(i);
 }

@@ -95,6 +95,7 @@
               <h:VistasHerramientas />
               <DataTemplate x:DataType="vm:EdicionMasivaViewModel"><v:EdicionMasivaView /></DataTemplate>
               <DataTemplate x:DataType="vm:CompletarJuegoViewModel"><v:CompletarJuegoView /></DataTemplate>
+              <DataTemplate x:DataType="vm:PantallaEventosViewModel"><v:AnadirEventoView /></DataTemplate>
             </ContentControl.DataTemplates>
           </ContentControl>
         </Panel>

@@ -43,10 +43,25 @@ public static class CoreEncounterReader
 {
     private const BindingFlags All = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
 
-    public static IReadOnlyList<CoreEncounterItem> Read()
+    /// <summary>
+    /// Los dos repartos de la Consola Virtual que el Core guarda como un campo suelto (no como una tabla) y que por eso la lectura general no ve: el Mew de GF
+    /// (<c>Encounters1VC.Gift</c>, un <c>EncounterGift1</c>) y el Celebi del Bosque Ilex (<c>Encounters2.CelebiVC</c>, un <c>EncounterStatic2</c>). Entran como <c>Gift</c>, como el resto de los
+    /// repartos de Gen 1-2 (R-014). El Mew comparte clave con los Mew de <c>Encounters1GBEra.Gifts</c> (misma plantilla de tipo, versión, contexto y especie).
+    /// </summary>
+    public static readonly IReadOnlyList<(string Class, string Field)> VirtualConsoleSingles = [("Encounters1VC", "Gift"), ("Encounters2", "CelebiVC")];
+
+    public static IReadOnlyList<CoreEncounterItem> Read() => [.. Enumerate(null).Select(x => x.Item)];
+
+    /// <summary>
+    /// Las plantillas MISMAS (no solo sus datos) de las tablas cuyo nombre (<c>Clase.Campo</c>) cumple el filtro, con el mismo elemento que devuelve <see cref="Read"/>.
+    /// Una plantilla que está en varias listas del Core (p. ej. <c>EncountersWC3.Encounter_WC3</c> y <c>EncountersWC3.International</c>) sale una vez por lista.
+    /// </summary>
+    public static IReadOnlyList<(CoreEncounterItem Item, IEncounterTemplate Template)> ReadTemplates(Func<string, bool> tableFilter)
+        => [.. Enumerate(tableFilter).Select(x => (x.Item, x.Template))];
+
+    private static IEnumerable<(CoreEncounterItem Item, IEncounterTemplate Template)> Enumerate(Func<string, bool>? tableFilter)
     {
         var asm = typeof(PKM).Assembly;
-        var result = new List<CoreEncounterItem>(300_000);
         var tables = 0;
         foreach (var t in asm.GetTypes()
                      .Where(t => t is { IsAbstract: true, IsSealed: true, Namespace: "PKHeX.Core" } && t.Name.StartsWith("Encounters", StringComparison.Ordinal))
@@ -57,28 +72,48 @@ public static class CoreEncounterReader
                 if (f.GetValue(null) is not IEnumerable seq || f.FieldType == typeof(string))
                     continue;
                 var table = $"{t.Name}.{f.Name}";
-                var before = result.Count;
+                if (tableFilter is not null && !tableFilter(table))
+                    continue;
+                var any = false;
                 var ordinal = 0;
                 foreach (var o in seq)
                 {
                     if (o is null) { ordinal++; continue; }
                     if (o is IEncounterTemplate template)
-                        result.Add(Make(table, ordinal, template));
+                    {
+                        any = true;
+                        yield return (Make(table, ordinal, template), template);
+                    }
                     else if (SlotsOf(o) is { } slots)
                     {
                         var i = 0;
                         foreach (var s in slots)
                             if (s is IEncounterTemplate st)
-                                result.Add(Make(table, (ordinal * 100_000) + i++, st));
+                            {
+                                any = true;
+                                yield return (Make(table, (ordinal * 100_000) + i++, st), st);
+                            }
                     }
                     ordinal++;
                 }
-                if (result.Count > before) tables++;
+                if (any) tables++;
             }
         }
-        if (tables == 0)
+        if (tables == 0 && tableFilter is null)
             throw new InvalidOperationException("No se encontró ninguna tabla de encuentros en el Core: ¿cambió su estructura interna?");
-        return result;
+
+        // Los repartos sueltos de la Consola Virtual (R-014): ver VirtualConsoleSingles. Fallan en voz alta si el Core los mueve.
+        foreach (var (cls, field) in VirtualConsoleSingles)
+        {
+            var table = $"{cls}.{field}";
+            if (tableFilter is not null && !tableFilter(table))
+                continue;
+            var type = asm.GetType("PKHeX.Core." + cls) ?? throw new InvalidOperationException($"El Core ya no tiene la clase {cls}.");
+            var fi = type.GetField(field, All) ?? throw new InvalidOperationException($"El Core ya no tiene el campo {table}.");
+            if (fi.GetValue(null) is not IEncounterTemplate single)
+                throw new InvalidOperationException($"{table} ya no es una plantilla de encuentro.");
+            yield return (Make(table, 0, single), single);
+        }
     }
 
     private static IEnumerable? SlotsOf(object area)
@@ -94,7 +129,8 @@ public static class CoreEncounterReader
     {
         var typeName = e.GetType().Name;
         var context = e is IContext c ? c.Context : EntityContext.None;
-        return new CoreEncounterItem(table, ordinal, typeName, EncounterKinds.Classify(typeName, table), e.Species, e.Form,
+        var kind = CoreEncounterReader.VirtualConsoleSingles.Any(v => table == $"{v.Class}.{v.Field}") ? EncounterKinds.Gift : EncounterKinds.Classify(typeName, table);
+        return new CoreEncounterItem(table, ordinal, typeName, kind, e.Species, e.Form,
             e.Version, context, e.Generation, e.LevelMin, e.LevelMax, e.IsEgg);
     }
 }

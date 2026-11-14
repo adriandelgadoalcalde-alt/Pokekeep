@@ -67,6 +67,7 @@ public sealed partial class CajasViewModel
                 new(IdiomaInterfaz.T("Cajas.NuevoPokemon"), IdiomaInterfaz.T("Cajas.AbreEditorPlantillaPKHeX"), "Plus", () => _anfitrion?.AbrirEditor(r, Pokekeep.Mobile.Ui.Editor.PlantillaEditor.Crear(sav)), Motivo: libre),   // PK-IO-018 (bloque 10-3)
                 new(IdiomaInterfaz.T("Cajas.ImportarArchivo"), IdiomaInterfaz.T("Cajas.PoneAquiPokemonArchivo"), "FileUp", () => ImportarArchivo(r), Motivo: libre ?? (_anfitrion?.Documentos is null ? IdiomaInterfaz.T("Cajas.ImportarDisponibleAqui") : null)),
                 new(IdiomaInterfaz.T("Cajas.AnadirDesdeLibreria"), IdiomaInterfaz.T("Cajas.EligePokemonJuegoPuede"), "BookOpen", () => _anfitrion?.IrALibreria(), Motivo: libre),
+                new(IdiomaInterfaz.T("Cajas.AnadirEvento"), IdiomaInterfaz.T("Cajas.AnadirEventoAyuda"), "Gift", () => _anfitrion?.AbrirEventos(r), Motivo: libre),
                 new(IdiomaInterfaz.T("Cajas.SeleccionarCaja"), IdiomaInterfaz.T("Cajas.MarcaTodosPokemonCaja"), "ListChecks", SeleccionarCaja),
             ]));
         }

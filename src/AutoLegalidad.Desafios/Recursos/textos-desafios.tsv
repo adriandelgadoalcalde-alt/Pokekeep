@@ -1,0 +1,183 @@
+# Textos de AutoLegalidad.Desafios. Formato: clave <TAB> español de España <TAB> inglés. Las líneas que empiezan por # son comentarios.
+# En español, «vosotros» cuando el texto habla a los jugadores. «Insignias» (no «medallas») para las del Pokéathlon.
+# --- Juegos ---
+juego.esmeralda	Esmeralda	Emerald
+juego.platino	Platino	Platinum
+juego.hgss	HeartGold y SoulSilver	HeartGold and SoulSilver
+juego.dp	Diamante y Perla	Diamond and Pearl
+juego.gen5	Negro, Blanco, Negro 2 y Blanco 2	Black, White, Black 2 and White 2
+juego.b2w2	Negro 2 y Blanco 2	Black 2 and White 2
+juego.gen6	X, Y, Rubí Omega y Zafiro Alfa	X, Y, Omega Ruby and Alpha Sapphire
+juego.gen7	Sol, Luna, Ultrasol y Ultraluna	Sun, Moon, Ultra Sun and Ultra Moon
+juego.swsh	Espada y Escudo	Sword and Shield
+juego.bdsp	Diamante Brillante y Perla Reluciente	Brilliant Diamond and Shining Pearl
+juego.za	Leyendas Pokémon: Z-A	Pokémon Legends: Z-A
+# --- Instalaciones ---
+inst.e.torre	Torre Batalla	Battle Tower
+inst.e.domo	Domo Batalla	Battle Dome
+inst.e.palacio	Palacio Batalla	Battle Palace
+inst.e.arena	Arena Batalla	Battle Arena
+inst.e.fabrica	Fábrica Batalla	Battle Factory
+inst.e.foso	Foso Batalla	Battle Pike
+inst.e.piramide	Pirámide Batalla	Battle Pyramid
+inst.e.colina	Colina Entrenador	Trainer Hill
+inst.4.sala	Sala Batalla	Battle Hall
+inst.4.castillo	Castillo Batalla	Battle Castle
+inst.4.arcade	Arcade Batalla	Battle Arcade
+inst.4.pokeathlon	Pokéathlon	Pokéathlon
+inst.5.metro	Metro Batalla	Battle Subway
+inst.5.metro_pb	Metro Batalla: Puntos de Batalla	Battle Subway: Battle Points
+inst.5.pwt	Torneo Mundial Pokémon (PWT)	Pokémon World Tournament (PWT)
+inst.6.maison	Mansión Batalla	Battle Maison
+inst.7.arbol	Árbol Batalla	Battle Tree
+inst.8.torre	Torre Batalla de Galar	Galar Battle Tower
+inst.8b.torre	Torre Batalla de Sinnoh	Sinnoh Battle Tower
+inst.9a.royale	Royale de Z-A	Z-A Royale
+# --- Modos ---
+modo.individual	Individual	Singles
+modo.dobles	Dobles	Doubles
+modo.multi	Multi	Multi
+modo.multi_enlace	Multi por enlace	Link Multi
+modo.multi_entrenador	Multi con entrenador	Multi (Trainer)
+modo.multi_amigo	Multi con amigo	Multi (Friend)
+modo.multi_npc	Multi con personaje	Multi (NPC)
+modo.wifi	Wi-Fi	Wi-Fi
+modo.triples	Triples	Triples
+modo.rotacion	Rotación	Rotation
+modo.normal	Normal	Normal
+modo.super	Súper	Super
+modo.tren_normal	Tren normal	Normal train
+modo.tren_super	Tren Súper	Super train
+modo.puntos	Puntos de Batalla	Battle Points
+modo.general	General	General
+modo.todo	Todo	Everything
+modo.clase1	Clase 1	Class 1
+modo.clase2	Clase 2	Class 2
+modo.clase3	Clase 3	Class 3
+modo.clase4	Clase 4	Class 4
+modo.royale_infinita	Royale infinita	Infinite Royale
+modo.royale	Royale	Royale
+nivel.nv50	Nv. 50	Lv. 50
+nivel.abierto	Abierto	Open
+colina.normal	Normal	Normal
+colina.variety	Variedad	Variety
+colina.unique	Único	Unique
+colina.expert	Experto	Expert
+# --- Jefes ---
+jefe.plata	Jefe de plata	Silver boss
+jefe.oro	Jefe de oro	Gold boss
+jefe.repetido	Jefe repetido	Repeat boss
+# --- Campos ---
+campo.racha_actual	Racha actual	Current streak
+campo.record_racha	Récord de racha	Record streak
+campo.racha_anterior	Racha anterior	Previous streak
+campo.continuar	Continuar la racha	Continue streak
+campo.campeonatos	Campeonatos	Championships
+campo.despejado	Despejado	Cleared
+campo.canjes_actual	Canjes actuales	Current swaps
+campo.canjes_record	Récord de canjes	Record swaps
+campo.pc_actual	Puntos de Castillo actuales	Current Castle Points
+campo.pc_record	Récord de puntos de Castillo	Record Castle Points
+campo.rondas	Rondas completadas	Rounds completed
+campo.serie	Serie	Set
+campo.super_desbloqueado	Tren Super desbloqueado	Super train unlocked
+campo.pb	Puntos de Batalla	Battle Points
+campo.registro	Registro	Record
+campo.victorias	Victorias	Wins
+campo.rango	Rango	Rank
+campo.rango_maestro	Rango máximo de la Clase Maestra	Highest Master Class rank
+campo.retos	Retos realizados	Challenges taken
+campo.mejor_tiempo	Mejor tiempo (fotogramas)	Best time (frames)
+campo.medallas_premio	Medallas de premio	Prize medals
+campo.puntos_entrada	Puntos de entrada	Ticket points
+campo.insignias_total	Insignias de todas las especies	Medals of all species
+campo.curso_record	Récord de curso	Course record
+campo.curso_puntos	Puntuación de curso	Course score
+campo.prueba_mejor	Mejor puntuación de la prueba	Best event score
+campo.primero_prueba	Primeros puestos de la prueba	Event first places
+campo.puntos_atleta	Puntos de atleta	Athlete Points
+campo.tarjetas_datos	Tarjetas de datos obtenidas	Data Cards obtained
+campo.tienda_diaria	Tienda diaria (compras de hoy)	Daily shop (today's purchases)
+campo.contador_tiempo	Tiempo en el Pokéathlon (minutos)	Time spent in the Pokéathlon (minutes)
+campo.contador_sesiones	Participaciones	Sessions joined
+campo.contador_primero	Primeros puestos	Placed first
+campo.contador_ultimo	Últimos puestos	Placed last
+campo.contador_bonus	Bonificaciones obtenidas	Bonuses earned
+campo.contador_instrucciones	Instrucciones a Pokémon	Pokémon instructions
+campo.contador_fallos	Fallos	Failed
+campo.contador_saltos	Saltos	Jumped
+campo.contador_adquiridos	Puntos adquiridos	Points acquired
+campo.contador_placajes	Placajes	Tackled
+campo.contador_caidas	Caídas	Fell down
+campo.contador_carreras	Carreras (aceleraciones)	Dashed
+campo.contador_cambios	Cambios de Pokémon	Switched
+campo.contador_autoobstaculos	Veces que se han estorbado a sí mismos	Self-impeded
+campo.contador_conexion_participadas	Conexión: participaciones	Connection: joined
+campo.contador_conexion_primero	Conexión: primeros puestos	Connection: first places
+campo.contador_conexion_ultimo	Conexión: últimos puestos	Connection: last places
+campo.contador_ultimo_pruebas	Últimos puestos en pruebas	Event last places
+campo.contador_fama	Fama	Fame
+# --- Cursos y pruebas del Pokéathlon ---
+curso.velocidad	Velocidad	Speed
+curso.fortaleza	Fortaleza	Power
+curso.precision	Precisión	Skill
+curso.resistencia	Resistencia	Stamina
+curso.salto	Salto	Jump
+prueba.vallas	Carrera de Vallas	Hurdle Dash
+prueba.banderines	Captura de Banderines	Pennant Capture
+prueba.empuje	Empuje Circular	Circle Push
+prueba.bloques	Rompebloques	Block Smash
+prueba.disco	Atrapa Discos	Disc Catch
+prueba.lamparas	Salto de Lámparas	Lamp Jump
+prueba.relevos	Carrera de Relevos	Relay Run
+prueba.anillos	Caída de Anillos	Ring Drop
+prueba.nieve	Lanzamiento de Nieve	Snow Throw
+prueba.rodada	Rodada a Meta	Goal Roll
+# --- Registros del PWT (nombres de PWTRecordID; el significado exacto de cada registro no está comprobado en el juego) ---
+pwt.normal	Tipo Normal	Normal type
+pwt.fighting	Tipo Lucha	Fighting type
+pwt.flying	Tipo Volador	Flying type
+pwt.poison	Tipo Veneno	Poison type
+pwt.ground	Tipo Tierra	Ground type
+pwt.rock	Tipo Roca	Rock type
+pwt.bug	Tipo Bicho	Bug type
+pwt.ghost	Tipo Fantasma	Ghost type
+pwt.steel	Tipo Acero	Steel type
+pwt.fire	Tipo Fuego	Fire type
+pwt.water	Tipo Agua	Water type
+pwt.grass	Tipo Planta	Grass type
+pwt.electric	Tipo Eléctrico	Electric type
+pwt.psychic	Tipo Psíquico	Psychic type
+pwt.ice	Tipo Hielo	Ice type
+pwt.dragon	Tipo Dragón	Dragon type
+pwt.dark	Tipo Siniestro	Dark type
+pwt.champion	Campeón	Champion
+pwt.driftveil	Driftveil	Driftveil
+pwt.unova	Teselia	Unova
+pwt.kanto	Kanto	Kanto
+pwt.johto	Johto	Johto
+pwt.hoenn	Hoenn	Hoenn
+pwt.sinnoh	Sinnoh	Sinnoh
+pwt.world	Mundial	World
+pwt.rental	Prestados	Rental
+pwt.rentalmaster	Prestados Maestro	Rental Master
+pwt.mix	Combinado	Mix
+pwt.mixmaster	Combinado Maestro	Mix Master
+# --- Motivos por los que no se puede ---
+motivo.sin_comprobar	Sin comprobar en el juego: no hay una fuente fiable de dónde sale el jefe en esta instalación, así que no se toca nada.	Not checked in the game: there is no verified source for where the boss appears in this facility, so nothing is changed.
+motivo.solo_individual	El jefe solo aparece en el modo Individual.	The boss only appears in Singles mode.
+motivo.sin_repeticion	En esta instalación cada jefe sale una sola vez en plata y una en oro: no se repite.	In this facility each boss appears only once in silver and once in gold: there is no repeat.
+motivo.falta_simbolo_plata	Todavía no tenéis el símbolo de plata: el jefe de oro no aparece hasta que ganéis al de plata.	You do not have the silver symbol yet: the gold boss does not appear until you beat the silver one.
+motivo.repetido_requiere_dos_simbolos	El jefe se repite solo cuando ya tenéis los símbolos de plata y de oro.	The boss only repeats once you have both the silver and the gold symbols.
+motivo.metro_normal_un_jefe	El tren normal del Metro Batalla acaba en el combate 21: solo tiene el primer jefe.	The normal Battle Subway train ends at battle 21: it only has the first boss.
+motivo.metro_super_solo_oro	En el tren Súper el jefe sale en el combate 49 (jefe de oro): el de plata es del tren normal.	On the Super train the boss appears at battle 49 (gold boss): the silver one belongs to the normal train.
+motivo.normal_un_jefe_20	El modo normal acaba en el combate 20, con su jefe: el de oro sale en el modo Súper.	The normal mode ends at battle 20, with its boss: the gold one appears in Super mode.
+motivo.super_solo_50	En el modo Súper el jefe sale en el combate 50 (jefe de oro): el de plata es del modo normal.	In Super mode the boss appears at battle 50 (gold boss): the silver one belongs to normal mode.
+motivo.por_rango_galar	Aquí el jefe no sale por la racha: Leon aparece al subir de nivel y, en la Master Ball, cada diez victorias.	Here the boss does not depend on the streak: Leon appears when you move up a tier and, in the Master Ball tier, every ten wins.
+motivo.por_rango_dbpr	Aquí el jefe no sale por la racha: en la Clase Maestra lo decide el rango (con el rango 10, Palmer). El rango se puede cambiar en este mismo modo.	Here the boss does not depend on the streak: in Master Class it depends on the rank (rank 10 brings Palmer). You can change the rank in this mode.
+explic.super_desbloqueado	El modo Súper tiene que estar desbloqueado: se abre al vencer al jefe del modo normal.	Super mode has to be unlocked first: it opens when you beat the normal mode boss.
+motivo.participante_gen4	Este Pokémon no puede ser participante: el Pokéathlon solo conoce las especies de la 1 a la 493.	This Pokémon cannot be a participant: the Pokéathlon only knows species 1 to 493.
+# --- Explicaciones de lo que se ha hecho ---
+expl.plata_repetida	Ya tenéis los dos símbolos, así que el jefe de plata se repite y la racha se ha dejado en su aparición repetida.	You already have both symbols, so the silver boss repeats and the streak was set to its repeat appearance.
+expl.plata_ya_tenida_va_oro	Ya tenéis el símbolo de plata: el siguiente jefe es el de oro, así que la racha se ha dejado para el de oro.	You already have the silver symbol: the next boss is the gold one, so the streak was set for the gold boss.
+expl.oro_repetido	Ya tenéis los dos símbolos, así que el jefe de oro se repite y la racha se ha dejado en su aparición repetida.	You already have both symbols, so the gold boss repeats and the streak was set to its repeat appearance.

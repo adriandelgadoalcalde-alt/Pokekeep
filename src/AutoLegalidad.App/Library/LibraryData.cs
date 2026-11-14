@@ -25,6 +25,14 @@ public sealed class LibraryData(string? catalogPath) : IDisposable
 
     public IReadOnlyList<LibraryRow> Query(LibraryFilter filter) => IsAvailable ? LibraryQueries.Query(Connection, filter) : [];
     public long Count(LibraryFilter filter) => IsAvailable ? LibraryQueries.Count(Connection, filter) : 0;
+
+    /// <summary>R-014 «Añadir evento»: los eventos que ofrece el juego (<see cref="LibraryFilter.GameId"/>), los nativos primero y los de transferencia después; <paramref name="via"/> limita a uno de los dos grupos.</summary>
+    public IReadOnlyList<LibraryRow> EventosParaJuego(LibraryFilter filter, string? via = null) => IsAvailable && TieneOfertas ? EventQueries.EventosParaJuego(Connection, filter, via) : [];
+    public long ContarEventos(LibraryFilter filter, string? via = null) => IsAvailable && TieneOfertas ? EventQueries.Contar(Connection, filter, via) : 0;
+
+    private bool? _tieneOfertas;
+    /// <summary>Un catálogo anterior a la migración 0008 no trae <c>event_offer</c>: se dice que no hay eventos en vez de fallar.</summary>
+    private bool TieneOfertas => _tieneOfertas ??= EventQueries.Existe(Connection);
     /// <summary>Hito 4b: candidatos de «Completar el juego» del juego <paramref name="gameId"/> (orígenes ofrecibles por especie-forma, en orden de prioridad).</summary>
     public IReadOnlyList<LivingDexCandidate> LivingDexCandidates(int gameId, bool includeHomeRequired, int gcDestination = 0) => IsAvailable ? LivingDexQueries.LivingDexCandidates(Connection, gameId, includeHomeRequired, gcDestination) : [];
 
@@ -58,7 +66,9 @@ public sealed class LibraryData(string? catalogPath) : IDisposable
         // entry_key = release|game|species-form|kind|variant: se acota por juego y especie y se compara la clave.
         var parts = entryKey.Split('|');
         if (parts.Length < 5 || !int.TryParse(parts[2].Split('-')[0], out var species)) return null;
-        return Query(new LibraryFilter { GameId = gameId, Species = species, Limit = 2000 }).FirstOrDefault(r => r.EntryKey == entryKey);
+        if (Query(new LibraryFilter { GameId = gameId, Species = species, Limit = 2000 }).FirstOrDefault(r => r.EntryKey == entryKey) is { } row) return row;
+        // R-014: una tarjeta que el juego recibe aunque su fila de la Librería sea de otro (la de origen, o la de un juego anterior por transferencia).
+        return EventosParaJuego(new LibraryFilter { GameId = gameId, Species = species, Limit = 2000 }).FirstOrDefault(r => r.EntryKey == entryKey);
     }
 
     /// <summary>Juego de la Librería correspondiente al guardado (el concreto del destino, ver <see cref="RequestBuilder.ResolveVersion"/>), o 0.</summary>

@@ -47,6 +47,11 @@ public class CatalogoLibreriaDatos(LibraryData datos) : ICatalogoLibreria, IDisp
 
     public long Contar(FiltroLibreria filtro) => Datos.Count(Convertir(filtro) with { Limit = 1, Offset = 0 });
 
+    public IReadOnlyList<EntradaLibreria> EventosParaJuego(FiltroLibreria filtro, string? via = null)
+        => [.. Datos.EventosParaJuego(Convertir(filtro), via).Select(r => Entrada(r, filtro.PermitirHome))];
+
+    public long ContarEventos(FiltroLibreria filtro, string? via = null) => Datos.ContarEventos(Convertir(filtro) with { Limit = 1, Offset = 0 }, via);
+
     public IReadOnlyList<(string Codigo, string Etiqueta)> Origenes() => [.. LibraryNames.Kinds.Select(k => (k.Kind, IdiomaInterfaz.T("Libreria.Origen." + k.Kind)))];
     public IReadOnlyList<(string Codigo, string Etiqueta)> IdiomasEvento() => [.. Datos.EventLanguages().Select(l => (l, IdiomaEvento(l)))];
     public IReadOnlyList<(string Codigo, string Etiqueta)> Regiones() => [.. LibraryNames.Regions.Select(r => (r.Code, IdiomaInterfaz.T("Libreria.Region." + r.Code)))];
@@ -80,6 +85,7 @@ public class CatalogoLibreriaDatos(LibraryData datos) : ICatalogoLibreria, IDisp
             Gigamax = r.Gigantamax,
             JuegoId = r.GameId,
             NumeroPokedex = r.DexNumber,
+            Via = r.Via,
         };
     }
 

@@ -70,6 +70,7 @@ internal static partial class PokeathlonGen4
     private static IEnumerable<CampoP> Participante(ColeccionDefP col, int i, int k, Func<ContextoP, PokeathlonParticipant4> de, int prioridad)
     {
         string Id(string campo) => col.IdCampo(i, $"part{k}.{campo}");
+        yield return ElegirPokemon(Id("elegir"), Id("especie"), Id("forma"), Id("genero"), Id("variocolor"), Id("pid"), Id("tid"), Id("sid"), prioridad - 1);
         foreach (var c in EspecieYForma(Id("especie"), Id("forma"), IdiomaInterfaz.T("Nav.Pokemon"),
             c => de(c).Species, (c, v) => { var p = de(c); p.Species = (ushort)v; }, c => de(c).Form, (c, v) => { var p = de(c); p.Form = (byte)v; }, prioridad)) yield return c;
         yield return P.Opcion(Id("genero"), L("L_Gender"), c => Math.Min((byte)2, de(c).Gender), (c, v) => { var p = de(c); p.Gender = (byte)v; }, _ => Generos, titulo: L("L_Gender"), prioridad: prioridad + 2);

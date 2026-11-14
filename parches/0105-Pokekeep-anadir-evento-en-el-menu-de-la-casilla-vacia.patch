@@ -1,0 +1,96 @@
+From edcfb830bdcf7a407a86136963d96c9b1c87e6f9 Mon Sep 17 00:00:00 2001
+From: Pokekeep <pokekeep@invalid>
+Date: Sat, 14 Nov 2026 17:41:07 +0100
+Subject: [PATCH] =?UTF-8?q?Pokekeep:=20=C2=ABA=C3=B1adir=20evento=E2=80=A6?=
+ =?UTF-8?q?=C2=BB=20en=20el=20men=C3=BA=20de=20la=20casilla=20vac=C3=ADa?=
+ =?UTF-8?q?=20(R-014)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+En una casilla vacía y escribible, el menú contextual ofrece «Añadir evento…» (Add event…), que abre la ventana de la Librería en modo evento: solo los eventos que ofrece el juego de la partida,
+primero los repartidos en él y, aparte, los de juegos anteriores que admite por transferencia. Lo elegido se coloca en esa casilla por el mismo camino que «Añadir a la caja». La lógica vive
+en AutoLegalidad.Ui (LibraryView.ActivarModoEventos); aquí solo se añade la entrada de menú y el punto de integración.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01K7SsmyJLJN7mL9bZmtPKMP
+---
+ .../Controls/SAV Editor/ContextMenuSAV.cs     | 15 ++++++++++++-
+ .../Pokekeep/PokekeepIntegration.cs           | 21 +++++++++++++++++++
+ 2 files changed, 35 insertions(+), 1 deletion(-)
+
+diff --git a/PKHeX.WinForms/Controls/SAV Editor/ContextMenuSAV.cs b/PKHeX.WinForms/Controls/SAV Editor/ContextMenuSAV.cs
+index 5e45151f3..f093df436 100644
+--- a/PKHeX.WinForms/Controls/SAV Editor/ContextMenuSAV.cs	
++++ b/PKHeX.WinForms/Controls/SAV Editor/ContextMenuSAV.cs	
+@@ -16,6 +16,7 @@ public partial class ContextMenuSAV : UserControl
+     private readonly ToolStripMenuItem mnuPokekeepLegalize = new() { Name = "mnuPokekeepLegalize", Text = Textos.LegalizarAutomaticamente, Image = Resources.wand };
+     private readonly ToolStripMenuItem mnuPokekeepOptimize = new() { Name = "mnuPokekeepOptimize", Text = Textos.OptimizarStats, Image = Resources.vallohi };
+     private readonly ToolStripMenuItem mnuPokekeepBulk = new() { Name = "mnuPokekeepBulk", Text = Textos.EdicionMasiva + " de este Pokémon…", Image = Resources.settings };
++    private readonly ToolStripMenuItem mnuPokekeepAddEvent = new() { Name = "mnuPokekeepAddEvent", Text = "Añadir evento…", Image = Resources.wand };
+     private ISlotInfo? _pokekeepSlot;
+ 
+     public ContextMenuSAV()
+@@ -28,7 +29,12 @@ public ContextMenuSAV()
+             if (_pokekeepSlot is { } slot)
+                 Pokekeep.RunBulkEdit(AutoLegalidad.Ui.Bulk.BulkScopeKind.Single, slot);
+         };
+-        mnuVSD.Items.AddRange([mnuPokekeepSep, mnuPokekeepLegalize, mnuPokekeepOptimize, mnuPokekeepBulk]);
++        mnuPokekeepAddEvent.Click += (_, _) =>
++        {
++            if (_pokekeepSlot is { } slot)
++                Pokekeep.AddEvent(slot);
++        };
++        mnuVSD.Items.AddRange([mnuPokekeepSep, mnuPokekeepLegalize, mnuPokekeepOptimize, mnuPokekeepBulk, mnuPokekeepAddEvent]);
+         if (Application.IsDarkModeEnabled)
+             WinFormsUtil.InvertToolStripIcons(mnuVSD.Items);
+     }
+@@ -169,6 +175,13 @@ private void MenuOpening(object sender, CancelEventArgs e)
+             item.ToolTipText = pokekeep.Enabled ? (item == mnuPokekeepLegalize ? Textos.LegalizarTooltip : item == mnuPokekeepOptimize ? Textos.OptimizarTooltip : "Elige qué mejorar de este Pokémon: stats, nivel, amistad, idioma, PP... (comprobado con PKHeX y con un único Deshacer).") : pokekeep.Reason;
+         }
+         mnuPokekeepSep.Visible = mnuPokekeepLegalize.Visible = mnuPokekeepOptimize.Visible = mnuPokekeepBulk.Visible = canView || canSet;
++        // R-014: en una casilla vacía y escribible, «Añadir evento…» abre la Librería filtrada a los eventos que ofrece el juego de la partida.
++        mnuPokekeepAddEvent.Text = Pokekeep.TextoAddEvent;
++        mnuPokekeepAddEvent.Visible = canSet && !canView;
++        mnuPokekeepAddEvent.Enabled = Pokekeep.AddEventAvailable;
++        mnuPokekeepAddEvent.ToolTipText = mnuPokekeepAddEvent.Enabled ? Pokekeep.TextoAddEventAyuda : Pokekeep.TextoAddEventSinDatos;
++        if (mnuPokekeepAddEvent.Visible)
++            mnuPokekeepSep.Visible = true;
+ 
+         if (!canView && !canSet && !canDelete)
+             e.Cancel = true;
+diff --git a/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs b/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs
+index 558932dfd..4b645e932 100644
+--- a/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs
++++ b/PKHeX.WinForms/Pokekeep/PokekeepIntegration.cs
+@@ -46,6 +46,27 @@ public static void AddLibraryTab(Action<TabPage> addTab)
+         addTab(page);
+     }
+ 
++    /// <summary>R-014: la entrada «Añadir evento…» del menú de casilla vacía necesita el catálogo de la Librería.</summary>
++    public static bool AddEventAvailable => App is { } app && app.Data.IsAvailable;
++    public static string TextoAddEvent => PokekeepDesafios.Espanol ? "Añadir evento…" : "Add event…";
++    public static string TextoAddEventAyuda => PokekeepDesafios.Espanol
++        ? "Elige un Pokémon de evento de los que este juego admite y lo coloca en esta casilla."
++        : "Pick an event Pokémon this game supports and place it in this slot.";
++    public static string TextoAddEventSinDatos => PokekeepDesafios.Espanol
++        ? "No se encontró el catálogo de la Librería."
++        : "The Library catalogue was not found.";
++
++    /// <summary>R-014: abre la Librería filtrada a los eventos del juego de la partida abierta, con esta casilla vacía como destino.</summary>
++    public static void AddEvent(ISlotInfo slot)
++    {
++        if (App is not { } app)
++            return;
++        var window = new LibraryWindow(app.Coordinator, app.Data);
++        window.View.ActivarModoEventos(slot, PokekeepDesafios.Espanol);
++        window.Text = PokekeepDesafios.Espanol ? "Añadir evento" : "Add event";
++        if (MainWindow is Form owner) window.Show(owner); else window.Show();
++    }
++
+     /// <summary>Avisa a la Librería de que se abrió (o cerró) otra partida.</summary>
+     public static void NotifySaveChanged()
+     {
+-- 
+2.55.0.windows.5
+

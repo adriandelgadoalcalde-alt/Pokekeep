@@ -43,6 +43,8 @@ public interface IAnfitrionCajas
     Masivas.TextosEdicionMasiva? TextosMasivas => null;
     /// <summary>Lleva a la Libreria (para anadir un Pokemon del catalogo a una casilla vacia).</summary>
     void IrALibreria();
+    /// <summary>R-014: abre «Añadir evento» (los eventos que ofrece el juego de la partida) para la casilla vacía <paramref name="destino"/>. Los anfitriones de prueba no la tienen.</summary>
+    void AbrirEventos(Pokekeep.Mobile.Ui.Cajas.CasillaRef destino) { }
     /// <summary>Bloque 10-8: por que no se puede abrir el exportador de cajas («Exportar cajas»/«Exportar caja» de PKHeX) desde aqui; null si se puede.</summary>
     string? MotivoExportadorCajas => IdiomaInterfaz.T("IAnfitrionCajas.ExportarAUnaCarpeta");
     /// <summary>Bloque 10-8: abre el exportador de cajas con el alcance forzado y la caja que se esta viendo.</summary>

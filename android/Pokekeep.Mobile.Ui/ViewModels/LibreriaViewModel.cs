@@ -99,8 +99,15 @@ public sealed partial class LibreriaViewModel : ObservableObject
     private bool _cargando;
     private long _total;
 
-    public LibreriaViewModel(Sesion? sesion, ICatalogoLibreria catalogo, IAnfitrionLibreria? anfitrion = null)
+    /// <summary>R-014 «Añadir evento»: la misma vista, con la consulta de eventos del juego (dos grupos: los que el juego repartió y los de juegos anteriores por transferencia).</summary>
+    public bool ModoEventos { get; }
+    /// <summary>Casilla vacía desde la que se abrió «Añadir evento»: el evento se coloca ahí (null: primera casilla libre de la caja activa).</summary>
+    public DestinoCasilla? DestinoEvento { get; }
+
+    public LibreriaViewModel(Sesion? sesion, ICatalogoLibreria catalogo, IAnfitrionLibreria? anfitrion = null, bool eventos = false, DestinoCasilla? destinoEvento = null)
     {
+        ModoEventos = eventos;
+        DestinoEvento = destinoEvento;
         _catalogo = catalogo;
         _anfitrion = anfitrion;
         Sesion = sesion;
@@ -115,7 +122,20 @@ public sealed partial class LibreriaViewModel : ObservableObject
     public string Juego { get; }
     public bool Hay { get; }
     public bool NoHay => !Hay;
-    public string Subtitulo => Sesion is null ? IdiomaInterfaz.T("Libreria.SubtituloSinPartida") : IdiomaInterfaz.F("Libreria.Subtitulo", Ajustes.Pkhex.ProgramaPkhex.NombreJuegoGuardado(Juego));
+    public string TituloVista => ModoEventos ? IdiomaInterfaz.T("Eventos.Titulo") : IdiomaInterfaz.T("Libreria.Vista.0");
+    public bool NoModoEventos => !ModoEventos;
+    /// <summary>Grupo de eventos que se ve: <c>nativo</c> (repartidos en este juego) o <c>transferencia</c> (de juegos anteriores).</summary>
+    [ObservableProperty] private string _grupo = "nativo";
+    [ObservableProperty] private long _totalNativos;
+    [ObservableProperty] private long _totalTransferencia;
+    public bool GrupoEsNativo => Grupo == "nativo";
+    public bool GrupoEsTransferencia => Grupo == "transferencia";
+    public string EtiquetaGrupoNativo => IdiomaInterfaz.F("Eventos.GrupoNativo", TotalNativos);
+    public string EtiquetaGrupoTransferencia => IdiomaInterfaz.F("Eventos.GrupoTransferencia", TotalTransferencia);
+    partial void OnGrupoChanged(string value) { OnPropertyChanged(nameof(GrupoEsNativo)); OnPropertyChanged(nameof(GrupoEsTransferencia)); CambioDeFiltro(); }
+    [RelayCommand] private void VerNativos() => Grupo = "nativo";
+    [RelayCommand] private void VerTransferencia() => Grupo = "transferencia";
+    public string Subtitulo => ModoEventos && Sesion is not null ? IdiomaInterfaz.F("Eventos.Subtitulo", Ajustes.Pkhex.ProgramaPkhex.NombreJuegoGuardado(Juego)) : Sesion is null ? IdiomaInterfaz.T("Libreria.SubtituloSinPartida") : IdiomaInterfaz.F("Libreria.Subtitulo", Ajustes.Pkhex.ProgramaPkhex.NombreJuegoGuardado(Juego));
     /// <summary>Mensaje en lugar de la lista cuando no hay catálogo o no hay partida con juego conocido.</summary>
     public string? Banner => !Hay ? IdiomaInterfaz.T("Libreria.FaltaCatalogo") : Sesion is null || _juegoId == 0 ? IdiomaInterfaz.T("Libreria.FaltaPartida") : null;
     public bool HayBanner => Banner is not null;
@@ -206,7 +226,7 @@ public sealed partial class LibreriaViewModel : ObservableObject
     {
         _retardo?.Dispose(); _retardo = null;
         if (Especie != 0 && _juegoId != 0) _formas = _catalogo.Formas(_juegoId, Especie);
-        foreach (var nombre in new[] { nameof(TextoDeBusqueda), nameof(Subtitulo), nameof(Banner), nameof(TituloBanner), nameof(HayBanner), nameof(HayLista) }) OnPropertyChanged(nombre);
+        foreach (var nombre in new[] { nameof(TituloVista), nameof(EtiquetaGrupoNativo), nameof(EtiquetaGrupoTransferencia), nameof(TextoDeBusqueda), nameof(Subtitulo), nameof(Banner), nameof(TituloBanner), nameof(HayBanner), nameof(HayLista) }) OnPropertyChanged(nombre);
         AvisarChips(); Cargar(conservarFilas: true);
     }
 
@@ -215,8 +235,8 @@ public sealed partial class LibreriaViewModel : ObservableObject
         Texto = string.IsNullOrWhiteSpace(Texto) ? null : Texto.Trim(),
         Juego = _juegoId,
         DestinoGc = _destinoGc,
-        Origen = Origen,
-        Generacion = Generacion == 0 ? null : Generacion,
+        Origen = ModoEventos ? null : Origen,
+        Generacion = ModoEventos || Generacion == 0 ? null : Generacion,
         Especie = Especie == 0 ? null : Especie,
         Forma = Especie != 0 && Forma >= 0 ? Forma : null,
         Idioma = Idioma,
@@ -234,8 +254,13 @@ public sealed partial class LibreriaViewModel : ObservableObject
         var f = Filtro();
         _homeAlCargar = f.PermitirHome;
         var modo = Sesion?.ModoSprites ?? Pokekeep.Sprites.ModoSprites.Clasico;
-        var filas = _catalogo.Consultar(f).Select(e => new FilaLibreria(e, modo)).ToList();
-        _total = _catalogo.Contar(f);
+        var filas = (ModoEventos ? _catalogo.EventosParaJuego(f, Grupo) : _catalogo.Consultar(f)).Select(e => new FilaLibreria(e, modo)).ToList();
+        _total = ModoEventos ? _catalogo.ContarEventos(f, Grupo) : _catalogo.Contar(f);
+        if (ModoEventos)
+        {
+            TotalNativos = _catalogo.ContarEventos(f, "nativo"); TotalTransferencia = _catalogo.ContarEventos(f, "transferencia");
+            OnPropertyChanged(nameof(EtiquetaGrupoNativo)); OnPropertyChanged(nameof(EtiquetaGrupoTransferencia));
+        }
         if (conservarFilas && Filas.Count == filas.Count && Filas.Zip(filas).All(p => p.First.Entrada.Clave == p.Second.Entrada.Clave))
             for (var i = 0; i < filas.Count; i++) Filas[i].ActualizarTextos(filas[i]);
         else Filas = new ObservableCollection<FilaLibreria>(filas);
@@ -323,14 +348,14 @@ public sealed partial class LibreriaViewModel : ObservableObject
     public void AnadirRapido(FilaLibreria? fila)
     {
         if (fila is null || _anfitrion is null) return;
-        new FichaLibreriaHojaViewModel(fila, _catalogo, _anfitrion, Sesion).AnadirCommand.Execute(null);
+        new FichaLibreriaHojaViewModel(fila, _catalogo, _anfitrion, Sesion, DestinoEvento).AnadirCommand.Execute(null);
     }
 
     [RelayCommand]
     public void AbrirFicha(FilaLibreria? fila)
     {
         if (fila is null || _anfitrion is null) return;
-        _anfitrion.AbrirHoja(new FichaLibreriaHojaViewModel(fila, _catalogo, _anfitrion, Sesion));
+        _anfitrion.AbrirHoja(new FichaLibreriaHojaViewModel(fila, _catalogo, _anfitrion, Sesion, DestinoEvento));
     }
 }
 
@@ -342,8 +367,11 @@ public sealed partial class FichaLibreriaHojaViewModel : HojaViewModel
     private readonly IAnfitrionLibreria _anfitrion;
     private readonly Sesion? _sesion;
 
-    public FichaLibreriaHojaViewModel(FilaLibreria fila, ICatalogoLibreria catalogo, IAnfitrionLibreria anfitrion, Sesion? sesion)
+    private readonly DestinoCasilla? _destino;
+
+    public FichaLibreriaHojaViewModel(FilaLibreria fila, ICatalogoLibreria catalogo, IAnfitrionLibreria anfitrion, Sesion? sesion, DestinoCasilla? destino = null)
     {
+        _destino = destino;
         _fila = fila; _catalogo = catalogo; _anfitrion = anfitrion; _sesion = sesion;
         var ficha = catalogo.Ficha(fila.Entrada, anfitrion.Ajustes.AllowHomeTrackerless);
         Lineas = [.. (ficha?.Lineas ?? [new LineaFicha(IdiomaInterfaz.T("Libreria.PudoLeerFicha"))]).Select(l => new LineaFichaVm(l.Texto, l.Negrita))];
@@ -369,14 +397,14 @@ public sealed partial class FichaLibreriaHojaViewModel : HojaViewModel
         if (_sesion is null) motivo = IdiomaInterfaz.T("Libreria.PartidaAbiertaJuegoConocido");
         else if (e.BloqueoHome is { } home) motivo = home;
         else if (_anfitrion.Acciones is not { } acciones) motivo = IdiomaInterfaz.T("Libreria.AccionesMotorEstanDisponibles");
-        else motivo = acciones.MotivoAnadir(_sesion, e.Clave, _anfitrion.CajaActiva, null);
+        else motivo = acciones.MotivoAnadir(_sesion, e.Clave, _anfitrion.CajaActiva, _destino);
         PuedeAnadir = motivo is null;
         PuedeElegirCasilla = _sesion is not null && _anfitrion.Acciones is { } ac2 && e.BloqueoHome is null && ac2.MotivoElegirCasilla(_sesion, e.Clave, _anfitrion.CajaActiva) is null;
-        Aviso = motivo ?? IdiomaInterfaz.F("Libreria.ColocaraPrimeraCasillaLibre", _anfitrion.CajaActiva + 1) + (e.RequiereHome ? " " + TextosLibreria.NecesitaHomeConAjuste : string.Empty);
+        Aviso = motivo ?? (_destino is { } d ? IdiomaInterfaz.F("Eventos.ColocaraEnCasilla", d.Caja + 1, d.Indice + 1) : IdiomaInterfaz.F("Libreria.ColocaraPrimeraCasillaLibre", _anfitrion.CajaActiva + 1)) + (e.RequiereHome ? " " + TextosLibreria.NecesitaHomeConAjuste : string.Empty);
     }
 
     [RelayCommand]
-    private void Anadir() => Lanzar(null);
+    private void Anadir() => Lanzar(_destino);
 
     [RelayCommand]
     private void ElegirCasilla()

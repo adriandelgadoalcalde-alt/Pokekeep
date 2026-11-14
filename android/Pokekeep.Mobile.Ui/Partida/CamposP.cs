@@ -47,6 +47,11 @@ public sealed class ContextoP
     internal readonly Dictionary<string, object?> Borrador = new();
     /// <summary>Nombre del archivo que el usuario eligio para cada campo <see cref="TipoP.Archivo"/> (por id del campo): el contenido va en el borrador, pero a veces el nombre cuenta (el musical toma su nombre del archivo, como <c>SAV_DLC5.GetImportedMusicalName</c>). Lo rellena la pantalla al importar; vacio si no se conoce.</summary>
     public Dictionary<string, string> NombresDeArchivo { get; } = new();
+    /// <summary>
+    /// Lo que una accion inmediata cuenta de lo que ha hecho («Torre Batalla · Individual: racha actual 0 → 28»). La accion lo deja aqui y la pantalla lo enseña como aviso (y lo vacia); null = el aviso de siempre.
+    /// R-013: «Ir al jefe» y «Máximo» dicen que han cambiado, no solo «Hecho».
+    /// </summary>
+    public string? Aviso { get; set; }
 
     public ContextoP(SesionM sesion) { Sesion = sesion; }
     public SesionM Sesion { get; }
@@ -162,6 +167,10 @@ public sealed class CampoP
     /// Solo se puede pulsar sin cambios pendientes en el editor (despues los campos se vuelven a leer).
     /// </summary>
     public bool Inmediata { get; init; }
+    /// <summary>Como se llama la entrada del historial de una accion inmediata (por defecto, el titulo del formulario y la etiqueta de la accion): «Ir al jefe de plata · Torre Batalla, Individual, Nv. 50».</summary>
+    public Func<ContextoP, string>? TextoHistorial { get; init; }
+    /// <summary>Un campo de tipo Opcion cuyas opciones NO son especies pero cada una lleva un Pokemon (el selector de «Elegir Pokémon…»): la especie de la opcion para dibujar su sprite, 0 = sin sprite.</summary>
+    public Func<ContextoP, int, int>? EspecieDeOpcion { get; init; }
     /// <summary>Un campo <see cref="TipoP.Archivo"/> tambien exporta: nombre sugerido y contenido (null = nada que exportar). Exportar NO cambia la partida.</summary>
     public Func<ContextoP, (string Nombre, byte[] Datos)?>? Exporta { get; init; }
     /// <summary>Un campo <see cref="TipoP.Archivo"/> acepta importar: valida el contenido y devuelve el motivo del rechazo (o null si sirve).</summary>

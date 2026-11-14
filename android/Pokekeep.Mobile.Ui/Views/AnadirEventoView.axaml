@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="clr-namespace:Pokekeep.Mobile.Ui.Design"
+             xmlns:v="clr-namespace:Pokekeep.Mobile.Ui.Views"
+             xmlns:vm="clr-namespace:Pokekeep.Mobile.Ui.ViewModels"
+             x:Class="Pokekeep.Mobile.Ui.Views.AnadirEventoView"
+             x:DataType="vm:PantallaEventosViewModel">
+  <Grid RowDefinitions="Auto,*">
+    <Button Name="BotonVolverEventos" Grid.Row="0" Classes="texto" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0" Command="{Binding VolverCommand}" Padding="16,0,8,0" AutomationProperties.Name="{DynamicResource Loc.Eventos.Volver}">
+      <StackPanel Orientation="Horizontal" Spacing="8"><d:Icono Glifo="ArrowLeft" Width="20" Height="20" /><TextBlock Text="{DynamicResource Loc.Eventos.Volver}" /></StackPanel>
+    </Button>
+    <v:LibreriaView Grid.Row="1" Margin="0,4,0,0" DataContext="{Binding Lista}" />
+  </Grid>
+</UserControl>
