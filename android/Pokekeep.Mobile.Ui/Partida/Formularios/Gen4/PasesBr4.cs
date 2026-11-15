@@ -104,10 +104,10 @@ internal static partial class PasesBr4
         var idPais = Id("pais"); var idIdioma = Id("idioma");
         IReadOnlyList<CampoP> historial =
         [
-            Contador(Id("combates"), "L_Battles", c => Pase(c, i).Battles, (c, v) => Pase(c, i).Battles = (int)v, int.MinValue, int.MaxValue, 0),
-            Contador(Id("r_coliseos"), "L_RecordColosseumBattles", c => Pase(c, i).RecordColosseumBattles, (c, v) => Pase(c, i).RecordColosseumBattles = (int)v, int.MinValue, int.MaxValue, 1),
-            Contador(Id("r_libres"), "L_RecordFreeBattles", c => Pase(c, i).RecordFreeBattles, (c, v) => Pase(c, i).RecordFreeBattles = (int)v, int.MinValue, int.MaxValue, 2),
-            Contador(Id("r_wifi"), "L_RecordWiFiBattles", c => Pase(c, i).RecordWiFiBattles, (c, v) => Pase(c, i).RecordWiFiBattles = (int)v, int.MinValue, int.MaxValue, 3),
+            Contador(Id("combates"), "L_Battles", c => Pase(c, i).Battles, (c, v) => Pase(c, i).Battles = (int)v, 0, int.MaxValue, 0),
+            Contador(Id("r_coliseos"), "L_RecordColosseumBattles", c => Pase(c, i).RecordColosseumBattles, (c, v) => Pase(c, i).RecordColosseumBattles = (int)v, 0, int.MaxValue, 1),
+            Contador(Id("r_libres"), "L_RecordFreeBattles", c => Pase(c, i).RecordFreeBattles, (c, v) => Pase(c, i).RecordFreeBattles = (int)v, 0, int.MaxValue, 2),
+            Contador(Id("r_wifi"), "L_RecordWiFiBattles", c => Pase(c, i).RecordWiFiBattles, (c, v) => Pase(c, i).RecordWiFiBattles = (int)v, 0, int.MaxValue, 3),
             Contador(Id("c_portico"), "L_RecordGatewayColosseumClears", c => Pase(c, i).RecordGatewayColosseumClears, (c, v) => Pase(c, i).RecordGatewayColosseumClears = (int)v, 0, 255, 4),
             Contador(Id("c_calle"), "L_RecordMainStreetColosseumClears", c => Pase(c, i).RecordMainStreetColosseumClears, (c, v) => Pase(c, i).RecordMainStreetColosseumClears = (int)v, 0, 255, 5),
             Contador(Id("c_cascada"), "L_RecordWaterfallColosseumClears", c => Pase(c, i).RecordWaterfallColosseumClears, (c, v) => Pase(c, i).RecordWaterfallColosseumClears = (int)v, 0, 255, 6),
@@ -138,6 +138,7 @@ internal static partial class PasesBr4
         ]);
     }
 
+    /// <summary>1.1.4: un contador de combates no es negativo (mínimo 0, no int.MinValue); el máximo que pinta el juego no se ha medido y se queda en el del dato.</summary>
     private static CampoP Contador(string id, string control, Func<ContextoP, long> leer, Action<ContextoP, long> escribir, long min, long max, int prioridad)
         => P.Entero(id, Ln(control), leer, escribir, min, max, prioridad: 50 + prioridad);
 

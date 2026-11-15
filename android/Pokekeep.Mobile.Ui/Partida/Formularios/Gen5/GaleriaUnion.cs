@@ -49,8 +49,8 @@ internal static partial class GaleriaUnion
         yield return new SeccionP(string.Empty,
         [
             P.Marca("script", L("CHK_ScriptFlag"), c => Avenida(c).ScriptFlag, (c, v) => Avenida(c).ScriptFlag = v),
-            P.Entero("visitantes", L("L_VisitorCount").TrimEnd(':'), c => Avenida(c).CountVisitor, (c, v) => Avenida(c).CountVisitor = (uint)v, 0, uint.MaxValue, ayuda: IdiomaInterfaz.T("GaleriaUnion.JuegoSiempreUsa")),
-            P.Entero("fans", L("L_FanCount").TrimEnd(':'), c => Avenida(c).CountFan, (c, v) => Avenida(c).CountFan = (uint)v, 0, uint.MaxValue, ayuda: IdiomaInterfaz.T("GaleriaUnion.JuegoSiempreUsa2")),
+            P.Entero("visitantes", L("L_VisitorCount").TrimEnd(':'), c => Avenida(c).CountVisitor, (c, v) => Avenida(c).CountVisitor = (uint)v, 0, AutoLegalidad.Desafios.TopesJuego.AvenidaVisitantes, ayuda: IdiomaInterfaz.T("GaleriaUnion.JuegoSiempreUsa")),
+            P.Entero("fans", L("L_FanCount").TrimEnd(':'), c => Avenida(c).CountFan, (c, v) => Avenida(c).CountFan = (uint)v, 0, AutoLegalidad.Desafios.TopesJuego.AvenidaFans, ayuda: IdiomaInterfaz.T("GaleriaUnion.JuegoSiempreUsa2")),
         ]);
         yield return new SeccionP(L("Tab_Settings"),
         [
@@ -65,7 +65,7 @@ internal static partial class GaleriaUnion
         yield return new SeccionP(L("L_IsPromotionActive").TrimEnd(':'),
         [
             P.Marca("promocion", L("L_IsPromotionActive"), c => Ajustes(c).IsPromotionActive, (c, v) => Ajustes(c).IsPromotionActive = v),
-            P.Entero("promocion-dias", L("L_PromotionDaysElapsed"), c => Ajustes(c).PromotionDaysElapsed, (c, v) => Ajustes(c).PromotionDaysElapsed = (ushort)v, 0, ushort.MaxValue),
+            P.Entero("promocion-dias", L("L_PromotionDaysElapsed"), c => Ajustes(c).PromotionDaysElapsed, (c, v) => Ajustes(c).PromotionDaysElapsed = (ushort)v, 0, AutoLegalidad.Desafios.TopesJuego.AvenidaPromocionDias),
         ]);
         yield return new SeccionP(L("L_VisitingPlayerDatabase").TrimEnd(':'),
         [

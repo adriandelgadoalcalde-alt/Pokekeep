@@ -42,6 +42,11 @@ public static class AcercaDeModelo
 
     /// <summary>De la más reciente a la más antigua. Resumido de <c>bitacora.md</c>; cada versión con su fecha real de publicación.</summary>
     public static IReadOnlyList<NovedadVersion> Novedades => [
+        new("1.1.4", FechaVisible("15-nov-2026"), AppIdioma.T("Más topes medidos contra los propios juegos, en Android y en Windows.", "More limits measured against the games themselves, on Android and Windows."),
+        [
+            AppIdioma.T("Topes con su fuente en el código del juego: horas de Oro, Plata y Cristal (999), Pokéathlon (999), bonguris (99), reloj de Rubí, Zafiro y Esmeralda, Galería Unión, dinero (999.999) y Torre Batalla de BDSP, estrellas de un donut (5) y estadística final de Gen 1 y 2 (999).", "Limits sourced from the game's code: Gold, Silver and Crystal hours (999), Pokéathlon (999), Apricorns (99), the Ruby, Sapphire and Emerald clock, Join Avenue, BDSP money (999,999) and Battle Tower, donut stars (5) and the Gen 1 and 2 final stat (999)."),
+            AppIdioma.T("Windows: la cantidad de un objeto de Pokémon Link se guardaba en un byte y 300 volvía como 44; ahora se queda en 255. La Torre Batalla de Espada y Escudo llega a 300, como en el juego.", "Windows: a Pokémon Link item quantity was saved in one byte and 300 came back as 44; it now stops at 255. The Sword and Shield Battle Tower goes up to 300, as in the game."),
+        ]),
         new("1.1.3", FechaVisible("15-nov-2026"), AppIdioma.T("Android: un número demasiado grande se queda en el máximo del juego.", "Android: a number that is too big stops at the game's maximum."),
         [
             AppIdioma.T("Si escribes 999999999 en un valor de la partida (Pokéathlon, torres, récords, concursos, dinero, puntos, la Mochila…), el campo pasa al máximo del juego y lo dice debajo, en vez de rechazarlo.", "Type 999999999 in a save value (Pokéathlon, towers, records, contests, money, points, the Bag…) and the field changes to the game's maximum and says so underneath, instead of refusing it."),

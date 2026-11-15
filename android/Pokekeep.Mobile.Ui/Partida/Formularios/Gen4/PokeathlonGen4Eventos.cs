@@ -52,10 +52,10 @@ internal static partial class PokeathlonGen4
                 PokeathlonCourseRecord4 Curso(ContextoP c) => At(c).GetCourseRecord((PokeathlonStat4)i);
                 var puntos = new List<CampoP>
                 {
-                    P.Entero(col!.IdCampo(i, "p0"), L("L_CourseScore0").TrimEnd(':'), c => Curso(c).Score0, (c, v) => { var r = Curso(c); r.Score0 = (ushort)v; }, 0, ushort.MaxValue, prioridad: 0),
-                    P.Entero(col.IdCampo(i, "p1"), L("L_CourseScore1").TrimEnd(':'), c => Curso(c).Score1, (c, v) => { var r = Curso(c); r.Score1 = (ushort)v; }, 0, ushort.MaxValue, prioridad: 1),
-                    P.Entero(col.IdCampo(i, "p2"), L("L_CourseScore2").TrimEnd(':'), c => Curso(c).Score2, (c, v) => { var r = Curso(c); r.Score2 = (ushort)v; }, 0, ushort.MaxValue, prioridad: 2),
-                    P.Entero(col.IdCampo(i, "pmax"), L("L_CourseScoreMax").TrimEnd(':'), c => Curso(c).ScoreMax, (c, v) => { var r = Curso(c); r.ScoreMax = (ushort)v; }, 0, ushort.MaxValue, prioridad: 3),
+                    P.Entero(col!.IdCampo(i, "p0"), L("L_CourseScore0").TrimEnd(':'), c => Curso(c).Score0, (c, v) => { var r = Curso(c); r.Score0 = (ushort)v; }, 0, AutoLegalidad.Desafios.TopesJuego.PokeathlonPuntuacion, prioridad: 0),
+                    P.Entero(col.IdCampo(i, "p1"), L("L_CourseScore1").TrimEnd(':'), c => Curso(c).Score1, (c, v) => { var r = Curso(c); r.Score1 = (ushort)v; }, 0, AutoLegalidad.Desafios.TopesJuego.PokeathlonPuntuacion, prioridad: 1),
+                    P.Entero(col.IdCampo(i, "p2"), L("L_CourseScore2").TrimEnd(':'), c => Curso(c).Score2, (c, v) => { var r = Curso(c); r.Score2 = (ushort)v; }, 0, AutoLegalidad.Desafios.TopesJuego.PokeathlonPuntuacion, prioridad: 2),
+                    P.Entero(col.IdCampo(i, "pmax"), L("L_CourseScoreMax").TrimEnd(':'), c => Curso(c).ScoreMax, (c, v) => { var r = Curso(c); r.ScoreMax = (ushort)v; }, 0, AutoLegalidad.Desafios.TopesJuego.PokeathlonPuntuacion, prioridad: 3),
                 };
                 var secciones = new List<SeccionP> { new(string.Empty, puntos) };
                 for (var k = 0; k < PokeathlonCourseRecord4.CountParticipant; k++)

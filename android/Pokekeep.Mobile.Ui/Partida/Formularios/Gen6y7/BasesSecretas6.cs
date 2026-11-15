@@ -134,7 +134,7 @@ internal static class BasesSecretas6
         yield return P.Opcion(idGenero, IdiomaInterfaz.T("Form.Genero"), c => Pk(c.Sav, b, j).Gender, (c, v) => Cambiar(c.Sav, b, j, p => p.Gender = (byte)v), Generos, titulo: IdiomaInterfaz.T("Form.Genero"));
         yield return P.Marca(Id("brillante"), IdiomaInterfaz.T("Catalogo.Variocolor"), c => Pk(c.Sav, b, j).IsShiny, (c, v) => Cambiar(c.Sav, b, j, p => p.IsShiny = v));
         yield return P.Opcion(Id("bola"), IdiomaInterfaz.T("BasesSecretas6.Bola"), c => Pk(c.Sav, b, j).Ball, (c, v) => Cambiar(c.Sav, b, j, p => p.Ball = (byte)v), c => P.Lista(Filtro(c).Balls), titulo: IdiomaInterfaz.T("BasesSecretas6.Bola"));
-        yield return P.Entero(Id("nivel"), IdiomaInterfaz.T("Cajas.Nivel"), c => Pk(c.Sav, b, j).CurrentLevel, (c, v) => Cambiar(c.Sav, b, j, p => p.CurrentLevel = (byte)v), 0, byte.MaxValue);
+        yield return P.Entero(Id("nivel"), IdiomaInterfaz.T("Cajas.Nivel"), c => Pk(c.Sav, b, j).CurrentLevel, (c, v) => Cambiar(c.Sav, b, j, p => p.CurrentLevel = (byte)v), 0, Experience.MaxLevel);
         yield return P.Entero(Id("amistad"), L("L_PKFriendship").TrimEnd(':'), c => Pk(c.Sav, b, j).CurrentFriendship, (c, v) => Cambiar(c.Sav, b, j, p => p.CurrentFriendship = (int)v), 0, byte.MaxValue);
 
         // Esfuerzo (0 a 252: el formulario recorta con Clamp) e individuales (0 a 31: el formulario aplica & 0x1F).
@@ -224,7 +224,7 @@ internal static class BasesSecretas6
         };
         var general = new SeccionP(string.Empty,
         [
-            P.Entero("capturadas", L("L_FlagsCaptured").TrimEnd(':'), c => ((SAV6AO)c.Sav).Records.GetRecord(80), (c, v) => ((SAV6AO)c.Sav).Records.SetRecord(80, (int)(uint)v), 0, uint.MaxValue, ayuda: IdiomaInterfaz.T("BasesSecretas6.EstadisticaEntrenador")),
+            P.Entero("capturadas", L("L_FlagsCaptured").TrimEnd(':'), c => ((SAV6AO)c.Sav).Records.GetRecord(80), (c, v) => ((SAV6AO)c.Sav).Records.SetRecord(80, (int)(uint)v), 0, AutoLegalidad.Desafios.TopesJuego.RecordCapturadasBasesSecretas, ayuda: IdiomaInterfaz.T("BasesSecretas6.EstadisticaEntrenador")),
             P.Accion("decoraciones", L("B_GiveDecor"), c => Bloque(c.Sav).GiveAllGoods(), textoBoton: IdiomaInterfaz.T("BasesSecretas6.Marcar"), confirmacion: IdiomaInterfaz.T("BasesSecretas6.MarcanObtenidasDecoracionesCada"),
                 ayuda: IdiomaInterfaz.T("BasesSecretas6.DaCadaDecoracionesUsadas")),
         ]);

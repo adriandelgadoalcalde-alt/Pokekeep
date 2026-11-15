@@ -93,7 +93,7 @@ internal static class EntrenadorSwitch
                     P.Texto("ot", IdiomaInterfaz.T("Form.NombreEntrenador"), c => BS(c).OT, (c, v) => { if (BS(c).OT != v) BS(c).OT = v; }, maxFn: c => 12),
                     P.Texto("rival", TB("L_Rival", IdiomaInterfaz.T("Form.TrainerSwitch8.SAV_Trainer8b.L_Rival")), c => BS(c).RivalName, (c, v) => { if (BS(c).RivalName != v) BS(c).RivalName = v; }, maxFn: c => 12),
                     .. IdsP.Campos(sav),
-                    P.Entero("dinero", IdiomaInterfaz.T("Form.Dinero"), c => BS(c).Money, (c, v) => BS(c).Money = (uint)v, 0, sav.MaxMoney, ayuda: IdiomaInterfaz.F("Form.Maximo", sav.MaxMoney)),
+                    P.Entero("dinero", IdiomaInterfaz.T("Form.Dinero"), c => BS(c).Money, (c, v) => BS(c).Money = (uint)v, 0, AutoLegalidad.Desafios.TopesJuego.DineroBDSP, ayuda: IdiomaInterfaz.F("Form.Maximo", AutoLegalidad.Desafios.TopesJuego.DineroBDSP)),
                     P.Entero("pb", TB("L_BP", IdiomaInterfaz.T("Form.Trainer8.BP")), c => BS(c).BattleTower.BP, (c, v) => BS(c).BattleTower.BP = (uint)v, 0, 9999),
                     P.Opcion("idioma", TB("L_Language", IdiomaInterfaz.T("Form.Trainer7b.Idioma")), c => BS(c).Language, (c, v) => BS(c).Language = (int)v, c => P.Lista(c.Datos.LanguageDataSource(8, EntityContext.Gen8b))),
                 ]),

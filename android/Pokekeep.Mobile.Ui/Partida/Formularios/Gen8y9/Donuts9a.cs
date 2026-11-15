@@ -148,7 +148,7 @@ internal static class Donuts9a
                     new SeccionP(string.Empty,
                     [
                         P.Opcion(Id("tipo"), L("L_Donut").TrimEnd(':'), c => Donut(c, i).Donut, (c, v) => Donut(c, i).Donut = (ushort)v, Tipos, titulo: L("L_Donut").TrimEnd(':')),
-                        P.Entero(Id("estrellas"), L("L_Stars").TrimEnd(':'), c => Donut(c, i).Stars, (c, v) => Donut(c, i).Stars = (byte)v, 0, 6),
+                        P.Entero(Id("estrellas"), L("L_Stars").TrimEnd(':'), c => Donut(c, i).Stars, (c, v) => Donut(c, i).Stars = (byte)v, 0, AutoLegalidad.Desafios.TopesJuego.DonutEstrellas),
                         P.Entero(Id("calorias"), L("L_Calories").TrimEnd(':'), c => Donut(c, i).Calories, (c, v) => Donut(c, i).Calories = (ushort)v, 0, 65535),
                         P.Entero(Id("nivel-extra"), L("L_LevelBoost").TrimEnd(':'), c => Donut(c, i).LevelBoost, (c, v) => Donut(c, i).LevelBoost = (byte)v, 0, 255),
                     ]),

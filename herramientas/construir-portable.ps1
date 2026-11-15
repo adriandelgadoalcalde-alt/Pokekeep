@@ -14,7 +14,7 @@
   La BD, la cache y el ZIP son artefactos de release (ADR 0005 y 0104): estan en .gitignore y NO se suben al repo, solo a la release.
 #>
 param(
-    [string]$Version = '1.1.3',
+    [string]$Version = '1.1.4',
     [string]$Salida,
     [string]$BD,
     [string]$Soluciones,

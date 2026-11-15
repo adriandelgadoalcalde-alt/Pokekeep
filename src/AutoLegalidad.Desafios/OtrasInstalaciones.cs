@@ -226,7 +226,7 @@ public sealed class Torre8 : InstalacionDesafio
 /// <summary>
 /// Torre Batalla de Diamante Brillante y Perla Reluciente (<see cref="BattleTowerWork8b"/>): cuatro clases con racha actual (<c>RenshouCount</c>), racha anterior (<c>RenshouCountOld</c>), victorias totales,
 /// rango, ronda (<c>tower_round</c>, +0x18, no la expone PKHeX) y partida suspendida (<c>suspension_flag</c>, +0x01), más dos datos generales (<c>MasterRankMax</c> y <c>ChallengeCount</c>).
-/// «Máximo»: racha, racha anterior y victorias a 9999, el <c>MAX_WIN_COUNT</c> del código del juego (investigación §12). Rango, ronda, suspensión, <c>MasterRankMax</c> y <c>ChallengeCount</c> no los toca.
+/// «Máximo»: racha, racha anterior y victorias a 9999, el <c>MAX_WIN_COUNT</c> del código del juego (investigación §12); <c>MasterRankMax</c> a 10 y <c>ChallengeCount</c> a 999.999 (<c>MAX_MASTER_RANK</c> y <c>MAX_CHALLENGE</c>, 1.1.4, ver <see cref="TopesJuego"/>). Rango, ronda y suspensión no los toca.
 /// «Ir al jefe»: el script <c>ev_tower_rooms_if_leader_battle</c> saca a Palmer en el modo 0 (Individual normal) cuando <c>renshou_cnt</c> vale 20 o 48 (VERIFICADO, §12), y la tabla de rivales tiene su fila
 /// en el rango 3 y el 7, ronda 7. Pokekeep deja la clase como al volver al vestíbulo tras ganar dos series (rango 3, racha 14) o seis (rango 7, racha 42), ronda 0 y sin suspender: así el séptimo
 /// combate de la serie siguiente es el de Palmer sin tocar el estado de una partida suspendida. Comprobado jugando en Eden con la partida autorizada (15-nov-2026, informe emulador-dbpr): con este estado, seis rivales normales y Palmer
@@ -276,8 +276,8 @@ public sealed class Torre8b : InstalacionDesafio
         }
         lista.Add(new ModoDesafio("general", Textos.Doble("modo.general"), NivelDesafio.NoAplica,
         [
-            Campo("rango_maestro", "campo.rango_maestro", RolCampo.Otro, null, s => ((SAV8BS)s).BattleTower.MasterRankMax, (s, v) => ((SAV8BS)s).BattleTower.MasterRankMax = (int)Math.Clamp(v, 0, int.MaxValue)),
-            Campo("retos", "campo.retos", RolCampo.Otro, null, s => ((SAV8BS)s).BattleTower.ChallengeCount, (s, v) => ((SAV8BS)s).BattleTower.ChallengeCount = (uint)Math.Clamp(v, 0, uint.MaxValue)),
+            Campo("rango_maestro", "campo.rango_maestro", RolCampo.Otro, TopesJuego.TorreBdspRangoMaestro, s => ((SAV8BS)s).BattleTower.MasterRankMax, (s, v) => ((SAV8BS)s).BattleTower.MasterRankMax = (int)Math.Clamp(v, 0, TopesJuego.TorreBdspRangoMaestro)),
+            Campo("retos", "campo.retos", RolCampo.Otro, TopesJuego.TorreBdspRetos, s => ((SAV8BS)s).BattleTower.ChallengeCount, (s, v) => ((SAV8BS)s).BattleTower.ChallengeCount = (uint)Math.Clamp(v, 0, TopesJuego.TorreBdspRetos)),
         ]));
         return _modos = [.. lista];
     }

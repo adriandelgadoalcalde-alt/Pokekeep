@@ -7,8 +7,8 @@ namespace Pokekeep.Mobile.Ui.Partida.Formularios.Gen4;
 
 /// <summary>
 /// PK-SAV-027: <c>SAV_Apricorn</c>, la cantidad de cada Bonguri (Oro, Plata y Cristal HeartGold/SoulSilver). El formulario es una rejilla de 7 filas (nombre del objeto y cantidad escrita a mano) con «Dar todos» (99 de cada uno) y
-/// «Ninguno» (0), que SOLO tocan la rejilla; al guardar, <c>B_Save_Click</c> lee cada celda como entero (lo que no es un numero cuenta 0) y llama a <c>SetApricornCount(i, Math.Min(255, cantidad))</c>.
-/// Aqui es una tabla de 7 filas (0-255) con las dos acciones masivas sobre el borrador; el orden de los nombres es el del formulario (el amarillo y el azul van cambiados respecto al numero de objeto: 485, 487, 486, 488...).
+/// «Ninguno» (0), que SOLO tocan la rejilla; al guardar, <c>B_Save_Click</c> lee cada celda como entero (lo que no es un numero cuenta 0) y llama a <c>SetApricornCount(i, Math.Min(255, cantidad))</c>. 1.1.4: el juego no admite más de 99 de cada color (pokeheartgold <c>src/scrcmd_apricorn.c:32</c>), y ese es el tope aquí.
+/// Aqui es una tabla de 7 filas (0-99) con las dos acciones masivas sobre el borrador; el orden de los nombres es el del formulario (el amarillo y el azul van cambiados respecto al numero de objeto: 485, 487, 486, 488...).
 /// </summary>
 internal static class Bonguri4
 {
@@ -31,9 +31,9 @@ internal static class Bonguri4
             Ayuda = IdiomaInterfaz.T("Bonguri4.CantidadCadaBonguriBolsa"),
             Filas = c => [.. Enumerable.Range(0, Cantidad).Select(i => new FilaTablaP
             {
-                Id = i, Nombre = c.Textos.itemlist[PrimerObjeto + DesplazamientoDelNombre[i]], Min = 0, Max = 255,
+                Id = i, Nombre = c.Textos.itemlist[PrimerObjeto + DesplazamientoDelNombre[i]], Min = 0, Max = AutoLegalidad.Desafios.TopesJuego.BonguriPorColor,
                 Leer = x => (long)((SAV4HGSS)x.Sav).GetApricornCount(i),
-                Escribir = (x, v) => ((SAV4HGSS)x.Sav).SetApricornCount(i, (int)Math.Min(255L, (long)v)),
+                Escribir = (x, v) => ((SAV4HGSS)x.Sav).SetApricornCount(i, (int)Math.Min(AutoLegalidad.Desafios.TopesJuego.BonguriPorColor, (long)v)),
             })],
             // B_All y B_None cambian solo la rejilla (el borrador); B_Save las escribe todas.
             Acciones =

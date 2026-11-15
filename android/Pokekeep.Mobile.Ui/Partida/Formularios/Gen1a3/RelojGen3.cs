@@ -26,11 +26,12 @@ internal static class RelojGen3
     /// <summary>Predicado barato de <see cref="Crear"/>: el editor existe para este guardado (solo Rubí, Zafiro y Esmeralda).</summary>
     public static bool Aplica(SaveFile sav) => sav is SAV3 { SmallBlock: ISaveBlock3SmallHoenn };
 
+    /// <summary>1.1.4: el día de ajuste inicial llega a 9999 (pokeemerald <c>reset_rtc_screen.c:119-125</c>) y el transcurrido cabe en el s16 del juego, 32767 (<c>global.h:198-204</c>); el formulario de PKHeX admite 65535.</summary>
     private static IEnumerable<CampoP> Reloj(string prefijo, bool inicial, string[] controles)
     {
         RTC3 Leer(ContextoP c) => inicial ? Pequeno(c.Sav).ClockInitial : Pequeno(c.Sav).ClockElapsed;
         void Escribir(ContextoP c, Action<RTC3> cambia) { var r = Leer(c); cambia(r); if (inicial) Pequeno(c.Sav).ClockInitial = r; else Pequeno(c.Sav).ClockElapsed = r; }
-        yield return P.Entero($"{prefijo}_dias", L(controles[0]), c => Leer(c).Day, (c, v) => Escribir(c, r => r.Day = (ushort)v), 0, 65535);
+        yield return P.Entero($"{prefijo}_dias", L(controles[0]), c => Leer(c).Day, (c, v) => Escribir(c, r => r.Day = (ushort)v), 0, inicial ? AutoLegalidad.Desafios.TopesJuego.RelojDiaInicial : AutoLegalidad.Desafios.TopesJuego.RelojDiaTranscurrido);
         yield return P.Entero($"{prefijo}_horas", L(controles[1]), c => Leer(c).Hour, (c, v) => Escribir(c, r => r.Hour = (byte)v), 0, 23);
         yield return P.Entero($"{prefijo}_minutos", L(controles[2]), c => Leer(c).Minute, (c, v) => Escribir(c, r => r.Minute = (byte)v), 0, 59);
         yield return P.Entero($"{prefijo}_segundos", L(controles[3]), c => Leer(c).Second, (c, v) => Escribir(c, r => r.Second = (byte)v), 0, 59);

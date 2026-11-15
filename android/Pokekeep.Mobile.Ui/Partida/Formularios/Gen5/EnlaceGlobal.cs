@@ -50,7 +50,7 @@ internal static class EnlaceGlobal
         ]);
         yield return new SeccionP(string.Empty,
         [
-            P.Entero("cargas", L("L_UploadCount"), c => Bloque(c).UploadCount, (c, v) => Bloque(c).UploadCount = (int)v, int.MinValue, int.MaxValue, ayuda: IdiomaInterfaz.T("EnlaceGlobal.NuncaUsado")),
+            P.Entero("cargas", L("L_UploadCount"), c => Bloque(c).UploadCount, (c, v) => Bloque(c).UploadCount = (int)v, 0, int.MaxValue, ayuda: IdiomaInterfaz.T("EnlaceGlobal.NuncaUsado")),
             P.Entero("estado", L("L_UploadStatus"), c => Bloque(c).UploadStatus, (c, v) => Bloque(c).UploadStatus = (byte)v, 0, byte.MaxValue),
             P.Marca("ranura", L("CHK_IsSlotPresent"), c => Bloque(c).IsSlotPresent, (c, v) => Bloque(c).IsSlotPresent = v),
             P.Marca("registrada", L("CHK_IsRegistered"), c => Bloque(c).IsRegistered, (c, v) => Bloque(c).IsRegistered = v),

@@ -90,10 +90,10 @@ internal static class Entrenador4BR
             [
                 new(IdiomaInterfaz.T("Form.Trainer4BR.Combates"),
                 [
-                    P.Entero("totalcombates", T("L_RecordTotalBattles", IdiomaInterfaz.T("Form.Trainer4BR.L_RecordTotalBattles")), c => S(c).RecordTotalBattles, (c, v) => S(c).RecordTotalBattles = (uint)v, 0, uint.MaxValue),
-                    P.Entero("combatescoliseo", T("L_RecordColosseumBattles", IdiomaInterfaz.T("Form.Trainer4BR.L_RecordColosseumBattles")), c => S(c).RecordColosseumBattles, (c, v) => S(c).RecordColosseumBattles = (uint)v, 0, uint.MaxValue),
-                    P.Entero("combateslibres", T("L_RecordFreeBattles", IdiomaInterfaz.T("Form.Trainer4BR.L_RecordFreeBattles")), c => S(c).RecordFreeBattles, (c, v) => S(c).RecordFreeBattles = (uint)v, 0, uint.MaxValue),
-                    P.Entero("combateswifi", T("L_RecordWiFiBattles", IdiomaInterfaz.T("Form.Trainer4BR.L_RecordWiFiBattles")), c => S(c).RecordWiFiBattles, (c, v) => S(c).RecordWiFiBattles = (uint)v, 0, uint.MaxValue),
+                    P.Entero("totalcombates", T("L_RecordTotalBattles", IdiomaInterfaz.T("Form.Trainer4BR.L_RecordTotalBattles")), c => S(c).RecordTotalBattles, (c, v) => S(c).RecordTotalBattles = (uint)v, 0, AutoLegalidad.Desafios.TopesJuego.BattleRevolutionContador),
+                    P.Entero("combatescoliseo", T("L_RecordColosseumBattles", IdiomaInterfaz.T("Form.Trainer4BR.L_RecordColosseumBattles")), c => S(c).RecordColosseumBattles, (c, v) => S(c).RecordColosseumBattles = (uint)v, 0, AutoLegalidad.Desafios.TopesJuego.BattleRevolutionContador),
+                    P.Entero("combateslibres", T("L_RecordFreeBattles", IdiomaInterfaz.T("Form.Trainer4BR.L_RecordFreeBattles")), c => S(c).RecordFreeBattles, (c, v) => S(c).RecordFreeBattles = (uint)v, 0, AutoLegalidad.Desafios.TopesJuego.BattleRevolutionContador),
+                    P.Entero("combateswifi", T("L_RecordWiFiBattles", IdiomaInterfaz.T("Form.Trainer4BR.L_RecordWiFiBattles")), c => S(c).RecordWiFiBattles, (c, v) => S(c).RecordWiFiBattles = (uint)v, 0, AutoLegalidad.Desafios.TopesJuego.BattleRevolutionContador),
                 ]),
                 new(IdiomaInterfaz.T("Form.Trainer4BR.ColiseosSuperados"), pistas),
             ]),

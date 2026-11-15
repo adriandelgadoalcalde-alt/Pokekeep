@@ -39,6 +39,8 @@ internal static partial class Catalogo
                 visible: c => c.Pk is IHyperTrain && StatVisible(c, i)) with { Grupo = "ht", Indice = i, AfectaStats = true });
         var final = Enumerable.Range(0, 6).Select(i =>
             F.Entero("PK-ED-048", IdiomaInterfaz.F("Catalogo.ValorFinal", NombresStats[i]), c => StatFinal(c, i), (c, v) => EscribirStatFinal(c.Pk, i, (int)v), 0, ushort.MaxValue, visible: c => StatVisible(c, i),
+                // 1.1.4: en Gen 1 y 2 el juego no pasa de 999 (MAX_STAT_VALUE); de Gen 3 en adelante no hay tope de juego y vale el del dato.
+                maxDinamico: c => c.Pk.Format <= 2 ? AutoLegalidad.Desafios.TopesJuego.EstadisticaFinalGen1y2 : ushort.MaxValue,
                 motivo: c => c.StatsManuales ? null : IdiomaInterfaz.T("Catalogo.CalculadaCoreNivelIV"), ayuda: IdiomaInterfaz.T("Catalogo.EstadisticaCombate")) with { Grupo = "final", Indice = i });
         var baseStat = Enumerable.Range(0, 6).Select(i =>
             F.Info("PK-ED-050", $"{NombresStats[i]}, base", c => c.Pk.PersonalInfo.GetBaseStatValue(i).ToString(), visible: c => StatVisible(c, i)) with { Grupo = "base", Indice = i });

@@ -1,0 +1,570 @@
+From 26b723968cb2b9ded9b1991a8735a878c226480c Mon Sep 17 00:00:00 2001
+From: Pokekeep <pokekeep@invalid>
+Date: Sun, 15 Nov 2026 20:36:00 +0100
+Subject: [PATCH] Pokekeep: topes del juego en los formularios del escritorio
+ (1.1.4)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Maison de XY/ORAS: 65.535 se leía como 6553 en la máscara de 4 cifras;
+ahora se abre y se guarda como 9.999. Racha de la Torre de Espada/Escudo
+a 300 al salir del cuadro. Nivel del Salón de la Fama de RBY y RSE a 100.
+Nexo Pokémon: cantidades de objeto hasta 255 (300 se guardaba como 44).
+Células de Zygarde: 95 en SM y 100 en USUM, y «Dar todas» ya no rompe al
+pasar del tope. Estrellas del donut de Z-A a 5. Dinero de BDSP a 999.999.
+Pokéathlon de HGSS: puntuaciones del curso y mejores puntuaciones a 999.
+Bonguris a 99 por color. Galería Unión: 8 visitantes, 12 fans y 7 días de
+promoción. Estadística final de Gen 1 y 2 a 999 en el modo avanzado (el
+método que la limitaba comprobaba TextBox y los cuadros son MaskedTextBox).
+Topes y fuentes en AutoLegalidad.Desafios.TopesJuego.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01K7SsmyJLJN7mL9bZmtPKMP
+---
+ .../Controls/PKM Editor/StatEditor.cs         | 13 +++++++-----
+ PKHeX.WinForms/Pokekeep/TopesFormulario.cs    | 20 +++++++++++++++++++
+ .../Gen1/SAV_HallOfFame1.Designer.cs          |  2 +-
+ .../Save Editors/Gen1/SAV_HallOfFame1.cs      |  1 +
+ .../Gen3/SAV_HallOfFame3.Designer.cs          |  2 +-
+ .../Save Editors/Gen3/SAV_HallOfFame3.cs      |  1 +
+ .../Save Editors/Gen4/SAV_Apricorn.cs         | 16 ++++++++++++---
+ .../Gen4/SAV_Pokeathlon4.Designer.cs          |  8 ++++----
+ .../Save Editors/Gen4/SAV_Pokeathlon4.cs      |  2 +-
+ .../JoinAvenueSettingsEditor.Designer.cs      |  2 +-
+ .../Join Avenue/SAV_JoinAvenue.Designer.cs    |  4 ++--
+ .../Save Editors/Gen6/SAV_Link6.Designer.cs   | 12 +++++------
+ .../Subforms/Save Editors/Gen6/SAV_Link6.cs   | 14 +++++++------
+ .../Subforms/Save Editors/Gen6/SAV_Trainer.cs |  5 ++++-
+ .../Gen7/SAV_ZygardeCell.Designer.cs          |  4 ++--
+ .../Save Editors/Gen7/SAV_ZygardeCell.cs      |  7 +++++--
+ .../Save Editors/Gen8/SAV_Trainer8.cs         | 13 ++++++++----
+ .../Gen8/SAV_Trainer8b.Designer.cs            |  2 +-
+ .../Save Editors/Gen8/SAV_Trainer8b.cs        |  7 ++++---
+ .../Gen9/DonutEditor9a.Designer.cs            |  2 +-
+ 20 files changed, 93 insertions(+), 44 deletions(-)
+ create mode 100644 PKHeX.WinForms/Pokekeep/TopesFormulario.cs
+
+diff --git a/PKHeX.WinForms/Controls/PKM Editor/StatEditor.cs b/PKHeX.WinForms/Controls/PKM Editor/StatEditor.cs
+index 6729db03d..302826b35 100644
+--- a/PKHeX.WinForms/Controls/PKM Editor/StatEditor.cs	
++++ b/PKHeX.WinForms/Controls/PKM Editor/StatEditor.cs	
+@@ -1,6 +1,7 @@
+ using System;
+ using System.Drawing;
+ using System.Windows.Forms;
++using AutoLegalidad.Desafios;
+ using PKHeX.Core;
+ using PKHeX.Drawing;
+ using PKHeX.Drawing.Misc;
+@@ -290,16 +291,18 @@ private void UpdateHackedStats(object sender, EventArgs e)
+             UpdateStats();
+     }
+ 
++    /// <summary>Pokekeep 1.1.4: Gen 1 y 2 no pasan de 999 (MAX_STAT_VALUE de pokered y pokecrystal); de Gen 3 en adelante el tope es el del dato (u16).</summary>
++    private uint TopeEstadisticaFinal => Entity.Format <= 2 ? (uint)TopesJuego.EstadisticaFinalGen1y2 : ushort.MaxValue;
++
+     private void UpdateHackedStatText(object sender, EventArgs e)
+     {
+-        if (!CHK_HackedStats.Checked || sender is not TextBox tb)
++        // Pokekeep 1.1.4: los cuadros de estadística son MaskedTextBox, que no es un TextBox: con `is not TextBox` este método nunca llegaba al tope. Solo se aplica el tope; vaciar el cuadro sigue sin escribir un 0.
++        if (!CHK_HackedStats.Checked || sender is not TextBoxBase tb)
+             return;
+ 
+         string text = tb.Text;
+-        if (string.IsNullOrWhiteSpace(text))
+-            tb.Text = "0";
+-        else if (Convert.ToUInt32(text) > ushort.MaxValue)
+-            tb.Text = "65535";
++        if (!string.IsNullOrWhiteSpace(text) && uint.TryParse(text.Trim(), out var valor) && valor > TopeEstadisticaFinal)
++            tb.Text = TopeEstadisticaFinal.ToString();
+     }
+ 
+     private void UpdateHyperTrainingFlag(int index, bool value)
+diff --git a/PKHeX.WinForms/Pokekeep/TopesFormulario.cs b/PKHeX.WinForms/Pokekeep/TopesFormulario.cs
+new file mode 100644
+index 000000000..291913b44
+--- /dev/null
++++ b/PKHeX.WinForms/Pokekeep/TopesFormulario.cs
+@@ -0,0 +1,20 @@
++using System;
++using System.Windows.Forms;
++
++namespace PKHeX.WinForms;
++
++/// <summary>
++/// Pokekeep 1.1.4: topes del juego en los formularios de escritorio. Un <see cref="NumericUpDown"/> ya se queda en su <c>Maximum</c> al escribir de más;
++/// una <see cref="MaskedTextBox"/> no (su máscara solo cuenta cifras: 3 cifras dejan 999 aunque el juego pare en 300), así que aquí se recorta el texto
++/// al salir de la caja y, al guardar, con <see cref="Acotar(string, uint)"/>.
++/// </summary>
++internal static class TopesFormulario
++{
++    /// <summary>Al salir de la caja, un número mayor que <paramref name="tope"/> se sustituye por el propio tope.</summary>
++    public static void AcotarAlSalir(MaskedTextBox caja, uint tope)
++        => caja.Leave += (_, _) => caja.Text = Acotar(caja.Text, tope).ToString();
++
++    /// <summary>Número de un texto con máscara (vacío o con huecos = 0) recortado al tope.</summary>
++    public static uint Acotar(string texto, uint tope)
++        => uint.TryParse(texto.Trim(), out var valor) ? Math.Min(valor, tope) : 0;
++}
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen1/SAV_HallOfFame1.Designer.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen1/SAV_HallOfFame1.Designer.cs
+index 1dce7f117..9dc84374c 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen1/SAV_HallOfFame1.Designer.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen1/SAV_HallOfFame1.Designer.cs	
+@@ -242,7 +242,7 @@ private void InitializeComponent()
+             // NUD_Level
+             // 
+             NUD_Level.Location = new System.Drawing.Point(223, 25);
+-            NUD_Level.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
++            NUD_Level.Maximum = new decimal(new int[] { 100, 0, 0, 0 });
+             NUD_Level.Name = "NUD_Level";
+             NUD_Level.Size = new System.Drawing.Size(41, 23);
+             NUD_Level.TabIndex = 79;
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen1/SAV_HallOfFame1.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen1/SAV_HallOfFame1.cs
+index d2ad3f7f5..8a6a5018c 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen1/SAV_HallOfFame1.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen1/SAV_HallOfFame1.cs	
+@@ -140,6 +140,7 @@ private void LoadEntity(HallOfFameEntity1 pk)
+         LoadingFields = true;
+ 
+         CB_Species.SelectedValue = (int)pk.Species;
++        NUD_Level.Maximum = Math.Max((int)Experience.MaxLevel, (int)pk.Level); // Pokekeep 1.1.4: nivel 100 como tope (pokered MAX_LEVEL); si la partida trae más, no rompe al abrirla
+         NUD_Level.Value = pk.Level;
+         var nick = pk.Nickname;
+         TB_Nickname.Text = nick;
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_HallOfFame3.Designer.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_HallOfFame3.Designer.cs
+index 096cee2b1..a86b895de 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_HallOfFame3.Designer.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_HallOfFame3.Designer.cs	
+@@ -149,7 +149,7 @@ private void InitializeComponent()
+             // NUD_Level
+             // 
+             NUD_Level.Location = new System.Drawing.Point(223, 146);
+-            NUD_Level.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
++            NUD_Level.Maximum = new decimal(new int[] { 100, 0, 0, 0 });
+             NUD_Level.Name = "NUD_Level";
+             NUD_Level.Size = new System.Drawing.Size(40, 25);
+             NUD_Level.TabIndex = 12;
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_HallOfFame3.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_HallOfFame3.cs
+index d9c2eaa47..f07d37afe 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_HallOfFame3.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_HallOfFame3.cs	
+@@ -76,6 +76,7 @@ private void LoadEntry(HallFame3PKM pk)
+         TB_SID.Text = pk.SID16.ToString("00000");
+         TB_PID.Text = pk.PID.ToString("X8");
+         TB_Nickname.Text = pk.Nickname;
++        NUD_Level.Maximum = Math.Max((int)Experience.MaxLevel, (int)pk.Level); // Pokekeep 1.1.4: nivel 100 como tope (pokeemerald pokemon.h:149); si la partida trae más, no rompe al abrirla
+         NUD_Level.Value = pk.Level;
+         CB_Species.SelectedValue = (int)pk.Species;
+         Loading = false;
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Apricorn.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Apricorn.cs
+index f388e3478..7ad26bcb9 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Apricorn.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Apricorn.cs	
+@@ -1,5 +1,6 @@
+ using System;
+ using System.Windows.Forms;
++using AutoLegalidad.Desafios;
+ using PKHeX.Core;
+ 
+ namespace PKHeX.WinForms;
+@@ -13,8 +14,18 @@ public SAV_Apricorn(SAV4HGSS sav)
+         SAV = (SAV4HGSS)(Origin = sav).Clone();
+ 
+         Setup();
++
++        // Pokekeep 1.1.4: la bolsa admite 99 de cada color (TopesJuego.BonguriPorColor); lo que se escribe de más se queda en 99 al terminar de editar la celda.
++        dgv.CellEndEdit += (_, e) =>
++        {
++            if (e.ColumnIndex == 1 && e.RowIndex >= 0)
++                dgv.Rows[e.RowIndex].Cells[1].Value = Acotar(dgv.Rows[e.RowIndex].Cells[1].Value).ToString();
++        };
+     }
+ 
++    private static int Acotar(object? valor)
++        => int.TryParse(valor?.ToString(), out var n) ? Math.Clamp(n, 0, TopesJuego.BonguriPorColor) : 0;
++
+     private readonly SAV4HGSS Origin;
+     private readonly SAV4HGSS SAV;
+     private const int Count = 7;
+@@ -65,7 +76,7 @@ private void Setup()
+     private void LoadCount()
+     {
+         for (int i = 0; i < Count; i++)
+-            dgv.Rows[i].Cells[1].Value = SAV.GetApricornCount(i).ToString();
++            dgv.Rows[i].Cells[1].Value = Math.Min(TopesJuego.BonguriPorColor, SAV.GetApricornCount(i)).ToString();
+     }
+ 
+     private void B_Cancel_Click(object sender, EventArgs e)
+@@ -92,8 +103,7 @@ private void B_Save_Click(object sender, EventArgs e)
+         for (int i = 0; i < Count; i++)
+         {
+             var cells = dgv.Rows[i].Cells;
+-            var count = int.TryParse(cells[1].Value?.ToString() ?? "0", out var val) ? val : 0;
+-            SAV.SetApricornCount(i, Math.Min(byte.MaxValue, count));
++            SAV.SetApricornCount(i, Acotar(cells[1].Value));
+         }
+         Origin.CopyChangesFrom(SAV);
+         Close();
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Pokeathlon4.Designer.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Pokeathlon4.Designer.cs
+index b8578f625..951634ef3 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Pokeathlon4.Designer.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Pokeathlon4.Designer.cs	
+@@ -557,7 +557,7 @@ private void InitializeComponent()
+             // 
+             NUD_CourseScore0.Location = new System.Drawing.Point(51, 0);
+             NUD_CourseScore0.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
+-            NUD_CourseScore0.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_CourseScore0.Maximum = new decimal(new int[] { 999, 0, 0, 0 });
+             NUD_CourseScore0.Name = "NUD_CourseScore0";
+             NUD_CourseScore0.Size = new System.Drawing.Size(100, 25);
+             NUD_CourseScore0.TabIndex = 1;
+@@ -577,7 +577,7 @@ private void InitializeComponent()
+             // 
+             NUD_CourseScore1.Location = new System.Drawing.Point(220, 0);
+             NUD_CourseScore1.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
+-            NUD_CourseScore1.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_CourseScore1.Maximum = new decimal(new int[] { 999, 0, 0, 0 });
+             NUD_CourseScore1.Name = "NUD_CourseScore1";
+             NUD_CourseScore1.Size = new System.Drawing.Size(100, 25);
+             NUD_CourseScore1.TabIndex = 3;
+@@ -597,7 +597,7 @@ private void InitializeComponent()
+             // 
+             NUD_CourseScore2.Location = new System.Drawing.Point(51, 26);
+             NUD_CourseScore2.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
+-            NUD_CourseScore2.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_CourseScore2.Maximum = new decimal(new int[] { 999, 0, 0, 0 });
+             NUD_CourseScore2.Name = "NUD_CourseScore2";
+             NUD_CourseScore2.Size = new System.Drawing.Size(100, 25);
+             NUD_CourseScore2.TabIndex = 5;
+@@ -617,7 +617,7 @@ private void InitializeComponent()
+             // 
+             NUD_CourseScoreMax.Location = new System.Drawing.Point(220, 26);
+             NUD_CourseScoreMax.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
+-            NUD_CourseScoreMax.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_CourseScoreMax.Maximum = new decimal(new int[] { 999, 0, 0, 0 });
+             NUD_CourseScoreMax.Name = "NUD_CourseScoreMax";
+             NUD_CourseScoreMax.Size = new System.Drawing.Size(100, 25);
+             NUD_CourseScoreMax.TabIndex = 7;
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Pokeathlon4.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Pokeathlon4.cs
+index e33d81052..b3ae10ec8 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Pokeathlon4.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Pokeathlon4.cs	
+@@ -256,7 +256,7 @@ private void InitializeBestScores()
+                 AutoSize = true,
+                 Text = GetEventDisplayName((PokeathlonEvent4)i) + ':',
+             };
+-            var editor = CreateNumericEditor(ushort.MaxValue);
++            var editor = CreateNumericEditor(TopesJuego.PokeathlonPuntuacion); // Pokekeep 1.1.4: cota de 999 (el juego recorta el curso a 999)
+             TLP_Best.RowStyles.Add(new RowStyle());
+             TLP_Best.Controls.Add(label, 0, i);
+             TLP_Best.Controls.Add(editor, 1, i);
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen5/Join Avenue/JoinAvenueSettingsEditor.Designer.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen5/Join Avenue/JoinAvenueSettingsEditor.Designer.cs
+index bebd0dc22..3433863fa 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen5/Join Avenue/JoinAvenueSettingsEditor.Designer.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen5/Join Avenue/JoinAvenueSettingsEditor.Designer.cs	
+@@ -280,7 +280,7 @@ private void InitializeComponent()
+             // 
+             NUD_PromotionDaysElapsed.Location = new System.Drawing.Point(154, 208);
+             NUD_PromotionDaysElapsed.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
+-            NUD_PromotionDaysElapsed.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_PromotionDaysElapsed.Maximum = new decimal(new int[] { 7, 0, 0, 0 });
+             NUD_PromotionDaysElapsed.Name = "NUD_PromotionDaysElapsed";
+             NUD_PromotionDaysElapsed.Size = new System.Drawing.Size(64, 25);
+             NUD_PromotionDaysElapsed.TabIndex = 17;
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen5/Join Avenue/SAV_JoinAvenue.Designer.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen5/Join Avenue/SAV_JoinAvenue.Designer.cs
+index 057905141..c9b47df47 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen5/Join Avenue/SAV_JoinAvenue.Designer.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen5/Join Avenue/SAV_JoinAvenue.Designer.cs	
+@@ -140,7 +140,7 @@ private void InitializeComponent()
+             // 
+             NUD_VisitorCount.Location = new System.Drawing.Point(94, 35);
+             NUD_VisitorCount.Margin = new System.Windows.Forms.Padding(0);
+-            NUD_VisitorCount.Maximum = new decimal(new int[] { -1, 0, 0, 0 });
++            NUD_VisitorCount.Maximum = new decimal(new int[] { 8, 0, 0, 0 });
+             NUD_VisitorCount.Name = "NUD_VisitorCount";
+             NUD_VisitorCount.Size = new System.Drawing.Size(120, 25);
+             NUD_VisitorCount.TabIndex = 3;
+@@ -160,7 +160,7 @@ private void InitializeComponent()
+             // 
+             NUD_FanCount.Location = new System.Drawing.Point(94, 60);
+             NUD_FanCount.Margin = new System.Windows.Forms.Padding(0);
+-            NUD_FanCount.Maximum = new decimal(new int[] { -1, 0, 0, 0 });
++            NUD_FanCount.Maximum = new decimal(new int[] { 12, 0, 0, 0 });
+             NUD_FanCount.Name = "NUD_FanCount";
+             NUD_FanCount.Size = new System.Drawing.Size(120, 25);
+             NUD_FanCount.TabIndex = 5;
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Link6.Designer.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Link6.Designer.cs
+index 4b2d59c04..c027708c3 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Link6.Designer.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Link6.Designer.cs	
+@@ -375,7 +375,7 @@ private void InitializeComponent()
+             NUD_Item6.Enabled = false;
+             NUD_Item6.Location = new System.Drawing.Point(250, 135);
+             NUD_Item6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_Item6.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_Item6.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+             NUD_Item6.Name = "NUD_Item6";
+             NUD_Item6.Size = new System.Drawing.Size(68, 23);
+             NUD_Item6.TabIndex = 131;
+@@ -405,7 +405,7 @@ private void InitializeComponent()
+             NUD_Item5.Enabled = false;
+             NUD_Item5.Location = new System.Drawing.Point(250, 108);
+             NUD_Item5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_Item5.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_Item5.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+             NUD_Item5.Name = "NUD_Item5";
+             NUD_Item5.Size = new System.Drawing.Size(68, 23);
+             NUD_Item5.TabIndex = 128;
+@@ -435,7 +435,7 @@ private void InitializeComponent()
+             NUD_Item4.Enabled = false;
+             NUD_Item4.Location = new System.Drawing.Point(250, 82);
+             NUD_Item4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_Item4.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_Item4.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+             NUD_Item4.Name = "NUD_Item4";
+             NUD_Item4.Size = new System.Drawing.Size(68, 23);
+             NUD_Item4.TabIndex = 125;
+@@ -465,7 +465,7 @@ private void InitializeComponent()
+             NUD_Item3.Enabled = false;
+             NUD_Item3.Location = new System.Drawing.Point(250, 55);
+             NUD_Item3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_Item3.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_Item3.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+             NUD_Item3.Name = "NUD_Item3";
+             NUD_Item3.Size = new System.Drawing.Size(68, 23);
+             NUD_Item3.TabIndex = 122;
+@@ -495,7 +495,7 @@ private void InitializeComponent()
+             NUD_Item2.Enabled = false;
+             NUD_Item2.Location = new System.Drawing.Point(250, 29);
+             NUD_Item2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_Item2.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_Item2.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+             NUD_Item2.Name = "NUD_Item2";
+             NUD_Item2.Size = new System.Drawing.Size(68, 23);
+             NUD_Item2.TabIndex = 119;
+@@ -525,7 +525,7 @@ private void InitializeComponent()
+             NUD_Item1.Enabled = false;
+             NUD_Item1.Location = new System.Drawing.Point(250, 2);
+             NUD_Item1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_Item1.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_Item1.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+             NUD_Item1.Name = "NUD_Item1";
+             NUD_Item1.Size = new System.Drawing.Size(68, 23);
+             NUD_Item1.TabIndex = 116;
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Link6.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Link6.cs
+index 2ba1b83fd..a183188ac 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Link6.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Link6.cs	
+@@ -1,6 +1,7 @@
+ using System;
+ using System.IO;
+ using System.Windows.Forms;
++using AutoLegalidad.Desafios;
+ using PKHeX.Core;
+ 
+ namespace PKHeX.WinForms;
+@@ -82,12 +83,13 @@ private void LoadLinkData()
+         CB_Item5.SelectedValue = (int)Gifts.Item5;
+         CB_Item6.SelectedValue = (int)Gifts.Item6;
+ 
+-        NUD_Item1.Value = Gifts.Quantity1;
+-        NUD_Item2.Value = Gifts.Quantity2;
+-        NUD_Item3.Value = Gifts.Quantity3;
+-        NUD_Item4.Value = Gifts.Quantity4;
+-        NUD_Item5.Value = Gifts.Quantity5;
+-        NUD_Item6.Value = Gifts.Quantity6;
++        // Pokekeep 1.1.4: la cantidad se guarda en un byte y 300 daba la vuelta (44); el cuadro llega a 255 (TopesJuego.NexoCantidadObjeto).
++        NUD_Item1.Value = Math.Min(TopesJuego.NexoCantidadObjeto, (int)Gifts.Quantity1);
++        NUD_Item2.Value = Math.Min(TopesJuego.NexoCantidadObjeto, (int)Gifts.Quantity2);
++        NUD_Item3.Value = Math.Min(TopesJuego.NexoCantidadObjeto, (int)Gifts.Quantity3);
++        NUD_Item4.Value = Math.Min(TopesJuego.NexoCantidadObjeto, (int)Gifts.Quantity4);
++        NUD_Item5.Value = Math.Min(TopesJuego.NexoCantidadObjeto, (int)Gifts.Quantity5);
++        NUD_Item6.Value = Math.Min(TopesJuego.NexoCantidadObjeto, (int)Gifts.Quantity6);
+ 
+         // Pokemon slots
+         TB_PKM1.Text = GetSpecies(Gifts.Entity1.Species);
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Trainer.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Trainer.cs
+index d3a5d09ba..8ca78f506 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Trainer.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Trainer.cs	
+@@ -66,6 +66,9 @@ public SAV_Trainer(SAV6 sav)
+ 
+     private readonly bool editing;
+     private readonly MaskedTextBox[] MaisonRecords;
++
++    /// <summary>Pokekeep 1.1.4: tope de las rachas de la Maison (medido en el binario de X; topes-113-fuentes.md línea 69). Coincide con la máscara de 4 cifras de los 20 cuadros.</summary>
++    private const int MaisonRachaMaxima = 9999;
+     private readonly CheckBox[] cba;
+     private bool MapUpdated;
+ 
+@@ -130,7 +133,7 @@ private void GetTextBoxes()
+         if (SAV is ISaveBlock6Main xyao)
+         {
+             for (int i = 0; i < MaisonBlock.MaisonStatCount; i++)
+-                MaisonRecords[i].Text = xyao.Maison.GetMaisonStat(i).ToString();
++                MaisonRecords[i].Text = Math.Min(MaisonRachaMaxima, (int)xyao.Maison.GetMaisonStat(i)).ToString(); // Pokekeep 1.1.4: 9.999 en el juego, la máscara es de 4 cifras
+         }
+ 
+         var sit = SAV.Situation;
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_ZygardeCell.Designer.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_ZygardeCell.Designer.cs
+index 223915728..60fbca08f 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_ZygardeCell.Designer.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_ZygardeCell.Designer.cs	
+@@ -118,7 +118,7 @@ private void InitializeComponent()
+             NUD_CellsTotal.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+             NUD_CellsTotal.Location = new System.Drawing.Point(105, 357);
+             NUD_CellsTotal.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_CellsTotal.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_CellsTotal.Maximum = new decimal(new int[] { 100, 0, 0, 0 });
+             NUD_CellsTotal.Name = "NUD_CellsTotal";
+             NUD_CellsTotal.Size = new System.Drawing.Size(77, 23);
+             NUD_CellsTotal.TabIndex = 3;
+@@ -162,7 +162,7 @@ private void InitializeComponent()
+             NUD_CellsCollected.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+             NUD_CellsCollected.Location = new System.Drawing.Point(105, 328);
+             NUD_CellsCollected.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_CellsCollected.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_CellsCollected.Maximum = new decimal(new int[] { 100, 0, 0, 0 });
+             NUD_CellsCollected.Name = "NUD_CellsCollected";
+             NUD_CellsCollected.Size = new System.Drawing.Size(77, 23);
+             NUD_CellsCollected.TabIndex = 6;
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_ZygardeCell.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_ZygardeCell.cs
+index 733e08ebd..7f21623ba 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_ZygardeCell.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_ZygardeCell.cs	
+@@ -15,6 +15,9 @@ public SAV_ZygardeCell(SAV7 sav)
+         WinFormsUtil.TranslateInterface(this, Main.CurrentLanguage);
+         SAV = (SAV7)(Origin = sav).Clone();
+         var ew = sav.EventWork;
++        // Pokekeep 1.1.4: 95 células en SM y 100 en USUM (EventWork7.TotalZygardeCellCount); si la partida ya trae más, el cuadro no puede romper al abrirla.
++        NUD_CellsTotal.Maximum = Math.Max(ew.TotalZygardeCellCount, ew.ZygardeCellTotal);
++        NUD_CellsCollected.Maximum = Math.Max(ew.TotalZygardeCellCount, ew.ZygardeCellCount);
+         NUD_CellsTotal.Value = ew.ZygardeCellTotal;
+         NUD_CellsCollected.Value = ew.ZygardeCellCount;
+ 
+@@ -78,9 +81,9 @@ private void B_GiveAll_Click(object sender, EventArgs e)
+             state.Value = states[2];
+         }
+ 
+-        NUD_CellsCollected.Value += added;
++        NUD_CellsCollected.Value = Math.Min(NUD_CellsCollected.Maximum, NUD_CellsCollected.Value + added);
+         if (SAV is not SAV7USUM)
+-            NUD_CellsTotal.Value += added;
++            NUD_CellsTotal.Value = Math.Min(NUD_CellsTotal.Maximum, NUD_CellsTotal.Value + added);
+ 
+         WinFormsUtil.Asterisk();
+     }
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8.cs
+index f417fad38..089e3efd7 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8.cs	
+@@ -1,6 +1,7 @@
+ using System;
+ using System.Linq;
+ using System.Windows.Forms;
++using AutoLegalidad.Desafios;
+ using PKHeX.Core;
+ 
+ namespace PKHeX.WinForms;
+@@ -22,6 +23,10 @@ public SAV_Trainer8(SAV8SWSH sav)
+         B_MaxCash.Click += (_, _) => MT_Money.Text = SAV.MaxMoney.ToString();
+         B_MaxWatt.Click += (_, _) => MT_Watt.Text = MyStatus8.MaxWatt.ToString();
+ 
++        // Pokekeep 1.1.4: la racha de la Torre para en 300 en el juego (TopesJuego.TorreSwShRacha); la máscara de 3 cifras dejaba escribir 999.
++        TopesFormulario.AcotarAlSalir(MT_BattleTowerSinglesStreak, TopesJuego.TorreSwShRacha);
++        TopesFormulario.AcotarAlSalir(MT_BattleTowerDoublesStreak, TopesJuego.TorreSwShRacha);
++
+         CB_Gender.Items.Clear();
+         CB_Gender.Items.AddRange([.. Main.GenderSymbols.Take(2)]); // m/f depending on unicode selection
+ 
+@@ -125,8 +130,8 @@ private void GetMiscValues()
+     {
+         MT_BattleTowerSinglesWin.Text = SAV.GetValue<uint>(SaveBlockAccessor8SWSH.KBattleTowerSinglesVictory).ToString();
+         MT_BattleTowerDoublesWin.Text = SAV.GetValue<uint>(SaveBlockAccessor8SWSH.KBattleTowerDoublesVictory).ToString();
+-        MT_BattleTowerSinglesStreak.Text = SAV.GetValue<ushort>(SaveBlockAccessor8SWSH.KBattleTowerSinglesStreak).ToString();
+-        MT_BattleTowerDoublesStreak.Text = SAV.GetValue<ushort>(SaveBlockAccessor8SWSH.KBattleTowerDoublesStreak).ToString();
++        MT_BattleTowerSinglesStreak.Text = Math.Min(TopesJuego.TorreSwShRacha, (int)SAV.GetValue<ushort>(SaveBlockAccessor8SWSH.KBattleTowerSinglesStreak)).ToString();
++        MT_BattleTowerDoublesStreak.Text = Math.Min(TopesJuego.TorreSwShRacha, (int)SAV.GetValue<ushort>(SaveBlockAccessor8SWSH.KBattleTowerDoublesStreak)).ToString();
+     }
+ 
+     private void SaveMiscValues()
+@@ -135,8 +140,8 @@ private void SaveMiscValues()
+         var doubles = Math.Min(9_999_999u, Util.ToUInt32(MT_BattleTowerDoublesWin.Text));
+         SAV.SetValue(SaveBlockAccessor8SWSH.KBattleTowerSinglesVictory, singles);
+         SAV.SetValue(SaveBlockAccessor8SWSH.KBattleTowerDoublesVictory, doubles);
+-        SAV.SetValue(SaveBlockAccessor8SWSH.KBattleTowerSinglesStreak, (ushort)Math.Min(300, Util.ToUInt32(MT_BattleTowerSinglesStreak.Text)));
+-        SAV.SetValue(SaveBlockAccessor8SWSH.KBattleTowerDoublesStreak, (ushort)Math.Min(300, Util.ToUInt32(MT_BattleTowerDoublesStreak.Text)));
++        SAV.SetValue(SaveBlockAccessor8SWSH.KBattleTowerSinglesStreak, (ushort)TopesFormulario.Acotar(MT_BattleTowerSinglesStreak.Text, TopesJuego.TorreSwShRacha));
++        SAV.SetValue(SaveBlockAccessor8SWSH.KBattleTowerDoublesStreak, (ushort)TopesFormulario.Acotar(MT_BattleTowerDoublesStreak.Text, TopesJuego.TorreSwShRacha));
+ 
+         SAV.SetRecord(RecordLists.G8BattleTowerSingleWin, (int)singles);
+         SAV.SetRecord(RecordLists.G8BattleTowerDoubleWin, (int)doubles);
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8b.Designer.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8b.Designer.cs
+index b3fd2fb83..d04d850ed 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8b.Designer.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8b.Designer.cs	
+@@ -195,7 +195,7 @@ private void InitializeComponent()
+             // 
+             MT_Money.Location = new System.Drawing.Point(139, 33);
+             MT_Money.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            MT_Money.Mask = "0000000";
++            MT_Money.Mask = "000000";
+             MT_Money.Name = "MT_Money";
+             MT_Money.Size = new System.Drawing.Size(60, 23);
+             MT_Money.TabIndex = 4;
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8b.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8b.cs
+index f10638413..d4f93f6da 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8b.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8b.cs	
+@@ -1,6 +1,7 @@
+ using System;
+ using System.Linq;
+ using System.Windows.Forms;
++using AutoLegalidad.Desafios;
+ using PKHeX.Core;
+ 
+ namespace PKHeX.WinForms;
+@@ -22,7 +23,7 @@ public SAV_Trainer8b(SAV8BS sav)
+         if (!Main.Unicode)
+             TB_OTName.DisableInGameFont = TB_Rival.DisableInGameFont = true;
+ 
+-        B_MaxCash.Click += (_, _) => MT_Money.Text = SAV.MaxMoney.ToString();
++        B_MaxCash.Click += (_, _) => MT_Money.Text = TopesJuego.DineroBDSP.ToString(); // Pokekeep 1.1.4: 999.999 en BDSP (SaveFile.MaxMoney vale aquí 9.999.999)
+ 
+         CB_Gender.Items.Clear();
+         CB_Gender.Items.AddRange([.. Main.GenderSymbols.Take(2)]); // m/f depending on unicode selection
+@@ -52,7 +53,7 @@ private void GetTextBoxes()
+         // Display Data
+         TB_OTName.Text = SAV.OT;
+         trainerID1.LoadTrainer(SAV);
+-        MT_Money.Text = SAV.Money.ToString();
++        MT_Money.Text = Math.Min((uint)TopesJuego.DineroBDSP, SAV.Money).ToString();
+         CB_Language.SelectedValue = SAV.Language;
+         TB_Rival.Text = SAV.RivalName;
+ 
+@@ -104,7 +105,7 @@ private void SaveTrainerInfo()
+         SAV.Version = (GameVersion)(CB_Game.SelectedIndex + (int)GameVersion.BD);
+         SAV.Gender = (byte)CB_Gender.SelectedIndex;
+ 
+-        SAV.Money = Util.ToUInt32(MT_Money.Text);
++        SAV.Money = TopesFormulario.Acotar(MT_Money.Text, TopesJuego.DineroBDSP);
+         SAV.Language = WinFormsUtil.GetIndex(CB_Language);
+ 
+         // only modify if changed (preserve trash bytes?)
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen9/DonutEditor9a.Designer.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen9/DonutEditor9a.Designer.cs
+index 2cec9536b..61086be29 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen9/DonutEditor9a.Designer.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen9/DonutEditor9a.Designer.cs	
+@@ -535,7 +535,7 @@ private void InitializeComponent()
+             // 
+             NUD_Stars.Location = new System.Drawing.Point(106, 2);
+             NUD_Stars.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
+-            NUD_Stars.Maximum = new decimal(new int[] { 6, 0, 0, 0 });
++            NUD_Stars.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
+             NUD_Stars.Name = "NUD_Stars";
+             NUD_Stars.Size = new System.Drawing.Size(61, 23);
+             NUD_Stars.TabIndex = 24;
+-- 
+2.55.0.windows.5
+
