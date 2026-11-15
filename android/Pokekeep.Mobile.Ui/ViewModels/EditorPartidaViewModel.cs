@@ -179,22 +179,17 @@ public sealed partial class CampoPVm : ObservableObject
         finally { _releyendo = false; }
     }
 
-    /// <summary>Una accion: queda pendiente (o se cancela). Si pide confirmacion, la primera vez pregunta.</summary>
+    /// <summary>
+    /// Una accion se hace al pulsarla, sin preguntar (R-015, propietario 15-nov-2026: «salta el aviso por todo»): todo lo que escribe entra en el historial de la partida y el aviso
+    /// que sigue lleva «Deshacer». Lo que hubiera pendiente en el borrador se aplica antes, en su propia entrada del historial.
+    /// </summary>
     [RelayCommand]
     private void Alternar()
     {
         if (!EsAccion || !EsEditable) return;
-        // Una accion inmediata actua de golpe sobre la partida: primero el aviso de los cambios pendientes y solo despues (si no hay) la confirmacion destructiva.
-        if (Def.Inmediata && _ed.AvisarSiHayPendientes()) return;
-        if (!Marcado && Def.Confirmacion is { } aviso)
-        {
-            TextosConfirmarHoja Textos() => new(Etiqueta, [Def.Confirmacion ?? aviso, IdiomaInterfaz.T(Def.Inmediata ? "Form.AhoraDeshacer" : "Form.HastaAplicar")], Def.TextoBoton ?? IdiomaInterfaz.T("Form.Hacer"), IdiomaInterfaz.T("Form.MejorNo"));
-            var t = Textos();
-            _ed.AbrirHoja(new ConfirmarHojaViewModel(t.Titulo, t.Parrafos, t.Confirmar, () => { if (Def.Inmediata) _ed.EjecutarInmediata(this); else Marcado = true; }, destructiva: true, actualizarTextos: Textos, textoCancelar: t.Cancelar));
-            return;
-        }
         if (Def.Inmediata) { _ed.EjecutarInmediata(this); return; }
-        Marcado = !Marcado;
+        Marcado = true;
+        if (Error is null) _ed.AplicarPendientes(Etiqueta);
     }
 
     [RelayCommand]
@@ -282,8 +277,9 @@ public sealed partial class PestanaPVm(PestanaP def) : ObservableObject
 }
 
 /// <summary>
-/// Editor de partida generico en pantalla (Entrenador, Estadisticas, Eventos...): pestanas, secciones de campos y la barra de «cambios sin aplicar». Trabaja sobre el borrador de
-/// <see cref="ModeloEditorPartida"/>; «Aplicar a la partida» escribe solo lo cambiado como una entrada del historial. Con cambios sin aplicar, salir pide confirmacion.
+/// Editor de partida generico en pantalla (Entrenador, Estadisticas, Eventos...): pestanas y secciones de campos. Trabaja sobre el borrador de <see cref="ModeloEditorPartida"/>, que
+/// se escribe solo (lo cambiado, como una entrada del historial) al salir, al pulsar una accion o antes de guardar. R-015 (15-nov-2026): sin barra de «cambios sin aplicar» ni
+/// preguntas; cada escritura avisa con «Deshacer».
 /// </summary>
 public sealed partial class EditorPartidaViewModel : ObservableObject
 {
@@ -295,9 +291,11 @@ public sealed partial class EditorPartidaViewModel : ObservableObject
 
     private readonly Action<Pokekeep.Mobile.Ui.Cajas.EditorCasillas.TipoCambio> _alCambiarCasillas;   // referencia fuerte de la suscripcion debil a Sesion.CasillasCambiadas
     private readonly Func<Pokekeep.Mobile.Ui.Almacen.IAlmacenDocumentos?> _documentos;
-    public EditorPartidaViewModel(ModeloEditorPartida modelo, Action volver, Action<HojaViewModel> abrirHoja, Action<string, string, string, string?, ICommand?> informar, Func<Pokekeep.Mobile.Ui.Almacen.IAlmacenDocumentos?>? documentos = null, Func<EditorDefP?>? actualizarDefinicion = null)
+    private readonly Func<ICommand?>? _deshacer;
+
+    public EditorPartidaViewModel(ModeloEditorPartida modelo, Action volver, Action<HojaViewModel> abrirHoja, Action<string, string, string, string?, ICommand?> informar, Func<Pokekeep.Mobile.Ui.Almacen.IAlmacenDocumentos?>? documentos = null, Func<EditorDefP?>? actualizarDefinicion = null, Func<ICommand?>? deshacer = null)
     {
-        _actualizarDefinicion = actualizarDefinicion;
+        _actualizarDefinicion = actualizarDefinicion; _deshacer = deshacer;
         Modelo = modelo; _volver = volver; _abrirHoja = abrirHoja; _informar = informar; _documentos = documentos ?? (() => null);
         Construir();
         _alCambiarCasillas = _ => { if (!_aplicando) Recargar(); };
@@ -342,18 +340,23 @@ public sealed partial class EditorPartidaViewModel : ObservableObject
     internal Pokekeep.Mobile.Ui.Almacen.IAlmacenDocumentos? Documentos() => _documentos();
     internal void Informar(string texto, string nivel, string glifo) => _informar(texto, nivel, glifo, null, null);
 
-    /// <summary>Si hay cambios sin aplicar, avisa (una accion inmediata los perderia) y devuelve true.</summary>
-    internal bool AvisarSiHayPendientes()
+    /// <summary>El aviso de «hecho» con su «Deshacer» (el historial de la partida es el mismo que el de las casillas).</summary>
+    private void InformarHecho(string texto, string nivel = "ok", string glifo = "CircleCheck")
     {
-        if (!Modelo.HayCambios) return false;
-        _informar(ModeloEditorPartida.MotivoPendientes, "aviso", "CircleAlert", null, null);
-        return true;
+        var deshacer = _deshacer?.Invoke();
+        _informar(texto, nivel, glifo, deshacer is null ? null : IdiomaInterfaz.T("SubeditorHoja.Deshacer"), deshacer);
     }
 
-    /// <summary>Una accion inmediata: sobre la partida real, con el borrador vacio. Despues se vuelve a leer todo (conservando la pestana y el elemento abierto).</summary>
+    /// <summary>
+    /// R-015: aplica el borrador, si lo hay, sin preguntar. Devuelve false solo si el Core lo rechaza: entonces el borrador se conserva y el aviso dice por qué.
+    /// <paramref name="queHizo"/> es lo que nombra el aviso (la accion pulsada); si es null, el titulo del editor.
+    /// </summary>
+    internal bool AplicarPendientes(string? queHizo = null) => !Modelo.HayCambios || AplicarBorrador(queHizo);
+
+    /// <summary>Una accion inmediata: sobre la partida real. Lo pendiente del borrador se aplica antes; despues se vuelve a leer todo (conservando la pestana y el elemento abierto).</summary>
     internal void EjecutarInmediata(CampoPVm campo)
     {
-        if (AvisarSiHayPendientes()) return;
+        if (!AplicarPendientes()) return;
         _aplicando = true;
         try
         {
@@ -362,7 +365,7 @@ public sealed partial class EditorPartidaViewModel : ObservableObject
             // R-013: una accion que cuenta lo que ha hecho («Racha actual 0 → 28») lo deja en Ctx.Aviso; si no, el aviso de siempre.
             var cuenta = Modelo.Ctx.Aviso; Modelo.Ctx.Aviso = null;
             if (r.SinCambios) _informar(cuenta ?? IdiomaInterfaz.T("Form.NadaCambio"), "aviso", "Info", null, null);
-            else _informar(cuenta ?? IdiomaInterfaz.F("Form.Hecho", campo.Etiqueta), "ok", "CircleCheck", null, null);
+            else InformarHecho(cuenta ?? IdiomaInterfaz.F("Form.Hecho", campo.Etiqueta));
         }
         catch (Exception ex) when (ex is ArgumentException or InvalidOperationException or IndexOutOfRangeException or FormatException or OverflowException or KeyNotFoundException or NotSupportedException)
         {
@@ -449,23 +452,28 @@ public sealed partial class EditorPartidaViewModel : ObservableObject
 
     [RelayCommand] private void Elegir(PestanaPVm? p) { if (p is not null) Actual = p; }
 
+    /// <summary>Aplica el borrador ya, sin esperar a salir (lo usan las pruebas y las derivaciones; la pantalla ya no tiene boton).</summary>
     [RelayCommand]
-    private void Aplicar()
+    private void Aplicar() { if (Modelo.HayCambios) AplicarBorrador(null); }
+
+    private bool AplicarBorrador(string? queHizo)
     {
-        if (!Modelo.HayCambios) return;
         _aplicando = true;
         try
         {
             var r = Modelo.Aplicar();
             Reconstruir();
+            var nombre = queHizo is null ? Titulo : $"{Titulo}: {queHizo}";
             if (r.SinCambios) _informar(IdiomaInterfaz.T("Form.NadaEscribir"), "aviso", "Info", null, null);
-            else if (Modelo.Def.AvisoTrasAplicar?.Invoke(Modelo.Ctx) is { } aviso) _informar(IdiomaInterfaz.F("Form.AplicadoAviso", Titulo, aviso), "aviso", "CircleAlert", null, null);
-            else _informar(IdiomaInterfaz.F("Form.Aplicado", Titulo), "ok", "CircleCheck", null, null);
+            else if (Modelo.Def.AvisoTrasAplicar?.Invoke(Modelo.Ctx) is { } aviso) InformarHecho(IdiomaInterfaz.F("Form.AplicadoAviso", nombre, aviso), "aviso", "CircleAlert");
+            else InformarHecho(IdiomaInterfaz.F("Form.Aplicado", nombre));
+            return true;
         }
         catch (Exception ex) when (ex is ArgumentException or InvalidOperationException or IndexOutOfRangeException or FormatException or OverflowException or KeyNotFoundException or NotSupportedException)
         {
             // El historial ya ha devuelto la partida a como estaba; el borrador se conserva para que el usuario lo corrija.
             _informar(IdiomaInterfaz.F("Form.ErrorAplicar", ex.Message), "error", "TriangleAlert", null, null);
+            return false;
         }
         finally { _aplicando = false; }
     }
@@ -477,14 +485,11 @@ public sealed partial class EditorPartidaViewModel : ObservableObject
         _informar(IdiomaInterfaz.T("Form.Descartados"), "ok", "CircleCheck", null, null);
     }
 
-    /// <summary>Vuelve al menu de Partida; con cambios sin aplicar pregunta antes.</summary>
+    /// <summary>Vuelve al menu de Partida aplicando antes lo cambiado (R-015: sin preguntar; el aviso lleva «Deshacer»). Si el Core lo rechaza, se queda para corregirlo.</summary>
     [RelayCommand]
     public void Volver()
     {
-        if (!Modelo.HayCambios) { _volver(); return; }
-        TextosConfirmarHoja Textos() => new(IdiomaInterfaz.T("Form.Salir.Titulo"), [IdiomaInterfaz.P("Form.Salir.Cambios", NumCambios, Titulo), IdiomaInterfaz.T("Form.Salir.Explicacion")], IdiomaInterfaz.T("Form.Salir.Confirmar"), IdiomaInterfaz.T("Form.Salir.Cancelar"));
-        var t = Textos();
-        _abrirHoja(new ConfirmarHojaViewModel(t.Titulo, t.Parrafos, t.Confirmar, _volver, destructiva: true, textoCancelar: t.Cancelar, actualizarTextos: Textos));
+        if (AplicarPendientes()) _volver();
     }
 
     /// <summary>Boton Atras del sistema: true si lo ha gestionado.</summary>

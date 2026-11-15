@@ -75,7 +75,7 @@ public sealed partial class ShellViewModel : ObservableObject, IAnfitrionCajas, 
         {
             Cajas = new CajasViewModel(sesion, this, cajaInicial, seleccionarIlegal);
             Cajas.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(CajasViewModel.BarraContextual)) { OnPropertyChanged(nameof(HayBarraContextual)); OnPropertyChanged(nameof(NoHayBarraContextual)); } };
-            MochilaVm = new MochilaViewModel(sesion, AbrirHoja, Informar) { EnPantalla = false };
+            MochilaVm = new MochilaViewModel(sesion, AbrirHoja, Informar) { EnPantalla = false, Deshacer = () => Cajas?.DeshacerCommand };
             Cambios = sesion.CambiosPendientes;
             // Cualquier cambio de casillas (cajas, editor, menu de caja, Deshacer) cuenta y deja la copia de recuperacion; nada se exporta (regla 13).
             sesion.CasillasCambiadas += _ => { Cambios = sesion.CambiosPendientes; _servicios?.Recuperacion(sesion); };
@@ -88,7 +88,7 @@ public sealed partial class ShellViewModel : ObservableObject, IAnfitrionCajas, 
             EntradaMenu.Localizada("Menu.Archivo.CopiaCarpeta.Titulo", "Menu.Archivo.CopiaCarpeta.Descripcion", "FolderOpen", "F2", HaySesion && servicios is not null ? GuardarEnCarpetaCommand : null),
             EntradaMenu.Localizada("Menu.Archivo.Carpeta.Titulo", "Menu.Archivo.Carpeta.Descripcion", "HardDrive", "F2", servicios is null ? null : ElegirCarpetaCommand),
         ];
-        PartidaVm = new PartidaViewModel(sesion, MenuPartida, HaySesion ? GuardarCommand : null, HaySesion ? ExportarCopiaCommand : null, AbrirHoja, Informar, () => Documentos, () => Portapapeles, BorradoresSinAplicar);
+        PartidaVm = new PartidaViewModel(sesion, MenuPartida, HaySesion ? GuardarCommand : null, HaySesion ? ExportarCopiaCommand : null, AbrirHoja, Informar, () => Documentos, () => Portapapeles, BorradoresSinAplicar, () => Cajas?.DeshacerCommand);
         PartidaVm.AbrirHerramienta = id => { Destino = Destino.Mas; NavegarF10("herramienta=" + id, out _); };
         PartidaVm.CambiarRanura = CambiarRanuraBr;
         if (MochilaVm is not null) MochilaVm.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(MochilaViewModel.HayCambios)) PartidaVm.ActualizarBorradores(); };
@@ -377,7 +377,7 @@ public sealed partial class ShellViewModel : ObservableObject, IAnfitrionCajas, 
             case "libreria": Destino = Destino.Libreria; return true;
             case "mochila": Destino = Destino.Mochila; return true;
             case "partida":
-                // Igual que «Volver» del editor: con cambios sin aplicar pregunta antes en vez de descartarlos en silencio.
+                // Igual que «Volver» del editor: con cambios sin aplicar los aplica (R-015) en vez de descartarlos en silencio.
                 Destino = Destino.Partida;
                 if (PartidaVm.Editor is { HayCambios: true } e) { e.Volver(); return true; }
                 PartidaVm.Editor = null; return true;
@@ -531,9 +531,21 @@ public sealed partial class ShellViewModel : ObservableObject, IAnfitrionCajas, 
         return l.Count == 0 ? null : string.Join(", ", l);
     }
 
-    /// <summary>Si hay borradores sin aplicar, avisa antes de guardar o exportar (que no los incluyen); si el usuario sigue, ejecuta la accion.</summary>
+    /// <summary>
+    /// R-015 (15-nov-2026): aplica sin preguntar los borradores de la partida (Mochila, editor de la partida, Eventos, Regalos, Complejo GO). False si el juego rechaza alguno: su
+    /// propio aviso dice por qué y el borrador se conserva. El del editor de Pokémon NO: meterlo en su casilla es una decision del usuario, como en PKHeX.
+    /// </summary>
+    public bool AplicarBorradoresPartida()
+        => (MochilaVm?.AplicarPendientes() ?? true)
+           && (PartidaVm.Editor?.AplicarPendientes() ?? true)
+           && (PartidaVm.Eventos?.AplicarPendientes() ?? true)
+           && (PartidaVm.Regalos?.AplicarPendientes() ?? true)
+           && (PartidaVm.GoPark?.AplicarPendientes() ?? true);
+
+    /// <summary>Antes de guardar o exportar se aplican los borradores de la partida; solo si queda el del editor de Pokémon (con su ajuste de PKHeX) se avisa, porque no entraria.</summary>
     private Task ConAvisoDeBorradores(string verbo, Func<Task> accion)
     {
+        if (!AplicarBorradoresPartida()) return Task.CompletedTask;
         if (BorradoresSinAplicar() is not { } b) return Proteger(accion);
         AbrirHoja(new ConfirmarHojaViewModel(IdiomaInterfaz.T("Form.Salir.Titulo"),
             [IdiomaInterfaz.F("Shell.CambiosAplicar2", b), IdiomaInterfaz.F("Shell.SoloIncluyeAplicadoPartida", verbo), IdiomaInterfaz.T("Shell.AplicalosAntesBotonAplicar")], IdiomaInterfaz.F("Shell.Ellos", verbo), () => _ = Proteger(accion)));

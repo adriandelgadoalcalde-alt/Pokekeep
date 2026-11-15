@@ -13,7 +13,8 @@ namespace AutoLegalidad.Desafios;
 /// <item>Regla de continuar: <c>Serie = Past / 7 + 1</c> (<c>SAV_Misc5.cs:692-707</c> y <c>SaveSubway</c>, <c>SAV_Misc5.cs:792-800</c>).</item>
 /// <item>Primer jefe (Ingo en Individual y Super Individual, Emmet en Dobles; los dos en Multi): Past = 14 y Serie = 3; el jefe sale en el combate 21 de la serie siguiente. Probado en partida (hilo 53662) en Individual.</item>
 /// <item>Segundo jefe, solo en tren Super: Past = 42 (0x2A) y Serie = 7; sale en el combate 49. Probado en partida en Super Individual.</item>
-/// <item>Dobles y Multi: las mismas cifras por el mismo patrón de 7; NO CONFIRMADO en partida. Se ofrecen igual porque el juego usa una sola rutina para los cuatro (investigación §4, fila «Multi / Dobles»).</item>
+/// <item>Dobles y Multi: verificado en el código (investigación §16). La función que elige rival (Negro <c>ov21 0x21cbd50</c>, Negro 2 <c>ov33 0x217c110</c>) es la misma para los nueve modos:
+/// en el 7.º combate del tren saca al jefe si la serie (<c>racha / 7</c>) vale 2 en un tren normal o 6 en uno Super, y elige su ID (0x132-0x139) según el modo. En Multi usa la serie mayor de los dos jugadores.</item>
 /// <item>El tren normal termina en el combate 21: no tiene segundo jefe. El tren Super tiene que estar desbloqueado (<c>BattleSubway5.cs:12-15</c>, bits 4, 5 y 6 de <c>Flags</c>).</item>
 /// <item>Tope «Máximo» 9999: el máximo de los formularios de PKHeX para estos campos (<c>SAV_Misc5.Designer.cs:1735,1955,1976</c>). El tope del juego NO está confirmado; los campos son u16 (la serie con 9999 vale 1429).</item>
 /// </list>

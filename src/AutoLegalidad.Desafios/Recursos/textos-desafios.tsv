@@ -87,6 +87,11 @@ campo.victorias	Victorias	Wins
 campo.rango	Rango	Rank
 campo.rango_maestro	Rango máximo de la Clase Maestra	Highest Master Class rank
 campo.retos	Retos realizados	Challenges taken
+campo.puntos_torre	Puntos de la Torre	Tower points
+campo.puntos_torre_max	Puntos máximos alcanzados	Highest tower points
+campo.contador_master	Victorias seguidas en la Master Ball	Wins in a row in the Master Ball tier
+campo.ronda	Combate de la serie	Battle of the set
+campo.suspendida	Partida suspendida	Challenge suspended
 campo.mejor_tiempo	Mejor tiempo (fotogramas)	Best time (frames)
 campo.medallas_premio	Medallas de premio	Prize medals
 campo.puntos_entrada	Puntos de entrada	Ticket points
@@ -173,11 +178,19 @@ motivo.metro_normal_un_jefe	El tren normal del Metro Batalla acaba en el combate
 motivo.metro_super_solo_oro	En el tren Súper el jefe sale en el combate 49 (jefe de oro): el de plata es del tren normal.	On the Super train the boss appears at battle 49 (gold boss): the silver one belongs to the normal train.
 motivo.normal_un_jefe_20	El modo normal acaba en el combate 20, con su jefe: el de oro sale en el modo Súper.	The normal mode ends at battle 20, with its boss: the gold one appears in Super mode.
 motivo.super_solo_50	En el modo Súper el jefe sale en el combate 50 (jefe de oro): el de plata es del modo normal.	In Super mode the boss appears at battle 50 (gold boss): the silver one belongs to normal mode.
-motivo.por_rango_galar	Aquí el jefe no sale por la racha: Leon aparece al subir de nivel y, en la Master Ball, cada diez victorias.	Here the boss does not depend on the streak: Leon appears when you move up a tier and, in the Master Ball tier, every ten wins.
-motivo.por_rango_dbpr	Aquí el jefe no sale por la racha: en la Clase Maestra lo decide el rango (con el rango 10, Palmer). El rango se puede cambiar en este mismo modo.	Here the boss does not depend on the streak: in Master Class it depends on the rank (rank 10 brings Palmer). You can change the rank in this mode.
+motivo.galar_plata_pasada	Ya habéis pasado los tres jefes que suben de bola: el siguiente es el de la entrada en la Master Ball (jefe de oro).	You are past the three bosses that move you up a tier: the next one is the Master Ball entry boss (gold boss).
+motivo.galar_ya_en_master	Ya estáis en la Master Ball: allí el jefe sale cada diez victorias seguidas (jefe repetido).	You are already in the Master Ball tier: there the boss appears every ten wins in a row (repeat boss).
+motivo.royale_por_historia	En la Royale no hay jefe por racha: el combate con Taunie o Urbain depende de cómo vais en la historia, no de las victorias.	There is no streak boss in the Royale: the battle with Taunie or Urbain depends on your progress in the story, not on your wins.
+motivo.dbpr_solo_individual_normal	Palmer sale por la racha en el modo Individual normal (la clase 1). En esta clase no se ha comprobado de qué depende el jefe, así que no se toca nada.	Palmer depends on the streak in normal Singles (class 1). For this class it has not been checked what the boss depends on, so nothing is changed.
+motivo.dbpr_general_sin_jefe	Estos datos son generales de la Torre: no tienen racha ni jefe.	These are general Tower stats: they have no streak or boss.
+motivo.dbpr_maestra_sin_comprobar	En la Clase Maestra hay un jefe en cada rango, pero no se ha comprobado qué rango y racha exige: no se toca nada.	In Master Class there is a boss at every rank, but it has not been checked which rank and streak it needs: nothing is changed.
+motivo.dbpr_plata_pasada	El rango ya pasa del 3: el primer combate con Palmer ya ha quedado atrás. Probad con el jefe de oro.	The rank is already above 3: the first battle with Palmer is behind you. Try the gold boss.
+motivo.dbpr_oro_pasado	El rango ya pasa del 7: los dos combates con Palmer de la clase normal ya han quedado atrás.	The rank is already above 7: both normal-class battles with Palmer are behind you.
 explic.super_desbloqueado	El modo Súper tiene que estar desbloqueado: se abre al vencer al jefe del modo normal.	Super mode has to be unlocked first: it opens when you beat the normal mode boss.
 motivo.participante_gen4	Este Pokémon no puede ser participante: el Pokéathlon solo conoce las especies de la 1 a la 493.	This Pokémon cannot be a participant: the Pokéathlon only knows species 1 to 493.
 # --- Explicaciones de lo que se ha hecho ---
+explic.galar_por_puntos	En esta Torre el jefe lo deciden los puntos (la bola en la que estáis), no la racha: se han dejado justo antes de su combate.	In this Tower the boss depends on your points (the ball tier you are in), not on the streak: they were set to just before that battle.
+explic.dbpr_palmer	La clase se ha dejado como al volver al vestíbulo tras ganar sus series: el séptimo combate de la serie que empecéis es el de Palmer.	The class was set as if you had just returned to the lobby after winning its sets: the seventh battle of the next set is against Palmer.
 expl.plata_repetida	Ya tenéis los dos símbolos, así que el jefe de plata se repite y la racha se ha dejado en su aparición repetida.	You already have both symbols, so the silver boss repeats and the streak was set to its repeat appearance.
 expl.plata_ya_tenida_va_oro	Ya tenéis el símbolo de plata: el siguiente jefe es el de oro, así que la racha se ha dejado para el de oro.	You already have the silver symbol: the next boss is the gold one, so the streak was set for the gold boss.
 expl.oro_repetido	Ya tenéis los dos símbolos, así que el jefe de oro se repite y la racha se ha dejado en su aparición repetida.	You already have both symbols, so the gold boss repeats and the streak was set to its repeat appearance.

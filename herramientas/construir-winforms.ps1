@@ -46,11 +46,11 @@ if ($ExportarParches) {
 if ($SoloCopia) { Write-Host "Copia lista: $copia" -ForegroundColor Green; return }
 
 Write-Host '== Worker (Release) ==' -ForegroundColor Cyan
-& $Dotnet build (Join-Path $RepoRaiz 'src\AutoLegalidad.Worker') -c Release "-p:SourceRevisionId=$CoreRev"
+& $Dotnet build (Join-Path $RepoRaiz 'src\AutoLegalidad.Worker') -c Release -m:1 "-p:SourceRevisionId=$CoreRev"
 if ($LASTEXITCODE -ne 0) { throw 'Fallo la compilacion del Worker.' }
 
 Write-Host '== PKHeX.WinForms de Pokekeep (Release) ==' -ForegroundColor Cyan
 $core = Join-Path $copia 'PKHeX.Core\PKHeX.Core.csproj'
-& $Dotnet build (Join-Path $copia 'PKHeX.WinForms\PKHeX.WinForms.csproj') -c Release "-p:SourceRevisionId=$CoreRev" "-p:PKHeXCoreProject=$core" "-p:PokekeepUiProject=$(Join-Path $RepoRaiz 'src\AutoLegalidad.Ui\AutoLegalidad.Ui.csproj')" -o $Salida
+& $Dotnet build (Join-Path $copia 'PKHeX.WinForms\PKHeX.WinForms.csproj') -c Release -m:1 "-p:SourceRevisionId=$CoreRev" "-p:PKHeXCoreProject=$core" "-p:PokekeepUiProject=$(Join-Path $RepoRaiz 'src\AutoLegalidad.Ui\AutoLegalidad.Ui.csproj')" -o $Salida
 if ($LASTEXITCODE -ne 0) { throw 'Fallo la compilacion de PKHeX.WinForms.' }
 Write-Host "Listo: $Salida\PKHeX.exe" -ForegroundColor Green

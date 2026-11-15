@@ -72,6 +72,7 @@ public sealed partial class ShellViewModel
     public string? CambiosQueSePerderian()
     {
         if (Sesion is null) return null;
+        AplicarBorradoresPartida();   // R-015: lo pendiente de la partida se aplica solo y cuenta como cambio sin guardar
         List<string> l = [];
         if (Sesion.CambiosPendientes > 0) l.Add(Sesion.CambiosPendientes == 1 ? IdiomaInterfaz.T("Shell.CambioGuardar") : IdiomaInterfaz.F("Partida.Cambios.otro", Sesion.CambiosPendientes));
         if (BorradoresSinAplicar() is { } b) l.Add(IdiomaInterfaz.F("Shell.CambiosAplicar", b));

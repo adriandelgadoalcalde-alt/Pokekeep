@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Pokekeep contributors
+using System.Buffers.Binary;
 using PKHeX.Core;
 
 namespace AutoLegalidad.Desafios;
@@ -27,10 +28,12 @@ public sealed class Pwt5 : InstalacionDesafio
 
 /// <summary>
 /// Mansión Batalla de Pokémon X, Y, Rubí Omega y Zafiro Alfa (<see cref="MaisonBlock"/>): 20 u16 desde 0x1C0 del bloque, cinco estilos × (actual normal, actual Super, mejor normal, mejor Super).
-/// El orden de las casillas es el de los formularios de PKHeX (<c>SAV_Trainer.cs:30-36</c>: índice 0 = actual normal, 1 = actual Super, 2 = mejor normal, 3 = mejor Super); el comentario de <c>MaisonBlock.cs</c> dice otra cosa y no se ha comprobado en partida (investigación §5).
-/// Tope «Máximo» 9999: la máscara de cuatro cifras de los formularios (<c>SAV_Trainer.Designer.cs:1410</c>). El tope del juego NO está confirmado.
-/// «Ir al jefe»: las Damas Batalla salen en el combate 20 del modo normal y en el 50 del Súper, en los cinco estilos (Bulbapedia, «Battle Maison», «on 20th / 50th consecutive battle»),
-/// y el juego deja interrumpir el reto tras cualquier combate sin perder la racha («The player may interrupt any challenge at any time»): racha 19 o 49. Consultado el 14-nov-2026.
+/// El orden de las casillas está verificado en el código de X (investigación §15): índice 0 = actual normal, 1 = actual Súper, 2 = récord normal, 3 = récord Súper, como en los
+/// formularios de PKHeX (<c>SAV_Trainer.cs:30-36</c>). La racha que lee el juego es <c>bloque + 0x1C0 + 8·estilo + 2·súper</c> (X <c>0x42fa5c</c>; el objeto del juego lleva 4 bytes
+/// de cabecera delante del bloque) y el récord, 4 bytes después (<c>0x42fb84</c>).
+/// Tope «Máximo» 9999: el del juego. Sumar una victoria (X <c>0x42f90c</c>) no pasa de 9999 y después sube el récord si la racha lo supera.
+/// «Ir al jefe»: verificado en el código. Al elegir rival (X <c>0x1d1b70</c>, Zafiro Alfa <c>0x1e5580</c>) el juego lee la racha actual de ese estilo y, si vale 49 en Súper o 19 en
+/// normal, saca a la Dama Batalla, en los cinco estilos. La racha se guarda tras cualquier combate, así que el combate siguiente es el 20.º o el 50.º.
 /// </summary>
 public sealed class Maison6 : InstalacionDesafio
 {
@@ -89,14 +92,15 @@ public sealed class Maison6 : InstalacionDesafio
 
 /// <summary>
 /// Árbol Batalla de Sol, Luna, Ultrasol y Ultraluna (<see cref="BattleTree7"/>): u16 en <c>8*tipo + 2*super + 4*récord</c> (<c>BattleTree7.GetStreakOffset</c>), tres tipos (Individual, Dobles, Multi; el cuarto no se usa).
-/// Tope «Máximo» 65535: el máximo de los formularios (<c>SAV_Trainer7.Designer.cs</c>, NUD_RCStreak*) y el de PKHeX en el Core (u16); el tope del juego NO está confirmado (investigación §6).
-/// «Ir al jefe»: Red (Individual), Blue (Dobles) o los dos (Multi) en el combate 20 del modo normal y en el 50 del Súper (Bulbapedia, «Battle Tree»: «On the 20th battle of normal
-/// challenges and the 50th battle of Super challenges, a Battle Legend will be challenged»), y se puede descansar tras cualquier combate sin perder la racha (Serebii): racha 19 o 49.
-/// Lo confirma en partida un usuario de Project Pokémon (hilo 43750: racha 29, 39 y 49 y ganar a mano los combates siguientes). Consultado el 14-nov-2026.
+/// Tope «Máximo» 9999: el del juego. <c>BattleInstSave::GetCountMax</c> devuelve 9999 (Sol <c>0x43afac</c>, Ultraluna <c>0x45072c</c>) y la suma de una victoria
+/// (Sol <c>0x43aef4</c>) no pasa de ahí; después sube el récord si la racha lo supera. Los formularios de PKHeX dejan 65535 (u16), un valor al que el juego nunca llega (investigación §14).
+/// «Ir al jefe»: verificado en el código (investigación §14). <c>BattleInst::SelectTrainer</c> (Sol <c>0x158070</c>) lee la racha actual guardada de ese tipo y rango
+/// (<c>GetWinCount</c>, la de PKHeX con <c>max = false</c>): con 19 en normal sale Red (Individual), Blue (Dobles) o los dos (Multi); con 49 en Súper, igual. Ultraluna compara
+/// los mismos 19 y 49 (<c>0x159f1c</c>/<c>0x159f30</c>). La racha se guarda tras cualquier combate, así que el combate siguiente es el 20.º o el 50.º.
 /// </summary>
 public sealed class Arbol7 : InstalacionDesafio
 {
-    public const int Tope = ushort.MaxValue;
+    public const int Tope = 9999;
     public static Arbol7 Instancia { get; } = new();
     private Arbol7() : base("arbol7", Textos.Doble("inst.7.arbol"), Textos.Doble("juego.gen7")) { }
 
@@ -130,17 +134,27 @@ public sealed class Arbol7 : InstalacionDesafio
 }
 
 /// <summary>
-/// Torre Batalla de Espada y Escudo: racha y victorias de Individual y Dobles (bloques por clave de <see cref="SaveBlockAccessor8SWSH"/>).
-/// Tope «Máximo»: racha 300 (comentario de <c>SaveBlockAccessor8SWSH.cs:216-217</c> y <c>SAV_Trainer8.cs:138-139</c>: es un tope de PKHeX; que lo imponga el juego NO está confirmado, investigación §7.1) y victorias 9.999.999 (<c>SaveBlockAccessor8SWSH.cs:214-215</c>, <c>SAV_Trainer8.cs:134-135</c>).
-/// Las victorias también se guardan en el registro del jugador (<c>SAV_Trainer8.cs:141-142</c>): se mantienen en paso.
-/// «Ir al jefe»: Leon sale en el último combate antes de subir de nivel y, en la Master Ball, cada diez victorias (Bulbapedia, «Battle Tower (Galar)»): va por rango, no por la racha. No se ofrece.
+/// Torre Batalla de Espada y Escudo: puntos de torre, racha y victorias de Individual y Dobles (bloques por clave de <see cref="SaveBlockAccessor8SWSH"/>).
+/// Los puntos de torre <c>r</c> (byte, 0..33; individuales <c>0x439116A4</c>, dobles <c>0xEE7B2ABD</c>) deciden la bola y el jefe; a su lado, el máximo alcanzado (<c>0xCE4AC6FA</c>/<c>0x29E026C7</c>)
+/// y el contador de victorias en la Master Ball (<c>0x0E411743</c>/<c>0xE2950DA8</c>, cuenta de 1 a 10). PKHeX no los expone: se leen por su clave (investigación §12).
+/// Topes «Máximo»: puntos y máximo 33, racha 300 y victorias 9.999.999 (los del código del juego, §12). Las victorias también se guardan en el registro del jugador (<c>SAV_Trainer8.cs:141-142</c>): se mantienen en paso.
+/// «Ir al jefe»: verificado en el código (§12). <c>IsNextTowerBossBattle</c> es verdadero con <c>r</c> = 5, 14, 26 y 32 y, en la Master Ball (<c>r</c> = 33), con el contador a 10. La racha y las
+/// victorias no las lee. Plata = el siguiente jefe de subida de bola (5, 14 o 26), sin bajar nunca los puntos; oro = el paso a la Master Ball (32); repetido = el de cada diez victorias en la Master Ball.
+/// Comprobado jugando en Eden con la partida autorizada de Espada (15-nov-2026, informe emulador-torres8): con <c>r</c> = 5 y con <c>r</c> = 33 y el contador a 10 el primer
+/// combate es contra Leon («Lionel» en español); con <c>r</c> = 8, un entrenador normal.
 /// </summary>
 public sealed class Torre8 : InstalacionDesafio
 {
-    internal override PlanJefe Planificar(SaveFile sav, ModoDesafio modo, JefeDesafio jefe) => PlanJefe.No("motivo.por_rango_galar");
-
     public const int RachaTope = 300;
     public const uint VictoriasTope = 9_999_999;
+    /// <summary>Puntos de torre de la Master Ball: el tope del juego.</summary>
+    public const int PuntosTope = 33;
+    /// <summary>Puntos con los que el combate siguiente es el de un jefe de subida de bola (<c>IsNextTowerBossBattle</c>).</summary>
+    public static IReadOnlyList<int> PuntosJefePlata { get; } = [5, 14, 26];
+    public const int PuntosJefeOro = 32;
+    /// <summary>En la Master Ball, el jefe sale cuando el contador llega a 10.</summary>
+    public const int ContadorJefeMaster = 10;
+
     public static Torre8 Instancia { get; } = new();
     private Torre8() : base("torre8", Textos.Doble("inst.8.torre"), Textos.Doble("juego.swsh")) { }
 
@@ -150,13 +164,19 @@ public sealed class Torre8 : InstalacionDesafio
 
     public override IReadOnlyList<ModoDesafio> Modos(SaveFile sav) => _modos ??=
     [
-        Crear("individual", SaveBlockAccessor8SWSH.KBattleTowerSinglesStreak, SaveBlockAccessor8SWSH.KBattleTowerSinglesVictory, RecordLists.G8BattleTowerSingleWin),
-        Crear("dobles", SaveBlockAccessor8SWSH.KBattleTowerDoublesStreak, SaveBlockAccessor8SWSH.KBattleTowerDoublesVictory, RecordLists.G8BattleTowerDoubleWin),
+        Crear("individual", SaveBlockAccessor8SWSH.KBattleTowerSinglesStreak, SaveBlockAccessor8SWSH.KBattleTowerSinglesVictory, RecordLists.G8BattleTowerSingleWin, 0x439116A4, 0xCE4AC6FA, 0x0E411743),
+        Crear("dobles", SaveBlockAccessor8SWSH.KBattleTowerDoublesStreak, SaveBlockAccessor8SWSH.KBattleTowerDoublesVictory, RecordLists.G8BattleTowerDoubleWin, 0xEE7B2ABD, 0x29E026C7, 0xE2950DA8),
     ];
 
-    private static ModoDesafio Crear(string clave, uint claveRacha, uint claveVictorias, int registro) =>
+    private static CampoDesafio Byte(string clave, string claveTexto, long? tope, uint bloque) =>
+        Campo(clave, claveTexto, RolCampo.Otro, tope, s => ((SAV8SWSH)s).GetValue<byte>(bloque), (s, v) => ((SAV8SWSH)s).SetValue(bloque, (byte)Math.Clamp(v, 0, tope ?? byte.MaxValue)));
+
+    private static ModoDesafio Crear(string clave, uint claveRacha, uint claveVictorias, int registro, uint clavePuntos, uint claveMaximo, uint claveContador) =>
         new(clave, Textos.Doble("modo." + clave), NivelDesafio.NoAplica,
         [
+            Byte("puntos", "campo.puntos_torre", PuntosTope, clavePuntos),
+            Byte("puntos_max", "campo.puntos_torre_max", PuntosTope, claveMaximo),
+            Byte("contador_master", "campo.contador_master", null, claveContador),
             Campo("actual", "campo.racha_actual", RolCampo.RachaActual, RachaTope, s => ((SAV8SWSH)s).GetValue<ushort>(claveRacha), (s, v) => ((SAV8SWSH)s).SetValue(claveRacha, (ushort)Math.Clamp(v, 0, ushort.MaxValue))),
             Campo("victorias", "campo.victorias", RolCampo.Otro, VictoriasTope, s => ((SAV8SWSH)s).GetValue<uint>(claveVictorias),
                 (s, v) =>
@@ -167,27 +187,66 @@ public sealed class Torre8 : InstalacionDesafio
                     sav.SetRecord(registro, (int)valor);
                 }),
         ]);
+
+    internal override PlanJefe Planificar(SaveFile sav, ModoDesafio modo, JefeDesafio jefe)
+    {
+        var r = (int)modo.Campo("puntos").Leer(sav);
+        int destino, contador = 0;
+        switch (jefe)
+        {
+            case JefeDesafio.Plata:
+                var siguiente = PuntosJefePlata.FirstOrDefault(p => p >= r);
+                if (siguiente == 0)
+                    return PlanJefe.No("motivo.galar_plata_pasada");
+                destino = siguiente;
+                break;
+            case JefeDesafio.Oro:
+                if (r > PuntosJefeOro)
+                    return PlanJefe.No("motivo.galar_ya_en_master");
+                destino = PuntosJefeOro;
+                break;
+            default:
+                destino = PuntosTope;
+                contador = ContadorJefeMaster;
+                break;
+        }
+        var valores = new Dictionary<string, long>
+        {
+            ["puntos"] = destino,
+            ["puntos_max"] = Math.Max(modo.Campo("puntos_max").Leer(sav), destino),
+            ["contador_master"] = contador,
+            // El jefe no las lee; se dejan coherentes con los puntos (cada victoria suma 1 a todo, §12).
+            ["actual"] = Math.Max(modo.Campo("actual").Leer(sav), destino),
+            ["victorias"] = Math.Max(modo.Campo("victorias").Leer(sav), destino),
+        };
+        return PlanJefe.Si(jefe, valores, "explic.galar_por_puntos");
+    }
 }
 
 /// <summary>
-/// Torre Batalla de Diamante Brillante y Perla Reluciente (<see cref="BattleTowerWork8b"/>): cuatro clases con racha actual (<c>RenshouCount</c>), racha anterior (<c>RenshouCountOld</c>, hace de «récord»), victorias totales y rango,
-/// más dos datos generales (<c>MasterRankMax</c> y <c>ChallengeCount</c>).
-/// «Máximo»: racha, racha anterior y victorias totales a 9999 por ANALOGÍA con la Torre de HGSS/Platino (el original de DBPR guarda 9999 como tope, investigación §3.4); el Core las guarda como u32 sin tope y el del juego NO está confirmado (investigación §7.2).
-/// El rango, <c>MasterRankMax</c> y <c>ChallengeCount</c> se pueden leer y escribir pero «Máximo» NO los toca: no se conoce su escala (investigación §7.2, «interacción con Rank»).
-/// «Ir al jefe»: en DBPR el jefe del 7.º combate de la Clase Maestra lo decide el rango (rango 10: Palmer en Individual, Barry y Palmer en Dobles; Bulbapedia, «Battle Tower (Sinnoh)»),
-/// no la racha. El Core no dice qué clase es cada una de las cuatro, así que no se ofrece: el rango se puede editar a mano en el modo.
+/// Torre Batalla de Diamante Brillante y Perla Reluciente (<see cref="BattleTowerWork8b"/>): cuatro clases con racha actual (<c>RenshouCount</c>), racha anterior (<c>RenshouCountOld</c>), victorias totales,
+/// rango, ronda (<c>tower_round</c>, +0x18, no la expone PKHeX) y partida suspendida (<c>suspension_flag</c>, +0x01), más dos datos generales (<c>MasterRankMax</c> y <c>ChallengeCount</c>).
+/// «Máximo»: racha, racha anterior y victorias a 9999, el <c>MAX_WIN_COUNT</c> del código del juego (investigación §12). Rango, ronda, suspensión, <c>MasterRankMax</c> y <c>ChallengeCount</c> no los toca.
+/// «Ir al jefe»: el script <c>ev_tower_rooms_if_leader_battle</c> saca a Palmer en el modo 0 (Individual normal) cuando <c>renshou_cnt</c> vale 20 o 48 (VERIFICADO, §12), y la tabla de rivales tiene su fila
+/// en el rango 3 y el 7, ronda 7. Pokekeep deja la clase como al volver al vestíbulo tras ganar dos series (rango 3, racha 14) o seis (rango 7, racha 42), ronda 0 y sin suspender: así el séptimo
+/// combate de la serie siguiente es el de Palmer sin tocar el estado de una partida suspendida. Comprobado jugando en Eden con la partida autorizada (15-nov-2026, informe emulador-dbpr): con este estado, seis rivales normales y Palmer
+/// en el 7.º combate de Individual normal; con la racha en 19 el siguiente rival es normal y el de después, Palmer.
 /// </summary>
 public sealed class Torre8b : InstalacionDesafio
 {
-    internal override PlanJefe Planificar(SaveFile sav, ModoDesafio modo, JefeDesafio jefe) => PlanJefe.No("motivo.por_rango_dbpr");
-
     public const int Tope = 9999;
+    /// <summary>Bandera de evento <c>FE_BTLTW_N_SINGLE_SUSPENSION</c> (Individual normal suspendida), la que mira el vestíbulo para ofrecer «continuar».</summary>
+    public const int BanderaSuspensionIndividual = 1421;
+    private const int InicioClases = 20;
+
     public static Torre8b Instancia { get; } = new();
     private Torre8b() : base("torre8b", Textos.Doble("inst.8b.torre"), Textos.Doble("juego.bdsp")) { }
 
     public override bool Aplica(SaveFile sav) => sav is SAV8BS;
 
     private ModoDesafio[]? _modos;
+
+    private static Span<byte> Bruto(SaveFile s, int idx) => ((SAV8BS)s).BattleTower.Data.Slice(InicioClases + (idx * BattleTowerClassData8b.SIZE), BattleTowerClassData8b.SIZE);
 
     public override IReadOnlyList<ModoDesafio> Modos(SaveFile sav)
     {
@@ -204,6 +263,15 @@ public sealed class Torre8b : InstalacionDesafio
                 Campo("record", "campo.racha_anterior", RolCampo.Record, Tope, s => Cl(s, c).RenshouCountOld, (s, v) => Cl(s, c).RenshouCountOld = (uint)Math.Clamp(v, 0, uint.MaxValue)),
                 Campo("victorias", "campo.victorias", RolCampo.Otro, Tope, s => Cl(s, c).TotalWins, (s, v) => Cl(s, c).TotalWins = (uint)Math.Clamp(v, 0, uint.MaxValue)),
                 Campo("rango", "campo.rango", RolCampo.Otro, null, s => Cl(s, c).Rank, (s, v) => Cl(s, c).Rank = (uint)Math.Clamp(v, 0, uint.MaxValue)),
+                Campo("ronda", "campo.ronda", RolCampo.Otro, null, s => BinaryPrimitives.ReadUInt32LittleEndian(Bruto(s, c)[0x18..]),
+                    (s, v) => BinaryPrimitives.WriteUInt32LittleEndian(Bruto(s, c)[0x18..], (uint)Math.Clamp(v, 0, 10))),
+                Campo("suspendida", "campo.suspendida", RolCampo.Bandera, null, s => Bruto(s, c)[0x01],
+                    (s, v) =>
+                    {
+                        Bruto(s, c)[0x01] = v != 0 ? (byte)1 : (byte)0;
+                        if (c == 0)
+                            ((SAV8BS)s).FlagWork.SetFlag(BanderaSuspensionIndividual, v != 0);
+                    }),
             ]));
         }
         lista.Add(new ModoDesafio("general", Textos.Doble("modo.general"), NivelDesafio.NoAplica,
@@ -212,6 +280,26 @@ public sealed class Torre8b : InstalacionDesafio
             Campo("retos", "campo.retos", RolCampo.Otro, null, s => ((SAV8BS)s).BattleTower.ChallengeCount, (s, v) => ((SAV8BS)s).BattleTower.ChallengeCount = (uint)Math.Clamp(v, 0, uint.MaxValue)),
         ]));
         return _modos = [.. lista];
+    }
+
+    internal override PlanJefe Planificar(SaveFile sav, ModoDesafio modo, JefeDesafio jefe)
+    {
+        if (modo.Clave != "clase1")
+            return PlanJefe.No(modo.Clave == "general" ? "motivo.dbpr_general_sin_jefe" : "motivo.dbpr_solo_individual_normal");
+        if (jefe == JefeDesafio.Repetido)
+            return PlanJefe.No("motivo.dbpr_maestra_sin_comprobar");
+        var (rango, racha) = jefe == JefeDesafio.Oro ? (7, 42) : (3, 14);
+        if (modo.Campo("rango").Leer(sav) > rango)
+            return PlanJefe.No(jefe == JefeDesafio.Oro ? "motivo.dbpr_oro_pasado" : "motivo.dbpr_plata_pasada");
+        var valores = new Dictionary<string, long>
+        {
+            ["rango"] = rango,
+            ["actual"] = racha,
+            ["ronda"] = 0,
+            ["suspendida"] = 0,
+            ["victorias"] = Math.Max(modo.Campo("victorias").Leer(sav), racha),
+        };
+        return PlanJefe.Si(jefe, valores, "explic.dbpr_palmer");
     }
 }
 
@@ -252,19 +340,24 @@ public sealed class ColinaEntrenador3 : InstalacionDesafio
 }
 
 /// <summary>
-/// Royale Infinita de Z-A: lo que tiene nombre en el Core. <see cref="InfiniteRoyale9a"/> (<c>Wins</c> y <c>PrizeMedals</c>; <c>Value0/1/4/5</c> no tienen nombre y no se tocan) y los puntos de entrada de las dos Royales
+/// Royale Infinita de Z-A: lo que tiene nombre en el Core. <see cref="InfiniteRoyale9a"/> (<c>Wins</c> y <c>PrizeMedals</c>; <c>Value0/1</c> son el contador de identificadores de carta, <c>Value4</c> una bandera y <c>Value5</c> relleno; investigación §12.3, y no se tocan) y los puntos de entrada de las dos Royales
 /// (<c>SAV9ZA.TicketPointsRoyale</c> y <c>TicketPointsRoyaleInfinite</c>).
-/// Topes de «Máximo»: puntos 310.000 (Royale) y 50.000 (infinita), los de los botones de PKHeX (<c>SAV_Trainer9a.cs:28-29</c>). <c>Wins</c> y <c>PrizeMedals</c> son u32 sin tope en el Core ni en ninguna otra fuente (investigación §8, NO CONFIRMADO):
-/// se pueden leer y escribir, pero «Máximo» NO los toca. «Ir al jefe» (Taunie/Urbain tras la 15.ª partida de recompensa): no se sabe si <c>Wins</c> es esa cuenta; no se ofrece.
+/// Topes de «Máximo»: puntos 310.000 (Royale) y 50.000 (infinita), los de los botones de PKHeX (<c>SAV_Trainer9a.cs:28-29</c>). <c>Wins</c> 99 y <c>PrizeMedals</c> 9999, los del código de Z-A
+/// (investigación §12.3): <c>Wins</c> son las victorias de la sesión de Royale, que el juego acota a 99 (setter <c>0x48ace0</c>), y las medallas, a <c>medal_stock_max</c> (<c>AddMedals</c> <c>0xb3b42c</c>).
+/// «Ir al jefe»: no aplica. El combate de Taunie/Urbain depende de la fase de la historia (<c>SYS_WORK_PHASE</c>) y de la cuenta de combates de recompensa, no de una racha (§12.3).
 /// </summary>
 public sealed class Royale9a : InstalacionDesafio
 {
     public const uint PuntosRoyaleTope = 310_000;
     public const uint PuntosInfinitaTope = 50_000;
+    public const uint VictoriasTope = 99;
+    public const uint MedallasTope = 9999;
     public static Royale9a Instancia { get; } = new();
     private Royale9a() : base("royale9a", Textos.Doble("inst.9a.royale"), Textos.Doble("juego.za")) { }
 
     public override bool Aplica(SaveFile sav) => sav is SAV9ZA;
+
+    internal override PlanJefe Planificar(SaveFile sav, ModoDesafio modo, JefeDesafio jefe) => PlanJefe.No("motivo.royale_por_historia");
 
     private ModoDesafio[]? _modos;
 
@@ -272,8 +365,8 @@ public sealed class Royale9a : InstalacionDesafio
     [
         new ModoDesafio("infinita", Textos.Doble("modo.royale_infinita"), NivelDesafio.NoAplica,
         [
-            Campo("victorias", "campo.victorias", RolCampo.RachaActual, null, s => ((SAV9ZA)s).InfiniteRoyale.Wins, (s, v) => ((SAV9ZA)s).InfiniteRoyale.Wins = (uint)Math.Clamp(v, 0, uint.MaxValue)),
-            Campo("medallas_premio", "campo.medallas_premio", RolCampo.Otro, null, s => ((SAV9ZA)s).InfiniteRoyale.PrizeMedals, (s, v) => ((SAV9ZA)s).InfiniteRoyale.PrizeMedals = (uint)Math.Clamp(v, 0, uint.MaxValue)),
+            Campo("victorias", "campo.victorias", RolCampo.RachaActual, VictoriasTope, s => ((SAV9ZA)s).InfiniteRoyale.Wins, (s, v) => ((SAV9ZA)s).InfiniteRoyale.Wins = (uint)Math.Clamp(v, 0, VictoriasTope)),
+            Campo("medallas_premio", "campo.medallas_premio", RolCampo.Otro, MedallasTope, s => ((SAV9ZA)s).InfiniteRoyale.PrizeMedals, (s, v) => ((SAV9ZA)s).InfiniteRoyale.PrizeMedals = (uint)Math.Clamp(v, 0, MedallasTope)),
             Campo("puntos", "campo.puntos_entrada", RolCampo.Otro, PuntosInfinitaTope, s => ((SAV9ZA)s).TicketPointsRoyaleInfinite, (s, v) => ((SAV9ZA)s).TicketPointsRoyaleInfinite = (uint)Math.Clamp(v, 0, uint.MaxValue)),
         ]),
         new ModoDesafio("normal", Textos.Doble("modo.royale"), NivelDesafio.NoAplica,

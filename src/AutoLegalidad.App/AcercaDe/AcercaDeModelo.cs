@@ -42,6 +42,12 @@ public static class AcercaDeModelo
 
     /// <summary>De la más reciente a la más antigua. Resumido de <c>bitacora.md</c>; cada versión con su fecha real de publicación.</summary>
     public static IReadOnlyList<NovedadVersion> Novedades => [
+        new("1.1.2", FechaVisible("15-nov-2026"), AppIdioma.T("Android: editar la partida ya no pide «Aplicar» a cada cambio.", "Android: editing the save no longer asks you to “Apply” every change."),
+        [
+            AppIdioma.T("Sin la barra «campos cambiados sin aplicar» ni las preguntas «¿Hacer?» y «¿Salir sin aplicar?». Lo que cambias se escribe al salir del editor, al pulsar una acción o al guardar, y el aviso que sale lleva «Deshacer».", "No more “fields changed, not applied” bar and no more “Do it?” or “Leave without applying?” questions. Your changes are written when you leave the editor, press an action or save, and the message that follows has “Undo”."),
+            AppIdioma.T("El editor del Pokémon sigue igual: «Aplicar» lo mete en su casilla, como en PKHeX.", "The Pokémon editor is unchanged: “Apply” puts it in its slot, as in PKHeX."),
+            AppIdioma.T("Desafíos: «Ir al jefe» en las Torres Batalla de Espada y Escudo y de Diamante Brillante y Perla Reluciente, con los números del código del juego. El Árbol Batalla se queda en 9999 con «Máximo».", "Challenges: “Go to the boss” in the Sword and Shield and Brilliant Diamond and Shining Pearl Battle Towers, with numbers from the game code. “Max” leaves the Battle Tree at 9999."),
+        ]),
         new("1.1.1", FechaVisible("15-nov-2026"), AppIdioma.T("«Añadir evento» ya enseña los eventos.", "“Add event” now shows the events."),
         [
             AppIdioma.T("La 1.1.0 llevaba en el APK y en el ZIP un catálogo anterior a «Añadir evento», y la lista salía vacía en todos los juegos. Ahora va el catálogo actual, con las tarjetas de Regalo Misterioso de Gen 4 en todos los juegos que las reciben.", "1.1.0 shipped an older catalog in the APK and the ZIP, from before “Add event”, so the list was empty in every game. Both now carry the current catalog, with Gen 4 Mystery Gift cards in every game that can receive them."),

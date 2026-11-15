@@ -11,6 +11,7 @@ public sealed partial class ShellViewModel
     private async Task<bool> CambiarRanuraBr(int ranura)
     {
         if (Sesion?.Guardado is not SAV4BR br || ranura == br.CurrentSlot) return false;
+        if (!AplicarBorradoresPartida()) return false;   // R-015: lo pendiente de la partida se aplica solo
         if (BorradoresSinAplicar() is { Length: > 0 } borradores)
         {
             Informar(IdiomaInterfaz.F("Shell.AplicaDescartaPrimeroCambios", borradores), "aviso", "CircleAlert");

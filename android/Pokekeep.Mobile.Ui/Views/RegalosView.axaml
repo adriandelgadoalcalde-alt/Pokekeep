@@ -86,19 +86,6 @@
       </ListBox.DataTemplates>
     </ListBox>
 
-    <!-- Cambios sin aplicar: siempre a mano -->
-    <Border Grid.Row="1" Name="BarraAcciones" Classes="tarjeta-pendiente" Padding="12" Margin="0,4,0,0" IsVisible="{Binding HayCambios}">
-      <StackPanel Spacing="8">
-        <TextBlock Text="{Binding TextoCambios}" FontWeight="Bold" TextWrapping="Wrap" AutomationProperties.HelpText="{DynamicResource Loc.Regalos.EscribenAplicarLuegoPueden}" />
-        <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
-          <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding DescartarCommand}" AutomationProperties.Name="{DynamicResource Loc.Regalos.DescartarCambiosRegalos}" AutomationProperties.HelpText="{DynamicResource Loc.Regalos.VuelveLeerRegalosPartida}">
-            <TextBlock Text="{DynamicResource Loc.CompletarJuego.Descartar}" TextAlignment="Center" />
-          </Button>
-          <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding AplicarCommand}" AutomationProperties.Name="{DynamicResource Loc.Regalos.AplicarRegalosPartida}" AutomationProperties.HelpText="{DynamicResource Loc.Eventos.EscribeCambiosPartidaAbierta}">
-            <TextBlock Text="{DynamicResource Loc.Editor.Aplicar}" TextAlignment="Center" />
-          </Button>
-        </d:RejillaSinPartir>
-      </StackPanel>
-    </Border>
+    <!-- R-015 (15-nov-2026): sin barra de «cambios sin aplicar»; se aplica solo al salir, con «Deshacer» en el aviso. -->
   </Grid>
 </UserControl>

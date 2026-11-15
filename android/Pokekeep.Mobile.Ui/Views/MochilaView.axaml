@@ -102,19 +102,6 @@
       </ListBox.DataTemplates>
     </ListBox>
 
-    <!-- Cambios sin aplicar: siempre a mano, aunque la lista este desplazada -->
-    <Border Grid.Row="1" Name="BarraAcciones" Classes="tarjeta-pendiente" Padding="12" Margin="0,4,0,0" IsVisible="{Binding HayCambios}">
-      <StackPanel Spacing="8">
-        <TextBlock Text="{DynamicResource Loc.Mochila.Pendiente}" FontWeight="Bold" TextWrapping="Wrap" AutomationProperties.HelpText="{DynamicResource Loc.Mochila.PendienteAyuda}" />
-        <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
-          <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding DescartarCommand}" AutomationProperties.Name="{DynamicResource Loc.Mochila.DescartarNombre}" AutomationProperties.HelpText="{DynamicResource Loc.Mochila.DescartarAyuda}">
-            <TextBlock Text="{DynamicResource Loc.Mochila.Descartar}" TextAlignment="Center" />
-          </Button>
-          <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding AplicarCommand}" AutomationProperties.Name="{DynamicResource Loc.Mochila.AplicarNombre}" AutomationProperties.HelpText="{DynamicResource Loc.Mochila.AplicarAyuda}">
-            <TextBlock Text="{DynamicResource Loc.Mochila.Aplicar}" TextAlignment="Center" />
-          </Button>
-        </d:RejillaSinPartir>
-      </StackPanel>
-    </Border>
+    <!-- R-015 (15-nov-2026): sin barra de «cambios sin aplicar»; se aplica solo al salir, con «Deshacer» en el aviso. -->
   </Grid>
 </UserControl>

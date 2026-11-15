@@ -167,7 +167,12 @@ public sealed partial class MochilaViewModel : ObservableObject
     public bool EnPantalla
     {
         get => _enPantalla;
-        set { _enPantalla = value; if (value && _recargaPendiente) { _recargaPendiente = false; Recargar(); } }
+        set
+        {
+            // R-015 (15-nov-2026): al dejar la pestaña, lo cambiado se aplica solo (sin barra ni preguntas; el aviso lleva «Deshacer»).
+            if (_enPantalla && !value) AplicarPendientes();
+            _enPantalla = value; if (value && _recargaPendiente) { _recargaPendiente = false; Recargar(); }
+        }
     }
 
     /// <summary>Cambió el idioma de los datos (bloque 10-1): sin borrador se vuelven a leer los nombres (al momento si está a la vista, o al volver); un borrador sin aplicar no se pierde y toma los nombres nuevos al aplicarlo.</summary>
@@ -405,37 +410,40 @@ public sealed partial class MochilaViewModel : ObservableObject
         }, () => TextosCantidadTodos(b)));
     }
 
-    private static TextosConfirmarHoja TextosQuitar(BolsilloModelo b) => new(
-        IdiomaInterfaz.F("Mochila.QuitarTitulo", b.Titulo),
-        [IdiomaInterfaz.T("Mochila.QuitarParrafo"), IdiomaInterfaz.T("Mochila.AplicarParrafo")], IdiomaInterfaz.T("Mochila.QuitarTodos"));
-
+    /// <summary>R-015: sin preguntar; queda en el borrador, que se aplica al salir con «Deshacer» en el aviso.</summary>
     private void ConfirmarQuitarTodos(BolsilloModelo b)
     {
-        var t = TextosQuitar(b);
-        _abrirHoja(new ConfirmarHojaViewModel(t.Titulo, t.Parrafos, t.Confirmar, () =>
-        {
-            Modelo.QuitarTodos(b); Rellenar();
-        }, destructiva: true, actualizarTextos: () => TextosQuitar(b)));
+        Modelo.QuitarTodos(b); Rellenar();
+        _informar(IdiomaInterfaz.F("Mochila.Quitado", b.Titulo), "ok", "CircleCheck", null, null);
     }
+
+    /// <summary>R-015: el «Deshacer» de la partida para el aviso de aplicado (lo pone la Shell).</summary>
+    public Func<ICommand?>? Deshacer { get; init; }
 
     // ---- Aplicar / descartar ----
     [RelayCommand]
-    private void Aplicar()
+    private void Aplicar() => AplicarPendientes();
+
+    /// <summary>R-015: aplica el borrador si lo hay, sin preguntar. False solo si el juego lo rechaza (el borrador se conserva).</summary>
+    public bool AplicarPendientes()
     {
-        if (!Modelo.HayCambios) return;
+        if (!Modelo.HayCambios) return true;
         _aplicando = true;
         try
         {
             var r = Modelo.Aplicar();
             _huellaPartida = HuellaDe(_sesion);
             Rellenar();
+            var deshacer = Deshacer?.Invoke();
             if (r.SinCambios) _informar(IdiomaInterfaz.T("Mochila.YaEraAsi"), "aviso", "Info", null, null);
-            else _informar(IdiomaInterfaz.T("Mochila.Aplicada"), "ok", "CircleCheck", null, null);
+            else _informar(IdiomaInterfaz.T("Mochila.Aplicada"), "ok", "CircleCheck", deshacer is null ? null : IdiomaInterfaz.T("SubeditorHoja.Deshacer"), deshacer);
+            return true;
         }
         catch (Exception ex) when (ex is ArgumentException or InvalidOperationException or IndexOutOfRangeException or FormatException or OverflowException or KeyNotFoundException or NotSupportedException)
         {
             // El historial ya ha devuelto la partida a como estaba; el borrador se conserva para que el usuario lo corrija o lo descarte.
             _informar(IdiomaInterfaz.F("Mochila.NoAdmitido", ex.Message), "error", "TriangleAlert", null, null);
+            return false;
         }
         finally { _aplicando = false; }
     }

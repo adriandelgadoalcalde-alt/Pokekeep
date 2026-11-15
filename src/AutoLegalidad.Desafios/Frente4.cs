@@ -18,7 +18,10 @@ namespace AutoLegalidad.Desafios;
 /// Castillo y Arcade 14 / 42 (<c>battle_castle_helpers.c:52-62</c>, <c>battle_arcade_helpers.c:49-59</c>; la ronda es racha / 7 y la racha solo se carga con la bandera de racha activa: <c>battle_castle.c:79-92</c>, <c>battle_arcade.c:278-284</c>, leído el 14-nov-2026). HGSS Arcade 14 / 42 (<c>pokeheartgold frontier_cmd_arcade.c:405-413</c>).</item>
 /// <item>Jefes de HGSS (pokeheartgold 6bf138d, leído el 14-nov-2026): Torre Palmer solo en Individual, en el 7.º combate de la ronda 2 (plata) o 6 (oro) (<c>src/unk_0204B538.c:214-223</c>); la ronda y la racha se cargan del guardado solo con la bandera de continuar (<c>src/unk_0204A3F4.c:280-292</c>), que es el bit <c>modo+8</c> del u16 en +8 y las rondas en +0xA+2·modo (<c>asm/unk_0202D230.s:549-630</c>), es decir, la bandera y el contador de la tabla BFF. Fábrica Thorton (entrenadores 0x135/0x136) y Castillo Darach (0x139/0x13A) cuando <c>7·ronda + combate + 1</c> es 21 o 49 en Individual (<c>asm/overlay_80_02236B78.s:9-27</c>, <c>asm/overlay_80_02237A70.s:9-27</c>), con ronda = racha / 7 (<c>overlay_80_0222FD08.s:60-100,190-196</c>; <c>overlay_80_022324C4.s:168-172,259-264</c>): N = 14 / 42. Sala Argenta (0x133/0x134) cuando <c>10·ronda + combate + 1</c> es 50 o 170 (<c>overlay_80_022372D8.s:77-96</c>), con ronda = racha / 10 (<c>overlay_80_022310C4.s:280-286</c>): N = 40 / 160. Números de entrenador cotejados con <c>pokeplatinum generated/frontier_trainers.txt:306-315</c>.</item>
 /// <item>Cada jefe sale una vez en plata y una en oro: no hay repetición (§3.1).</item>
-/// <item>Sin base verificada (devuelve «sin comprobar en el juego»): la Torre de DP (pokediamond no trae su código, §3.3).</item>
+/// <item>Torre de DP, leída en el binario de Diamante (ES, Rev 5; desensamblado el 15-nov-2026, investigación §13): el rival lo elige la función del overlay 6 en <c>0x2244894</c>, que devuelve
+/// 305 (Palmer plata) en Individual con ronda 2 y 7.º rival, y 306 (oro) con ronda 6, junto a las mismas tablas de rivales que Platino (<c>ov6 0x2250d78</c> y <c>0x2250d98</c>, 16/16 valores iguales).
+/// Al abrir el reto (<c>ov6 0x224373c-0x2243784</c>) la racha solo se carga con el bit <c>8+modo</c> de las banderas del registro, y el contador de rondas se lee siempre. En el registro, las banderas están
+/// en <c>+8</c> (<c>arm9 0x202a5c4</c>) y las rondas en <c>+0xC + 2·modo</c> (<c>arm9 0x202a584</c>; en Platino, <c>+0xA</c>): de ahí el contador en la bandera + 3 de la tabla BFF de DP.</item>
 /// </list>
 /// </summary>
 public sealed class Frente4 : InstalacionDesafio
@@ -42,7 +45,7 @@ public sealed class Frente4 : InstalacionDesafio
     // Tabla BFF de SAV_Misc4.cs:52-77: [direccion, zancada, byte de banderas]. Modos de la Torre: BFT[1] (5); el resto: BFT[0] (3). El Arcade solo tiene Individual (stride 4 en PKHeX).
     private static readonly Def[] DefsDP =
     [
-        new("dp.torre", "inst.e.torre", Tipo.Torre, 0x5FCA, 0x04, 0x6601, 5, true, 14, 42, 2, 6), // Palmer en los combates 21 y 49 de Individual, como en Platino (Bulbapedia, «Battle Tower (Sinnoh)», cintas Habilidad y Gran Habilidad; consultado el 14-nov-2026)
+        new("dp.torre", "inst.e.torre", Tipo.Torre, 0x5FCA, 0x04, 0x6601, 5, true, 14, 42, 2, 6), // Palmer en los combates 21 y 49 de Individual: código de Diamante (ov6 0x2244894, rondas 2 y 6), como en Platino; ver la cabecera
     ];
 
     private static readonly Def[] DefsPt =

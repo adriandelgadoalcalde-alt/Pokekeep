@@ -141,9 +141,9 @@ public sealed partial class GoParkViewModel : ObservableObject
 
     public void Vaciar(int indice) { Modelo.Vaciar(indice); Rellenar(); }
 
+    /// <summary>R-015 (ADR 0107): una acción se hace al pulsarla, sin «¿Vaciar?»; se aplica en el momento y el aviso lleva «Deshacer».</summary>
     [RelayCommand]
-    private void VaciarTodo()
-        => _abrirHoja(new ConfirmarHojaViewModel(IdiomaInterfaz.T("GoPark.VaciarParqueGO"), [IdiomaInterfaz.T("GoPark.VaciaranHuecosParqueGO"), IdiomaInterfaz.T("GoPark.CambiosEscribenHastaApliques")], IdiomaInterfaz.T("GoPark.VaciarTodo"), () => { Modelo.VaciarTodo(); Rellenar(); }, destructiva: true));
+    private void VaciarTodo() { Modelo.VaciarTodo(); Rellenar(); AplicarPendientes(); }
 
     [RelayCommand]
     private async Task CopiarResumen()
@@ -156,28 +156,37 @@ public sealed partial class GoParkViewModel : ObservableObject
         _informar(ok ? IdiomaInterfaz.T("Eventos.ResumenCopiadoPortapapeles") : IdiomaInterfaz.T("Eventos.PodidoCopiarPortapapeles"), ok ? "ok" : "error", ok ? "CircleCheck" : "TriangleAlert", null, null);
     }
 
+    /// <summary>R-015: el «Deshacer» de la partida para el aviso de aplicado (lo pone PartidaViewModel).</summary>
+    public Func<ICommand?>? Deshacer { get; init; }
+    private ICommand? CmdDeshacer => Deshacer?.Invoke();
+    private string? TextoDeshacer => CmdDeshacer is null ? null : IdiomaInterfaz.T("SubeditorHoja.Deshacer");
+
     [RelayCommand]
-    private void Aplicar()
+    private void Aplicar() => AplicarPendientes();
+
+    /// <summary>R-015: aplica el borrador si lo hay. False solo si el juego lo rechaza (el borrador se conserva).</summary>
+    public bool AplicarPendientes()
     {
+        if (!Modelo.HayCambios) return true;
+        var ok = true;
         _aplicando = true;
-        try { if (Modelo.Aplicar().Aplicado) _informar(IdiomaInterfaz.T("GoPark.ParqueGOAplicadoPartida"), "ok", "CircleCheck", null, null); }
+        try { if (Modelo.Aplicar().Aplicado) _informar(IdiomaInterfaz.T("GoPark.ParqueGOAplicadoPartida"), "ok", "CircleCheck", TextoDeshacer, CmdDeshacer); }
         catch (Exception ex) when (ex is ArgumentException or InvalidOperationException or IndexOutOfRangeException or FormatException or OverflowException or KeyNotFoundException or NotSupportedException)
         {
+            ok = false;
             _informar(IdiomaInterfaz.F("Eventos.JuegoAdmitioCambioPartida", ex.Message), "error", "TriangleAlert", null, null);
         }
         finally { _aplicando = false; }
         Rellenar();
+        return ok;
     }
 
     [RelayCommand]
     private void Descartar() { Modelo.Descartar(); Rellenar(); _informar(IdiomaInterfaz.T("Form.Descartados"), "ok", "CircleCheck", null, null); }
 
+    /// <summary>Vuelve al menu de Partida aplicando antes lo cambiado (R-015, 15-nov-2026: sin preguntar; el aviso lleva «Deshacer»). Si el juego lo rechaza, se queda.</summary>
     [RelayCommand]
-    public void Volver()
-    {
-        if (!Modelo.HayCambios) { _volver(); return; }
-        _abrirHoja(new ConfirmarHojaViewModel(IdiomaInterfaz.T("Form.Salir.Titulo"), [IdiomaInterfaz.T("GoPark.HasCambiadoParqueGO"), IdiomaInterfaz.T("Form.Salir.Explicacion")], IdiomaInterfaz.T("Form.Salir.Confirmar"), _volver, destructiva: true, textoCancelar: IdiomaInterfaz.T("Form.Salir.Cancelar")));
-    }
+    public void Volver() { if (AplicarPendientes()) _volver(); }
 
     public bool Atras() { Volver(); return true; }
 }

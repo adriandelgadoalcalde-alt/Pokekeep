@@ -242,21 +242,33 @@ public sealed partial class RegalosViewModel : ObservableObject
     }
 
     // ---- Aplicar ----
+    /// <summary>R-015: el «Deshacer» de la partida para el aviso de aplicado (lo pone PartidaViewModel).</summary>
+    public Func<ICommand?>? Deshacer { get; init; }
+    private ICommand? CmdDeshacer => Deshacer?.Invoke();
+    private string? TextoDeshacer => CmdDeshacer is null ? null : IdiomaInterfaz.T("SubeditorHoja.Deshacer");
+
     [RelayCommand]
-    private void Aplicar()
+    private void Aplicar() => AplicarPendientes();
+
+    /// <summary>R-015: aplica el borrador si lo hay. False solo si el juego lo rechaza (el borrador se conserva).</summary>
+    public bool AplicarPendientes()
     {
+        if (!Modelo.HayCambios) return true;
+        var ok = true;
         _aplicando = true;
         try
         {
             var inf = Modelo.Aplicar();
-            if (inf.Aplicado) _informar(IdiomaInterfaz.T("Regalos.RegalosAplicadosPartidaPuedes"), "ok", "CircleCheck", null, null);
+            if (inf.Aplicado) _informar(IdiomaInterfaz.T("Regalos.RegalosAplicadosPartidaPuedes"), "ok", "CircleCheck", TextoDeshacer, CmdDeshacer);
         }
         catch (Exception ex) when (ex is ArgumentException or InvalidOperationException or IndexOutOfRangeException or FormatException or OverflowException or KeyNotFoundException or NotSupportedException)
         {
+            ok = false;
             _informar(IdiomaInterfaz.F("Eventos.JuegoAdmitioCambioPartida", ex.Message), "error", "TriangleAlert", null, null);
         }
         finally { _aplicando = false; }
         Reconstruir();
+        return ok;
     }
 
     [RelayCommand]
@@ -266,13 +278,9 @@ public sealed partial class RegalosViewModel : ObservableObject
         _informar(IdiomaInterfaz.T("Form.Descartados"), "ok", "CircleCheck", null, null);
     }
 
-    /// <summary>Vuelve al menu de Partida; con cambios sin aplicar pregunta antes.</summary>
+    /// <summary>Vuelve al menu de Partida aplicando antes lo cambiado (R-015, 15-nov-2026: sin preguntar; el aviso lleva «Deshacer»). Si el juego lo rechaza, se queda.</summary>
     [RelayCommand]
-    public void Volver()
-    {
-        if (!Modelo.HayCambios) { _volver(); return; }
-        _abrirHoja(new ConfirmarHojaViewModel(IdiomaInterfaz.T("Form.Salir.Titulo"), [IdiomaInterfaz.T("Regalos.HasCambiadoRegalosMisteriosos"), IdiomaInterfaz.T("Form.Salir.Explicacion")], IdiomaInterfaz.T("Form.Salir.Confirmar"), _volver, destructiva: true, textoCancelar: IdiomaInterfaz.T("Form.Salir.Cancelar")));
-    }
+    public void Volver() { if (AplicarPendientes()) _volver(); }
 
     public bool Atras() { Volver(); return true; }
 }

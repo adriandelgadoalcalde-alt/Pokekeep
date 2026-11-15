@@ -50,7 +50,7 @@ public sealed partial class PartidaViewModel
             return true;
         }
         if (HerramientasGuardado.Crear(id, _sesion.Guardado) is not { } def) return false;
-        Editor = new EditorPartidaViewModel(new ModeloEditorPartida(_sesion, def), () => Editor = null, _abrirHoja, _informar, _documentos, () => HerramientasGuardado.Crear(id, _sesion.Guardado));
+        Editor = new EditorPartidaViewModel(new ModeloEditorPartida(_sesion, def), () => Editor = null, _abrirHoja, _informar, _documentos, () => HerramientasGuardado.Crear(id, _sesion.Guardado), _deshacer);
         return true;
     }
 }

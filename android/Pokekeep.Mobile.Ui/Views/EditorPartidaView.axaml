@@ -55,19 +55,6 @@
       <v:ColeccionPView DataContext="{Binding Coleccion}" IsVisible="{Binding $parent[UserControl].((vm:EditorPartidaViewModel)DataContext).HayColeccion}" />
     </Panel>
 
-    <!-- Cambios sin aplicar: siempre a mano -->
-    <Border Grid.Row="2" Name="BarraAcciones" Classes="tarjeta-pendiente" Padding="12" Margin="0,4,0,0" IsVisible="{Binding HayCambios}">
-      <StackPanel Spacing="8">
-        <TextBlock Text="{Binding TextoCambios}" FontWeight="Bold" TextWrapping="Wrap" AutomationProperties.HelpText="{DynamicResource Loc.Form.Vista.EditorPartidaView.2}" />
-        <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
-          <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding DescartarCommand}" AutomationProperties.Name="{DynamicResource Loc.Form.Vista.EditorPartidaView.3}" AutomationProperties.HelpText="{DynamicResource Loc.Form.Vista.EditorPartidaView.4}">
-            <TextBlock Text="{DynamicResource Loc.Form.Vista.EditorPartidaView.5}" TextAlignment="Center" />
-          </Button>
-          <Button Classes="primario" HorizontalAlignment="Stretch" Command="{Binding AplicarCommand}" AutomationProperties.Name="{DynamicResource Loc.Form.Vista.EditorPartidaView.6}" AutomationProperties.HelpText="{DynamicResource Loc.Form.Vista.EditorPartidaView.7}">
-            <TextBlock Text="{DynamicResource Loc.Form.Vista.EditorPartidaView.8}" TextAlignment="Center" />
-          </Button>
-        </d:RejillaSinPartir>
-      </StackPanel>
-    </Border>
+    <!-- R-015 (15-nov-2026): sin barra de «cambios sin aplicar». Lo cambiado se escribe solo al salir, al pulsar una accion o antes de guardar, con un aviso que lleva «Deshacer». -->
   </Grid>
 </UserControl>

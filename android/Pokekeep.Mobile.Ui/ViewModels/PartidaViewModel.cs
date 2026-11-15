@@ -70,10 +70,12 @@ public sealed partial class PartidaViewModel : ObservableObject
     partial void OnTextoBorradoresChanged(string? value) => OnPropertyChanged(nameof(HayBorradores));
     public void ActualizarBorradores() => TextoBorradores = _borradores?.Invoke() is { } b ? IdiomaInterfaz.F("Partida.Borradores", b) : null;
     private readonly Action<string, string, string, string?, ICommand?> _informar;
+    /// <summary>R-015: el «Deshacer» de la partida (el mismo historial que las casillas) para los avisos de los editores que se aplican solos.</summary>
+    private readonly Func<ICommand?>? _deshacer;
 
-    public PartidaViewModel(SesionM? sesion, IReadOnlyList<EntradaMenu> accionesArchivo, ICommand? guardar, ICommand? exportar, Action<HojaViewModel> abrirHoja, Action<string, string, string, string?, ICommand?> informar, Func<Almacen.IAlmacenDocumentos?>? documentos = null, Func<IPortapapeles?>? portapapeles = null, Func<string?>? borradores = null)
+    public PartidaViewModel(SesionM? sesion, IReadOnlyList<EntradaMenu> accionesArchivo, ICommand? guardar, ICommand? exportar, Action<HojaViewModel> abrirHoja, Action<string, string, string, string?, ICommand?> informar, Func<Almacen.IAlmacenDocumentos?>? documentos = null, Func<IPortapapeles?>? portapapeles = null, Func<string?>? borradores = null, Func<ICommand?>? deshacer = null)
     {
-        _borradores = borradores;
+        _borradores = borradores; _deshacer = deshacer;
         _documentos = documentos ?? (() => null);
         _portapapeles = portapapeles ?? (() => null);
         _sesion = sesion; AccionesArchivo = accionesArchivo; GuardarCommand = guardar; ExportarCommand = exportar; _abrirHoja = abrirHoja; _informar = informar;
@@ -198,19 +200,19 @@ public sealed partial class PartidaViewModel : ObservableObject
         if (id == "gopark")
         {
             if (ModeloGoPark.NoAplica(_sesion.Guardado) is not null) { _informar(IdiomaInterfaz.T("Partida.Error.GoPark"), "aviso", "CircleAlert", null, null); return false; }
-            GoPark = new GoParkViewModel(_sesion, _documentos, _portapapeles, _abrirHoja, _informar, () => GoPark = null);
+            GoPark = new GoParkViewModel(_sesion, _documentos, _portapapeles, _abrirHoja, _informar, () => GoPark = null) { Deshacer = _deshacer };
             return true;
         }
         if (id == "eventos")
         {
             if (ModeloEventos.NoAplica(_sesion.Guardado) is not null) { _informar(IdiomaInterfaz.T("Partida.Error.Eventos"), "aviso", "CircleAlert", null, null); return false; }
-            Eventos = new EventosViewModel(_sesion, _documentos, _portapapeles, _abrirHoja, _informar, () => Eventos = null);
+            Eventos = new EventosViewModel(_sesion, _documentos, _portapapeles, _abrirHoja, _informar, () => Eventos = null) { Deshacer = _deshacer };
             return true;
         }
         if (id == "regalos")
         {
             if (ModeloRegalos.NoAplica(_sesion.Guardado) is not null) { _informar(IdiomaInterfaz.T("Partida.Error.Regalos"), "aviso", "CircleAlert", null, null); return false; }
-            Regalos = new RegalosViewModel(_sesion, _documentos, _abrirHoja, _informar, () => Regalos = null);
+            Regalos = new RegalosViewModel(_sesion, _documentos, _abrirHoja, _informar, () => Regalos = null) { Deshacer = _deshacer };
             return true;
         }
         EditorDefP? CrearDefinicion() => id.StartsWith("esp:", StringComparison.Ordinal) ? CatalogoEspecificos.Editor(id[4..], _sesion.Guardado) : id switch
@@ -223,7 +225,7 @@ public sealed partial class PartidaViewModel : ObservableObject
         };
         var def = CrearDefinicion();
         if (def is null) { _informar(IdiomaInterfaz.T("Partida.Error.Editor"), "aviso", "CircleAlert", null, null); return false; }
-        Editor = new EditorPartidaViewModel(new ModeloEditorPartida(_sesion, def), () => Editor = null, _abrirHoja, _informar, _documentos, CrearDefinicion);
+        Editor = new EditorPartidaViewModel(new ModeloEditorPartida(_sesion, def), () => Editor = null, _abrirHoja, _informar, _documentos, CrearDefinicion, _deshacer);
         return true;
     }
 
