@@ -95,7 +95,7 @@
       "description": "Editor de partidas de Pokémon gratuito para Android y Windows, basado en PKHeX, con legalidad automática: «Legalizar automáticamente» corrige solo lo que marca PKHeX y comprueba el resultado con las propias reglas de PKHeX antes de escribirlo.",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Android 10 o posterior, Windows 10 y 11 (64 bits)",
-      "softwareVersion": "1.0.1",
+      "softwareVersion": "1.1.2",
       "datePublished": "2026-10-26",
       "license": "https://www.gnu.org/licenses/gpl-3.0.html",
       "isAccessibleForFree": true,
@@ -110,11 +110,11 @@
       ],
       "url": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/es/",
       "downloadUrl": [
-        "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.0.1/Pokekeep-1.0.1.apk",
-        "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.0.1/PKHeX-Pokekeep-1.0.1.zip"
+        "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.1.2/Pokekeep-1.1.2.apk",
+        "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.1.2/PKHeX-Pokekeep-1.1.2.zip"
       ],
       "installUrl": "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/latest",
-      "releaseNotes": "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/tag/v1.0.1",
+      "releaseNotes": "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/tag/v1.1.2",
       "isBasedOn": {
         "@type": "SoftwareSourceCode",
         "name": "PKHeX",
@@ -476,13 +476,13 @@ footer .fila { display: flex; flex-wrap: wrap; gap: 8px 22px; }
       <p class="entradilla">Pokekeep es PKHeX con un botón «Legalizar automáticamente», en el móvil y en Windows. Corrige solo lo que marca PKHeX, y no escribe nada hasta que el propio PKHeX dice que el resultado es legal.</p>
       <p class="sello" id="sello">✓ Comprobado con PKHeX.Core 26.10.18</p>
       <div class="descargas">
-        <a class="boton principal" id="descarga-apk" href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.0.1/Pokekeep-1.0.1.apk">
+        <a class="boton principal" id="descarga-apk" href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.1.2/Pokekeep-1.1.2.apk">
           <span class="sistema"><b>Android</b> 10+</span>
-          <span class="detalle">APK · unos 700 MB · <span class="ver">v1.0.1</span></span>
+          <span class="detalle">APK · unos 700 MB · <span class="ver">v1.1.2</span></span>
         </a>
-        <a class="boton" id="descarga-zip" href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.0.1/PKHeX-Pokekeep-1.0.1.zip">
+        <a class="boton" id="descarga-zip" href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.1.2/PKHeX-Pokekeep-1.1.2.zip">
           <span class="sistema"><b>Windows</b> 10/11 · 64 bits</span>
-          <span class="detalle">ZIP portable · 119 MB · <span class="ver">v1.0.1</span></span>
+          <span class="detalle">ZIP portable · 120 MB · <span class="ver">v1.1.2</span></span>
         </a>
       </div>
       <p class="notas-descarga">Gratis y de código abierto (GPL-3.0). Sin cuenta, sin anuncios, y la app de Android no pide acceso a Internet.
@@ -607,7 +607,7 @@ footer .fila { display: flex; flex-wrap: wrap; gap: 8px 22px; }
       <div class="opcion">
         <h3>Windows</h3>
         <ol>
-          <li>Descarga el ZIP portable (119 MB) con el botón de la parte de arriba. Es para Windows 10 u 11 de 64 bits.</li>
+          <li>Descarga el ZIP portable (120 MB) con el botón de la parte de arriba. Es para Windows 10 u 11 de 64 bits.</li>
           <li>Descomprímelo en una carpeta.</li>
           <li>Abre <code>PKHeX.exe</code>. No hay que instalar nada, ni siquiera .NET.</li>
         </ol>
@@ -702,7 +702,7 @@ footer .fila { display: flex; flex-wrap: wrap; gap: 8px 22px; }
     }
   } catch (e) {}
 
-  // Los botones de descarga apuntan a la última release real (el HTML trae la 1.0.1 por si la API no responde).
+  // Los botones de descarga apuntan a la última release real (el HTML trae la 1.1.2 por si la API no responde).
   // Se consulta en la primera interacción, no al cargar: así los rastreadores y las pruebas automáticas no gastan
   // el límite de peticiones anónimas de la API de GitHub.
   var consultado = false;
