@@ -1,0 +1,236 @@
+From bd319a479d6508548097711834352eedbd867417 Mon Sep 17 00:00:00 2001
+From: Pokekeep <pokekeep@invalid>
+Date: Sun, 15 Nov 2026 15:13:10 +0100
+Subject: [PATCH] Pokekeep: topes del juego en la partida (1.1.3)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Salto Pokémon y A por bayas se leen y escriben con sus 32 bits y su tope
+(99990 y 999990; el Core los leía como u16), récords de Gen 3 hasta
+0xFFFFFF salvo la hora del Salón, horas jugadas con el tope de cada
+generación (999 en Gen 3 y 4, 255 en Gen 1) y rachas del Árbol Batalla
+a 9999. Topes y fuentes en AutoLegalidad.Desafios.TopesJuego.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01K7SsmyJLJN7mL9bZmtPKMP
+---
+ .../Save Editors/Gen3/SAV_Misc3.Designer.cs   |  6 ++---
+ .../Subforms/Save Editors/Gen3/SAV_Misc3.cs   | 18 +++++++++-----
+ .../Gen7/SAV_Trainer7.Designer.cs             | 24 +++++++++----------
+ .../Save Editors/SAV_SimpleTrainer.cs         |  2 +-
+ 4 files changed, 28 insertions(+), 22 deletions(-)
+
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_Misc3.Designer.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_Misc3.Designer.cs
+index 34aaf598f..2fdadb478 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_Misc3.Designer.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_Misc3.Designer.cs	
+@@ -544,7 +544,7 @@ private void InitializeComponent()
+             TB_B2.Font = new System.Drawing.Font("Courier New", 8.25F);
+             TB_B2.Location = new System.Drawing.Point(215, 66);
+             TB_B2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            TB_B2.Mask = "0000";
++            TB_B2.Mask = "000000";
+             TB_B2.Name = "TB_B2";
+             TB_B2.Size = new System.Drawing.Size(40, 20);
+             TB_B2.TabIndex = 13;
+@@ -604,7 +604,7 @@ private void InitializeComponent()
+             TB_J2.Font = new System.Drawing.Font("Courier New", 8.25F);
+             TB_J2.Location = new System.Drawing.Point(90, 66);
+             TB_J2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            TB_J2.Mask = "0000";
++            TB_J2.Mask = "00000";
+             TB_J2.Name = "TB_J2";
+             TB_J2.Size = new System.Drawing.Size(40, 20);
+             TB_J2.TabIndex = 4;
+@@ -1181,7 +1181,7 @@ private void InitializeComponent()
+             // 
+             NUD_FameH.Location = new System.Drawing.Point(51, 68);
+             NUD_FameH.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_FameH.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
++            NUD_FameH.Maximum = new decimal(new int[] { 999, 0, 0, 0 });
+             NUD_FameH.Name = "NUD_FameH";
+             NUD_FameH.Size = new System.Drawing.Size(65, 23);
+             NUD_FameH.TabIndex = 2;
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_Misc3.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_Misc3.cs
+index c7d2d7360..99d2ea962 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_Misc3.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen3/SAV_Misc3.cs	
+@@ -136,11 +136,11 @@ private void B_Save_Click(object sender, EventArgs e)
+     private void ReadJoyful(ISaveBlock3SmallExpansion j)
+     {
+         TB_J1.Text = Math.Min((ushort)9999, j.JoyfulJumpInRow).ToString();
+-        TB_J2.Text = Math.Min(99990, j.JoyfulJumpScore).ToString();
++        TB_J2.Text = TopesJuego.PuntuacionMinijuego(j, salto: true).ToString(); // Pokekeep 1.1.3: u32 en el juego (TopesJuego)
+         TB_J3.Text = Math.Min((ushort)9999, j.JoyfulJump5InRow).ToString();
+         TB_J4.Text = Math.Min((ushort)9999, j.JoyfulJumpGamesMaxPlayers).ToString();
+         TB_B1.Text = Math.Min((ushort)9999, j.JoyfulBerriesInRow).ToString();
+-        TB_B2.Text = Math.Min(99990, j.JoyfulBerriesScore).ToString();
++        TB_B2.Text = TopesJuego.PuntuacionMinijuego(j, salto: false).ToString();
+         TB_B3.Text = Math.Min((ushort)9999, j.JoyfulBerries5InRow).ToString();
+         TB_BerryPowder.Text = Math.Min(99999u, j.BerryPowder).ToString();
+     }
+@@ -148,11 +148,11 @@ private void ReadJoyful(ISaveBlock3SmallExpansion j)
+     private void SaveJoyful(ISaveBlock3SmallExpansion j)
+     {
+         j.JoyfulJumpInRow = (ushort)Util.ToUInt32(TB_J1.Text);
+-        j.JoyfulJumpScore = (ushort)Util.ToUInt32(TB_J2.Text);
++        TopesJuego.PonerPuntuacionMinijuego(j, salto: true, Util.ToUInt32(TB_J2.Text));
+         j.JoyfulJump5InRow = (ushort)Util.ToUInt32(TB_J3.Text);
+         j.JoyfulJumpGamesMaxPlayers = (ushort)Util.ToUInt32(TB_J4.Text);
+         j.JoyfulBerriesInRow = (ushort)Util.ToUInt32(TB_B1.Text);
+-        j.JoyfulBerriesScore = (ushort)Util.ToUInt32(TB_B2.Text);
++        TopesJuego.PonerPuntuacionMinijuego(j, salto: false, Util.ToUInt32(TB_B2.Text));
+         j.JoyfulBerries5InRow = (ushort)Util.ToUInt32(TB_B3.Text);
+         j.BerryPowder = Util.ToUInt32(TB_BerryPowder.Text);
+     }
+@@ -580,13 +580,19 @@ private void LoadRecords()
+         return;
+ 
+         void ChangeFame() => SAV.SetRecord(1, (uint)(NUD_RecordValue.Value = GetFameTime()));
+-        void LoadRecordID(int index) => NUD_RecordValue.Value = SAV.GetRecord(index);
++        // Pokekeep 1.1.3: cada récord se para en 0xFFFFFF en el juego (TopesJuego.RegistroGen3); el 1 es la hora del Salón y se escribe entera.
++        void LoadRecordID(int index)
++        {
++            var actual = SAV.GetRecord(index);
++            NUD_RecordValue.Maximum = index == TopesJuego.RegistroGen3TiempoSalon ? uint.MaxValue : Math.Max(TopesJuego.RegistroGen3, actual);
++            NUD_RecordValue.Value = actual;
++        }
+         void LoadFame(uint val) => SetFameTime(val);
+     }
+ 
+     public uint GetFameTime()
+     {
+-        var hrs = Math.Min(9999, (uint)NUD_FameH.Value);
++        var hrs = Math.Min(999, (uint)NUD_FameH.Value);
+         var min = Math.Min(59, (uint)NUD_FameM.Value);
+         var sec = Math.Min(59, (uint)NUD_FameS.Value);
+ 
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_Trainer7.Designer.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_Trainer7.Designer.cs
+index 8ea888d70..f7d7b3e24 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_Trainer7.Designer.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_Trainer7.Designer.cs	
+@@ -1410,7 +1410,7 @@ private void InitializeComponent()
+             // 
+             NUD_SMStreak2.Location = new System.Drawing.Point(293, 225);
+             NUD_SMStreak2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_SMStreak2.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_SMStreak2.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
+             NUD_SMStreak2.Name = "NUD_SMStreak2";
+             NUD_SMStreak2.Size = new System.Drawing.Size(70, 23);
+             NUD_SMStreak2.TabIndex = 92;
+@@ -1420,7 +1420,7 @@ private void InitializeComponent()
+             // 
+             NUD_SCStreak2.Location = new System.Drawing.Point(293, 201);
+             NUD_SCStreak2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_SCStreak2.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_SCStreak2.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
+             NUD_SCStreak2.Name = "NUD_SCStreak2";
+             NUD_SCStreak2.Size = new System.Drawing.Size(70, 23);
+             NUD_SCStreak2.TabIndex = 91;
+@@ -1430,7 +1430,7 @@ private void InitializeComponent()
+             // 
+             NUD_SMStreak1.Location = new System.Drawing.Point(293, 159);
+             NUD_SMStreak1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_SMStreak1.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_SMStreak1.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
+             NUD_SMStreak1.Name = "NUD_SMStreak1";
+             NUD_SMStreak1.Size = new System.Drawing.Size(70, 23);
+             NUD_SMStreak1.TabIndex = 90;
+@@ -1440,7 +1440,7 @@ private void InitializeComponent()
+             // 
+             NUD_SCStreak1.Location = new System.Drawing.Point(293, 135);
+             NUD_SCStreak1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_SCStreak1.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_SCStreak1.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
+             NUD_SCStreak1.Name = "NUD_SCStreak1";
+             NUD_SCStreak1.Size = new System.Drawing.Size(70, 23);
+             NUD_SCStreak1.TabIndex = 89;
+@@ -1450,7 +1450,7 @@ private void InitializeComponent()
+             // 
+             NUD_SMStreak0.Location = new System.Drawing.Point(293, 93);
+             NUD_SMStreak0.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_SMStreak0.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_SMStreak0.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
+             NUD_SMStreak0.Name = "NUD_SMStreak0";
+             NUD_SMStreak0.Size = new System.Drawing.Size(70, 23);
+             NUD_SMStreak0.TabIndex = 88;
+@@ -1460,7 +1460,7 @@ private void InitializeComponent()
+             // 
+             NUD_SCStreak0.Location = new System.Drawing.Point(293, 69);
+             NUD_SCStreak0.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_SCStreak0.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_SCStreak0.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
+             NUD_SCStreak0.Name = "NUD_SCStreak0";
+             NUD_SCStreak0.Size = new System.Drawing.Size(70, 23);
+             NUD_SCStreak0.TabIndex = 87;
+@@ -1470,7 +1470,7 @@ private void InitializeComponent()
+             // 
+             NUD_RMStreak2.Location = new System.Drawing.Point(216, 225);
+             NUD_RMStreak2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_RMStreak2.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_RMStreak2.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
+             NUD_RMStreak2.Name = "NUD_RMStreak2";
+             NUD_RMStreak2.Size = new System.Drawing.Size(70, 23);
+             NUD_RMStreak2.TabIndex = 86;
+@@ -1490,7 +1490,7 @@ private void InitializeComponent()
+             // 
+             NUD_RCStreak2.Location = new System.Drawing.Point(216, 201);
+             NUD_RCStreak2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_RCStreak2.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_RCStreak2.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
+             NUD_RCStreak2.Name = "NUD_RCStreak2";
+             NUD_RCStreak2.Size = new System.Drawing.Size(70, 23);
+             NUD_RCStreak2.TabIndex = 84;
+@@ -1510,7 +1510,7 @@ private void InitializeComponent()
+             // 
+             NUD_RMStreak1.Location = new System.Drawing.Point(216, 159);
+             NUD_RMStreak1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_RMStreak1.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_RMStreak1.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
+             NUD_RMStreak1.Name = "NUD_RMStreak1";
+             NUD_RMStreak1.Size = new System.Drawing.Size(70, 23);
+             NUD_RMStreak1.TabIndex = 82;
+@@ -1530,7 +1530,7 @@ private void InitializeComponent()
+             // 
+             NUD_RCStreak1.Location = new System.Drawing.Point(216, 135);
+             NUD_RCStreak1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_RCStreak1.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_RCStreak1.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
+             NUD_RCStreak1.Name = "NUD_RCStreak1";
+             NUD_RCStreak1.Size = new System.Drawing.Size(70, 23);
+             NUD_RCStreak1.TabIndex = 80;
+@@ -1550,7 +1550,7 @@ private void InitializeComponent()
+             // 
+             NUD_RMStreak0.Location = new System.Drawing.Point(216, 93);
+             NUD_RMStreak0.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_RMStreak0.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_RMStreak0.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
+             NUD_RMStreak0.Name = "NUD_RMStreak0";
+             NUD_RMStreak0.Size = new System.Drawing.Size(70, 23);
+             NUD_RMStreak0.TabIndex = 78;
+@@ -1570,7 +1570,7 @@ private void InitializeComponent()
+             // 
+             NUD_RCStreak0.Location = new System.Drawing.Point(216, 69);
+             NUD_RCStreak0.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            NUD_RCStreak0.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
++            NUD_RCStreak0.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
+             NUD_RCStreak0.Name = "NUD_RCStreak0";
+             NUD_RCStreak0.Size = new System.Drawing.Size(70, 23);
+             NUD_RCStreak0.TabIndex = 76;
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/SAV_SimpleTrainer.cs b/PKHeX.WinForms/Subforms/Save Editors/SAV_SimpleTrainer.cs
+index b3a2a8465..25807ca88 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/SAV_SimpleTrainer.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/SAV_SimpleTrainer.cs	
+@@ -238,7 +238,7 @@ private void B_Save_Click(object sender, EventArgs e)
+         SAV.SID16 = (ushort)Util.ToUInt32(MT_SID.Text);
+         SAV.Money = Util.ToUInt32(MT_Money.Text);
+ 
+-        SAV.PlayedHours = ushort.Parse(MT_Hours.Text);
++        SAV.PlayedHours = Math.Min(AutoLegalidad.Desafios.TopesJuego.Horas(SAV), Util.ToInt32(MT_Hours.Text)); // Pokekeep 1.1.3: tope del juego (antes 99999 en la máscara rompía ushort.Parse)
+         SAV.PlayedMinutes = ushort.Parse(MT_Minutes.Text) % 60;
+         SAV.PlayedSeconds = ushort.Parse(MT_Seconds.Text) % 60;
+ 
+-- 
+2.55.0.windows.5
+

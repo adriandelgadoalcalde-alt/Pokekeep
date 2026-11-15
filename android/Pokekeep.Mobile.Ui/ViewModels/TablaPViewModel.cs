@@ -54,6 +54,10 @@ public sealed partial class FilaTablaPVm : ObservableObject
     [ObservableProperty] private string? _error;
     [ObservableProperty] private bool _modificado;
     public bool HayError => !string.IsNullOrEmpty(Error);
+    /// <summary>Aviso (no es un error) de que el número escrito se ajustó al tope o al mínimo de la fila.</summary>
+    [ObservableProperty] private string? _aviso;
+    public bool HayAviso => !string.IsNullOrEmpty(Aviso);
+    partial void OnAvisoChanged(string? value) => OnPropertyChanged(nameof(HayAviso));
     public string TextoMarca => Marcado ? IdiomaInterfaz.T("Comun.Si") : IdiomaInterfaz.T("Comun.No");
 
     partial void OnErrorChanged(string? value) => OnPropertyChanged(nameof(HayError));
@@ -71,23 +75,34 @@ public sealed partial class FilaTablaPVm : ObservableObject
     {
         OnPropertyChanged(nameof(Accesible));
         if (_releyendo || Def.EsMarca) return;
-        _textoRechazado = value;
-        if (!long.TryParse(value.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var n)) { Error = IdiomaInterfaz.F("Form.EscribirNumero", Def.Min, Def.Max); return; }
-        if (n < Def.Min || n > Def.Max)
-        {
-            Error = IdiomaInterfaz.F("Form.FueraRango", Def.Min, Def.Max);
-            _releyendo = true; try { Valor = Convert.ToString(_m.Borrador(Clave), CultureInfo.InvariantCulture) ?? "0"; } finally { _releyendo = false; }
-            return;
-        }
+        Escribir(value, final: false);
+    }
+
+    /// <summary>
+    /// Un número por encima del tope de la fila se queda en el tope al momento y la fila lo enseña ya ajustado, con su aviso (ADR 0108);
+    /// por debajo del mínimo se espera a salir del campo.
+    /// </summary>
+    private void Escribir(string value, bool final)
+    {
+        _textoRechazado = value; Aviso = null;
+        if (!TopeNumero.Acotar(value, Def.Min, Def.Max, hex: false, final, out var n, out var ajuste)) { Error = IdiomaInterfaz.F("Form.EscribirNumero", Def.Min, Def.Max); return; }
+        if (n < Def.Min) { Error = IdiomaInterfaz.F("Form.FueraRango", Def.Min, Def.Max); return; }
         _textoRechazado = null;
         Error = _m.PonerFila(_tabla.Id, Def, n);
+        if (Error is null && ajuste != AjusteTope.Ninguno)
+        {
+            Aviso = TopeNumero.Aviso(ajuste, ajuste == AjusteTope.AlMinimo ? Def.Min : Def.Max);
+            _releyendo = true; try { Valor = Convert.ToString(_m.Borrador(Clave), CultureInfo.InvariantCulture) ?? "0"; } finally { _releyendo = false; }
+        }
         Modificado = _m.CuentaComoCambio(Clave);
         _alCambiar();
     }
 
+    /// <summary>Al salir de la fila: un número por debajo del mínimo pasa al mínimo; un texto que no es un número vuelve al último valor válido.</summary>
     public void PerderFoco()
     {
         if (Error is null) return;
+        if (_textoRechazado is { } texto) { Escribir(texto, final: true); if (Error is null) return; }
         _releyendo = true;
         try { Valor = Convert.ToString(_m.Borrador(Clave), CultureInfo.InvariantCulture) ?? "0"; } finally { _releyendo = false; }
     }

@@ -545,6 +545,8 @@
   "Form.EscribirNumero": "Escribe un número entre {0} y {1}.",
   "Form.EscribirHex": "Escribe un valor hexadecimal.",
   "Form.FueraRango": "No se ha cambiado: debe estar entre {0} y {1}.",
+  "Form.AjustadoMaximo": "Ajustado al máximo del juego: {0}.",
+  "Form.AjustadoMinimo": "Ajustado al mínimo del juego: {0}.",
   "Form.EscribirDecimal": "Escribe un número (con punto o coma decimal).",
   "Form.EscribirFecha": "Escribe la fecha como dd/mm/aaaa hh:mm:ss.",
   "Form.FechaFueraRango": "No se ha cambiado: la fecha debe estar entre {0:dd/MM/yyyy} y {1:dd/MM/yyyy}.",

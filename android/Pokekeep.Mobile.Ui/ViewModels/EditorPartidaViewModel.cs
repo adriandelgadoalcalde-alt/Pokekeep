@@ -41,6 +41,8 @@ public sealed partial class CampoPVm : ObservableObject
     [ObservableProperty] private string _valor = string.Empty;
     [ObservableProperty] private bool _marcado;
     [ObservableProperty] private string? _error;
+    /// <summary>Aviso (no es un error) de que el número escrito se ajustó al tope o al mínimo del juego.</summary>
+    [ObservableProperty] private string? _aviso;
     [ObservableProperty] private string? _detalle;
     [ObservableProperty] private string? _motivo;
     [ObservableProperty] private bool _visible = true;
@@ -99,6 +101,7 @@ public sealed partial class CampoPVm : ObservableObject
     public bool EsEditable => Motivo is null && !EsInfo;
     public bool EsFijo => Motivo is not null && !EsInfo;
     public bool HayError => !string.IsNullOrEmpty(Error);
+    public bool HayAviso => !string.IsNullOrEmpty(Aviso);
     public bool HayDetalle => !string.IsNullOrEmpty(Detalle);
     /// <summary>El campo es una especie (el selector y la fila llevan su sprite).</summary>
     public bool EsEspecie => Def.Tipo == TipoP.Opcion && Def.EsEspecie;
@@ -124,6 +127,7 @@ public sealed partial class CampoPVm : ObservableObject
 
     partial void OnMotivoChanged(string? value) { OnPropertyChanged(nameof(EsEditable)); OnPropertyChanged(nameof(EsFijo)); OnPropertyChanged(nameof(Ayuda)); }
     partial void OnErrorChanged(string? value) => OnPropertyChanged(nameof(HayError));
+    partial void OnAvisoChanged(string? value) => OnPropertyChanged(nameof(HayAviso));
     partial void OnDetalleChanged(string? value) => OnPropertyChanged(nameof(HayDetalle));
     partial void OnEtiquetaChanged(string value) => OnPropertyChanged(nameof(Accesible));
     partial void OnModificadoChanged(bool value) => OnPropertyChanged(nameof(Accesible));
@@ -140,21 +144,41 @@ public sealed partial class CampoPVm : ObservableObject
         OnPropertyChanged(nameof(ValorLargo)); OnPropertyChanged(nameof(ValorCorto)); OnPropertyChanged(nameof(Accesible)); OnPropertyChanged(nameof(EspecieSprite)); OnPropertyChanged(nameof(HayEspecieSprite));
         OnPropertyChanged(nameof(HayArchivoElegido)); OnPropertyChanged(nameof(ResumenArchivo));
         if (_releyendo || EsOpcion || EsInfo || EsArchivo) return;
-        var rechazo = M.PonerTexto(Def, value);
+        Escribir(value, final: false);
+    }
+
+    /// <summary>
+    /// Escribe lo tecleado. Un número por encima del tope del juego se queda en el tope y el campo lo enseña ya ajustado, con su aviso
+    /// (ADR 0108); por debajo del mínimo se espera a salir del campo.
+    /// </summary>
+    private void Escribir(string value, bool final)
+    {
+        var rechazo = M.PonerTexto(Def, value, final);
         Error = rechazo; _textoRechazado = rechazo is null ? null : value;
-        if (rechazo is null) _ed.AlCambiar(this);
-        // Un numero bien escrito pero fuera del limite se rechaza de inmediato: el campo vuelve al ultimo valor valido y el motivo sigue a la vista (como un campo con mascara).
-        else if (EsNumero && value.Trim().Length > 0 && double.TryParse(value.Trim().Replace(',', '.'), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out _))
+        Aviso = rechazo is null ? M.UltimoAviso : null;
+        if (rechazo is null)
         {
-            _releyendo = true;
-            try { Valor = M.Formatear(Def, M.Borrador(Def.Id)); } finally { _releyendo = false; }
+            if (Aviso is not null)
+            {
+                _releyendo = true;
+                try { Valor = M.Formatear(Def, M.Borrador(Def.Id)); } finally { _releyendo = false; }
+            }
+            _ed.AlCambiar(this);
         }
     }
 
-    /// <summary>Al salir del campo, si lo escrito se rechazo vuelve el ultimo valor valido (el motivo sigue a la vista).</summary>
+    /// <summary>
+    /// Al salir del campo: un número por debajo del mínimo pasa al mínimo; cualquier otro texto rechazado vuelve al último valor válido
+    /// (el motivo sigue a la vista).
+    /// </summary>
     public void PerderFoco()
     {
         if (Error is null) return;
+        if (EsNumero && _textoRechazado is { } texto)
+        {
+            Escribir(texto, final: true);
+            if (Error is null) return;
+        }
         _releyendo = true;
         try { Valor = M.Formatear(Def, M.Borrador(Def.Id)); } finally { _releyendo = false; }
     }
@@ -174,6 +198,7 @@ public sealed partial class CampoPVm : ObservableObject
             var v = m.Borrador(Def.Id);
             if (Def.Tipo is TipoP.Marca or TipoP.Accion) Marcado = v is true;
             else if (!conservarTexto) Valor = m.Formatear(Def, v);
+            if (!conservarTexto) Aviso = null;
             ActualizarVista();
         }
         finally { _releyendo = false; }

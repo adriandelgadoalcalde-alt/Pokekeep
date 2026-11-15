@@ -12,6 +12,9 @@ namespace Pokekeep.Mobile.Ui.Partida.Formularios.Gen4;
 /// </summary>
 internal static partial class PokeathlonGen4
 {
+    /// <summary>Mayor récord de prueba que se puede escribir: 0xFFFF significa «sin récord» (pokeathlon_save.c:10-14).</summary>
+    internal const int TopeRecordPrueba = ushort.MaxValue - 1;
+
     // Estática, pero por idioma de la interfaz: antes se fijaba al primero y seguía en él tras cambiarlo (auditoría uso10, A7).
     private static (string Idioma, IReadOnlyList<OpcionP> Lista)? _generos;
     private static IReadOnlyList<OpcionP> Generos
@@ -85,7 +88,9 @@ internal static partial class PokeathlonGen4
     private static IEnumerable<CampoP> Registro(ColeccionDefP col, int i, string prefijo, string titulo, Func<ContextoP, PokeathlonEventRecord4> de, int prioridad)
     {
         string Id(string campo) => col.IdCampo(i, $"{prefijo}.{campo}");
-        yield return P.Entero(Id("record"), $"{titulo} · {L("L_Record").TrimEnd(':')}", c => de(c).Record, (c, v) => { var r = de(c); r.Record = (ushort)v; }, 0, ushort.MaxValue, prioridad: prioridad);
+        // 1.1.3: 65535 (0xFFFF) no es un récord, es «sin récord»: PokeathlonSave_Init deja así las 50 entradas propias y las 50 de conexión
+        // (pokeheartgold src/pokeathlon/pokeathlon_save.c:10-14). El mayor récord que se puede escribir es 65534.
+        yield return P.Entero(Id("record"), $"{titulo} · {L("L_Record").TrimEnd(':')}", c => de(c).Record, (c, v) => { var r = de(c); r.Record = (ushort)v; }, 0, TopeRecordPrueba, prioridad: prioridad);
         for (var e = 0; e < 3; e++)
         {
             var entrada = e;

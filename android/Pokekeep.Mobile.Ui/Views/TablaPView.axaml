@@ -25,7 +25,7 @@
           </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>
-      <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding AvisoAccion}" IsVisible="{Binding HayAviso}" TextWrapping="Wrap" />
+      <TextBlock Classes="sec error" Foreground="{DynamicResource Error}" Text="{Binding AvisoAccion}" IsVisible="{Binding HayAviso}" TextWrapping="Wrap" />
     </StackPanel>
     <ListBox Name="FilasTabla" Grid.Row="1" Classes="limpia" AutomationProperties.Name="{DynamicResource Loc.TablaP.FilasTabla}" Padding="0,0,0,8">
       <ListBox.DataTemplates>
@@ -49,7 +49,8 @@
                   <TextBlock Text="{Binding TextoFijo}" FontWeight="Medium" VerticalAlignment="Center" IsVisible="{Binding EsFija}" AutomationProperties.Name="{Binding Accesible}" />
                 </Panel>
               </d:EtiquetaYValor>
-              <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding Error}" IsVisible="{Binding HayError}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
+              <TextBlock Classes="sec error" Foreground="{DynamicResource Error}" Text="{Binding Error}" IsVisible="{Binding HayError}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
+              <TextBlock Classes="sec aviso" Foreground="{DynamicResource Aviso}" Text="{Binding Aviso}" IsVisible="{Binding HayAviso}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
             </StackPanel>
           </Border>
         </DataTemplate>

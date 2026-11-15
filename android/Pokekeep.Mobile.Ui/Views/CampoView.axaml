@@ -99,6 +99,6 @@
       <Slider Minimum="0" Maximum="{Binding Maximo}" Value="{Binding Numero, Mode=TwoWay}" MinHeight="48" AutomationProperties.Name="{Binding Etiqueta}" />
     </StackPanel>
 
-    <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding Error}" IsVisible="{Binding HayError}" />
+    <TextBlock Classes="sec error" Foreground="{DynamicResource Error}" Text="{Binding Error}" IsVisible="{Binding HayError}" />
   </StackPanel>
 </UserControl>

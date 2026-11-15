@@ -171,9 +171,10 @@ internal static class F
             Leer = c => leer(c).ToString(CultureInfo.InvariantCulture),
             Escribir = (c, t) =>
             {
-                if (!long.TryParse(t.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var v)) return IdiomaInterfaz.T("Campos.EscribeNumeroEntero");
+                // Ajusta al rango aunque el número no quepa en 64 bits (ADR 0108: 99999999999999999999 también se queda en el tope).
                 var tope = maxDinamico?.Invoke(c) ?? max;
-                escribir(c, Math.Clamp(v, min, tope));
+                if (!Partida.TopeNumero.Acotar(t, min, tope, hex: false, final: true, out var v, out _)) return IdiomaInterfaz.T("Campos.EscribeNumeroEntero");
+                escribir(c, v);
                 return null;
             },
         };

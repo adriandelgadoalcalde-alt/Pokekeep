@@ -22,7 +22,7 @@
         <TextBlock Text="{Binding Titulo}" FontWeight="Medium" TextWrapping="Wrap" />
         <TextBox Classes="campo numero" Text="{Binding Texto}" LostFocus="AlPerderFoco" MinHeight="48" AutomationProperties.Name="{Binding Titulo}" AutomationProperties.HelpText="{Binding Descripcion}" />
         <TextBlock Classes="sec" Text="{Binding Descripcion}" TextWrapping="Wrap" />
-        <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding Error}" TextWrapping="Wrap" IsVisible="{Binding HayError}" AutomationProperties.LiveSetting="Polite" />
+        <TextBlock Classes="sec error" Foreground="{DynamicResource Error}" Text="{Binding Error}" TextWrapping="Wrap" IsVisible="{Binding HayError}" AutomationProperties.LiveSetting="Polite" />
       </StackPanel>
     </DataTemplate>
     <DataTemplate x:DataType="vm:FilaPkhexInterruptor">

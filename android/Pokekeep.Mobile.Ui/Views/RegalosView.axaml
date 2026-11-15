@@ -68,7 +68,7 @@
               <TextBox Classes="campo numero" Text="{Binding NumeroNuevo}" MaxLength="5" TextInputOptions.ContentType="Digits" Watermark="{DynamicResource Loc.Comun.NumeroAbrev}" AutomationProperties.Name="{DynamicResource Loc.Regalos.NumeroTarjeta}" AutomationProperties.HelpText="{Binding MaximoTexto}" />
               <Button Classes="primario" Command="{Binding AnadirRecibidaCommand}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Regalos.AnadirTarjetaRecibida}"><TextBlock Text="{DynamicResource Loc.Form.Anadir}" /></Button>
             </d:EtiquetaYValor>
-            <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding ErrorNumero}" IsVisible="{Binding HayErrorNumero}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
+            <TextBlock Classes="sec error" Foreground="{DynamicResource Error}" Text="{Binding ErrorNumero}" IsVisible="{Binding HayErrorNumero}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
           </StackPanel>
         </DataTemplate>
 

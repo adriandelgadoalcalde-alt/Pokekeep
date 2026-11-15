@@ -42,6 +42,11 @@ public static class AcercaDeModelo
 
     /// <summary>De la más reciente a la más antigua. Resumido de <c>bitacora.md</c>; cada versión con su fecha real de publicación.</summary>
     public static IReadOnlyList<NovedadVersion> Novedades => [
+        new("1.1.3", FechaVisible("15-nov-2026"), AppIdioma.T("Android: un número demasiado grande se queda en el máximo del juego.", "Android: a number that is too big stops at the game's maximum."),
+        [
+            AppIdioma.T("Si escribes 999999999 en un valor de la partida (Pokéathlon, torres, récords, concursos, dinero, puntos, la Mochila…), el campo pasa al máximo del juego y lo dice debajo, en vez de rechazarlo.", "Type 999999999 in a save value (Pokéathlon, towers, records, contests, money, points, the Bag…) and the field changes to the game's maximum and says so underneath, instead of refusing it."),
+            AppIdioma.T("Topes leídos en el código de los juegos: horas jugadas (999 en Gen 3 y 4, 255 en Gen 1), récords de Gen 3, Salto Pokémon y A por bayas, rachas de la Maison y del Árbol Batalla (9999) y el récord de cada prueba del Pokéathlon.", "Limits read in the games' code: hours played (999 in Gen 3 and 4, 255 in Gen 1), Gen 3 records, Pokémon Jump and Dodrio Berry Picking, Battle Maison and Battle Tree streaks (9,999) and each Pokéathlon event record."),
+        ]),
         new("1.1.2", FechaVisible("15-nov-2026"), AppIdioma.T("Android: editar la partida ya no pide «Aplicar» a cada cambio.", "Android: editing the save no longer asks you to “Apply” every change."),
         [
             AppIdioma.T("Sin la barra «campos cambiados sin aplicar» ni las preguntas «¿Hacer?» y «¿Salir sin aplicar?». Lo que cambias se escribe al salir del editor, al pulsar una acción o al guardar, y el aviso que sale lleva «Deshacer».", "No more “fields changed, not applied” bar and no more “Do it?” or “Leave without applying?” questions. Your changes are written when you leave the editor, press an action or save, and the message that follows has “Undo”."),

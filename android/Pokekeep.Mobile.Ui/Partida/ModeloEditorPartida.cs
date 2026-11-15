@@ -171,12 +171,25 @@ public sealed class ModeloEditorPartida
 
     // ---- Escritura al borrador ----
     /// <summary>Pone un valor en el borrador desde lo que el usuario escribio. Devuelve el motivo del rechazo (y no cambia nada) o null.</summary>
-    public string? PonerTexto(CampoP c, string texto) => ProcesarTexto(c, texto, escribir: true);
+    /// <remarks>
+    /// Un número por encima del tope se queda en el tope (ADR 0108); por debajo del mínimo, solo con <paramref name="final"/> (al salir del
+    /// campo). Cuando se ajusta, <see cref="UltimoAviso"/> dice a qué valor.
+    /// </remarks>
+    public string? PonerTexto(CampoP c, string texto, bool final = false) => ProcesarTexto(c, texto, escribir: true, final);
     /// <summary>La misma validacion de entrada, sin normalizar/escribir valores ni disparar derivaciones.</summary>
-    public string? ValidarTexto(CampoP c, string texto) => ProcesarTexto(c, texto, escribir: false);
-    private string? ProcesarTexto(CampoP c, string texto, bool escribir)
+    public string? ValidarTexto(CampoP c, string texto) => ProcesarTexto(c, texto, escribir: false, final: false);
+    /// <summary>Aviso de la última escritura de texto que ajustó el número a su tope o a su mínimo (null si se escribió tal cual).</summary>
+    public string? UltimoAviso { get; private set; }
+    private string? ProcesarTexto(CampoP c, string texto, bool escribir, bool final)
     {
+        if (escribir) UltimoAviso = null;
         string? Aceptar(object valor) => escribir ? Poner(c, valor) : Validar(c, valor);
+        string? AceptarAjustado(object valor, AjusteTope ajuste, object tope)
+        {
+            var r = Aceptar(valor);
+            if (r is null && escribir) UltimoAviso = TopeNumero.Aviso(ajuste, tope);
+            return r;
+        }
         switch (c.Tipo)
         {
             case TipoP.Texto:
@@ -189,18 +202,20 @@ public sealed class ModeloEditorPartida
             case TipoP.Entero:
             {
                 var t = texto.Trim();
-                if (t.Length == 0) return IdiomaInterfaz.F("Form.EscribirNumero", c.Min, c.MaximoEn(Ctx));
-                if (!(c.Hex ? long.TryParse(t, NumberStyles.AllowHexSpecifier, Inv, out var n) : long.TryParse(t, NumberStyles.Integer, Inv, out n)))
-                    return c.Hex ? IdiomaInterfaz.T("Form.EscribirHex") : IdiomaInterfaz.F("Form.EscribirNumero", c.Min, c.MaximoEn(Ctx));
-                if (n < c.Min || n > c.MaximoEn(Ctx)) return IdiomaInterfaz.F("Form.FueraRango", c.Min, c.MaximoEn(Ctx));
-                return Aceptar(n);
+                var max = c.MaximoEn(Ctx);
+                if (t.Length == 0) return IdiomaInterfaz.F("Form.EscribirNumero", c.Min, max);
+                if (!TopeNumero.Acotar(t, c.Min, max, c.Hex, final, out var n, out var ajuste))
+                    return c.Hex ? IdiomaInterfaz.T("Form.EscribirHex") : IdiomaInterfaz.F("Form.EscribirNumero", c.Min, max);
+                // Por debajo del mínimo mientras se escribe: todavía no se ajusta (al salir del campo, sí).
+                if (n < c.Min) return IdiomaInterfaz.F("Form.FueraRango", c.Min, max);
+                return AceptarAjustado(n, ajuste, ajuste == AjusteTope.AlMinimo ? c.Min : max);
             }
             case TipoP.Decimal:
             {
-                var t = texto.Trim().Replace(',', '.');
-                if (!double.TryParse(t, NumberStyles.Float, Inv, out var d) || double.IsNaN(d) || double.IsInfinity(d)) return IdiomaInterfaz.T("Form.EscribirDecimal");
-                if (d < c.Min || d > c.MaximoEn(Ctx)) return IdiomaInterfaz.F("Form.FueraRango", c.Min, c.MaximoEn(Ctx));
-                return Aceptar(d);
+                var max = c.MaximoEn(Ctx);
+                if (!TopeNumero.Acotar(texto, c.Min, max, final, out var d, out var ajuste)) return IdiomaInterfaz.T("Form.EscribirDecimal");
+                if (d < c.Min) return IdiomaInterfaz.F("Form.FueraRango", c.Min, max);
+                return AceptarAjustado(d, ajuste, ajuste == AjusteTope.AlMinimo ? c.Min : max);
             }
             case TipoP.FechaHora:
             {
@@ -245,7 +260,8 @@ public sealed class ModeloEditorPartida
     public string? PonerFila(string tabla, FilaTablaP f, object valor)
     {
         if (f.SoloLectura) return IdiomaInterfaz.T("Form.FilaFija");
-        if (valor is long l && (l < f.Min || l > f.Max)) return IdiomaInterfaz.F("Form.FueraRango", f.Min, f.Max);
+        // Un número fuera de rango se queda en el tope o en el mínimo de la fila (ADR 0108), nunca se rechaza.
+        if (valor is long l) valor = Math.Clamp(l, f.Min, Math.Max(f.Min, f.Max));
         Ctx.Borrador[f.Clave(tabla)] = valor;
         if (_defTablas.TryGetValue(tabla, out var def) && def.Coherencia is { } coherencia)
             foreach (var (clave, nuevo) in coherencia(Ctx, f, valor)) if (_filas.ContainsKey(clave)) Ctx.Borrador[clave] = nuevo;

@@ -64,7 +64,7 @@
                     <Button Classes="secundario" Command="{Binding PonerNumeroValorCommand}" MinHeight="48" AutomationProperties.Name="{DynamicResource Loc.Eventos.PonerValor}"><TextBlock Text="{DynamicResource Loc.Eventos.Poner}" /></Button>
                   </d:EtiquetaYValor>
                   <TextBlock Classes="sec" Text="{Binding AyudaNumero}" IsVisible="{Binding SinErrorNumero}" />
-                  <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding ErrorNumero}" IsVisible="{Binding HayErrorNumero}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
+                  <TextBlock Classes="sec error" Foreground="{DynamicResource Error}" Text="{Binding ErrorNumero}" IsVisible="{Binding HayErrorNumero}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
                 </StackPanel>
               </Border>
             </StackPanel>
@@ -123,7 +123,7 @@
               <Button Classes="chip" HorizontalAlignment="Left" Command="{Binding ElegirOpcionCommand}" IsVisible="{Binding TieneOpciones}" AutomationProperties.Name="{DynamicResource Loc.Eventos.ElegirValorNombre}" AutomationProperties.HelpText="{DynamicResource Loc.Eventos.AbreListaValoresNombre}">
                 <TextBlock Text="{Binding TextoOpcion}" TextWrapping="Wrap" />
               </Button>
-              <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding Error}" IsVisible="{Binding HayError}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
+              <TextBlock Classes="sec error" Foreground="{DynamicResource Error}" Text="{Binding Error}" IsVisible="{Binding HayError}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
             </StackPanel>
           </Border>
         </DataTemplate>

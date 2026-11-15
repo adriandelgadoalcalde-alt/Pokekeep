@@ -68,7 +68,7 @@ internal static class EntrenadorSimple
 
         var tiempo = new List<CampoP>
         {
-            P.Entero("horas", IdiomaInterfaz.T("Form.HorasJugadas"), c => c.Sav.PlayedHours, (c, v) => c.Sav.PlayedHours = (ushort)v, 0, 65535, grupo: "tiempo"),
+            P.Entero("horas", IdiomaInterfaz.T("Form.HorasJugadas"), c => c.Sav.PlayedHours, (c, v) => c.Sav.PlayedHours = (ushort)v, 0, AutoLegalidad.Desafios.TopesJuego.Horas(sav), grupo: "tiempo"),
             P.Entero("minutos", IdiomaInterfaz.T("Form.Minutos"), c => c.Sav.PlayedMinutes, (c, v) => c.Sav.PlayedMinutes = (ushort)v % 60, 0, 59, grupo: "tiempo"),
             P.Entero("segundos", IdiomaInterfaz.T("Form.Segundos"), c => c.Sav.PlayedSeconds, (c, v) => c.Sav.PlayedSeconds = (ushort)v % 60, 0, 59, grupo: "tiempo"),
         };

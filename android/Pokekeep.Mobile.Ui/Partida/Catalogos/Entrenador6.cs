@@ -35,9 +35,9 @@ internal static class Entrenador6
                 P.Opcion("genero", IdiomaInterfaz.T("Form.Genero"), c => S(c).Gender, (c, v) => { S(c).Gender = (byte)v; S(c).Overworld.ResetPlayerModel(); }, _ => AyudasGen3.Generos, afectaA: _ => aspectoXY.Select(a => a.Id)),
                 P.Texto("ot", IdiomaInterfaz.T("Form.NombreEntrenador"), c => S(c).OT, (c, v) => { if (S(c).OT != v) S(c).OT = v; }, maxFn: c => c.Sav.MaxStringLengthTrainer),
                 .. IdsP.Campos(sav),
-                P.Entero("dinero", IdiomaInterfaz.T("Form.Dinero"), c => S(c).Money, (c, v) => S(c).Money = (uint)v, 0, 9_999_999, ayuda: IdiomaInterfaz.T("Form.Trainer6.MaxDinero")),
+                P.Entero("dinero", IdiomaInterfaz.T("Form.Dinero"), c => S(c).Money, (c, v) => S(c).Money = (uint)v, 0, sav.MaxMoney, ayuda: IdiomaInterfaz.T("Form.Trainer6.MaxDinero")),
                 P.Entero("bp", T("L_BP"), c => S(c).BP, (c, v) => S(c).BP = (ushort)v, 0, 65535),
-                P.Entero("pm", T("L_PM"), c => S(c).GetRecord(63), (c, v) => { S(c).SetRecord(63, (int)v); S(c).SetRecord(64, (int)v); }, 0, int.MaxValue, ayuda: IdiomaInterfaz.T("Form.Trainer6.PokemillasAyuda")),
+                P.Entero("pm", T("L_PM"), c => S(c).GetRecord(63), (c, v) => { S(c).SetRecord(63, (int)v); S(c).SetRecord(64, (int)v); }, 0, int.MaxValue, maxFn: c => Math.Max(S(c).GetRecordMax(63), S(c).GetRecord(63)), ayuda: IdiomaInterfaz.T("Form.Trainer6.PokemillasAyuda")),
             ]),
             new(IdiomaInterfaz.T("Form.RegionLengua"),
             [
@@ -144,7 +144,7 @@ internal static class Entrenador6
         for (var i = 0; i < MaisonBlock.MaisonStatCount; i++)
         {
             var n = i;
-            yield return P.Entero($"maison{n}", $"{modos[n / 4]}: {est[n % 4].ToLowerInvariant()}", c => ((ISaveBlock6Main)c.Sav).Maison.GetMaisonStat(n), (c, v) => ((ISaveBlock6Main)c.Sav).Maison.SetMaisonStat(n, (ushort)v), 0, 65535);
+            yield return P.Entero($"maison{n}", $"{modos[n / 4]}: {est[n % 4].ToLowerInvariant()}", c => ((ISaveBlock6Main)c.Sav).Maison.GetMaisonStat(n), (c, v) => ((ISaveBlock6Main)c.Sav).Maison.SetMaisonStat(n, (ushort)v), 0, AutoLegalidad.Desafios.Maison6.Tope);
         }
     }
 }

@@ -30,7 +30,7 @@ internal static class Entrenador7b
                     P.Texto("ot", IdiomaInterfaz.T("Form.NombreEntrenador"), c => S(c).OT, (c, v) => { if (S(c).OT != v) S(c).OT = v; }, maxFn: c => c.Sav.MaxStringLengthTrainer),
                     P.Texto("rival", T("L_RivalName", IdiomaInterfaz.T("Form.Trainer7b.Rival")), c => S(c).Blocks.Misc.RivalName, (c, v) => { if (S(c).Blocks.Misc.RivalName != v) S(c).Blocks.Misc.RivalName = v; }, maxFn: c => c.Sav.MaxStringLengthTrainer),
                     .. IdsP.Campos(sav),
-                    P.Entero("dinero", IdiomaInterfaz.T("Form.Dinero"), c => S(c).Blocks.Misc.Money, (c, v) => S(c).Money = (uint)v, 0, 9_999_999, ayuda: IdiomaInterfaz.T("Form.Trainer6.MaxDinero")),
+                    P.Entero("dinero", IdiomaInterfaz.T("Form.Dinero"), c => S(c).Blocks.Misc.Money, (c, v) => S(c).Money = (uint)v, 0, sav.MaxMoney, ayuda: IdiomaInterfaz.T("Form.Trainer6.MaxDinero")),
                     P.Opcion("idioma", T("L_Language", IdiomaInterfaz.T("Form.Trainer7b.Idioma")), c => S(c).Language, (c, v) => S(c).Language = (int)v, c => P.Lista(c.Datos.LanguageDataSource(7, EntityContext.Gen7b))),
                 ]),
                 new(IdiomaInterfaz.T("Form.Trainer7.Aventura"),

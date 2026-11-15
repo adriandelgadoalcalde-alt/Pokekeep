@@ -78,7 +78,8 @@
                   <d:Icono Glifo="Trash2" Width="20" Height="20" />
                 </Button>
               </Grid>
-              <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding Error}" IsVisible="{Binding HayError}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
+              <TextBlock Classes="sec error" Foreground="{DynamicResource Error}" Text="{Binding Error}" IsVisible="{Binding HayError}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
+              <TextBlock Classes="sec aviso" Foreground="{DynamicResource Aviso}" Text="{Binding Aviso}" IsVisible="{Binding HayAviso}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
               <WrapPanel IsVisible="{Binding HayMarcas}">
                 <ToggleButton Classes="chip" IsChecked="{Binding Favorito, Mode=TwoWay}" IsVisible="{Binding TieneFavorito}" MinHeight="48" Margin="0,0,8,0" AutomationProperties.Name="{DynamicResource Loc.Mochila.Favorito}"><TextBlock Text="{DynamicResource Loc.Mochila.Favorito}" /></ToggleButton>
                 <ToggleButton Classes="chip" IsChecked="{Binding Nuevo, Mode=TwoWay}" IsVisible="{Binding TieneNuevo}" MinHeight="48" Margin="0,0,8,0" AutomationProperties.Name="{DynamicResource Loc.Mochila.NuevoNombre}"><TextBlock Text="{DynamicResource Loc.Mochila.Nuevo}" /></ToggleButton>

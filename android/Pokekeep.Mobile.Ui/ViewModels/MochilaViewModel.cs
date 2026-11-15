@@ -71,9 +71,13 @@ public sealed partial class FilaObjetoVm : ObservableObject
 
     [ObservableProperty] private string _cantidad = string.Empty;
     [ObservableProperty] private string? _error;
+    /// <summary>Aviso (no es un error) de que la cantidad escrita se quedó en el máximo del bolsillo.</summary>
+    [ObservableProperty] private string? _aviso;
     [ObservableProperty] private bool _favorito, _nuevo, _nuevoTienda, _sostenido, _libre;
 
     public bool HayError => !string.IsNullOrEmpty(Error);
+    public bool HayAviso => !string.IsNullOrEmpty(Aviso);
+    partial void OnAvisoChanged(string? value) => OnPropertyChanged(nameof(HayAviso));
     public bool TieneFavorito => M.TieneFavorito;
     public bool TieneNuevo => M.TieneNuevo;
     public bool TieneNuevoTienda => M.TieneNuevoTienda;
@@ -88,12 +92,16 @@ public sealed partial class FilaObjetoVm : ObservableObject
         if (_releyendo) return;
         Error = M.PonerCantidad(_bolsillo, Fila, value);
         _textoRechazado = Error is null ? null : value;
-        if (Error is null) _vm.AlCambiar();
-        // Un numero bien escrito pero por encima del limite se rechaza de inmediato: el campo vuelve al ultimo valor valido y el motivo sigue a la vista (misma regla en todos los editores de partida).
-        else if (int.TryParse(value.Trim(), out var n) && n >= 0)
+        Aviso = Error is null ? M.UltimoAviso : null;
+        if (Error is null)
         {
-            _releyendo = true;
-            try { Cantidad = Datos.Cantidad.ToString(); } finally { _releyendo = false; }
+            // Por encima del máximo del bolsillo la cantidad se queda en el máximo y el campo lo enseña ya ajustado (ADR 0108).
+            if (Aviso is not null)
+            {
+                _releyendo = true;
+                try { Cantidad = Datos.Cantidad.ToString(); } finally { _releyendo = false; }
+            }
+            _vm.AlCambiar();
         }
     }
 
@@ -117,7 +125,7 @@ public sealed partial class FilaObjetoVm : ObservableObject
         try
         {
             var d = Datos;
-            Cantidad = d.Cantidad.ToString(); Error = null; _textoRechazado = null;
+            Cantidad = d.Cantidad.ToString(); Error = null; Aviso = null; _textoRechazado = null;
             Favorito = d.Favorito; Nuevo = d.Nuevo; NuevoTienda = d.NuevoTienda; Sostenido = d.Sostenido; Libre = d.Libre;
         }
         finally { _releyendo = false; }
@@ -492,13 +500,18 @@ public sealed partial class NumeroHojaViewModel : HojaViewModel
     public bool HayError => !string.IsNullOrEmpty(Error);
     partial void OnErrorChanged(string? value) => OnPropertyChanged(nameof(HayError));
 
+    /// <summary>Por encima del máximo el número se queda en el máximo al momento (ADR 0108); por debajo del mínimo, al confirmar.</summary>
     partial void OnValorChanged(string value)
-        => Error = int.TryParse(value.Trim(), out var n) && n >= Min && n <= Max ? null : IdiomaInterfaz.F("Numero.Error", Min, Max);
+    {
+        if (!TopeNumero.Acotar(value, Min, Max, hex: false, final: false, out var n, out var ajuste) || n < Min) { Error = IdiomaInterfaz.F("Numero.Error", Min, Max); return; }
+        Error = null;
+        if (ajuste == AjusteTope.AlMaximo) Valor = Max.ToString(System.Globalization.CultureInfo.InvariantCulture);
+    }
 
     [RelayCommand]
     private void Confirmar()
     {
-        if (!int.TryParse(Valor.Trim(), out var n) || n < Min || n > Max) { Error = IdiomaInterfaz.F("Numero.Error", Min, Max); return; }
-        Cerrar(); _aplicar(n);
+        if (!TopeNumero.Acotar(Valor, Min, Max, hex: false, final: true, out var n, out _)) { Error = IdiomaInterfaz.F("Numero.Error", Min, Max); return; }
+        Cerrar(); _aplicar((int)n);
     }
 }

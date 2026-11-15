@@ -110,7 +110,8 @@
         <TextBlock Text="{Binding Valor}" FontWeight="Medium" VerticalAlignment="Center" TextAlignment="Right" TextWrapping="Wrap" MaxWidth="220" />
       </d:EtiquetaYValor>
 
-      <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding Error}" IsVisible="{Binding HayError}" AutomationProperties.LiveSetting="Assertive" />
+      <TextBlock Classes="sec error" Foreground="{DynamicResource Error}" Text="{Binding Error}" IsVisible="{Binding HayError}" AutomationProperties.LiveSetting="Assertive" />
+      <TextBlock Classes="sec aviso" Foreground="{DynamicResource Aviso}" Text="{Binding Aviso}" IsVisible="{Binding HayAviso}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
     </StackPanel>
   </Grid>
 </UserControl>

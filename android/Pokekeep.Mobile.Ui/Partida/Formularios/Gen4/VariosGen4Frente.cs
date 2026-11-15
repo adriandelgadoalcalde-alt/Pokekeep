@@ -118,7 +118,7 @@ internal static partial class VariosGen4
         if (f == (int)Instalacion.Torre)
         {
             // NUD_Stat1 es el número de «continuar» de la Torre (0-65535): u16 en la dirección del indicador. ChangeStatVal liga los dos cuadros: continuar = actual / 7.
-            campos.Add(P.Entero(Prefijo(col, f, idCuenta), L("CHK_Continue") + IdiomaInterfaz.T("VariosGen4Frente.Veces"), c => ReadUInt16LittleEndian(S(c).General[continuarTorre..]), (c, v) => WriteUInt16LittleEndian(S(c).General[continuarTorre..], (ushort)v), 0, 65535, prioridad: 1,
+            campos.Add(P.Entero(Prefijo(col, f, idCuenta), L("CHK_Continue") + IdiomaInterfaz.T("VariosGen4Frente.Veces"), c => ReadUInt16LittleEndian(S(c).General[continuarTorre..]), (c, v) => WriteUInt16LittleEndian(S(c).General[continuarTorre..], (ushort)v), 0, 9999 / 7, prioridad: 1,   // 1.1.3: la racha tope es 9999 (battle_frontier_save.c:72) y continuar = racha / 7
                 afectaA: _ => [Prefijo(col, f, idActual)]));
             AtarTorre(campos, col, f, idActual, idCuenta);
         }

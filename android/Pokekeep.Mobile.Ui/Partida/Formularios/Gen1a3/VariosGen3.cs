@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Pokekeep contributors
 using System.Buffers.Binary;
+using AutoLegalidad.Desafios;
 using PKHeX.Core;
 using Pokekeep.Mobile.Ui.Localizacion;
 using Pokekeep.Mobile.Ui.Ajustes.Pkhex;
@@ -70,6 +71,7 @@ internal static partial class VariosGen3
     }
 
     // ---------------------------------------------------------------- Minijuegos (TAB_Joyful)
+    // 1.1.3: las mejores puntuaciones de Salto Pokémon y A por bayas se leen con sus 32 bits y su tope (TopesJuego, compartido con el escritorio).
     private static PestanaP Minijuegos()
     {
         static ISaveBlock3SmallExpansion J(ContextoP c) => (ISaveBlock3SmallExpansion)S(c).SmallBlock;
@@ -79,14 +81,14 @@ internal static partial class VariosGen3
             new SeccionP(L("label4"),
             [
                 P.Entero("salto_seguidos", L("L_JRow"), c => Math.Min((ushort)9999, J(c).JoyfulJumpInRow), (c, v) => J(c).JoyfulJumpInRow = (ushort)v, 0, 9999, prioridad: 0),
-                P.Entero("salto_puntos", L("L_JHigh"), c => Math.Min(99990u, J(c).JoyfulJumpScore), (c, v) => J(c).JoyfulJumpScore = (uint)v, 0, 9999, prioridad: 1),
+                P.Entero("salto_puntos", L("L_JHigh"), c => TopesJuego.PuntuacionMinijuego(J(c), salto: true), (c, v) => TopesJuego.PonerPuntuacionMinijuego(J(c), salto: true, (uint)v), 0, TopesJuego.SaltoPuntuacion, prioridad: 1),
                 P.Entero("salto_5", L("L_J5Score"), c => Math.Min((ushort)9999, J(c).JoyfulJump5InRow), (c, v) => J(c).JoyfulJump5InRow = (ushort)v, 0, 9999, prioridad: 2),
                 P.Entero("salto_jugadores", L("L_JMaxPlayers"), c => Math.Min((ushort)9999, J(c).JoyfulJumpGamesMaxPlayers), (c, v) => J(c).JoyfulJumpGamesMaxPlayers = (ushort)v, 0, 9999, prioridad: 3),
             ]),
             new SeccionP(L("label5"),
             [
                 P.Entero("bayas_capturadas", L("L_BCaught"), c => Math.Min((ushort)9999, J(c).JoyfulBerriesInRow), (c, v) => J(c).JoyfulBerriesInRow = (ushort)v, 0, 9999, prioridad: 4),
-                P.Entero("bayas_puntos", L("L_BHigh"), c => Math.Min(99990u, J(c).JoyfulBerriesScore), (c, v) => J(c).JoyfulBerriesScore = (uint)v, 0, 9999, prioridad: 5),
+                P.Entero("bayas_puntos", L("L_BHigh"), c => TopesJuego.PuntuacionMinijuego(J(c), salto: false), (c, v) => TopesJuego.PonerPuntuacionMinijuego(J(c), salto: false, (uint)v), 0, TopesJuego.BayasPuntuacion, prioridad: 5),
                 P.Entero("bayas_5", L("L_B5Score"), c => Math.Min((ushort)9999, J(c).JoyfulBerries5InRow), (c, v) => J(c).JoyfulBerries5InRow = (ushort)v, 0, 9999, prioridad: 6),
             ]),
             new SeccionP(string.Empty, [P.Entero("polvo", L("L_BerryPowder"), c => Math.Min(99999u, J(c).BerryPowder), (c, v) => J(c).BerryPowder = (uint)v, 0, 99999, prioridad: 7)]),
@@ -212,12 +214,12 @@ internal static partial class VariosGen3
         {
             if (id == RegistroTiempoHall) continue;
             var k = id;
-            registros.Add(P.Entero($"registro:{k}", nombre, c => S(c).GetRecord(k), (c, v) => S(c).SetRecord(k, (uint)v), 0, uint.MaxValue, prioridad: 100 + k));
+            registros.Add(P.Entero($"registro:{k}", nombre, c => S(c).GetRecord(k), (c, v) => S(c).SetRecord(k, (uint)v), 0, TopesJuego.RegistroGen3, prioridad: 100 + k));
         }
         // El registro 1 es el tiempo de juego al entrar en el Hall de la Fama: horas << 16 | minutos << 8 | segundos (NUD_FameH/M/S del formulario). Se escribe entero cuando cambia una de las tres partes.
         var hall = new List<CampoP>
         {
-            P.Entero("hall_horas", IdiomaInterfaz.T("Form.Horas"), c => Math.Min(9999u, S(c).GetRecord(RegistroTiempoHall) >> 16), (c, v) => S(c).SetRecord(RegistroTiempoHall, TiempoHall(c)), 0, 9999, grupo: "hall", prioridad: 100),
+            P.Entero("hall_horas", IdiomaInterfaz.T("Form.Horas"), c => Math.Min(9999u, S(c).GetRecord(RegistroTiempoHall) >> 16), (c, v) => S(c).SetRecord(RegistroTiempoHall, TiempoHall(c)), 0, 999, grupo: "hall", prioridad: 100),
             P.Entero("hall_minutos", IdiomaInterfaz.T("Form.Minutos"), c => Math.Min(59u, (byte)(S(c).GetRecord(RegistroTiempoHall) >> 8)), (c, v) => S(c).SetRecord(RegistroTiempoHall, TiempoHall(c)), 0, 59, grupo: "hall", prioridad: 100),
             P.Entero("hall_segundos", IdiomaInterfaz.T("Form.Segundos"), c => Math.Min(59u, (byte)S(c).GetRecord(RegistroTiempoHall)), (c, v) => S(c).SetRecord(RegistroTiempoHall, TiempoHall(c)), 0, 59, grupo: "hall", prioridad: 100),
         };

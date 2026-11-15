@@ -11,7 +11,7 @@
         <TextBlock Classes="etiqueta" Text="{Binding Etiqueta}" />
         <TextBox Classes="campo numero" Text="{Binding Valor}" MaxLength="5" TextInputOptions.ContentType="Digits" AutomationProperties.Name="{Binding Etiqueta}" AutomationProperties.HelpText="{Binding Rango}" />
         <TextBlock Classes="sec" Text="{Binding Rango}" />
-        <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding Error}" IsVisible="{Binding HayError}" TextWrapping="Wrap" />
+        <TextBlock Classes="sec error" Foreground="{DynamicResource Error}" Text="{Binding Error}" IsVisible="{Binding HayError}" TextWrapping="Wrap" />
       </StackPanel>
       <d:RejillaSinPartir Columns="2" ColumnSpacing="8" RowSpacing="8">
         <Button Classes="secundario" HorizontalAlignment="Stretch" Command="{Binding CerrarCommand}" AutomationProperties.Name="{DynamicResource Loc.Comun.Cancelar}">

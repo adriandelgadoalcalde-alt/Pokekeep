@@ -78,7 +78,7 @@ internal static class Entrenador7
                     deriva: c => new Dictionary<string, object?> { ["piel"] = (c.Entero("piel") & ~1L) | (c.Entero("genero") & 1) }),
                 P.Texto("ot", IdiomaInterfaz.T("Form.NombreEntrenador"), c => S(c).OT, (c, v) => { if (S(c).OT != v) S(c).OT = v; }, maxFn: c => c.Sav.MaxStringLengthTrainer),
                 .. IdsP.Campos(sav),
-                P.Entero("dinero", IdiomaInterfaz.T("Form.Dinero"), c => S(c).Money, (c, v) => S(c).Money = (uint)v, 0, 9_999_999, ayuda: IdiomaInterfaz.T("Form.Trainer7.MaxDinero")),
+                P.Entero("dinero", IdiomaInterfaz.T("Form.Dinero"), c => S(c).Money, (c, v) => S(c).Money = (uint)v, 0, sav.MaxMoney, ayuda: IdiomaInterfaz.T("Form.Trainer7.MaxDinero")),
                 P.Entero("pb", T("L_BP"), c => S(c).Misc.BP, (c, v) => S(c).Misc.BP = (uint)v, 0, 9999),
                 P.Entero("festimonedas", T("L_FC"), c => S(c).Festa.FestaCoins, (c, v) => S(c).Festa.FestaCoins = (int)v, 0, 9_999_999),
             ]),
@@ -132,7 +132,7 @@ internal static class Entrenador7
                 for (var i = 0; i < 3; i++)
                 {
                     var tipo = i; var sup = super; var mx = max;
-                    arbol.Add(P.Entero($"arbol_{(super ? "s" : "r")}{(max ? "m" : "c")}{i}", IdiomaInterfaz.F("Form.Trainer7.Racha", nombre, rotulo, modos[i].ToLowerInvariant()), c => S(c).BattleTree.GetTreeStreak(tipo, sup, mx), (c, v) => S(c).BattleTree.SetTreeStreak((int)v, tipo, sup, mx), 0, 65535));
+                    arbol.Add(P.Entero($"arbol_{(super ? "s" : "r")}{(max ? "m" : "c")}{i}", IdiomaInterfaz.F("Form.Trainer7.Racha", nombre, rotulo, modos[i].ToLowerInvariant()), c => S(c).BattleTree.GetTreeStreak(tipo, sup, mx), (c, v) => S(c).BattleTree.SetTreeStreak((int)v, tipo, sup, mx), 0, AutoLegalidad.Desafios.Arbol7.Tope));
                 }
         pestanas.Add(new("arbol", T("Tab_BattleTree"), [new(IdiomaInterfaz.T("Form.Trainer7.Rachas"), arbol)]));
 

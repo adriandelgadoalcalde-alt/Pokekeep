@@ -50,7 +50,7 @@ internal static class SalonFama1
             c => P.Lista(c.Datos.SpeciesDataSource.Where(x => x.Value <= (int)Species.Mew)), titulo: L("Label_Species"), prioridad: 0, grupo: grupo,
             deriva: c => c.Marca(ida) ? new Dictionary<string, object?>() : new Dictionary<string, object?> { [idm] = NombreDeEspecie(c.Sav, c.Entero(ide)) }, especie: true);
         yield return P.Entero(idn, L("L_Level"), c => Fama(c.Sav).GetEntity(equipo, hueco).Level,
-            (c, v) => { if (c.Entero(ide) is not (0 or > (int)Species.Mew)) { var e = Fama(c.Sav).GetEntity(equipo, hueco); e.Level = (byte)v; } }, 0, 255, prioridad: 1, grupo: grupo);
+            (c, v) => { if (c.Entero(ide) is not (0 or > (int)Species.Mew)) { var e = Fama(c.Sav).GetEntity(equipo, hueco); e.Level = (byte)v; } }, 0, Experience.MaxLevel, prioridad: 1, grupo: grupo);
         // El mote solo se edita con «Mote» marcado; sin marcar sigue a la especie (CB_Species_SelectedIndexChanged).
         yield return P.Marca(ida, L("CHK_Nicknamed"), c => { var e = Fama(c.Sav).GetEntity(equipo, hueco); return TieneMote(c.Sav, e.Species, e.Nickname); }, null,
             sinEscritura: true, ayuda: IdiomaInterfaz.T("Form.Fama1.MoteAyuda"),

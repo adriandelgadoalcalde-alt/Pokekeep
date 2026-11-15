@@ -193,7 +193,7 @@
                     <TextBlock Text="{DynamicResource Loc.Cajas.SemillaHexadecimal}" VerticalAlignment="Center" />
                     <TextBox Classes="campo" MinWidth="170" Text="{Binding Semilla}" MaxLength="{Binding DigitosSemilla}" AutomationProperties.Name="{DynamicResource Loc.Cajas.SemillaGuarderiaHexadecimal}" />
                   </d:EtiquetaYValor>
-                  <TextBlock Classes="sec" Foreground="{DynamicResource Error}" Text="{Binding ErrorSemilla}" IsVisible="{Binding HayErrorSemilla}" />
+                  <TextBlock Classes="sec error" Foreground="{DynamicResource Error}" Text="{Binding ErrorSemilla}" IsVisible="{Binding HayErrorSemilla}" />
                 </StackPanel>
               </StackPanel>
             </Border>

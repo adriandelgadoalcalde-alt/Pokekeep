@@ -222,12 +222,22 @@ public sealed class ModeloMochila
         return null;
     }
 
-    /// <summary>Pone la cantidad de una fila. Devuelve el motivo del rechazo (y no cambia nada) o null.</summary>
+    /// <summary>Aviso de la última <see cref="PonerCantidad"/> que dejó la cantidad en el máximo del bolsillo (null si se escribió tal cual).</summary>
+    public string? UltimoAviso { get; private set; }
+
+    /// <summary>
+    /// Pone la cantidad de una fila. Una cantidad por encima del máximo real del bolsillo se queda en ese máximo, con su aviso en
+    /// <see cref="UltimoAviso"/> (ADR 0108: «si escribes 999999999 automáticamente te pone que es lo máximo»). Devuelve el motivo del
+    /// rechazo (y no cambia nada) solo si lo escrito no es un número de 0 en adelante.
+    /// </summary>
     public string? PonerCantidad(BolsilloModelo b, int fila, string texto)
     {
+        UltimoAviso = null;
         var f = b.Filas[fila];
-        if (RechazoCantidad(b, f.Id, texto) is { } motivo) return motivo;
-        f.Cantidad = int.Parse(texto.Trim()); b.Tocar();
+        var max = MaximoDe(b, f.Id);
+        if (!TopeNumero.Acotar(texto, 0, max, hex: false, final: false, out var n, out var ajuste) || n < 0) return IdiomaInterfaz.T("Mochila.Entero");
+        f.Cantidad = (int)n; b.Tocar();
+        UltimoAviso = TopeNumero.Aviso(ajuste, max);
         return null;
     }
 
