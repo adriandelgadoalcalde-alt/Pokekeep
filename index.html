@@ -95,7 +95,7 @@
       "description": "Free Pokémon save editor for Android and Windows, built on PKHeX, with automatic legality: “Legalize automatically” fixes only what PKHeX flags and checks the result with PKHeX’s own rules before writing it.",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Android 10 or later, Windows 10 and 11 (64-bit)",
-      "softwareVersion": "1.1.2",
+      "softwareVersion": "1.1.3",
       "datePublished": "2026-10-26",
       "license": "https://www.gnu.org/licenses/gpl-3.0.html",
       "isAccessibleForFree": true,
@@ -110,11 +110,11 @@
       ],
       "url": "https://adriandelgadoalcalde-alt.github.io/Pokekeep/",
       "downloadUrl": [
-        "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.1.2/Pokekeep-1.1.2.apk",
-        "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.1.2/PKHeX-Pokekeep-1.1.2.zip"
+        "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.1.3/Pokekeep-1.1.3.apk",
+        "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.1.3/PKHeX-Pokekeep-1.1.3.zip"
       ],
       "installUrl": "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/latest",
-      "releaseNotes": "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/tag/v1.1.2",
+      "releaseNotes": "https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/tag/v1.1.3",
       "isBasedOn": {
         "@type": "SoftwareSourceCode",
         "name": "PKHeX",
@@ -476,13 +476,13 @@ footer .fila { display: flex; flex-wrap: wrap; gap: 8px 22px; }
       <p class="entradilla">Pokekeep is PKHeX with a “Legalize automatically” button, on your phone and on Windows. It fixes only what PKHeX flags, and nothing is written until PKHeX itself says the result is legal.</p>
       <p class="sello" id="sello">✓ Checked by PKHeX.Core 26.10.18</p>
       <div class="descargas">
-        <a class="boton principal" id="descarga-apk" href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.1.2/Pokekeep-1.1.2.apk">
+        <a class="boton principal" id="descarga-apk" href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.1.3/Pokekeep-1.1.3.apk">
           <span class="sistema"><b>Android</b> 10+</span>
-          <span class="detalle">APK · about 700 MB · <span class="ver">v1.1.2</span></span>
+          <span class="detalle">APK · about 700 MB · <span class="ver">v1.1.3</span></span>
         </a>
-        <a class="boton" id="descarga-zip" href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.1.2/PKHeX-Pokekeep-1.1.2.zip">
+        <a class="boton" id="descarga-zip" href="https://github.com/adriandelgadoalcalde-alt/Pokekeep/releases/download/v1.1.3/PKHeX-Pokekeep-1.1.3.zip">
           <span class="sistema"><b>Windows</b> 10/11 · 64-bit</span>
-          <span class="detalle">Portable ZIP · 120 MB · <span class="ver">v1.1.2</span></span>
+          <span class="detalle">Portable ZIP · 120 MB · <span class="ver">v1.1.3</span></span>
         </a>
       </div>
       <p class="notas-descarga">Free and open source (GPL-3.0). No account, no ads, and the Android app doesn’t ask for Internet access.
@@ -702,7 +702,7 @@ footer .fila { display: flex; flex-wrap: wrap; gap: 8px 22px; }
     }
   } catch (e) {}
 
-  // Los botones de descarga apuntan a la última release real (el HTML trae la 1.1.2 por si la API no responde).
+  // Los botones de descarga apuntan a la última release real (el HTML trae la 1.1.3 por si la API no responde).
   // Se consulta en la primera interacción, no al cargar: así los rastreadores y las pruebas automáticas no gastan
   // el límite de peticiones anónimas de la API de GitHub.
   var consultado = false;
