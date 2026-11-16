@@ -304,6 +304,10 @@ public sealed partial class EditorViewModel : ObservableObject, IAnfitrionEditor
         var error = Modelo.Escribir(def, texto);
         c.PonerError(error);
         if (error is null) c.MarcarPendiente(false);
+        // Por encima del tope el número se queda en el tope (ADR 0108) y el cuadro lo enseña ya ajustado, con su aviso.
+        if (error is null && def.Tipo == TipoCampo.Entero && def.Escribir is not null
+            && TopeNumero.Acotar(texto, def.Min, def.MaximoEn(Modelo.Contexto), hex: false, final: false, out _, out var ajuste) && ajuste == AjusteTope.AlMaximo)
+            c.MostrarAjustado(texto, Modelo.Valor(def), TopeNumero.Aviso(ajuste, def.MaximoEn(Modelo.Contexto))!);
     }
 
     public void EscribirMarca(CampoVm c, bool valor)

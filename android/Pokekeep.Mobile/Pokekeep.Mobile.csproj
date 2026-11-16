@@ -10,7 +10,8 @@
     <RootNamespace>Pokekeep.Mobile</RootNamespace>
     <AssemblyName>Pokekeep.Mobile</AssemblyName>
     <ApplicationId>com.incredibad.pokekeep</ApplicationId>
-    <ApplicationVersion>107</ApplicationVersion>
+    <!-- 108: la 1.1.5 recompilada el 16-nov-2026 con dos arreglos de Android (número ajustado en vivo y franja del teclado); el nombre sigue siendo 1.1.5. -->
+    <ApplicationVersion>108</ApplicationVersion>
     <ApplicationDisplayVersion>$(PokekeepVersion)</ApplicationDisplayVersion>
     <AndroidPackageFormat>apk</AndroidPackageFormat>
     <!-- compilar-apk.ps1 elige UNA arquitectura con PokekeepRid. No se pasa -p:RuntimeIdentifiers en la línea de órdenes: como propiedad global llega también a PKHeX.Core y a los

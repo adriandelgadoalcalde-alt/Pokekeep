@@ -70,6 +70,24 @@ public sealed partial class FilaObjetoVm : ObservableObject
     public string Accesible => IdiomaInterfaz.F("Mochila.FilaAccesible", Nombre, Datos.Cantidad, Maximo);
 
     [ObservableProperty] private string _cantidad = string.Empty;
+    /// <summary>
+    /// Hace que el cuadro enseñe el número ya ajustado. El ajuste se hace mientras el cuadro pasa su texto al modelo, y el enlace no lee un
+    /// cambio hecho dentro de ese paso; avisar después con el mismo valor tampoco basta, porque el enlace ya lo tiene apuntado como el último.
+    /// Por eso, justo después, se le enseña un instante lo tecleado (lo que ya tiene el cuadro: no cambia nada) y luego el valor ajustado,
+    /// que sí ve como cambio y lleva al cuadro (fallo visto por Adrian el 16-nov-2026, TopeEnVivoCuadroRealTests).
+    /// </summary>
+#pragma warning disable MVVMTK0034 // se toca el campo a propósito: sin pasar por el setter, que volvería a ajustar
+    private void ReavisarCuadro(string tecleado)
+    {
+        var bueno = _cantidad;
+        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            if (_cantidad != bueno || tecleado == bueno) return;   // ya se escribió otra cosa
+            _cantidad = tecleado; OnPropertyChanged(nameof(Cantidad));
+            _cantidad = bueno; OnPropertyChanged(nameof(Cantidad));
+        });
+    }
+#pragma warning restore MVVMTK0034
     [ObservableProperty] private string? _error;
     /// <summary>Aviso (no es un error) de que la cantidad escrita se quedó en el máximo del bolsillo.</summary>
     [ObservableProperty] private string? _aviso;
@@ -100,6 +118,9 @@ public sealed partial class FilaObjetoVm : ObservableObject
             {
                 _releyendo = true;
                 try { Cantidad = Datos.Cantidad.ToString(); } finally { _releyendo = false; }
+                // El cuadro está a mitad de pasar su texto al modelo y no lee un cambio hecho dentro de ese paso: se le vuelve a avisar
+                // justo después, o seguiría enseñando lo tecleado (visto por Adrian el 16-nov-2026, TopeEnVivoCuadroRealTests).
+                ReavisarCuadro(value);
             }
             _vm.AlCambiar();
         }
@@ -496,6 +517,24 @@ public sealed partial class NumeroHojaViewModel : HojaViewModel
     }
     public string Rango => IdiomaInterfaz.F("Ajustes.Rango", Min, Max);
     [ObservableProperty] private string _valor = string.Empty;
+    /// <summary>
+    /// Hace que el cuadro enseñe el número ya ajustado. El ajuste se hace mientras el cuadro pasa su texto al modelo, y el enlace no lee un
+    /// cambio hecho dentro de ese paso; avisar después con el mismo valor tampoco basta, porque el enlace ya lo tiene apuntado como el último.
+    /// Por eso, justo después, se le enseña un instante lo tecleado (lo que ya tiene el cuadro: no cambia nada) y luego el valor ajustado,
+    /// que sí ve como cambio y lleva al cuadro (fallo visto por Adrian el 16-nov-2026, TopeEnVivoCuadroRealTests).
+    /// </summary>
+#pragma warning disable MVVMTK0034 // se toca el campo a propósito: sin pasar por el setter, que volvería a ajustar
+    private void ReavisarCuadro(string tecleado)
+    {
+        var bueno = _valor;
+        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            if (_valor != bueno || tecleado == bueno) return;   // ya se escribió otra cosa
+            _valor = tecleado; OnPropertyChanged(nameof(Valor));
+            _valor = bueno; OnPropertyChanged(nameof(Valor));
+        });
+    }
+#pragma warning restore MVVMTK0034
     [ObservableProperty] private string? _error;
     public bool HayError => !string.IsNullOrEmpty(Error);
     partial void OnErrorChanged(string? value) => OnPropertyChanged(nameof(HayError));
@@ -505,7 +544,13 @@ public sealed partial class NumeroHojaViewModel : HojaViewModel
     {
         if (!TopeNumero.Acotar(value, Min, Max, hex: false, final: false, out var n, out var ajuste) || n < Min) { Error = IdiomaInterfaz.F("Numero.Error", Min, Max); return; }
         Error = null;
-        if (ajuste == AjusteTope.AlMaximo) Valor = Max.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        if (ajuste == AjusteTope.AlMaximo)
+        {
+            Valor = Max.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            // El cuadro está a mitad de pasar su texto al modelo y no lee un cambio hecho dentro de ese paso: se le vuelve a avisar
+            // justo después, o seguiría enseñando lo tecleado (visto por Adrian el 16-nov-2026, TopeEnVivoCuadroRealTests).
+            ReavisarCuadro(value);
+        }
     }
 
     [RelayCommand]

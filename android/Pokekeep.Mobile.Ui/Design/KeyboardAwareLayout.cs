@@ -34,6 +34,19 @@ public sealed class KeyboardAwareLayout : ContentControl
     /// <summary>En <see cref="EstrategiaTeclado.Auto"/>, lo que se supone si el teclado ya esta abierto cuando se mide por primera vez (la plataforma lo fija: false en Android 15+).</summary>
     public static bool SuponeVentanaRedimensionada { get; set; } = true;
 
+    /// <summary>
+    /// Lo que dice el propio sistema de si el teclado está a la vista (null: no lo sabe). Fallo visto por Adrian el 16-nov-2026 en su S24 con la
+    /// 1.1.5: con el teclado abierto, la app pasa a segundo plano y el teclado se cierra allí; al volver, el panel de Avalonia seguía dando la altura
+    /// vieja del teclado y nadie avisaba del cierre, así que el relleno (en negro) y la cabecera compacta se quedaban, sin forma de quitarlos.
+    /// Con esto, una altura de teclado que el sistema niega no cuenta.
+    /// </summary>
+    public static Func<bool?>? TecladoDelSistemaVisible { get; set; }
+
+    private static event Action? RevisionPedida;
+
+    /// <summary>Vuelve a medir el teclado en todos los contenedores (al volver la app a primer plano o recuperar el foco de la ventana).</summary>
+    public static void Revisar() => RevisionPedida?.Invoke();
+
     private double _alturaLibre;
     private EstrategiaTeclado _modo = EstrategiaTeclado.VentanaRedimensionada;
     private bool _visible;
@@ -58,6 +71,8 @@ public sealed class KeyboardAwareLayout : ContentControl
     public KeyboardAwareLayout()
     {
         AddHandler(GotFocusEvent, AlTomarFoco, RoutingStrategies.Bubble);
+        // Tocar la pantalla con el teclado dado por abierto vuelve a mirar si lo está: un relleno que se quedó atrás se quita al primer toque.
+        AddHandler(PointerPressedEvent, (_, _) => { if (TecladoVisible) Dispatcher.UIThread.Post(Recalcular); }, RoutingStrategies.Tunnel, handledEventsToo: true);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -66,6 +81,7 @@ public sealed class KeyboardAwareLayout : ContentControl
         _top = TopLevel.GetTopLevel(this);
         if (_top?.InputPane is { } pane) pane.StateChanged += AlCambiarPanel;
         if (_top is not null) _top.PropertyChanged += AlCambiarTamano;
+        RevisionPedida += AlPedirRevision;
         Recalcular();
     }
 
@@ -73,9 +89,12 @@ public sealed class KeyboardAwareLayout : ContentControl
     {
         if (_top?.InputPane is { } pane) pane.StateChanged -= AlCambiarPanel;
         if (_top is not null) _top.PropertyChanged -= AlCambiarTamano;
+        RevisionPedida -= AlPedirRevision;
         _top = null;
         base.OnDetachedFromVisualTree(e);
     }
+
+    private void AlPedirRevision() => Dispatcher.UIThread.Post(Recalcular);
 
     private void AlCambiarPanel(object? sender, Avalonia.Controls.Platform.InputPaneStateEventArgs e) => Dispatcher.UIThread.Post(Recalcular);
 
@@ -91,6 +110,7 @@ public sealed class KeyboardAwareLayout : ContentControl
     {
         var ocupado = OcupadoPorTeclado ?? _top?.InputPane?.OccludedRect;
         var alto = ocupado is { Height: > 0 } r ? r.Height : 0;
+        if (alto > 0 && TecladoDelSistemaVisible?.Invoke() == false) { alto = 0; ocupado = null; }
         var altoVentana = _top?.ClientSize.Height ?? Bounds.Height;
         TecladoVisible = alto > 0;
         if (!TecladoVisible)

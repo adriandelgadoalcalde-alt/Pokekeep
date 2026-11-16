@@ -114,6 +114,24 @@ public sealed partial class FilaConstanteVm : ObservableObject
     public string? Clave => EtiquetaLegible.Partir(Etiqueta.Nombre).Clave;
     public bool HayClave => Clave is not null;
     [ObservableProperty] private string _valor = "0";
+    /// <summary>
+    /// Hace que el cuadro enseñe el número ya ajustado. El ajuste se hace mientras el cuadro pasa su texto al modelo, y el enlace no lee un
+    /// cambio hecho dentro de ese paso; avisar después con el mismo valor tampoco basta, porque el enlace ya lo tiene apuntado como el último.
+    /// Por eso, justo después, se le enseña un instante lo tecleado (lo que ya tiene el cuadro: no cambia nada) y luego el valor ajustado,
+    /// que sí ve como cambio y lleva al cuadro (fallo visto por Adrian el 16-nov-2026, TopeEnVivoCuadroRealTests).
+    /// </summary>
+#pragma warning disable MVVMTK0034 // se toca el campo a propósito: sin pasar por el setter, que volvería a ajustar
+    private void ReavisarCuadro(string tecleado)
+    {
+        var bueno = _valor;
+        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            if (_valor != bueno || tecleado == bueno) return;   // ya se escribió otra cosa
+            _valor = tecleado; OnPropertyChanged(nameof(Valor));
+            _valor = bueno; OnPropertyChanged(nameof(Valor));
+        });
+    }
+#pragma warning restore MVVMTK0034
     [ObservableProperty] private string? _error;
     public bool HayError => !string.IsNullOrEmpty(Error);
     public bool Modificada => _vm.Modelo.ConstanteModificada(Etiqueta.Indice);
@@ -134,6 +152,7 @@ public sealed partial class FilaConstanteVm : ObservableObject
         {
             Error = IdiomaInterfaz.T("Eventos.Cambiado") + motivo[0].ToString().ToLowerInvariant() + motivo[1..];
             _releyendo = true; try { Valor = _vm.Modelo.Constante(Etiqueta.Indice).ToString(CultureInfo.InvariantCulture); } finally { _releyendo = false; }
+            ReavisarCuadro(value);
             return;
         }
         Error = null;

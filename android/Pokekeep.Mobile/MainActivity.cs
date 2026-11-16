@@ -69,6 +69,10 @@ public class MainActivity : AvaloniaMainActivity
         ShellViewModel.DiagnosticoEntrada = texto => global::Android.Util.Log.Info("POKEKEEP-ENTRADA", texto);
 #endif
         PuenteActividad.Registrar(this);   // los selectores del sistema (abrir, exportar) se lanzan desde esta actividad
+        // Lo que dice Android del teclado (API 30+): si lo niega, la altura vieja que conserve el panel de Avalonia no cuenta (fallo del 16-nov-2026).
+        if ((int)Build.VERSION.SdkInt >= 30)
+            Pokekeep.Mobile.Ui.Design.KeyboardAwareLayout.TecladoDelSistemaVisible = () => Window?.DecorView?.RootWindowInsets is { } insets
+                ? insets.IsVisible(global::Android.Views.WindowInsets.Type.Ime()) : null;
         base.OnCreate(savedInstanceState);
         if (savedInstanceState is null) RecibirArchivo(Intent);   // arranque en frio desde «Abrir con» o «Compartir» (el equivalente de los argumentos de PKHeX, PK-MENU-045)
     }
@@ -89,6 +93,7 @@ public class MainActivity : AvaloniaMainActivity
     {
         if (!hasFocus) Pokekeep.Mobile.Ui.Design.CicloInteraccion.Interrumpir();
         base.OnWindowFocusChanged(hasFocus);
+        if (hasFocus) RevisarTeclado();
     }
 
     protected override void OnStop()
@@ -101,6 +106,17 @@ public class MainActivity : AvaloniaMainActivity
     {
         base.OnResume();
         ShellViewModel.RevalidarRecientesEnPrimerPlano();
+        RevisarTeclado();
+    }
+
+    /// <summary>
+    /// Al volver a primer plano, el teclado se vuelve a medir contra lo que dice Android (los insets de la ventana), ahora y otra vez cuando Android
+    /// ha terminado de colocar la ventana: si se cerró mientras la app estaba en segundo plano, se quita su hueco (fallo del 16-nov-2026).
+    /// </summary>
+    private void RevisarTeclado()
+    {
+        Pokekeep.Mobile.Ui.Design.KeyboardAwareLayout.Revisar();
+        Window?.DecorView?.PostDelayed(Pokekeep.Mobile.Ui.Design.KeyboardAwareLayout.Revisar, 400);
     }
 
     /// <summary>Deja en el buzón de la interfaz el documento que trae el Intent; la Shell lo abre cuando esta lista (y si ya lo esta, al momento). Nada se lee aqui.</summary>

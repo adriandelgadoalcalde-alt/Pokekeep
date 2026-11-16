@@ -50,6 +50,24 @@ public sealed partial class FilaTablaPVm : ObservableObject
     public string Accesible => Def.EsMarca ? $"{Def.Nombre}: {(Marcado ? IdiomaInterfaz.T("Comun.Si") : IdiomaInterfaz.T("Comun.No"))}" : $"{Def.Nombre}: {Valor}";
 
     [ObservableProperty] private string _valor = string.Empty;
+    /// <summary>
+    /// Hace que el cuadro enseñe el número ya ajustado. El ajuste se hace mientras el cuadro pasa su texto al modelo, y el enlace no lee un
+    /// cambio hecho dentro de ese paso; avisar después con el mismo valor tampoco basta, porque el enlace ya lo tiene apuntado como el último.
+    /// Por eso, justo después, se le enseña un instante lo tecleado (lo que ya tiene el cuadro: no cambia nada) y luego el valor ajustado,
+    /// que sí ve como cambio y lleva al cuadro (fallo visto por Adrian el 16-nov-2026, TopeEnVivoCuadroRealTests).
+    /// </summary>
+#pragma warning disable MVVMTK0034 // se toca el campo a propósito: sin pasar por el setter, que volvería a ajustar
+    private void ReavisarCuadro(string tecleado)
+    {
+        var bueno = _valor;
+        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            if (_valor != bueno || tecleado == bueno) return;   // ya se escribió otra cosa
+            _valor = tecleado; OnPropertyChanged(nameof(Valor));
+            _valor = bueno; OnPropertyChanged(nameof(Valor));
+        });
+    }
+#pragma warning restore MVVMTK0034
     [ObservableProperty] private bool _marcado;
     [ObservableProperty] private string? _error;
     [ObservableProperty] private bool _modificado;
@@ -93,6 +111,9 @@ public sealed partial class FilaTablaPVm : ObservableObject
         {
             Aviso = TopeNumero.Aviso(ajuste, ajuste == AjusteTope.AlMinimo ? Def.Min : Def.Max);
             _releyendo = true; try { Valor = Convert.ToString(_m.Borrador(Clave), CultureInfo.InvariantCulture) ?? "0"; } finally { _releyendo = false; }
+            // El cuadro está a mitad de pasar su texto al modelo y no lee un cambio hecho dentro de ese paso: se le vuelve a avisar
+            // justo después, o seguiría enseñando lo tecleado (visto por Adrian el 16-nov-2026, TopeEnVivoCuadroRealTests).
+            ReavisarCuadro(value);
         }
         Modificado = _m.CuentaComoCambio(Clave);
         _alCambiar();

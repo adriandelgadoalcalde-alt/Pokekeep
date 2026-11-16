@@ -40,6 +40,41 @@ public sealed partial class CampoVm : ObservableObject
     [ObservableProperty] private string? _error;
     [ObservableProperty] private string? _detalle;
     [ObservableProperty] private bool _visible = true;
+    /// <summary>«Ajustado al máximo del juego: N» cuando lo tecleado pasaba del tope (ADR 0108, como en los editores de la partida).</summary>
+    [ObservableProperty] private string? _aviso;
+    public bool HayAviso => !string.IsNullOrEmpty(Aviso);
+    partial void OnAvisoChanged(string? value) => OnPropertyChanged(nameof(HayAviso));
+
+    /// <summary>
+    /// Lo tecleado pasaba del tope y el modelo se quedó en él: el cuadro pasa ya al valor guardado y dice debajo a qué se ajustó (16-nov-2026: el
+    /// editor del Pokémon conservaba lo tecleado hasta salir del campo, y Adrian pidió que todos los números se comporten igual).
+    /// </summary>
+    public void MostrarAjustado(string tecleado, string valorGuardado, string aviso)
+    {
+        Aviso = aviso;
+        _releyendo = true;
+        try { Valor = valorGuardado; } finally { _releyendo = false; }
+        ReavisarCuadro(tecleado);
+    }
+
+    /// <summary>
+    /// Hace que el cuadro enseñe el número ya ajustado. El ajuste se hace mientras el cuadro pasa su texto al modelo, y el enlace no lee un
+    /// cambio hecho dentro de ese paso; avisar después con el mismo valor tampoco basta, porque el enlace ya lo tiene apuntado como el último.
+    /// Por eso, justo después, se le enseña un instante lo tecleado (lo que ya tiene el cuadro: no cambia nada) y luego el valor ajustado,
+    /// que sí ve como cambio y lleva al cuadro (fallo visto por Adrian el 16-nov-2026, TopeEnVivoCuadroRealTests).
+    /// </summary>
+#pragma warning disable MVVMTK0034 // se toca el campo a propósito: sin pasar por el setter, que volvería a ajustar
+    private void ReavisarCuadro(string tecleado)
+    {
+        var bueno = _valor;
+        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            if (_valor != bueno || tecleado == bueno) return;   // ya se escribió otra cosa
+            _valor = tecleado; OnPropertyChanged(nameof(Valor));
+            _valor = bueno; OnPropertyChanged(nameof(Valor));
+        });
+    }
+#pragma warning restore MVVMTK0034
 
     // ---- Que plantilla pintar ----
     public bool EsCampoNumerico => Def.Tipo is TipoCampo.Entero or TipoCampo.Decimal;
@@ -107,6 +142,7 @@ public sealed partial class CampoVm : ObservableObject
         RefrescarColores();
         OnPropertyChanged(nameof(Accesible)); OnPropertyChanged(nameof(HayValorAccion)); OnPropertyChanged(nameof(ValorLargo)); OnPropertyChanged(nameof(ValorCorto)); OnPropertyChanged(nameof(EspecieSprite)); OnPropertyChanged(nameof(HayEspecieSprite));
         if (_releyendo || EsOpcion || EsInfo || EsAccion) return;
+        Aviso = null;
         _ed.EscribirTexto(this, value, final: false);
     }
 
@@ -158,7 +194,7 @@ public sealed partial class CampoVm : ObservableObject
         finally { _releyendo = false; }
     }
 
-    public void PonerError(string? error) => Error = error;
+    public void PonerError(string? error) { Error = error; if (error is not null) Aviso = null; }
 
     [RelayCommand] private void Elegir() => _ed.AbrirSelector(this);
     [RelayCommand] private void Ejecutar() => _ed.EjecutarAccion(this);
@@ -172,6 +208,19 @@ public abstract partial class SeccionBaseVm : ObservableObject
     [ObservableProperty] private bool _visible = true;
     public abstract IEnumerable<CampoVm> TodosLosCampos { get; }
     public virtual void Releer() { foreach (var c in TodosLosCampos) c.Releer(); Visible = TodosLosCampos.Any(c => c.Visible); }
+
+    /// <summary>
+    /// Aviso de ajuste al tope de una celda de tabla (IV, EV, AV, GV, PP…), que no tiene sitio propio para mensajes: se enseña debajo de la
+    /// tabla con el nombre de la celda («Ataque, IV: Ajustado al máximo del juego: 31.»). Los campos sueltos lo enseñan en su propia vista.
+    /// </summary>
+    public string? AvisoCeldas => Celdas.FirstOrDefault(c => c.HayAviso) is { } c ? $"{c.Etiqueta}: {c.Aviso}" : null;
+    public bool HayAvisoCeldas => AvisoCeldas is not null;
+    protected virtual IEnumerable<CampoVm> Celdas => [];
+    protected void VigilarCelda(CampoVm? c)
+    {
+        if (c is null) return;
+        c.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(CampoVm.Aviso)) { OnPropertyChanged(nameof(AvisoCeldas)); OnPropertyChanged(nameof(HayAvisoCeldas)); } };
+    }
 }
 
 public sealed class SeccionPlanaVm : SeccionBaseVm
@@ -226,6 +275,12 @@ public sealed partial class SeccionStatsVm : SeccionBaseVm, Design.IConAnchoDisp
     public double AnchoNecesario => 104 + 6 + 48 + (Filas.Any(f => f.Iv?.Visible == true) ? 62 : 0) + (HayEv ? 74 : 0) + (HayAv ? 62 : 0) + (HayGv ? 58 : 0) + (HayHt ? 54 : 0);
     internal void Recalcular() => Apilada = PorEscala || (AnchoDisponible > 0 && AnchoDisponible < AnchoNecesario);
     public override IEnumerable<CampoVm> TodosLosCampos => Filas.SelectMany(f => new[] { f.Final, f.Iv, f.Ev, f.Av, f.Gv, f.Ht }).OfType<CampoVm>().Concat(Resto);
+    protected override IEnumerable<CampoVm> Celdas => Filas.SelectMany(f => new[] { f.Iv, f.Ev, f.Av, f.Gv }).OfType<CampoVm>();
+
+    public SeccionStatsVm()
+    {
+        Filas.CollectionChanged += (_, e) => { foreach (var f in e.NewItems?.OfType<FilaStatVm>() ?? []) { VigilarCelda(f.Iv); VigilarCelda(f.Ev); VigilarCelda(f.Av); VigilarCelda(f.Gv); } };
+    }
 }
 
 /// <summary>Una fila de movimiento: el movimiento (se elige de la lista), sus PP y sus PP Ups.</summary>
@@ -241,6 +296,12 @@ public sealed class SeccionMovsVm : SeccionBaseVm
 {
     public ObservableCollection<FilaMovVm> Filas { get; } = [];
     public override IEnumerable<CampoVm> TodosLosCampos => Filas.SelectMany(f => new[] { f.Mov, f.Pp, f.PpUps }).OfType<CampoVm>();
+    protected override IEnumerable<CampoVm> Celdas => Filas.SelectMany(f => new[] { f.Pp, f.PpUps }).OfType<CampoVm>();
+
+    public SeccionMovsVm()
+    {
+        Filas.CollectionChanged += (_, e) => { foreach (var f in e.NewItems?.OfType<FilaMovVm>() ?? []) { VigilarCelda(f.Pp); VigilarCelda(f.PpUps); } };
+    }
 }
 
 /// <summary>Una pestana del editor.</summary>

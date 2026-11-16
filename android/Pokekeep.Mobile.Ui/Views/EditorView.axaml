@@ -25,7 +25,7 @@
                   <Border Classes="separador" />
                   <Grid ColumnDefinitions="*,Auto" AutomationProperties.Name="{Binding NombreAccesible}">
                     <StackPanel>
-                      <StackPanel Orientation="Horizontal" Spacing="4"><TextBlock Text="{Binding Nombre}" FontWeight="Medium" TextWrapping="NoWrap" /><TextBlock Text="{Binding Senal}" FontWeight="Bold" Classes="dorado" /></StackPanel>
+                      <TextBlock TextWrapping="Wrap"><Run Text="{Binding Nombre}" FontWeight="Medium" /><Run Text=" " /><Run Text="{Binding Senal}" FontWeight="Bold" Foreground="{DynamicResource Dorado}" /></TextBlock>
                       <TextBlock Classes="sec" Text="{Binding Base.Valor, StringFormat='Base {0}'}" IsVisible="{Binding Base.Visible}" />
                     </StackPanel>
                     <TextBlock Grid.Column="1" Text="{Binding FinalTexto}" FontWeight="Bold" VerticalAlignment="Center" AutomationProperties.Name="{Binding FinalAccesible}" />
@@ -55,10 +55,8 @@
               <DataTemplate x:DataType="vm:FilaStatVm">
                 <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="6" Margin="0,2">
                   <StackPanel VerticalAlignment="Center" AutomationProperties.Name="{Binding NombreAccesible}">
-                    <StackPanel Orientation="Horizontal" Spacing="4">
-                      <TextBlock Text="{Binding Nombre}" FontWeight="Medium" FontSize="{DynamicResource TamDato}" TextWrapping="NoWrap" />
-                      <TextBlock Text="{Binding Senal}" FontWeight="Bold" Classes="dorado" />
-                    </StackPanel>
+                    <!-- 16-nov-2026: nombre y signo en un solo texto que se parte si no cabe (a x1,29 en 360 dp «At. especial −» pisaba el valor final) -->
+                    <TextBlock FontSize="{DynamicResource TamDato}" TextWrapping="Wrap"><Run Text="{Binding Nombre}" FontWeight="Medium" /><Run Text=" " /><Run Text="{Binding Senal}" FontWeight="Bold" Foreground="{DynamicResource Dorado}" /></TextBlock>
                     <TextBlock Classes="sec" FontSize="{DynamicResource TamMini}" Text="{Binding Base.Valor, StringFormat='Base {0}'}" IsVisible="{Binding Base.Visible}" />
                   </StackPanel>
                   <TextBlock Grid.Column="1" Width="48" Text="{Binding FinalTexto}" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" AutomationProperties.Name="{Binding FinalAccesible}" />
@@ -77,6 +75,7 @@
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
+          <TextBlock Classes="sec aviso" Foreground="{DynamicResource Aviso}" Text="{Binding AvisoCeldas}" IsVisible="{Binding HayAvisoCeldas}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
           <Border Classes="insignia error" IsVisible="{Binding HayAvisoEv}" HorizontalAlignment="Left">
             <StackPanel Orientation="Horizontal" Spacing="6"><d:Icono Glifo="TriangleAlert" /><TextBlock Text="{Binding AvisoEv}" TextWrapping="Wrap" /></StackPanel>
           </Border>
@@ -110,6 +109,7 @@
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
+          <TextBlock Classes="sec aviso" Foreground="{DynamicResource Aviso}" Text="{Binding AvisoCeldas}" IsVisible="{Binding HayAvisoCeldas}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
         </StackPanel>
       </Border>
     </DataTemplate>

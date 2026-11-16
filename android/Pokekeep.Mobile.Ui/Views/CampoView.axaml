@@ -100,5 +100,6 @@
     </StackPanel>
 
     <TextBlock Classes="sec error" Foreground="{DynamicResource Error}" Text="{Binding Error}" IsVisible="{Binding HayError}" />
+    <TextBlock Classes="sec aviso" Foreground="{DynamicResource Aviso}" Text="{Binding Aviso}" IsVisible="{Binding HayAviso}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
   </StackPanel>
 </UserControl>
