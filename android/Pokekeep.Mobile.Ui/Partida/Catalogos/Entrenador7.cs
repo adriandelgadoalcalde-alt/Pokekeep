@@ -223,7 +223,7 @@ internal static class Entrenador7
 
     private static IEnumerable<CampoP> Aventura()
     {
-        yield return P.Entero("horas", IdiomaInterfaz.T("Form.Trainer7.Horas"), c => S(c).PlayedHours, (c, v) => S(c).PlayedHours = (ushort)v, 0, 65535, grupo: "tiempo");
+        yield return P.Entero("horas", IdiomaInterfaz.T("Form.Trainer7.Horas"), c => S(c).PlayedHours, (c, v) => S(c).PlayedHours = (ushort)v, 0, ushort.MaxValue, maxFn: c => AutoLegalidad.Desafios.TopesJuego.Horas(c.Sav), grupo: "tiempo");
         yield return P.Entero("minutos", IdiomaInterfaz.T("Form.Minutos"), c => S(c).PlayedMinutes, (c, v) => S(c).PlayedMinutes = (ushort)v % 60, 0, 59, grupo: "tiempo");
         yield return P.Entero("segundos", IdiomaInterfaz.T("Form.Segundos"), c => S(c).PlayedSeconds, (c, v) => S(c).PlayedSeconds = (ushort)v % 60, 0, 59, grupo: "tiempo");
         yield return P.FechaHora("inicio", T("L_Started"), c => EntrenadorSimple.Fecha(S(c).SecondsToStart), (c, v) => S(c).SecondsToStart = (uint)EntrenadorSimple.Segundos(v));

@@ -56,7 +56,7 @@ internal static partial class Varios5
             P.Entero("fm-participado", L("L_FMParticipated"), c => B2(c).Festa.Participated, (c, v) => B2(c).Festa.Participated = (ushort)v, 0, 9999),
             P.Entero("fm-completadas", L("L_FMCompleted"), c => B2(c).Festa.Completed, (c, v) => B2(c).Festa.Completed = (ushort)v, 0, 9999),
             P.Entero("fm-maximos", L("L_FMTopScore"), c => B2(c).Festa.TopScores, (c, v) => B2(c).Festa.TopScores = (ushort)v, 0, 9999),
-            P.Entero("fm-participantes", L("L_FMParticipants"), c => B2(c).Festa.Participants, (c, v) => B2(c).Festa.Participants = (byte)v, 0, byte.MaxValue),
+            P.Entero("fm-participantes", L("L_FMParticipants"), c => B2(c).Festa.Participants, (c, v) => B2(c).Festa.Participants = (byte)v, 0, AutoLegalidad.Desafios.TopesJuego.FestivalParticipantes),
         ]);
         yield return new SeccionP(L("GB_FunfestMissions"),
         [

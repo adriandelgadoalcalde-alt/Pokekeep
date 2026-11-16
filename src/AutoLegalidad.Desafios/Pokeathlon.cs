@@ -8,8 +8,8 @@ namespace AutoLegalidad.Desafios;
 /// Pokéathlon de HeartGold y SoulSilver (<see cref="Pokeathlon4"/>) al máximo. Con los topes del Core (<c>Pokeathlon4.cs</c>, <c>PokeathlonGlobalCounters4.cs</c>), salvo las puntuaciones de los cursos y de las pruebas, que llevan el tope del juego (1.1.4):
 /// <list type="bullet">
 /// <item>Insignias («medallas» de PKHeX, cinco bits por especie) de las 493 especies: <see cref="PokeathlonMedalManager4.SetAllMedals"/>.</item>
-/// <item>Récords de los cinco cursos (<c>Score0..2</c> y <c>ScoreMax</c>, u16): <see cref="TopesJuego.PokeathlonPuntuacion"/> (999), lo que el juego deja al guardar el curso (<c>pokeheartgold asm/overlay_96.s:3204-3224</c>). El formulario de PKHeX admite 65535.</item>
-/// <item>Mejores puntuaciones de las diez pruebas (u16): 999, la misma cota (el juego las recorta a 999 al llevarlas al curso).</item>
+/// <item>Récords de los cinco cursos (u16): <c>ScoreMax</c>, el total con los puntos extra, <see cref="TopesJuego.PokeathlonPuntuacion"/> (999, <c>pokeheartgold asm/overlay_96.s:3204-3224</c> y <c>:14615-14628</c>); <c>Score0..2</c>, los puntos de cada una de sus tres pruebas, <see cref="TopesJuego.PokeathlonPuntosPrueba"/> (200, 1.1.5). El formulario de PKHeX admite 65535.</item>
+/// <item>Mejores puntuaciones de las diez pruebas (u16, en Puntos atleta): <see cref="TopesJuego.PokeathlonMejorPrueba"/>: 200, salvo Disc Catch, que no llega a 150 y se queda en 149 (1.1.5, conversión de pokeheartgold <c>overlay_96.s</c>).</item>
 /// <item>Puntos de atleta: <see cref="Pokeathlon4.MaxPoints"/> = 99999 (confirmado en el juego: <c>pokeheartgold pokeathlon_save.h</c>, «capped at 99999»).</item>
 /// <item>Tarjetas de datos: <see cref="Pokeathlon4.DataCardAllObtained"/> (27 bits). Tienda diaria: <see cref="Pokeathlon4.FlagsShopAllObtained"/> (12 bits, «todo comprado hoy»).</item>
 /// <item>Contadores: <see cref="PokeathlonGlobalCounters4.MaxPlay"/> para el tiempo, <see cref="PokeathlonGlobalCounters4.MaxStat"/> para el resto y <see cref="PokeathlonGlobalCounters4.MaxFame"/> para la fama. Los dos totales que el juego calcula
@@ -58,12 +58,12 @@ public sealed class Pokeathlon4Maximo : InstalacionDesafio
             for (var k = 0; k < 3; k++)
             {
                 var kk = k;
-                campos.Add(Campo($"curso{i + 1}_p{k}", Etiqueta("campo.curso_puntos", "curso." + CursoClave(i), k + 1), RolCampo.Otro, TopesJuego.PokeathlonPuntuacion,
+                campos.Add(Campo($"curso{i + 1}_p{k}", Etiqueta("campo.curso_puntos", "curso." + CursoClave(i), k + 1), RolCampo.Otro, TopesJuego.PokeathlonPuntosPrueba,
                     s => kk switch { 0 => P(s).GetCourseRecord(curso).Score0, 1 => P(s).GetCourseRecord(curso).Score1, _ => P(s).GetCourseRecord(curso).Score2 },
                     (s, v) =>
                     {
                         var c = P(s).GetCourseRecord(curso);
-                        var x = (ushort)Math.Clamp(v, 0, TopesJuego.PokeathlonPuntuacion);
+                        var x = (ushort)Math.Clamp(v, 0, TopesJuego.PokeathlonPuntosPrueba);
                         if (kk == 0) c.Score0 = x; else if (kk == 1) c.Score1 = x; else c.Score2 = x;
                     }));
             }
@@ -71,8 +71,8 @@ public sealed class Pokeathlon4Maximo : InstalacionDesafio
         for (var i = 0; i < (int)PokeathlonEvent4.Count; i++)
         {
             var prueba = (PokeathlonEvent4)i;
-            campos.Add(Campo($"prueba{i + 1}_mejor", Etiqueta("campo.prueba_mejor", "prueba." + PruebaClave(i)), RolCampo.Record, TopesJuego.PokeathlonPuntuacion,
-                s => P(s).GetBestScore(prueba), (s, v) => P(s).SetBestScore(prueba, (ushort)Math.Clamp(v, 0, TopesJuego.PokeathlonPuntuacion))));
+            campos.Add(Campo($"prueba{i + 1}_mejor", Etiqueta("campo.prueba_mejor", "prueba." + PruebaClave(i)), RolCampo.Record, TopesJuego.PokeathlonMejorPrueba(prueba),
+                s => P(s).GetBestScore(prueba), (s, v) => P(s).SetBestScore(prueba, (ushort)Math.Clamp(v, 0, TopesJuego.PokeathlonMejorPrueba(prueba)))));
         }
         campos.Add(Campo("puntos", "campo.puntos_atleta", RolCampo.Otro, Pokeathlon4.MaxPoints, s => P(s).Points, (s, v) => P(s).Points = (uint)Math.Clamp(v, 0, uint.MaxValue)));
         campos.Add(Campo("tarjetas", "campo.tarjetas_datos", RolCampo.Bandera, Pokeathlon4.DataCardAllObtained, s => P(s).FlagsDataCard, (s, v) => P(s).FlagsDataCard = (uint)Math.Clamp(v, 0, uint.MaxValue)));

@@ -95,12 +95,18 @@ internal static class IdsP
 internal static class ComunP
 {
     /// <summary>Horas, minutos y segundos de juego (el Core las trata como un solo valor: se escriben juntas).</summary>
-    public static IEnumerable<CampoP> Tiempo(int maxHoras = 65535)
+    public static IEnumerable<CampoP> Tiempo(int maxHoras = 65535, Func<ContextoP, long>? maxFn = null)
     {
-        yield return P.Entero("horas", IdiomaInterfaz.T("Form.HorasJugadas"), c => c.Sav.PlayedHours, (c, v) => c.Sav.PlayedHours = (ushort)v, 0, maxHoras, grupo: "tiempo");
+        yield return P.Entero("horas", IdiomaInterfaz.T("Form.HorasJugadas"), c => c.Sav.PlayedHours, (c, v) => c.Sav.PlayedHours = (ushort)v, 0, maxHoras, maxFn: maxFn, grupo: "tiempo");
         yield return P.Entero("minutos", IdiomaInterfaz.T("Form.Minutos"), c => c.Sav.PlayedMinutes, (c, v) => c.Sav.PlayedMinutes = (ushort)v % 60, 0, 59, grupo: "tiempo");
         yield return P.Entero("segundos", IdiomaInterfaz.T("Form.Segundos"), c => c.Sav.PlayedSeconds, (c, v) => c.Sav.PlayedSeconds = (ushort)v % 60, 0, 59, grupo: "tiempo");
     }
+
+    /// <summary>
+    /// Tiempo de juego de las partidas de Switch (1.1.5): las horas llevan el tope que cabe en su dato, <c>TopesJuego.Horas(sav)</c> (999 en Diamante Brillante y
+    /// Perla Reluciente, 65.535 en el resto: <c>PlayTime9.PlayedHours</c> y <c>PlayTime8b</c> escriben 16 bits). Con 99.999, que era el tope anterior, volvía 34.463.
+    /// </summary>
+    public static IEnumerable<CampoP> TiempoSwitch() => Tiempo(ushort.MaxValue, c => AutoLegalidad.Desafios.TopesJuego.Horas(c.Sav));
 
     public static string DatosBloque(ContextoP c, string k) => k;
 }

@@ -105,14 +105,14 @@ internal static class Pokochos8b
                 new SeccionP(string.Empty,
                 [
                     P.Opcion(col!.IdCampo(i, "tipo"), L("Col_Type"), c => Sav(c).Poffins.GetPoffin(i).MstID, (c, v) => Cambiar(c, i, p => p.MstID = (byte)v), Tipos, titulo: IdiomaInterfaz.T("Pokochos8b.TipoPokocho")),
-                    P.Entero(col.IdCampo(i, "nivel"), L("Col_Level"), c => Sav(c).Poffins.GetPoffin(i).Level, (c, v) => Cambiar(c, i, p => p.Level = (byte)v), 0, 255),
+                    P.Entero(col.IdCampo(i, "nivel"), L("Col_Level"), c => Sav(c).Poffins.GetPoffin(i).Level, (c, v) => Cambiar(c, i, p => p.Level = (byte)v), 0, AutoLegalidad.Desafios.TopesJuego.PokochoNivel, maxFn: c => Math.Max(AutoLegalidad.Desafios.TopesJuego.PokochoNivel, (int)Sav(c).Poffins.GetPoffin(i).Level)),
                     P.Entero(col.IdCampo(i, "suavidad"), L("Col_Smooth"), c => Sav(c).Poffins.GetPoffin(i).Taste, (c, v) => Cambiar(c, i, p => p.Taste = (byte)v), 0, 255),
                     P.Marca(col.IdCampo(i, "nuevo"), L("Col_New"), c => Sav(c).Poffins.GetPoffin(i).IsNew, (c, v) => Cambiar(c, i, p => p.IsNew = v)),
-                    P.Entero(col.IdCampo(i, "picante"), L("Col_Spicy"), c => Sav(c).Poffins.GetPoffin(i).FlavorSpicy, (c, v) => Cambiar(c, i, p => p.FlavorSpicy = (byte)v), 0, 255),
-                    P.Entero(col.IdCampo(i, "seco"), L("Col_Dry"), c => Sav(c).Poffins.GetPoffin(i).FlavorDry, (c, v) => Cambiar(c, i, p => p.FlavorDry = (byte)v), 0, 255),
-                    P.Entero(col.IdCampo(i, "dulce"), L("Col_Sweet"), c => Sav(c).Poffins.GetPoffin(i).FlavorSweet, (c, v) => Cambiar(c, i, p => p.FlavorSweet = (byte)v), 0, 255),
-                    P.Entero(col.IdCampo(i, "amargo"), L("Col_Bitter"), c => Sav(c).Poffins.GetPoffin(i).FlavorBitter, (c, v) => Cambiar(c, i, p => p.FlavorBitter = (byte)v), 0, 255),
-                    P.Entero(col.IdCampo(i, "acido"), L("Col_Sour"), c => Sav(c).Poffins.GetPoffin(i).FlavorSour, (c, v) => Cambiar(c, i, p => p.FlavorSour = (byte)v), 0, 255),
+                    P.Entero(col.IdCampo(i, "picante"), L("Col_Spicy"), c => Sav(c).Poffins.GetPoffin(i).FlavorSpicy, (c, v) => Cambiar(c, i, p => p.FlavorSpicy = (byte)v), 0, AutoLegalidad.Desafios.TopesJuego.PokochoSabor, maxFn: c => Math.Max(AutoLegalidad.Desafios.TopesJuego.PokochoSabor, (int)Sav(c).Poffins.GetPoffin(i).FlavorSpicy)),
+                    P.Entero(col.IdCampo(i, "seco"), L("Col_Dry"), c => Sav(c).Poffins.GetPoffin(i).FlavorDry, (c, v) => Cambiar(c, i, p => p.FlavorDry = (byte)v), 0, AutoLegalidad.Desafios.TopesJuego.PokochoSabor, maxFn: c => Math.Max(AutoLegalidad.Desafios.TopesJuego.PokochoSabor, (int)Sav(c).Poffins.GetPoffin(i).FlavorDry)),
+                    P.Entero(col.IdCampo(i, "dulce"), L("Col_Sweet"), c => Sav(c).Poffins.GetPoffin(i).FlavorSweet, (c, v) => Cambiar(c, i, p => p.FlavorSweet = (byte)v), 0, AutoLegalidad.Desafios.TopesJuego.PokochoSabor, maxFn: c => Math.Max(AutoLegalidad.Desafios.TopesJuego.PokochoSabor, (int)Sav(c).Poffins.GetPoffin(i).FlavorSweet)),
+                    P.Entero(col.IdCampo(i, "amargo"), L("Col_Bitter"), c => Sav(c).Poffins.GetPoffin(i).FlavorBitter, (c, v) => Cambiar(c, i, p => p.FlavorBitter = (byte)v), 0, AutoLegalidad.Desafios.TopesJuego.PokochoSabor, maxFn: c => Math.Max(AutoLegalidad.Desafios.TopesJuego.PokochoSabor, (int)Sav(c).Poffins.GetPoffin(i).FlavorBitter)),
+                    P.Entero(col.IdCampo(i, "acido"), L("Col_Sour"), c => Sav(c).Poffins.GetPoffin(i).FlavorSour, (c, v) => Cambiar(c, i, p => p.FlavorSour = (byte)v), 0, AutoLegalidad.Desafios.TopesJuego.PokochoSabor, maxFn: c => Math.Max(AutoLegalidad.Desafios.TopesJuego.PokochoSabor, (int)Sav(c).Poffins.GetPoffin(i).FlavorSour)),
                 ]),
             ],
         };
@@ -123,7 +123,7 @@ internal static class Pokochos8b
                 foreach (var (p, i) in Sav(c).Poffins.GetPoffins().Select((p, i) => (p, i)))
                 {
                     p.MstID = 0x1C; p.Level = 60; p.Taste = 0xFF;
-                    p.FlavorSpicy = p.FlavorBitter = p.FlavorDry = p.FlavorSour = p.FlavorSweet = 0xFF;
+                    p.FlavorSpicy = p.FlavorBitter = p.FlavorDry = p.FlavorSour = p.FlavorSweet = (byte)AutoLegalidad.Desafios.TopesJuego.PokochoSabor; // 1.1.5: el juego no pasa de 100 al cocinar (PKHeX pone 255)
                     Sav(c).Poffins.SetPoffin(i, p);
                 }
                 Normalizar(c);

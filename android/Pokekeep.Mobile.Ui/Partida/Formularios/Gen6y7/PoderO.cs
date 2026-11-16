@@ -58,7 +58,7 @@ internal static class PoderO
                     Escribir = (x, v) => { if (n == 1) Bloque(x).SetLevel1(tipo, (byte)(long)v); else Bloque(x).SetLevel2(tipo, (byte)(long)v); },
                 });
             }
-        l.Add(new FilaTablaP { Id = FilaPuntos, Nombre = L("L_Points"), Min = 0, Max = byte.MaxValue, Leer = x => (long)Bloque(x).Points, Escribir = (x, v) => Bloque(x).Points = (byte)(long)v });
+        l.Add(new FilaTablaP { Id = FilaPuntos, Nombre = L("L_Points"), Min = 0, Max = AutoLegalidad.Desafios.TopesJuego.PoderOPuntos, Leer = x => (long)Bloque(x).Points, Escribir = (x, v) => Bloque(x).Points = (byte)(long)v });
         return l;
     }
 

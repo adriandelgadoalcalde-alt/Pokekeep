@@ -205,7 +205,19 @@ internal static partial class VariosGen3
 
     private const int RegistroTiempoHall = 1;
 
-    private static uint TiempoHall(ContextoP c) => (uint)((Math.Min(9999, (uint)c.Entero("hall_horas")) << 16) | (Math.Min(59, (uint)c.Entero("hall_minutos")) << 8) | Math.Min(59, (uint)c.Entero("hall_segundos")));
+    private static uint TiempoHall(ContextoP c) => (HorasDelSalon(c) << 16) | (Math.Min(59, (uint)c.Entero("hall_minutos")) << 8) | Math.Min(59, (uint)c.Entero("hall_segundos"));
+
+    /// <summary>
+    /// Horas del tiempo del Salón de la Fama (1.1.5): el campo llega a 999, las horas que cuenta el juego (<see cref="TopesJuego.Horas"/>). Un guardado con más horas (caben 16 bits) se enseña en 999;
+    /// mientras no se toquen las horas se conservan las guardadas, para no perderlas al cambiar solo los minutos.
+    /// </summary>
+    private static uint HorasDelSalon(ContextoP c)
+    {
+        var tope = (uint)TopesJuego.Horas(S(c));
+        var guardadas = S(c).GetRecord(RegistroTiempoHall) >> 16;
+        var horas = Math.Min(tope, (uint)c.Entero("hall_horas"));
+        return guardadas > tope && horas == tope ? guardadas : horas;
+    }
 
     private static PestanaP Registros(SAV3 s3)
     {
@@ -219,7 +231,7 @@ internal static partial class VariosGen3
         // El registro 1 es el tiempo de juego al entrar en el Hall de la Fama: horas << 16 | minutos << 8 | segundos (NUD_FameH/M/S del formulario). Se escribe entero cuando cambia una de las tres partes.
         var hall = new List<CampoP>
         {
-            P.Entero("hall_horas", IdiomaInterfaz.T("Form.Horas"), c => Math.Min(9999u, S(c).GetRecord(RegistroTiempoHall) >> 16), (c, v) => S(c).SetRecord(RegistroTiempoHall, TiempoHall(c)), 0, 999, grupo: "hall", prioridad: 100),
+            P.Entero("hall_horas", IdiomaInterfaz.T("Form.Horas"), c => Math.Min((uint)TopesJuego.Horas(S(c)), S(c).GetRecord(RegistroTiempoHall) >> 16), (c, v) => S(c).SetRecord(RegistroTiempoHall, TiempoHall(c)), 0, TopesJuego.Horas(s3), grupo: "hall", prioridad: 100),
             P.Entero("hall_minutos", IdiomaInterfaz.T("Form.Minutos"), c => Math.Min(59u, (byte)(S(c).GetRecord(RegistroTiempoHall) >> 8)), (c, v) => S(c).SetRecord(RegistroTiempoHall, TiempoHall(c)), 0, 59, grupo: "hall", prioridad: 100),
             P.Entero("hall_segundos", IdiomaInterfaz.T("Form.Segundos"), c => Math.Min(59u, (byte)S(c).GetRecord(RegistroTiempoHall)), (c, v) => S(c).SetRecord(RegistroTiempoHall, TiempoHall(c)), 0, 59, grupo: "hall", prioridad: 100),
         };

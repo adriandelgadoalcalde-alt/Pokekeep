@@ -121,8 +121,8 @@ internal static partial class GaleriaUnion
         yield return P.Marca(Id("marca-aa"), L("L_IsFlagAA"), c => v(c).IsFlagAA, (c, x) => v(c).IsFlagAA = x);
         yield return P.Entero(Id("rango-galeria"), L("L_JoinAvenueRank").TrimEnd(':'), c => v(c).JoinAvenueRank, (c, x) => v(c).JoinAvenueRank = (byte)x, 0, 255);
         yield return P.Entero(Id("desconocidoac"), L("L_UnknownAC"), c => v(c).UnknownAC, (c, x) => v(c).UnknownAC = (byte)x, 0, 255);
-        yield return P.Entero(Id("tienda-nivel-a"), L("L_ShopRank").TrimEnd(':'), c => v(c).ShopRank, (c, x) => v(c).ShopRank = (byte)x, 0, 10);
-        yield return P.Entero(Id("tienda-experiencia"), L("L_ShopExperience").TrimEnd(':'), c => v(c).ShopExperience, (c, x) => v(c).ShopExperience = (ushort)x, 0, ushort.MaxValue);
+        yield return P.Entero(Id("tienda-nivel-a"), L("L_ShopRank").TrimEnd(':'), c => v(c).ShopRank, (c, x) => v(c).ShopRank = (byte)x, 0, AutoLegalidad.Desafios.TopesJuego.AvenidaTiendaRango);
+        yield return P.Entero(Id("tienda-experiencia"), L("L_ShopExperience").TrimEnd(':'), c => v(c).ShopExperience, (c, x) => v(c).ShopExperience = (ushort)x, 0, AutoLegalidad.Desafios.TopesJuego.AvenidaTiendaExperiencia);
         yield return P.Entero(Id("inventario"), L("L_IsInventory").TrimEnd(':'), c => v(c).IsInventory, (c, x) => v(c).IsInventory = (uint)x, 0, uint.MaxValue);
         yield return P.Entero(Id("tienda-trabajo"), L("L_ShopWork").TrimEnd(':'), c => v(c).ShopWork, (c, x) => v(c).ShopWork = (ushort)x, 0, ushort.MaxValue);
         yield return P.Entero(Id("sinusob8"), L("L_UnusedB8"), c => v(c).UnusedB8, (c, x) => v(c).UnusedB8 = (uint)x, 0, uint.MaxValue);
@@ -132,8 +132,8 @@ internal static partial class GaleriaUnion
         yield return P.Entero(Id("bits13-20"), L("L_UnknownBits13_20"), c => v(c).UnknownBits13_20, (c, x) => v(c).UnknownBits13_20 = (byte)x, 0, 255);
         yield return P.Entero(Id("bits21-27"), L("L_UnknownBits21_27"), c => v(c).UnknownBits21_27, (c, x) => v(c).UnknownBits21_27 = (byte)x, 0, 127);
         yield return P.Entero(Id("bits28-31"), L("L_UnknownBits28_31"), c => v(c).UnknownBits28_31, (c, x) => v(c).UnknownBits28_31 = (byte)x, 0, 15);
-        foreach (var f in Tienda(pre + "deseada-", L("L_DesiredShopType").TrimEnd(':'), c => v(c).DesiredShopTypeTuple, (c, t) => v(c).DesiredShopTypeTuple = t)) yield return f;
-        foreach (var f in Tienda(pre + "tienda-", L("L_ShopType").TrimEnd(':'), c => v(c).ShopTypeTuple, (c, t) => v(c).ShopTypeTuple = t)) yield return f;
+        foreach (var f in Tienda(pre + "deseada-", L("L_DesiredShopType").TrimEnd(':'), c => AutoLegalidad.Desafios.TopesJuego.AvenidaDescifrarTienda(v(c).DesiredShopType), (c, bruto) => v(c).DesiredShopType = bruto)) yield return f;
+        foreach (var f in Tienda(pre + "tienda-", L("L_ShopType").TrimEnd(':'), c => AutoLegalidad.Desafios.TopesJuego.AvenidaDescifrarTienda(v(c).ShopType), (c, bruto) => v(c).ShopType = bruto)) yield return f;
     }
 
     private static byte ConteoDeTienda(JoinAvenueVisitor5 v, int i) => i switch
@@ -150,17 +150,17 @@ internal static partial class GaleriaUnion
         }
     }
 
-    /// <summary>La tienda (o la deseada): tipo, nivel y versión se guardan como UNA tupla (<c>SetShopTuple</c>); sin tipo, el valor es 0.</summary>
-    private static IEnumerable<CampoP> Tienda(string pre, string nombre, Func<ContextoP, (byte Version, JoinAvenueShopType5 Type, byte Rank)?> leer, Action<ContextoP, (byte Version, JoinAvenueShopType5 Type, byte Rank)?> escribir)
+    /// <summary>La tienda (o la deseada): tipo, nivel y versión se guardan juntos en UN dato (<see cref="AutoLegalidad.Desafios.TopesJuego.AvenidaCodificarTienda"/>); sin tipo, el valor es 0.</summary>
+    private static IEnumerable<CampoP> Tienda(string pre, string nombre, Func<ContextoP, (byte Version, JoinAvenueShopType5 Tipo, byte Rango)?> leer, Action<ContextoP, ushort> escribir)
     {
         var idTipo = pre + "tipo"; var idNivel = pre + "nivel"; var idVersion = pre + "version"; var grupo = pre + "tupla";
         void Guardar(ContextoP c)
         {
             var t = (int)c.Entero(idTipo);
-            escribir(c, t < 0 ? null : ((byte)c.Entero(idVersion), (JoinAvenueShopType5)t, (byte)c.Entero(idNivel)));
+            escribir(c, t < 0 ? (ushort)0 : AutoLegalidad.Desafios.TopesJuego.AvenidaCodificarTienda((byte)c.Entero(idVersion), (JoinAvenueShopType5)t, (byte)c.Entero(idNivel)));
         }
-        yield return P.Opcion(idTipo, nombre, c => leer(c) is { } x ? (int)x.Type : -1, (c, _) => Guardar(c), _ => OpcionesDeTienda(), titulo: nombre, grupo: grupo);
-        yield return P.Entero(idNivel, IdiomaInterfaz.F("GaleriaUnion.Nivel", nombre), c => leer(c) is { } x ? x.Rank : 0, (c, _) => Guardar(c), 0, 9, grupo: grupo);
+        yield return P.Opcion(idTipo, nombre, c => leer(c) is { } x ? (int)x.Tipo : -1, (c, _) => Guardar(c), _ => OpcionesDeTienda(), titulo: nombre, grupo: grupo);
+        yield return P.Entero(idNivel, IdiomaInterfaz.F("GaleriaUnion.Nivel", nombre), c => leer(c) is { } x ? x.Rango : 0, (c, _) => Guardar(c), 0, 9, grupo: grupo);
         yield return P.Entero(idVersion, $"{nombre} · {L("L_Version").TrimEnd(':').ToLowerInvariant()}", c => leer(c) is { } x ? x.Version : 0, (c, _) => Guardar(c), 0, 3, grupo: grupo);
     }
 

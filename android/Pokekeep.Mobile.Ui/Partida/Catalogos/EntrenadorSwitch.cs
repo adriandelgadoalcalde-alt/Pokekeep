@@ -35,7 +35,7 @@ internal static class EntrenadorSwitch
             ]),
             new(IdiomaInterfaz.T("Form.Trainer7.Aventura"),
             [
-                .. ComunP.Tiempo(99_999),
+                .. ComunP.TiempoSwitch(),
                 P.FechaHora("inicio", TA("L_Started", IdiomaInterfaz.T("Form.Trainer7b.Inicio")), c => LA(c).AdventureStart.Timestamp, (c, v) => LA(c).AdventureStart.Timestamp = v),
                 new CampoP { Id = "guardado", Etiqueta = TA("L_LastSaved", IdiomaInterfaz.T("Form.Trainer7b.Guardado")), Tipo = TipoP.FechaHora, SinSegundosFn = c => !LA(c).LastSaved.HasSeconds, Leer = c => LA(c).LastSaved.Timestamp, Escribir = (c, v) => LA(c).LastSaved.Timestamp = (DateTime)v! },
             ]),
@@ -99,7 +99,7 @@ internal static class EntrenadorSwitch
                 ]),
                 new(IdiomaInterfaz.T("Form.Trainer7.Aventura"),
                 [
-                    .. ComunP.Tiempo(99_999),
+                    .. ComunP.TiempoSwitch(),
                     P.FechaHora("inicio", TB("L_Started", IdiomaInterfaz.T("Form.Trainer7b.Inicio")), c => Seg(BS(c).System.LocalTimestampStart), (c, v) => BS(c).System.LocalTimestampStart = Revisa(BS(c).System.LocalTimestampStart, v)),
                     P.FechaHora("guardado", TB("L_LastSaved", IdiomaInterfaz.T("Form.Trainer7b.Guardado")), c => Seg(BS(c).System.LocalTimestampLatest), (c, v) => BS(c).System.LocalTimestampLatest = Revisa(BS(c).System.LocalTimestampLatest, v)),
                 ]),
@@ -156,7 +156,7 @@ internal static class EntrenadorSwitch
                 ]),
                 new(IdiomaInterfaz.T("Form.Trainer7.Aventura"),
                 [
-                    .. ComunP.Tiempo(99_999),
+                    .. ComunP.TiempoSwitch(),
                     new CampoP { Id = "inicio", Etiqueta = T9("L_Started", IdiomaInterfaz.T("EntrenadorSwitch.InicioAventura")), Tipo = TipoP.FechaHora, SoloFecha = true, Leer = c => SV(c).EnrollmentDate.Timestamp.Date, Escribir = (c, v) => SV(c).EnrollmentDate.Timestamp = (DateTime)v! },
                     P.FechaHora("guardado", T9("L_LastSaved", IdiomaInterfaz.T("Form.Trainer7b.Guardado")), c => SV(c).LastSaved.Timestamp, (c, v) => SV(c).LastSaved.Timestamp = v.Date.AddSeconds(v.TimeOfDay.TotalSeconds)),
                 ]),
@@ -370,7 +370,7 @@ internal static class EntrenadorSwitch
                 ]),
                 new(IdiomaInterfaz.T("Form.Trainer7.Aventura"),
                 [
-                    .. ComunP.Tiempo(99_999),
+                    .. ComunP.TiempoSwitch(),
                     P.FechaHora("guardado", T9a("L_LastSaved", IdiomaInterfaz.T("Form.Trainer7b.Guardado")), c => ZA(c).LastSaved.Timestamp, (c, v) => ZA(c).LastSaved.Timestamp = v.Date.AddSeconds(v.TimeOfDay.TotalSeconds)),
                 ]),
             ]),

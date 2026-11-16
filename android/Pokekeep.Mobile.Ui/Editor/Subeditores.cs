@@ -260,6 +260,14 @@ public static class Subeditores
         return i switch { 18 => IdiomaInterfaz.T("Subeditores.Regimen2"), 19 => IdiomaInterfaz.T("Subeditores.Regimen3"), 20 => IdiomaInterfaz.T("Subeditores.Regimen4"), 21 => IdiomaInterfaz.T("Subeditores.Regimen5"), 22 => IdiomaInterfaz.T("Subeditores.Regimen6"), 23 => IdiomaInterfaz.T("Subeditores.Regimen7"), 24 => IdiomaInterfaz.T("Subeditores.Regimen8"), 25 => IdiomaInterfaz.T("Subeditores.Regimen9"), 26 => IdiomaInterfaz.T("Subeditores.Regimen10"), 27 => IdiomaInterfaz.T("Subeditores.Regimen11"), 28 => IdiomaInterfaz.T("Subeditores.Regimen12"), _ => IdiomaInterfaz.T("Subeditores.Regimen13") };
     }
 
+    /// <summary>Cambia el saco y, si los usos que lleva superan los que el juego da al saco nuevo, los deja en ese tope (1.1.5, S25: el juego los fija al asignar el saco y solo los baja).</summary>
+    internal static void CambiarSaco(PK6 pk, int saco)
+    {
+        pk.TrainingBag = (byte)saco;
+        var tope = AutoLegalidad.Desafios.TopesJuego.UsosSacoSuperentrenamiento(saco);
+        if (pk.TrainingBagHits > tope) pk.TrainingBagHits = (byte)tope;
+    }
+
     private static SubeditorDef Super(ContextoEditor c)
     {
         var campos = new List<CampoDef>();
@@ -284,8 +292,10 @@ public static class Subeditores
                 F.Casilla("PK-PKME-010", IdiomaInterfaz.T("Subeditores.SuperentrenamientoSecretoDesbloqueado"), cc => cc.Pk is ISuperTrain s && s.SecretSuperTrainingUnlocked, (cc, v) => { var s = (ISuperTrain)cc.Pk; s.SecretSuperTrainingUnlocked = v; if (!v) s.SuperTrainSupremelyTrained = false; return null; }) with { Indice = 200 },
                 F.Casilla("PK-PKME-010", IdiomaInterfaz.T("Subeditores.EntrenadoMaximo"), cc => cc.Pk is ISuperTrain s && s.SuperTrainSupremelyTrained, (cc, v) => { ((ISuperTrain)cc.Pk).SuperTrainSupremelyTrained = v; return null; },
                     motivo: cc => cc.Pk is ISuperTrain { SecretSuperTrainingUnlocked: true } ? null : IdiomaInterfaz.T("Subeditores.NecesitaSuperentrenamientoSecretoDesbloque")) with { Indice = 201 },
-                F.Opcion("PK-PKME-010", IdiomaInterfaz.T("Subeditores.SacoEntrenamiento"), cc => [.. Enumerable.Range(0, bolsas.Length).Select(z => new OpcionCampo(z, z == 0 ? IdiomaInterfaz.T("Form.Ninguno") : bolsas[z]))], cc => ((PK6)cc.Pk).TrainingBag, (cc, id) => { ((PK6)cc.Pk).TrainingBag = (byte)id; return null; }) with { Indice = 202 },
-                F.Entero("PK-PKME-010", IdiomaInterfaz.T("Subeditores.GolpesSaco"), cc => ((PK6)cc.Pk).TrainingBagHits, (cc, v) => ((PK6)cc.Pk).TrainingBagHits = (byte)v, 0, 255) with { Indice = 203 },
+                F.Opcion("PK-PKME-010", IdiomaInterfaz.T("Subeditores.SacoEntrenamiento"), cc => [.. Enumerable.Range(0, bolsas.Length).Select(z => new OpcionCampo(z, z == 0 ? IdiomaInterfaz.T("Form.Ninguno") : bolsas[z]))], cc => ((PK6)cc.Pk).TrainingBag, (cc, id) => { CambiarSaco((PK6)cc.Pk, id); return null; }) with { Indice = 202 },
+                // 1.1.5 (S25): los usos del saco no pasan de los que el juego le da a ese saco; un valor ya guardado por encima se respeta al abrir.
+                F.Entero("PK-PKME-010", IdiomaInterfaz.T("Subeditores.GolpesSaco"), cc => ((PK6)cc.Pk).TrainingBagHits, (cc, v) => ((PK6)cc.Pk).TrainingBagHits = (byte)v, 0, 255,
+                    maxDinamico: cc => Math.Max(AutoLegalidad.Desafios.TopesJuego.UsosSacoSuperentrenamiento(((PK6)cc.Pk).TrainingBag), ((PK6)cc.Pk).TrainingBagHits)) with { Indice = 203 },
             ]));
         }
         secciones.Add(new(IdiomaInterfaz.T("Subeditores.Regimenes"), campos));

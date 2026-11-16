@@ -204,7 +204,7 @@ public sealed class PanelDesafios : UserControl
                     {
                         Name = "NUD_" + cid,
                         Minimum = 0,
-                        Maximum = campo.Maximo is { } m ? Math.Max(m, 0) : uint.MaxValue,
+                        Maximum = campo.Tope is { } m ? Math.Max(m, 0) : uint.MaxValue,
                         ThousandsSeparator = false,
                         Width = 100,
                     };

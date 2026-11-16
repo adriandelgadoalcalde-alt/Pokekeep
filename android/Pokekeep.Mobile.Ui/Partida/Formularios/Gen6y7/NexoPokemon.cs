@@ -30,7 +30,8 @@ internal static class NexoPokemon
     private static string Objeto(ContextoP c, ushort objeto) => objeto < c.Textos.itemlist.Length ? c.Textos.itemlist[objeto] : objeto.ToString();
 
     /// <summary>
-    /// Lo que hace <c>SaveLinkData</c> con un paquete recien importado: reescribe origen, disponibilidad, PB, Poké Millas, objetos y cantidades (estas como un byte: se pierde el byte alto) y el checksum.
+    /// Lo que hace <c>SaveLinkData</c> con un paquete recien importado: reescribe origen, disponibilidad, PB, Poké Millas, objetos y cantidades y el checksum. 1.1.5: las cantidades ya no se llevan a un byte (PKHeX
+    /// perdía el byte alto, 300 volvía como 44); se guardan con sus 16 bits, como las lee el juego, que las recorta a 999 al recibir el regalo.
     /// </summary>
     internal static void Normalizar(ContextoP c)
     {
@@ -39,8 +40,6 @@ internal static class NexoPokemon
         g.Enabled = g.Enabled;
         g.BattlePoints = g.BattlePoints;
         g.Pokemiles = g.Pokemiles;
-        g.Quantity1 = (byte)g.Quantity1; g.Quantity2 = (byte)g.Quantity2; g.Quantity3 = (byte)g.Quantity3;
-        g.Quantity4 = (byte)g.Quantity4; g.Quantity5 = (byte)g.Quantity5; g.Quantity6 = (byte)g.Quantity6;
         Enlace(c).RefreshChecksum();
     }
 

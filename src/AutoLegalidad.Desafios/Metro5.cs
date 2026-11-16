@@ -16,12 +16,13 @@ namespace AutoLegalidad.Desafios;
 /// <item>Dobles y Multi: verificado en el código (investigación §16). La función que elige rival (Negro <c>ov21 0x21cbd50</c>, Negro 2 <c>ov33 0x217c110</c>) es la misma para los nueve modos:
 /// en el 7.º combate del tren saca al jefe si la serie (<c>racha / 7</c>) vale 2 en un tren normal o 6 en uno Super, y elige su ID (0x132-0x139) según el modo. En Multi usa la serie mayor de los dos jugadores.</item>
 /// <item>El tren normal termina en el combate 21: no tiene segundo jefe. El tren Super tiene que estar desbloqueado (<c>BattleSubway5.cs:12-15</c>, bits 4, 5 y 6 de <c>Flags</c>).</item>
-/// <item>Tope «Máximo» 9999: el máximo de los formularios de PKHeX para estos campos (<c>SAV_Misc5.Designer.cs:1735,1955,1976</c>). El tope del juego NO está confirmado; los campos son u16 (la serie con 9999 vale 1429).</item>
+/// <item>Tope «Máximo» (1.1.5): <see cref="TopesJuego.MetroRacha"/> (65.535). Antes era 9999, el máximo de los formularios de PKHeX (<c>SAV_Misc5.Designer.cs:1735,1955,1976</c>); el motor del juego cuenta la racha en un u16 y solo para en 0xFFFF
+/// (B2W2 ov33 <c>0x0217BD4C</c>, BW ov21 <c>0x021CA1FC</c>). La serie derivada con 65.535 vale 9.363.</item>
 /// </list>
 /// </summary>
 public sealed class Metro5 : InstalacionDesafio
 {
-    public const int RachaMaxima = 9999;
+    public const int RachaMaxima = TopesJuego.MetroRacha;
 
     private Metro5() : base("metro5", Textos.Doble("inst.5.metro"), Textos.Doble("juego.gen5")) { }
 
@@ -56,8 +57,8 @@ public sealed class Metro5 : InstalacionDesafio
         {
             Campo("actual", "campo.racha_actual", RolCampo.RachaActual, RachaMaxima, s => d.GetPast(B(s)), (s, v) => d.SetPast(B(s), (int)Math.Clamp(v, 0, ushort.MaxValue))),
             Campo("record", "campo.record_racha", RolCampo.Record, RachaMaxima, s => d.GetRecord(B(s)), (s, v) => d.SetRecord(B(s), (int)Math.Clamp(v, 0, ushort.MaxValue))),
-            // La serie no tiene maximo propio: se deriva de la racha (Serie = Past / 7 + 1).
-            Campo("serie", "campo.serie", RolCampo.Contador, null, s => d.GetSet(B(s)), (s, v) => d.SetSet(B(s), (int)Math.Clamp(v, 0, ushort.MaxValue))),
+            // La serie no tiene «Máximo» propio: se deriva de la racha (Serie = Past / 7 + 1). Su tope es el del juego, 65.534 (TopesJuego.MetroSerie).
+            Campo("serie", "campo.serie", RolCampo.Contador, null, s => d.GetSet(B(s)), (s, v) => d.SetSet(B(s), (int)Math.Clamp(v, 0, TopesJuego.MetroSerie)), TopesJuego.MetroSerie),
         };
         if (d.GetSuper is { } gs && d.SetSuper is { } ss)
             campos.Add(Campo("super_desbloqueado", "campo.super_desbloqueado", RolCampo.Bandera, 1, s => gs(B(s)) ? 1 : 0, (s, v) => ss(B(s), v != 0)));

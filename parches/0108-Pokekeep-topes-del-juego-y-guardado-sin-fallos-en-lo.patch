@@ -1,0 +1,1046 @@
+From 6d882662e72a83facebd7a9d7c284f9146560dfb Mon Sep 17 00:00:00 2001
+From: Pokekeep <pokekeep@invalid>
+Date: Mon, 16 Nov 2026 00:56:03 +0100
+Subject: [PATCH] Pokekeep: topes del juego y guardado sin fallos en los
+ formularios del escritorio (1.1.5)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- Horas con TopesJuego.Horas en los ocho editores del entrenador; Pokéathlon (200 por prueba, 149 en
+  Disc Catch, récords en bruto por prueba), Pokémon Link a 999 con 16 bits, Galería Unión (rango 100,
+  experiencia 1.999, tienda 9/999 y su codificación correcta), Metro 65.535, Salón de la Fama de 6.ª
+  9.999, Festi Plaza, Enlace Global (mueble 127) y Pokochos de BDSP (sabores y nivel 100).
+- Guardado que ya no falla ni da la vuelta: Estilo de XY, PB/minutos/segundos/Maison vacíos, Base
+  Secreta, constantes de eventos, sociabilidad, obediencia, concursos, Superentrenamiento, Castillo de
+  Gen 4 (2 bytes), mochila con HaX y fechas de Gen 9, Z-A y donuts.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01K7SsmyJLJN7mL9bZmtPKMP
+---
+ .../Controls/PKM Editor/ContestStat.cs        | 16 ++++++----
+ .../Controls/PKM Editor/LoadSave.cs           |  4 +--
+ .../Controls/PKM Editor/PKMEditor.cs          |  1 +
+ PKHeX.WinForms/Pokekeep/TopesFormulario.cs    | 13 +++++++++
+ .../Subforms/PKM Editors/MemoryAmie.cs        |  3 +-
+ .../PKM Editors/SuperTrainingEditor.cs        |  4 +++
+ .../Pokeathlon/PokeathlonConnection4Editor.cs |  4 +--
+ .../Pokeathlon/PokeathlonEventData4Editor.cs  |  4 +--
+ .../PokeathlonEventRecord4Editor.cs           | 28 ++++++++++++++++--
+ .../Subforms/Save Editors/Gen4/SAV_Misc4.cs   |  2 +-
+ .../Save Editors/Gen4/SAV_Pokeathlon4.cs      | 23 ++++++++++-----
+ .../Join Avenue/JoinAvenueSettingsEditor.cs   |  3 ++
+ .../JoinAvenueVisitorSpecificEditor.cs        | 29 ++++++++++++-------
+ .../Save Editors/Gen5/SAV_GlobalLink5.cs      |  2 ++
+ .../Subforms/Save Editors/Gen5/SAV_Misc5.cs   | 17 +++++++++++
+ .../Gen6/SAV_HallOfFame.Designer.cs           |  2 +-
+ .../Save Editors/Gen6/SAV_HallOfFame.cs       |  7 +++--
+ .../Subforms/Save Editors/Gen6/SAV_Link6.cs   | 27 ++++++++---------
+ .../Save Editors/Gen6/SAV_SecretBase.cs       |  8 +++--
+ .../Save Editors/Gen6/SAV_SuperTrain.cs       | 26 ++++++++++++++---
+ .../Subforms/Save Editors/Gen6/SAV_Trainer.cs | 14 +++++----
+ .../Save Editors/Gen7/SAV_FestivalPlaza.cs    |  3 ++
+ .../Save Editors/Gen7/SAV_Trainer7.cs         |  3 +-
+ .../Save Editors/Gen7/SAV_Trainer7GG.cs       |  3 +-
+ .../Save Editors/Gen8/SAV_Poffin8b.cs         | 22 +++++++-------
+ .../Save Editors/Gen8/SAV_Trainer8.cs         |  3 +-
+ .../Save Editors/Gen8/SAV_Trainer8a.cs        |  3 +-
+ .../Save Editors/Gen8/SAV_Trainer8b.cs        |  3 +-
+ .../Save Editors/Gen9/DonutEditor9a.cs        |  2 ++
+ .../Save Editors/Gen9/SAV_Trainer9.cs         |  4 ++-
+ .../Save Editors/Gen9/SAV_Trainer9a.cs        |  4 ++-
+ .../Subforms/Save Editors/SAV_EventFlags.cs   |  5 +++-
+ .../Subforms/Save Editors/SAV_EventFlags2.cs  |  5 +++-
+ .../Subforms/Save Editors/SAV_Inventory.cs    | 11 ++++++-
+ 34 files changed, 227 insertions(+), 81 deletions(-)
+
+diff --git a/PKHeX.WinForms/Controls/PKM Editor/ContestStat.cs b/PKHeX.WinForms/Controls/PKM Editor/ContestStat.cs
+index 792fb36e4..f36fb36af 100644
+--- a/PKHeX.WinForms/Controls/PKM Editor/ContestStat.cs	
++++ b/PKHeX.WinForms/Controls/PKM Editor/ContestStat.cs	
+@@ -13,40 +13,44 @@ public ContestStat()
+ 
+     public byte ContestCool
+     {
+-        get => (byte)Util.ToInt32(TB_Cool.Text);
++        get => Acotar(TB_Cool.Text);
+         set => TB_Cool.Text = value.ToString();
+     }
+ 
+     public byte ContestBeauty
+     {
+-        get => (byte)Util.ToInt32(TB_Beauty.Text);
++        get => Acotar(TB_Beauty.Text);
+         set => TB_Beauty.Text = value.ToString();
+     }
+ 
+     public byte ContestCute
+     {
+-        get => (byte)Util.ToInt32(TB_Cute.Text);
++        get => Acotar(TB_Cute.Text);
+         set => TB_Cute.Text = value.ToString();
+     }
+ 
+     public byte ContestSmart
+     {
+-        get => (byte)Util.ToInt32(TB_Smart.Text);
++        get => Acotar(TB_Smart.Text);
+         set => TB_Smart.Text = value.ToString();
+     }
+ 
+     public byte ContestTough
+     {
+-        get => (byte)Util.ToInt32(TB_Tough.Text);
++        get => Acotar(TB_Tough.Text);
+         set => TB_Tough.Text = value.ToString();
+     }
+ 
+     public byte ContestSheen
+     {
+-        get => (byte)Util.ToInt32(TB_Sheen.Text);
++        get => Acotar(TB_Sheen.Text);
+         set => TB_Sheen.Text = value.ToString();
+     }
+ 
++    // Pokekeep 1.1.5: la máscara de 3 cifras deja escribir hasta 999 y el recorte a 255 de Update255_MTB solo ocurre al salir de la caja (Validated); un guardado sin pérdida de foco (atajo, menú) leía
++    // (byte)300 = 44. Lo que entrega el control se recorta aquí, en el propio getter, al máximo del byte.
++    private static byte Acotar(string texto) => (byte)Math.Min(Util.ToInt32(texto), byte.MaxValue);
++
+     private void Update255_MTB(object sender, EventArgs e)
+     {
+         if (sender is not MaskedTextBox tb)
+diff --git a/PKHeX.WinForms/Controls/PKM Editor/LoadSave.cs b/PKHeX.WinForms/Controls/PKM Editor/LoadSave.cs
+index 84e6e935a..df0c1c803 100644
+--- a/PKHeX.WinForms/Controls/PKM Editor/LoadSave.cs	
++++ b/PKHeX.WinForms/Controls/PKM Editor/LoadSave.cs	
+@@ -502,7 +502,7 @@ private void SaveMisc9(PK9 pk9)
+         pk9.BattleVersion = (GameVersion)WinFormsUtil.GetIndex(CB_BattleVersion);
+         pk9.TeraTypeOriginal = (MoveType)WinFormsUtil.GetIndex(Stats.CB_TeraTypeOriginal);
+         pk9.TeraTypeOverride = (MoveType)WinFormsUtil.GetIndex(Stats.CB_TeraTypeOverride);
+-        pk9.ObedienceLevel = (byte)Util.ToInt32(TB_ObedienceLevel.Text);
++        pk9.ObedienceLevel = (byte)Math.Clamp(Util.ToInt32(TB_ObedienceLevel.Text), 0, Experience.MaxLevel); // Pokekeep 1.1.5: 300 se guardaba como 44
+     }
+ 
+     private void LoadMisc9(PA9 pk9)
+@@ -520,7 +520,7 @@ private void SaveMisc9(PA9 pk9)
+         pk9.StatAlignment = (Nature)WinFormsUtil.GetIndex(CB_StatAlignment);
+         pk9.HandlingTrainerLanguage = (byte)WinFormsUtil.GetIndex(CB_HTLanguage);
+         pk9.BattleVersion = (GameVersion)WinFormsUtil.GetIndex(CB_BattleVersion);
+-        pk9.ObedienceLevel = (byte)Util.ToInt32(TB_ObedienceLevel.Text);
++        pk9.ObedienceLevel = (byte)Math.Clamp(Util.ToInt32(TB_ObedienceLevel.Text), 0, Experience.MaxLevel); // Pokekeep 1.1.5: 300 se guardaba como 44
+         pk9.IsAlpha = Stats.CHK_IsAlpha.Checked;
+     }
+ }
+diff --git a/PKHeX.WinForms/Controls/PKM Editor/PKMEditor.cs b/PKHeX.WinForms/Controls/PKM Editor/PKMEditor.cs
+index 972a02771..b708da057 100644
+--- a/PKHeX.WinForms/Controls/PKM Editor/PKMEditor.cs	
++++ b/PKHeX.WinForms/Controls/PKM Editor/PKMEditor.cs	
+@@ -26,6 +26,7 @@ public PKMEditor()
+     {
+         InitializeComponent();
+         InicializarInsigniasPokekeep();
++        TopesFormulario.AcotarAlSalir(TB_ObedienceLevel, Experience.MaxLevel); // Pokekeep 1.1.5: el nivel de obediencia (PK9 y PA9) es un byte y un nivel; la máscara de 3 cifras deja 999
+ 
+         // Commonly reused Control arrays
+         Moves = [MC_Move1, MC_Move2, MC_Move3, MC_Move4];
+diff --git a/PKHeX.WinForms/Pokekeep/TopesFormulario.cs b/PKHeX.WinForms/Pokekeep/TopesFormulario.cs
+index 291913b44..a93d8ca0e 100644
+--- a/PKHeX.WinForms/Pokekeep/TopesFormulario.cs
++++ b/PKHeX.WinForms/Pokekeep/TopesFormulario.cs
+@@ -14,6 +14,19 @@ internal static class TopesFormulario
+     public static void AcotarAlSalir(MaskedTextBox caja, uint tope)
+         => caja.Leave += (_, _) => caja.Text = Acotar(caja.Text, tope).ToString();
+ 
++    /// <summary>
++    /// Primera fecha que cabe en el campo de año de <c>Epoch1900DateTimeValue</c> (Pokekeep 1.1.5): el año se guarda en 12 bits contados desde 1900
++    /// (<c>Epoch1900DateTimeValue.cs:18</c>, <c>EpochDateTime.cs:10</c>) y <c>RawYear</c> no enmascara, así que un año anterior se convertía en un negativo que se
++    /// mezclaba con <c>|</c> en los 32 bits de la fecha y borraba mes, día, hora y minuto. El otro extremo cabe: 1900 + 4095 = 5995, y los selectores paran en 4095.
++    /// </summary>
++    public static readonly DateTime FechaMinima1900 = new(1900, 1, 1);
++
++    /// <summary>
++    /// Primera fecha que cabe en el campo de milisegundos del donut de Z-A (Pokekeep 1.1.5): se cuentan desde 1970 (<c>Donut9a.Epoch</c>) en un <c>ulong</c>, y un instante anterior daba un negativo que,
++    /// convertido a <c>ulong</c>, queda en 0: el selector enseñaba 1960 y la partida guardaba 1970 (<c>DonutEditor9a.cs:332, 354, 370</c>). El selector paraba en 1753.
++    /// </summary>
++    public static readonly DateTime FechaMinima1970 = new(1970, 1, 1);
++
+     /// <summary>Número de un texto con máscara (vacío o con huecos = 0) recortado al tope.</summary>
+     public static uint Acotar(string texto, uint tope)
+         => uint.TryParse(texto.Trim(), out var valor) ? Math.Min(valor, tope) : 0;
+diff --git a/PKHeX.WinForms/Subforms/PKM Editors/MemoryAmie.cs b/PKHeX.WinForms/Subforms/PKM Editors/MemoryAmie.cs
+index e41fd8acc..bdf289623 100644
+--- a/PKHeX.WinForms/Subforms/PKM Editors/MemoryAmie.cs	
++++ b/PKHeX.WinForms/Subforms/PKM Editors/MemoryAmie.cs	
+@@ -36,6 +36,7 @@ public MemoryAmie(PKM pk)
+             tabControl1.TabPages.Remove(Tab_Residence);
+         }
+ 
++        MT_Sociability.TextChanged += Update255_MTB; // Pokekeep 1.1.5: era el único cuadro de byte de esta ventana sin recorte (la máscara de 3 cifras deja 999)
+         GetLangStrings();
+         LoadFields();
+     }
+@@ -210,7 +211,7 @@ private void SaveFields()
+         }
+ 
+         if (Entity is G8PKM pk8)
+-            pk8.Sociability = (byte)Util.ToInt32(MT_Sociability.Text);
++            pk8.Sociability = (byte)Math.Clamp(Util.ToInt32(MT_Sociability.Text), 0, byte.MaxValue); // Pokekeep 1.1.5: 300 se guardaba como 44
+     }
+ 
+     // Event Actions
+diff --git a/PKHeX.WinForms/Subforms/PKM Editors/SuperTrainingEditor.cs b/PKHeX.WinForms/Subforms/PKM Editors/SuperTrainingEditor.cs
+index 5817e5813..b69082d51 100644
+--- a/PKHeX.WinForms/Subforms/PKM Editors/SuperTrainingEditor.cs	
++++ b/PKHeX.WinForms/Subforms/PKM Editors/SuperTrainingEditor.cs	
+@@ -54,7 +54,11 @@ public SuperTrainingEditor(ISuperTrainRegimen pk)
+                 hits = 0;
+ 
+             CB_Bag.SelectedIndex = bag;
++            // Pokekeep 1.1.5 (S25): los usos del saco no pasan de los que el juego da a ese saco (TopesJuego.UsosSacoSuperentrenamiento: 2, 5, 10, 20 o 50); el valor ya guardado
++            // por encima se respeta al abrir. Al cambiar de saco, el cuadro baja al tope del nuevo, como hace el juego al asignarlo.
++            NUD_BagHits.Maximum = Math.Max(AutoLegalidad.Desafios.TopesJuego.UsosSacoSuperentrenamiento(bag), hits);
+             NUD_BagHits.Value = hits;
++            CB_Bag.SelectedIndexChanged += (_, _) => NUD_BagHits.Maximum = AutoLegalidad.Desafios.TopesJuego.UsosSacoSuperentrenamiento(CB_Bag.SelectedIndex);
+ 
+             if (!CHK_SecretUnlocked.Checked) // force update to disable checkboxes
+                 CHK_Secret_CheckedChanged(this, EventArgs.Empty);
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen4/Pokeathlon/PokeathlonConnection4Editor.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen4/Pokeathlon/PokeathlonConnection4Editor.cs
+index 71d1eee2a..a6cf7183a 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen4/Pokeathlon/PokeathlonConnection4Editor.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen4/Pokeathlon/PokeathlonConnection4Editor.cs	
+@@ -16,7 +16,7 @@ public PokeathlonConnection4Editor()
+     private PokeathlonEventRecord4Editor[] EventRecords { get; }
+     private PokeathlonEventTrainer4Editor[] Trainers { get; }
+ 
+-    public void LoadObject(PokeathlonConnection4 entity)
++    public void LoadObject(PokeathlonConnection4 entity, PokeathlonEvent4 prueba)
+     {
+         SuspendLayout();
+         TLP_Main.SuspendLayout();
+@@ -25,7 +25,7 @@ public void LoadObject(PokeathlonConnection4 entity)
+         NUD_Attempts.Value = Math.Clamp(inner.Attempts, 0, (uint)NUD_Attempts.Maximum);
+         for (int i = 0; i < EventRecords.Length; i++)
+         {
+-            EventRecords[i].LoadObject(inner.GetRecord(i));
++            EventRecords[i].LoadObject(inner.GetRecord(i), prueba); // Pokekeep 1.1.5: el tope del récord depende de la prueba
+             Trainers[i].LoadObject(entity.GetTrainer(i));
+         }
+ 
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen4/Pokeathlon/PokeathlonEventData4Editor.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen4/Pokeathlon/PokeathlonEventData4Editor.cs
+index e62aad2b6..376a8ae69 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen4/Pokeathlon/PokeathlonEventData4Editor.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen4/Pokeathlon/PokeathlonEventData4Editor.cs	
+@@ -14,11 +14,11 @@ public PokeathlonEventData4Editor()
+ 
+     private PokeathlonEventRecord4Editor[] EventRecords { get; }
+ 
+-    public void LoadObject(PokeathlonEventData4 entity)
++    public void LoadObject(PokeathlonEventData4 entity, PokeathlonEvent4 prueba)
+     {
+         NUD_Attempts.Value = Math.Clamp(entity.Attempts, 0, (uint)NUD_Attempts.Maximum);
+         for (int i = 0; i < EventRecords.Length; i++)
+-            EventRecords[i].LoadObject(entity.GetRecord(i));
++            EventRecords[i].LoadObject(entity.GetRecord(i), prueba); // Pokekeep 1.1.5: el tope del récord depende de la prueba
+     }
+ 
+     public void SaveObject(PokeathlonEventData4 entity)
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen4/Pokeathlon/PokeathlonEventRecord4Editor.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen4/Pokeathlon/PokeathlonEventRecord4Editor.cs
+index ad54d6dba..af2eaa947 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen4/Pokeathlon/PokeathlonEventRecord4Editor.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen4/Pokeathlon/PokeathlonEventRecord4Editor.cs	
+@@ -1,18 +1,42 @@
+ using System;
+ using System.Windows.Forms;
++using AutoLegalidad.Desafios;
+ using PKHeX.Core;
+ 
+ namespace PKHeX.WinForms;
+ 
+ public sealed partial class PokeathlonEventRecord4Editor : UserControl
+ {
++    // Pokekeep 1.1.5: el récord en bruto de cada prueba tiene su tope en el juego (TopesJuego.PokeathlonRecordBruto: 999, 999, 1.023, 4.095 o el del dato).
++    // 0xFFFF no es un récord, es «sin récord» (pokeathlon_save.c:10-14): se puede mostrar y conservar, pero no se alcanza escribiendo un número.
++    private int Limite = ushort.MaxValue - 1;
++    private bool SinRecord;
++
+     public PokeathlonEventRecord4Editor()
+     {
+         InitializeComponent();
++        NUD_Record.ValueChanged += (_, _) => AcotarAlTope();
++    }
++
++    /// <summary>Valor del cuadro tal como se guardaría: por encima del tope de la prueba se queda en el tope, salvo el «sin récord» que ya tenía.</summary>
++    private int ValorAcotado()
++    {
++        var valor = (int)NUD_Record.Value;
++        return valor > Limite && !(SinRecord && valor == ushort.MaxValue) ? Limite : valor;
++    }
++
++    private void AcotarAlTope()
++    {
++        var valor = ValorAcotado();
++        if (valor != (int)NUD_Record.Value)
++            NUD_Record.Value = valor;
+     }
+ 
+-    public void LoadObject(PokeathlonEventRecord4 entity)
++    public void LoadObject(PokeathlonEventRecord4 entity, PokeathlonEvent4 prueba)
+     {
++        var tope = TopesJuego.PokeathlonRecordBruto(prueba);
++        SinRecord = entity.Record == ushort.MaxValue;
++        Limite = SinRecord ? tope : Math.Max(tope, entity.Record); // un valor ya guardado por encima del tope no se recorta al abrir
+         NUD_Record.Value = Math.Clamp(entity.Record, (ushort)0, (ushort)NUD_Record.Maximum);
+         UC_Entry0.LoadValues(entity.Entry0.Species, entity.Entry0.Form);
+         UC_Entry1.LoadValues(entity.Entry1.Species, entity.Entry1.Form);
+@@ -21,7 +45,7 @@ public void LoadObject(PokeathlonEventRecord4 entity)
+ 
+     public void SaveObject(PokeathlonEventRecord4 entity)
+     {
+-        entity.Record = (ushort)NUD_Record.Value;
++        entity.Record = (ushort)ValorAcotado();
+         entity.Entry0 = new SpeciesForm10 { Species = UC_Entry0.Species, Form = UC_Entry0.Form };
+         entity.Entry1 = new SpeciesForm10 { Species = UC_Entry1.Species, Form = UC_Entry1.Form };
+         entity.Entry2 = new SpeciesForm10 { Species = UC_Entry2.Species, Form = UC_Entry2.Form };
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Misc4.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Misc4.cs
+index 8335bd552..2afdc18d5 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Misc4.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Misc4.cs	
+@@ -627,7 +627,7 @@ private void NUD_CastleRank_ValueChanged(object sender, EventArgs e)
+         if (i < 0)
+             return;
+         var offset = BFF[3][2] + (BFF[3][3] * CB_Stats2.SelectedIndex) + 0x0A + (i << 1);
+-        WriteInt32LittleEndian(SAV.General[offset..], (int)na[i].Value);
++        WriteInt16LittleEndian(SAV.General[offset..], (short)na[i].Value); // Pokekeep 1.1.5: cada rango son 2 bytes (se leen con ReadInt16LittleEndian); con 4 bytes se pisaba el rango siguiente y se dejaba a 0
+     }
+ 
+     private void GetHallStat()
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Pokeathlon4.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Pokeathlon4.cs
+index b3ae10ec8..39170a711 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Pokeathlon4.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen4/SAV_Pokeathlon4.cs	
+@@ -256,7 +256,7 @@ private void InitializeBestScores()
+                 AutoSize = true,
+                 Text = GetEventDisplayName((PokeathlonEvent4)i) + ':',
+             };
+-            var editor = CreateNumericEditor(TopesJuego.PokeathlonPuntuacion); // Pokekeep 1.1.4: cota de 999 (el juego recorta el curso a 999)
++            var editor = CreateNumericEditor(TopesJuego.PokeathlonMejorPrueba((PokeathlonEvent4)i)); // Pokekeep 1.1.5: en Puntos atleta, 200 (149 en Disc Catch)
+             TLP_Best.RowStyles.Add(new RowStyle());
+             TLP_Best.Controls.Add(label, 0, i);
+             TLP_Best.Controls.Add(editor, 1, i);
+@@ -377,7 +377,11 @@ private void SaveCounters()
+     private void LoadBestScores()
+     {
+         foreach (var binding in BestScoreEditors)
+-            binding.Editor.SetValueClamped(Pokeathlon.GetBestScore(binding.Event));
++        {
++            var actual = Pokeathlon.GetBestScore(binding.Event);
++            binding.Editor.Maximum = Math.Max(TopesJuego.PokeathlonMejorPrueba(binding.Event), actual); // Pokekeep 1.1.5: un valor ya guardado por encima no se recorta al abrir
++            binding.Editor.SetValueClamped(actual);
++        }
+     }
+ 
+     private void SaveBestScores()
+@@ -390,9 +394,14 @@ private void LoadCourse(int index)
+     {
+         IsLoading = true;
+         var course = Pokeathlon.GetCourseRecord((PokeathlonStat4)index);
+-        CourseScoreEditors[0].SetValueClamped(course.Score0);
+-        CourseScoreEditors[1].SetValueClamped(course.Score1);
+-        CourseScoreEditors[2].SetValueClamped(course.Score2);
++        // Pokekeep 1.1.5: Score0..2 son los puntos de cada prueba del curso; el juego los recorta a 200 (TopesJuego.PokeathlonPuntosPrueba).
++        // Un valor ya guardado por encima no se recorta al abrir.
++        ushort[] puntos = [course.Score0, course.Score1, course.Score2];
++        for (int k = 0; k < 3; k++)
++        {
++            CourseScoreEditors[k].Maximum = Math.Max(TopesJuego.PokeathlonPuntosPrueba, (int)puntos[k]);
++            CourseScoreEditors[k].SetValueClamped(puntos[k]);
++        }
+         CourseScoreEditors[3].SetValueClamped(course.ScoreMax);
+         for (int i = 0; i < CourseParticipantEditors.Length; i++)
+             CourseParticipantEditors[i].LoadObject(course.GetParticipant(i));
+@@ -414,7 +423,7 @@ private void SaveCourse(int index)
+     private void LoadSelfEvent(int index)
+     {
+         IsLoading = true;
+-        UC_SelfEventData.LoadObject(Pokeathlon.GetEventSelf((PokeathlonEvent4)index));
++        UC_SelfEventData.LoadObject(Pokeathlon.GetEventSelf((PokeathlonEvent4)index), (PokeathlonEvent4)index);
+         CurrentSelfEventIndex = index;
+         IsLoading = false;
+     }
+@@ -427,7 +436,7 @@ private void SaveSelfEvent(int index)
+     private void LoadConnection(int index)
+     {
+         IsLoading = true;
+-        UC_Connection.LoadObject(Pokeathlon.GetEventConnection((PokeathlonEvent4)index));
++        UC_Connection.LoadObject(Pokeathlon.GetEventConnection((PokeathlonEvent4)index), (PokeathlonEvent4)index);
+         CurrentConnectionIndex = index;
+         IsLoading = false;
+     }
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen5/Join Avenue/JoinAvenueSettingsEditor.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen5/Join Avenue/JoinAvenueSettingsEditor.cs
+index bf0ea19af..4c11f53ee 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen5/Join Avenue/JoinAvenueSettingsEditor.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen5/Join Avenue/JoinAvenueSettingsEditor.cs	
+@@ -29,6 +29,9 @@ public void LoadObject(JoinAvenueSettings5 settings)
+     {
+         TB_Name.Text = settings.Name;
+         TB_Title.Text = settings.PlayerTitle;
++        // Pokekeep 1.1.5: el juego llega a rango 100 y a experiencia 1.999 (TopesJuego.AvenidaRango y AvenidaExperiencia); un valor ya guardado por encima no se recorta al abrir.
++        NUD_Experience.Maximum = Math.Max(AutoLegalidad.Desafios.TopesJuego.AvenidaExperiencia, settings.Experience);
++        NUD_Rank.Maximum = Math.Max(AutoLegalidad.Desafios.TopesJuego.AvenidaRango, (int)settings.Rank);
+         NUD_Experience.Value = Math.Clamp(settings.Experience, 0, (uint)NUD_Experience.Maximum);
+         NUD_Rank.Value = Math.Clamp(settings.Rank, (ushort)0, (ushort)NUD_Rank.Maximum);
+         CB_CeilingColor.SelectedValue = (int)settings.CeilingColor;
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen5/Join Avenue/JoinAvenueVisitorSpecificEditor.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen5/Join Avenue/JoinAvenueVisitorSpecificEditor.cs
+index 12b3cb402..90be2acd7 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen5/Join Avenue/JoinAvenueVisitorSpecificEditor.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen5/Join Avenue/JoinAvenueVisitorSpecificEditor.cs	
+@@ -72,6 +72,9 @@ public void LoadObject(JoinAvenueVisitor5 entity)
+         CHK_IsFlagAA.Checked = entity.IsFlagAA;
+         NUD_JoinAvenueRank.Value = Math.Clamp(entity.JoinAvenueRank, (byte)0, (byte)NUD_JoinAvenueRank.Maximum);
+         NUD_UnknownAC.Value = Math.Clamp(entity.UnknownAC, (byte)0, (byte)NUD_UnknownAC.Maximum);
++        // Pokekeep 1.1.5: la tienda sube hasta el rango 9 y la experiencia hasta 999 (TopesJuego.AvenidaTiendaRango y AvenidaTiendaExperiencia); un valor ya guardado por encima no se recorta al abrir.
++        NUD_ShopRank.Maximum = Math.Max(AutoLegalidad.Desafios.TopesJuego.AvenidaTiendaRango, (int)entity.ShopRank);
++        NUD_ShopExperience.Maximum = Math.Max(AutoLegalidad.Desafios.TopesJuego.AvenidaTiendaExperiencia, (int)entity.ShopExperience);
+         NUD_ShopRank.Value = Math.Clamp(entity.ShopRank, (byte)0, (byte)NUD_ShopRank.Maximum);
+         NUD_ShopExperience.Value = Math.Clamp(entity.ShopExperience, (ushort)0, (ushort)NUD_ShopExperience.Maximum);
+         NUD_IsInventory.Value = Math.Clamp(entity.IsInventory, 0, (uint)NUD_IsInventory.Maximum);
+@@ -84,8 +87,10 @@ public void LoadObject(JoinAvenueVisitor5 entity)
+         NUD_UnknownBits21_27.Value = Math.Clamp(entity.UnknownBits21_27, (byte)0, (byte)NUD_UnknownBits21_27.Maximum);
+         NUD_UnknownBits28_31.Value = Math.Clamp(entity.UnknownBits28_31, (byte)0, (byte)NUD_UnknownBits28_31.Maximum);
+ 
+-        GetShopTuple(entity.DesiredShopTypeTuple, CB_DesiredShopType, NUD_DesiredShopLevel, NUD_DesiredShopVersion);
+-        GetShopTuple(entity.ShopTypeTuple, CB_ShopType, NUD_ShopTypeLevel, NUD_ShopTypeVersion);
++        // Pokekeep 1.1.5: la tienda se lee y se escribe con TopesJuego.AvenidaDescifrarTienda y AvenidaCodificarTienda: el EncodeShop del Core no es la inversa de su DecodeShop, así que guardar
++        // con la tupla cambiaba el rango y la versión de CADA tienda al aceptar el formulario (rango 9 -> 8, versión 3 -> 1), y descifraba como tienda inventada el 65.535 de los visitantes sin tienda.
++        GetShopTuple(AutoLegalidad.Desafios.TopesJuego.AvenidaDescifrarTienda(entity.DesiredShopType), CB_DesiredShopType, NUD_DesiredShopLevel, NUD_DesiredShopVersion);
++        GetShopTuple(AutoLegalidad.Desafios.TopesJuego.AvenidaDescifrarTienda(entity.ShopType), CB_ShopType, NUD_ShopTypeLevel, NUD_ShopTypeVersion);
+     }
+ 
+     public void SaveObject(JoinAvenueVisitor5 entity)
+@@ -152,11 +157,11 @@ public void SaveObject(JoinAvenueVisitor5 entity)
+         entity.UnknownBits21_27 = (byte)NUD_UnknownBits21_27.Value;
+         entity.UnknownBits28_31 = (byte)NUD_UnknownBits28_31.Value;
+ 
+-        entity.DesiredShopTypeTuple = SetShopTuple(CB_DesiredShopType, NUD_DesiredShopLevel, NUD_DesiredShopVersion);
+-        entity.ShopTypeTuple = SetShopTuple(CB_ShopType, NUD_ShopTypeLevel, NUD_ShopTypeVersion);
++        entity.DesiredShopType = SetShop(CB_DesiredShopType, NUD_DesiredShopLevel, NUD_DesiredShopVersion, entity.DesiredShopType);
++        entity.ShopType = SetShop(CB_ShopType, NUD_ShopTypeLevel, NUD_ShopTypeVersion, entity.ShopType);
+     }
+ 
+-    private static void GetShopTuple((byte Version, JoinAvenueShopType5 Type, byte Rank)? tuple, ComboBox type, NumericUpDown level, NumericUpDown version)
++    private static void GetShopTuple((byte Version, JoinAvenueShopType5 Tipo, byte Rango)? tuple, ComboBox type, NumericUpDown level, NumericUpDown version)
+     {
+         if (tuple is not { } x)
+         {
+@@ -165,17 +170,21 @@ private static void GetShopTuple((byte Version, JoinAvenueShopType5 Type, byte R
+             type.SelectedValue = -1;
+             return;
+         }
+-        type.SelectedValue = (int)x.Type;
+-        level.Value = x.Rank;
++        type.SelectedValue = (int)x.Tipo;
++        level.Value = x.Rango;
+         version.Value = x.Version;
+     }
+ 
+-    private static (byte Version, JoinAvenueShopType5 Type, byte Rank)? SetShopTuple(ComboBox type, NumericUpDown level, NumericUpDown version)
++    /// <summary>
++    /// Dato de tienda que deja el formulario (Pokekeep 1.1.5). Sin tipo, 0; pero un dato que ya no era una tienda (65.535 en los visitantes sin tienda de las partidas reales) se conserva mientras el
++    /// formulario siga enseñando «ninguna».
++    /// </summary>
++    private static ushort SetShop(ComboBox type, NumericUpDown level, NumericUpDown version, ushort actual)
+     {
+         var t = WinFormsUtil.GetIndex(type);
+         if (t < 0)
+-            return null;
+-        return ((byte)version.Value, (JoinAvenueShopType5)t, (byte)level.Value);
++            return actual > AutoLegalidad.Desafios.TopesJuego.AvenidaTiendaDatoMaximo ? actual : (ushort)0;
++        return AutoLegalidad.Desafios.TopesJuego.AvenidaCodificarTienda((byte)version.Value, (JoinAvenueShopType5)t, (byte)level.Value);
+     }
+ 
+     private static void InitializeCombo(ComboBox cb, IReadOnlyList<ComboItem> source)
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen5/SAV_GlobalLink5.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen5/SAV_GlobalLink5.cs
+index 23c74dca2..f9929c251 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen5/SAV_GlobalLink5.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen5/SAV_GlobalLink5.cs	
+@@ -63,6 +63,8 @@ private void LoadData()
+         NUD_CGearSkin.Value = Block.CGearSkin;
+         NUD_DexSkin.Value = Block.DexSkin;
+ 
++        // Pokekeep 1.1.5: el dato guarda 7 bits (GlobalLink5.cs:67, Furniture & 0x7F; el octavo es otra marca): con el máximo de 255 del diseñador, 200 se guardaba como 72 sin avisar.
++        NUD_FurnitureSelected.Maximum = AutoLegalidad.Desafios.TopesJuego.EnlaceGlobalMuebleElegido;
+         NUD_FurnitureSelected.Value = Block.SelectedFurnitureIndex;
+         CHK_FurnitureSynchronized.Checked = Block.IsFurnitureSynchronized;
+ 
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen5/SAV_Misc5.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen5/SAV_Misc5.cs
+index 3b9345c3c..fe9f70baa 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen5/SAV_Misc5.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen5/SAV_Misc5.cs	
+@@ -29,6 +29,22 @@ public SAV_Misc5(SAV5 sav)
+         WinFormsUtil.TranslateInterface(this, Main.CurrentLanguage);
+         SAV = (SAV5)(Origin = sav).Clone();
+ 
++        // Pokekeep 1.1.5: la racha y el récord de cada modo del Metro Batalla llegan a 65.535 en el juego (TopesJuego.MetroRacha; el formulario de PKHeX paraba en 9.999).
++        // Con cinco cifras la caja se queda corta: se ensancha diez píxeles hacia la izquierda, sin mover su borde derecho (medido: «65535» pide 37 px de texto; con seis la caja dejaba 34, GeometriaFormularios115Tests).
++        foreach (var nud in (NumericUpDown[])[NUD_SinglePast, NUD_SingleRecord, NUD_DoublePast, NUD_DoubleRecord, NUD_MultiNpcPast, NUD_MultiNpcRecord, NUD_MultiFriendsPast, NUD_MultiFriendsRecord,
++            NUD_SSinglePast, NUD_SSingleRecord, NUD_SDoublePast, NUD_SDoubleRecord, NUD_SMultiNpcPast, NUD_SMultiNpcRecord, NUD_SMultiFriendsPast, NUD_SMultiFriendsRecord])
++        {
++            nud.Maximum = TopesJuego.MetroRacha;
++            nud.Left -= 10;
++            nud.Width += 10;
++            // Su etiqueta («Pasado», «Récord»), alineada a la derecha, se corre al borde izquierdo del grupo y acaba 2 px antes del cuadro, sin pisarlo (GeometriaFormularios115Tests).
++            var etiqueta = (Label)nud.Parent!.Controls["L_" + nud.Name[4..]]!;
++            etiqueta.Left = 3;
++            etiqueta.Width = nud.Left - 2 - etiqueta.Left;
++        }
++        // Pokekeep 1.1.5: el juego solo guarda 100 participantes o menos (TopesJuego.FestivalParticipantes); el valor ya guardado por encima se respeta al abrir (ReadEntralink).
++        NUD_FMMostParticipants.Maximum = TopesJuego.FestivalParticipantes;
++
+         CLB_MusicalProps.Items.AddRange(PropNames);
+         swp = SAV.BattleSubwayPlay;
+         sw = SAV.BattleSubway;
+@@ -323,6 +339,7 @@ private void ReadEntralink()
+             NUD_FMParticipated.SetValueClamped(block.Participated);
+             NUD_FMCompleted.SetValueClamped(block.Completed);
+             NUD_FMTopScores.SetValueClamped(block.TopScores);
++            NUD_FMMostParticipants.Maximum = Math.Max(TopesJuego.FestivalParticipantes, (int)block.Participants); // Pokekeep 1.1.5: un valor ya guardado por encima de 100 no se recorta al abrir
+             NUD_FMMostParticipants.SetValueClamped(block.Participants);
+             NUD_EntreeWhiteEXP.SetValueClamped(block.WhiteEXP);
+             NUD_EntreeBlackEXP.SetValueClamped(block.BlackEXP);
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_HallOfFame.Designer.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_HallOfFame.Designer.cs
+index e3c3ea4d6..58928bd96 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_HallOfFame.Designer.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_HallOfFame.Designer.cs	
+@@ -420,7 +420,7 @@ private void InitializeComponent()
+             TB_VN.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+             TB_VN.Location = new System.Drawing.Point(111, 25);
+             TB_VN.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+-            TB_VN.Mask = "000";
++            TB_VN.Mask = "0000";
+             TB_VN.Name = "TB_VN";
+             TB_VN.Size = new System.Drawing.Size(37, 23);
+             TB_VN.TabIndex = 6;
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_HallOfFame.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_HallOfFame.cs
+index 1a79222e8..eebad02f5 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_HallOfFame.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_HallOfFame.cs	
+@@ -20,6 +20,9 @@ public partial class SAV_HallOfFame : Form
+     public SAV_HallOfFame(SAV6 sav)
+     {
+         InitializeComponent();
++        // Pokekeep 1.1.5: el mínimo de PKHeX (721x386) es menor que el tamaño de diseño y, al encoger la ventana, el cuadro «Entry» se cortaba 21 px por la derecha y 30 por abajo
++        // (medido en GeometriaFormularios115Tests). El mínimo pasa a ser el tamaño de diseño.
++        MinimumSize = Size;
+         WinFormsUtil.TranslateInterface(this, Main.CurrentLanguage);
+         SAV = (SAV6)(Origin = sav).Clone();
+         Fame = ((ISaveBlock6Main)SAV).HallOfFame;
+@@ -77,7 +80,7 @@ private void DisplayEntry(object sender, EventArgs e)
+ 
+         var span = Fame.GetEntry(index);
+         var vnd = new HallFame6Index(span[^4..]);
+-        TB_VN.Text = vnd.ClearIndex.ToString("000");
++        TB_VN.Text = vnd.ClearIndex.ToString("0000"); // Pokekeep 1.1.5: cuatro cifras (el dato ocupa 14 bits y el juego llega a 9.999)
+         var s = new List<string> { $"Entry #{vnd.ClearIndex}" };
+         if (!vnd.HasData)
+         {
+@@ -236,7 +239,7 @@ private void Write_Entry(object sender, EventArgs e)
+     private void Validate_TextBoxes()
+     {
+         TB_Level.Text = Math.Min(Util.ToInt32(TB_Level.Text), 100).ToString("000");
+-        TB_VN.Text = Math.Min(Util.ToInt32(TB_VN.Text), byte.MaxValue).ToString("000");
++        TB_VN.Text = Math.Min(Util.ToInt32(TB_VN.Text), AutoLegalidad.Desafios.TopesJuego.SalonFamaVictorias6).ToString("0000"); // Pokekeep 1.1.5: el juego llega a 9.999 victorias (antes se recortaba a 255)
+         TB_TID.Text = Math.Min(Util.ToInt32(TB_TID.Text), ushort.MaxValue).ToString("00000");
+         TB_SID.Text = Math.Min(Util.ToInt32(TB_SID.Text), ushort.MaxValue).ToString("00000");
+     }
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Link6.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Link6.cs
+index a183188ac..0c3e7bcd2 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Link6.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Link6.cs	
+@@ -83,13 +83,14 @@ private void LoadLinkData()
+         CB_Item5.SelectedValue = (int)Gifts.Item5;
+         CB_Item6.SelectedValue = (int)Gifts.Item6;
+ 
+-        // Pokekeep 1.1.4: la cantidad se guarda en un byte y 300 daba la vuelta (44); el cuadro llega a 255 (TopesJuego.NexoCantidadObjeto).
+-        NUD_Item1.Value = Math.Min(TopesJuego.NexoCantidadObjeto, (int)Gifts.Quantity1);
+-        NUD_Item2.Value = Math.Min(TopesJuego.NexoCantidadObjeto, (int)Gifts.Quantity2);
+-        NUD_Item3.Value = Math.Min(TopesJuego.NexoCantidadObjeto, (int)Gifts.Quantity3);
+-        NUD_Item4.Value = Math.Min(TopesJuego.NexoCantidadObjeto, (int)Gifts.Quantity4);
+-        NUD_Item5.Value = Math.Min(TopesJuego.NexoCantidadObjeto, (int)Gifts.Quantity5);
+-        NUD_Item6.Value = Math.Min(TopesJuego.NexoCantidadObjeto, (int)Gifts.Quantity6);
++        // Pokekeep 1.1.5: la cantidad es u16 (PL6.cs:58) y el juego la recorta a 999 al recibir el regalo (TopesJuego.NexoCantidadObjeto); un valor
++        // ya guardado por encima no se recorta al abrir.
++        NUD_Item1.Maximum = Math.Max(TopesJuego.NexoCantidadObjeto, (int)Gifts.Quantity1); NUD_Item1.Value = Gifts.Quantity1;
++        NUD_Item2.Maximum = Math.Max(TopesJuego.NexoCantidadObjeto, (int)Gifts.Quantity2); NUD_Item2.Value = Gifts.Quantity2;
++        NUD_Item3.Maximum = Math.Max(TopesJuego.NexoCantidadObjeto, (int)Gifts.Quantity3); NUD_Item3.Value = Gifts.Quantity3;
++        NUD_Item4.Maximum = Math.Max(TopesJuego.NexoCantidadObjeto, (int)Gifts.Quantity4); NUD_Item4.Value = Gifts.Quantity4;
++        NUD_Item5.Maximum = Math.Max(TopesJuego.NexoCantidadObjeto, (int)Gifts.Quantity5); NUD_Item5.Value = Gifts.Quantity5;
++        NUD_Item6.Maximum = Math.Max(TopesJuego.NexoCantidadObjeto, (int)Gifts.Quantity6); NUD_Item6.Value = Gifts.Quantity6;
+ 
+         // Pokemon slots
+         TB_PKM1.Text = GetSpecies(Gifts.Entity1.Species);
+@@ -131,11 +132,11 @@ private void SaveLinkData()
+         Gifts.Item5 = (ushort)WinFormsUtil.GetIndex(CB_Item5);
+         Gifts.Item6 = (ushort)WinFormsUtil.GetIndex(CB_Item6);
+ 
+-        Gifts.Quantity1 = (byte)NUD_Item1.Value;
+-        Gifts.Quantity2 = (byte)NUD_Item2.Value;
+-        Gifts.Quantity3 = (byte)NUD_Item3.Value;
+-        Gifts.Quantity4 = (byte)NUD_Item4.Value;
+-        Gifts.Quantity5 = (byte)NUD_Item5.Value;
+-        Gifts.Quantity6 = (byte)NUD_Item6.Value;
++        Gifts.Quantity1 = (ushort)NUD_Item1.Value; // Pokekeep 1.1.5: antes (byte)
++        Gifts.Quantity2 = (ushort)NUD_Item2.Value; // Pokekeep 1.1.5: antes (byte)
++        Gifts.Quantity3 = (ushort)NUD_Item3.Value; // Pokekeep 1.1.5: antes (byte)
++        Gifts.Quantity4 = (ushort)NUD_Item4.Value; // Pokekeep 1.1.5: antes (byte)
++        Gifts.Quantity5 = (ushort)NUD_Item5.Value; // Pokekeep 1.1.5: antes (byte)
++        Gifts.Quantity6 = (ushort)NUD_Item6.Value; // Pokekeep 1.1.5: antes (byte)
+     }
+ }
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_SecretBase.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_SecretBase.cs
+index 1d237e322..007c4fe58 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_SecretBase.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_SecretBase.cs	
+@@ -26,6 +26,10 @@ public SAV_SecretBase(SAV6AO sav)
+         WinFormsUtil.TranslateInterface(this, Main.CurrentLanguage);
+         SAV = (SAV6AO)(Origin = sav).Clone();
+ 
++        // Pokekeep 1.1.5: la máscara de 3 cifras deja 999 y los dos datos caben en un byte (SecretBase6PKM.cs:55 y :57): al salir de la caja se recortan al máximo.
++        TopesFormulario.AcotarAlSalir(TB_Friendship, byte.MaxValue);
++        TopesFormulario.AcotarAlSalir(TB_Level, Experience.MaxLevel);
++
+         NUD_FObject.Maximum = SecretBase6.COUNT_GOODS - 1; // zero indexed!
+         NUD_FPKM.Maximum = SecretBase6Other.COUNT_TEAM - 1; // zero indexed!
+         PG_Base.Font = FontUtil.GetFont(context: EntityContext.Gen6);
+@@ -211,9 +215,9 @@ private void SavePKM(SecretBase6PKM pk)
+         pk.IV_SPD = Convert.ToByte(TB_SPDIV.Text) & 0x1F;
+         pk.IV_SPE = Convert.ToByte(TB_SPEIV.Text) & 0x1F;
+         pk.IsShiny = CHK_Shiny.Checked;
+-        pk.CurrentFriendship = Convert.ToByte(TB_Friendship.Text);
++        pk.CurrentFriendship = (int)TopesFormulario.Acotar(TB_Friendship.Text, byte.MaxValue); // Pokekeep 1.1.5: Convert.ToByte lanzaba OverflowException con 256 a 999
+         pk.Ball = (byte)WinFormsUtil.GetIndex(CB_Ball);
+-        pk.CurrentLevel = Convert.ToByte(TB_Level.Text);
++        pk.CurrentLevel = (byte)Math.Clamp(TopesFormulario.Acotar(TB_Level.Text, Experience.MaxLevel), (uint)Experience.MinLevel, (uint)Experience.MaxLevel); // Pokekeep 1.1.5: 1 a 100 (Convert.ToByte lanzaba con 256 a 999 y dejaba un nivel imposible entre 101 y 255)
+     }
+ 
+     private void LoadPKM(SecretBase6PKM pk)
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_SuperTrain.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_SuperTrain.cs
+index 52770ab63..968cb1189 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_SuperTrain.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_SuperTrain.cs	
+@@ -148,15 +148,33 @@ private void ChangeRecordSpecies1(object sender, EventArgs e)
+         holder.Species = (ushort)WinFormsUtil.GetIndex(CB_Species1);
+     }
+ 
++    /// <summary>
++    /// Pokekeep 1.1.5: estas cajas no tienen máscara y aceptan cualquier número; con <c>byte.TryParse</c> un 300 no se guardaba y la caja seguía enseñándolo (el guardado conservaba el valor anterior). Un número
++    /// que no cabe en el byte se recorta a 255 y la caja enseña ya lo que se guarda; un texto que no es un número sigue sin escribirse.
++    /// </summary>
++    private static bool TryAcotar(MaskedTextBox caja, out byte valor)
++    {
++        valor = 0;
++        var texto = caja.Text.Trim();
++        if (texto.Length == 0 || texto.AsSpan().ContainsAnyExceptInRange('0', '9'))
++            return false;
++        var cifras = texto.TrimStart('0');
++        var numero = cifras.Length == 0 ? 0 : cifras.Length > 3 ? 999 : int.Parse(cifras);
++        valor = (byte)Math.Min(numero, byte.MaxValue);
++        if (numero > byte.MaxValue)
++            caja.Text = valor.ToString(); // vuelve a lanzar TextChanged con el valor ya recortado, que cabe
++        return true;
++    }
++
+     private void ChangeRecordMisc1(object sender, EventArgs e)
+     {
+         int index = listBox1.SelectedIndex;
+         if (index < 0 || loading)
+             return;
+         var holder = STB.GetHolder1(index);
+-        if (byte.TryParse(MTB_Form1.Text, out var form))
++        if (TryAcotar(MTB_Form1, out var form))
+             holder.Form = form;
+-        if (byte.TryParse(MTB_Gender1.Text, out var gender))
++        if (TryAcotar(MTB_Gender1, out var gender))
+             holder.Gender = gender;
+     }
+ 
+@@ -175,9 +193,9 @@ private void ChangeRecordMisc2(object sender, EventArgs e)
+         if (index < 0 || loading)
+             return;
+         var holder = STB.GetHolder2(index);
+-        if (byte.TryParse(MTB_Form2.Text, out var form))
++        if (TryAcotar(MTB_Form2, out var form))
+             holder.Form = form;
+-        if (byte.TryParse(MTB_Gender2.Text, out var gender))
++        if (TryAcotar(MTB_Gender2, out var gender))
+             holder.Gender = gender;
+     }
+ 
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Trainer.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Trainer.cs
+index 8ca78f506..783dedc23 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Trainer.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen6/SAV_Trainer.cs	
+@@ -152,9 +152,11 @@ private void GetTextBoxes()
+         TB_BP.Text = SAV.BP.ToString();
+         TB_PM.Text = SAV.GetRecord(63).ToString();
+ 
++        TopesFormulario.AcotarAlSalir(TB_Style, byte.MaxValue); // Pokekeep 1.1.5: el dato es un byte y la máscara de tres cifras deja escribir hasta 999
+         TB_Style.Text = sit.Style.ToString();
+ 
+         // Load Play Time
++        TopesFormulario.AcotarAlSalir(MT_Hours, (uint)AutoLegalidad.Desafios.TopesJuego.Horas(SAV)); // Pokekeep 1.1.5
+         MT_Hours.Text = SAV.PlayedHours.ToString();
+         MT_Minutes.Text = SAV.PlayedMinutes.ToString();
+         MT_Seconds.Text = SAV.PlayedSeconds.ToString();
+@@ -228,7 +230,7 @@ private void Save()
+         if (SAV is ISaveBlock6Main xyao)
+         {
+             for (int i = 0; i < MaisonBlock.MaisonStatCount; i++)
+-                xyao.Maison.SetMaisonStat(i, ushort.Parse(MaisonRecords[i].Text));
++                xyao.Maison.SetMaisonStat(i, (ushort)TopesFormulario.Acotar(MaisonRecords[i].Text, MaisonRachaMaxima)); // Pokekeep 1.1.5: ushort.Parse lanzaba FormatException con un cuadro vacío y el guardado no se hacía
+         }
+ 
+         // Copy Position
+@@ -242,12 +244,12 @@ private void Save()
+             sit.R = (int)NUD_R.Value;
+         }
+ 
+-        SAV.BP = ushort.Parse(TB_BP.Text);
++        SAV.BP = (int)TopesFormulario.Acotar(TB_BP.Text, AutoLegalidad.Desafios.TopesJuego.PuntosBatalla3DS); // Pokekeep 1.1.5: tope del juego (9.999) y un cuadro vacío ya no lanza FormatException al guardar
+         // Set Current PokéMiles
+         SAV.SetRecord(63, Util.ToInt32(TB_PM.Text));
+         // Set Max Obtained Pokémiles
+         SAV.SetRecord(64, Util.ToInt32(TB_PM.Text));
+-        sit.Style = byte.Parse(TB_Style.Text);
++        sit.Style = (byte)TopesFormulario.Acotar(TB_Style.Text, byte.MaxValue); // Pokekeep 1.1.5: la máscara deja 999 y byte.Parse lanzaba OverflowException de 256 en adelante, y el guardado no se hacía
+ 
+         // Copy Badges
+         int badgeval = 0;
+@@ -256,9 +258,9 @@ private void Save()
+         SAV.Badges = badgeval;
+ 
+         // Save PlayTime
+-        SAV.PlayedHours = ushort.Parse(MT_Hours.Text);
+-        SAV.PlayedMinutes = ushort.Parse(MT_Minutes.Text) % 60;
+-        SAV.PlayedSeconds = ushort.Parse(MT_Seconds.Text) % 60;
++        SAV.PlayedHours = (int)TopesFormulario.Acotar(MT_Hours.Text, (uint)AutoLegalidad.Desafios.TopesJuego.Horas(SAV)); // Pokekeep 1.1.5: la máscara deja 99999 y ushort.Parse rompía al guardar; tope del juego o del dato
++        SAV.PlayedMinutes = (int)TopesFormulario.Acotar(MT_Minutes.Text, 59); // Pokekeep 1.1.5: un cuadro vacío lanzaba FormatException
++        SAV.PlayedSeconds = (int)TopesFormulario.Acotar(MT_Seconds.Text, 59); // Pokekeep 1.1.5: un cuadro vacío lanzaba FormatException
+ 
+         // Sprite
+         if (SAV is IMultiplayerSprite ms)
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_FestivalPlaza.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_FestivalPlaza.cs
+index 4bd924f3b..a5847f583 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_FestivalPlaza.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_FestivalPlaza.cs	
+@@ -25,6 +25,7 @@ public SAV_FestivalPlaza(SAV7 sav)
+         SAV = (SAV7)(Origin = sav).Clone();
+         editing = true;
+         entry = -1;
++        NUD_Exchangable.Maximum = AutoLegalidad.Desafios.TopesJuego.FestiPlazaIntercambios; // Pokekeep 1.1.5: el juego deja 3 intercambios (Ultraluna 0x454434); lo ya guardado por encima se respeta al abrir (más abajo)
+         typeMAX = SAV is SAV7USUM ? 0x7F : 0x7C;
+         TB_PlazaName.Text = SAV.Festa.FestivalPlazaName;
+ 
+@@ -253,6 +254,7 @@ private void LoadFacility()
+                 CB_LuckyResult.SelectedIndex = lucky;
+                 break;
+             case 7:
++                NUD_Exchangable.Maximum = Math.Max(AutoLegalidad.Desafios.TopesJuego.FestiPlazaIntercambios, (int)facility.ExchangeLeftCount); // Pokekeep 1.1.5: un valor ya guardado por encima de 3 no se recorta ni lanza al abrir
+                 NUD_Exchangable.Value = facility.ExchangeLeftCount;
+                 break;
+         }
+@@ -543,6 +545,7 @@ private void CB_FacilityType_SelectedIndexChanged(object sender, EventArgs e)
+                 CB_LuckyResult.SelectedIndex = lucky;
+                 break;
+             case 7:
++                NUD_Exchangable.Maximum = Math.Max(AutoLegalidad.Desafios.TopesJuego.FestiPlazaIntercambios, (int)facility.ExchangeLeftCount); // Pokekeep 1.1.5: un valor ya guardado por encima de 3 no se recorta ni lanza al abrir
+                 NUD_Exchangable.Value = facility.ExchangeLeftCount;
+                 break;
+         }
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_Trainer7.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_Trainer7.cs
+index af6c79af9..2548573ae 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_Trainer7.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_Trainer7.cs	
+@@ -133,6 +133,7 @@ private void GetTextBoxes()
+         catch { GB_Map.Enabled = false; }
+ 
+         // Load Play Time
++        TopesFormulario.AcotarAlSalir(MT_Hours, (uint)AutoLegalidad.Desafios.TopesJuego.Horas(SAV)); // Pokekeep 1.1.5
+         MT_Hours.Text = SAV.PlayedHours.ToString();
+         MT_Minutes.Text = SAV.PlayedMinutes.ToString();
+         MT_Seconds.Text = SAV.PlayedSeconds.ToString();
+@@ -351,7 +352,7 @@ private void SaveTrainerInfo()
+         }
+ 
+         // Save PlayTime
+-        SAV.PlayedHours = ushort.Parse(MT_Hours.Text);
++        SAV.PlayedHours = (int)TopesFormulario.Acotar(MT_Hours.Text, (uint)AutoLegalidad.Desafios.TopesJuego.Horas(SAV)); // Pokekeep 1.1.5: la máscara deja 99999 y ushort.Parse rompía al guardar; tope del juego o del dato
+         SAV.PlayedMinutes = ushort.Parse(MT_Minutes.Text) % 60;
+         SAV.PlayedSeconds = ushort.Parse(MT_Seconds.Text) % 60;
+ 
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_Trainer7GG.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_Trainer7GG.cs
+index e4036ccd4..cd59e08f8 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_Trainer7GG.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen7/SAV_Trainer7GG.cs	
+@@ -88,6 +88,7 @@ private void LoadTrainerInfo()
+         catch { GB_Map.Enabled = false; }
+ 
+         // Load Play Time
++        TopesFormulario.AcotarAlSalir(MT_Hours, (uint)AutoLegalidad.Desafios.TopesJuego.Horas(SAV)); // Pokekeep 1.1.5
+         MT_Hours.Text = SAV.PlayedHours.ToString();
+         MT_Minutes.Text = SAV.PlayedMinutes.ToString();
+         MT_Seconds.Text = SAV.PlayedSeconds.ToString();
+@@ -135,7 +136,7 @@ private void SaveTrainerInfo()
+         }
+ 
+         // Save PlayTime
+-        SAV.PlayedHours = ushort.Parse(MT_Hours.Text);
++        SAV.PlayedHours = (int)TopesFormulario.Acotar(MT_Hours.Text, (uint)AutoLegalidad.Desafios.TopesJuego.Horas(SAV)); // Pokekeep 1.1.5: la máscara deja 99999 y ushort.Parse rompía al guardar; tope del juego o del dato
+         SAV.PlayedMinutes = ushort.Parse(MT_Minutes.Text) % 60;
+         SAV.PlayedSeconds = ushort.Parse(MT_Seconds.Text) % 60;
+ 
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Poffin8b.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Poffin8b.cs
+index e548d005f..374c41a7f 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Poffin8b.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Poffin8b.cs	
+@@ -184,16 +184,18 @@ private void SaveItems(IReadOnlyList<Poffin8b> items)
+             var item = items[index];
+ 
+             item.MstID = SetPoffinName(cells[1].Value?.ToString() ?? "");
+-            item.Level = Parse(cells[2]);
+-            item.Taste = Parse(cells[3]);
++            item.Level = Parse(cells[2], AutoLegalidad.Desafios.TopesJuego.PokochoNivel, item.Level);
++            item.Taste = Parse(cells[3], byte.MaxValue, item.Taste);
+             item.IsNew = (bool)cells[4].Value!;
+-            item.FlavorSpicy = Parse(cells[5]);
+-            item.FlavorDry = Parse(cells[6]);
+-            item.FlavorSweet = Parse(cells[7]);
+-            item.FlavorBitter = Parse(cells[8]);
+-            item.FlavorSour = Parse(cells[9]);
+-
+-            static byte Parse(DataGridViewCell c) => (byte)(byte.TryParse(c.Value!.ToString(), out var p) ? p : 0);
++            item.FlavorSpicy = Parse(cells[5], AutoLegalidad.Desafios.TopesJuego.PokochoSabor, item.FlavorSpicy);
++            item.FlavorDry = Parse(cells[6], AutoLegalidad.Desafios.TopesJuego.PokochoSabor, item.FlavorDry);
++            item.FlavorSweet = Parse(cells[7], AutoLegalidad.Desafios.TopesJuego.PokochoSabor, item.FlavorSweet);
++            item.FlavorBitter = Parse(cells[8], AutoLegalidad.Desafios.TopesJuego.PokochoSabor, item.FlavorBitter);
++            item.FlavorSour = Parse(cells[9], AutoLegalidad.Desafios.TopesJuego.PokochoSabor, item.FlavorSour);
++
++            // Pokekeep 1.1.5: 256 o más se guardaba como 0 (TryParse falla); ahora se queda en el tope del juego (el nivel y los cinco sabores, 100: TopesJuego.PokochoNivel y PokochoSabor; la suavidad,
++            // el del byte). Un valor ya guardado por encima del tope (el PKHeX dejaba 255) se conserva si no se toca: «Math.Max(tope, actual)».
++            static byte Parse(DataGridViewCell c, int tope, byte actual) => (byte)Math.Min(TopesFormulario.Acotar(c.Value?.ToString() ?? string.Empty, byte.MaxValue), (uint)Math.Max(tope, (int)actual));
+         }
+     }
+ 
+@@ -209,7 +211,7 @@ private void B_All_Click(object sender, EventArgs e)
+             poffin.MstID = 0x1C;
+             poffin.Level = 60;
+             poffin.Taste = 0xFF;
+-            poffin.FlavorSpicy = poffin.FlavorBitter = poffin.FlavorDry = poffin.FlavorSour = poffin.FlavorSweet = 0xFF;
++            poffin.FlavorSpicy = poffin.FlavorBitter = poffin.FlavorDry = poffin.FlavorSour = poffin.FlavorSweet = (byte)AutoLegalidad.Desafios.TopesJuego.PokochoSabor; // Pokekeep 1.1.5: el juego no pasa de 100 al cocinar (PofinCookModel.CalcParam); antes 255
+         }
+         LoadItems(AllItems);
+         WinFormsUtil.Asterisk();
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8.cs
+index 089e3efd7..1892222fd 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8.cs	
+@@ -92,6 +92,7 @@ private void GetTextBoxes()
+         catch { GB_Map.Enabled = false; }
+ 
+         // Load Play Time
++        TopesFormulario.AcotarAlSalir(MT_Hours, (uint)AutoLegalidad.Desafios.TopesJuego.Horas(SAV)); // Pokekeep 1.1.5
+         MT_Hours.Text = SAV.PlayedHours.ToString();
+         MT_Minutes.Text = SAV.PlayedMinutes.ToString();
+         MT_Seconds.Text = SAV.PlayedSeconds.ToString();
+@@ -196,7 +197,7 @@ private void SaveTrainerInfo()
+         }
+ 
+         // Save PlayTime
+-        SAV.PlayedHours = ushort.Parse(MT_Hours.Text);
++        SAV.PlayedHours = (int)TopesFormulario.Acotar(MT_Hours.Text, (uint)AutoLegalidad.Desafios.TopesJuego.Horas(SAV)); // Pokekeep 1.1.5: la máscara deja 99999 y ushort.Parse rompía al guardar; tope del juego o del dato
+         SAV.PlayedMinutes = ushort.Parse(MT_Minutes.Text) % 60;
+         SAV.PlayedSeconds = ushort.Parse(MT_Seconds.Text) % 60;
+ 
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8a.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8a.cs
+index d4507effb..94ec5cbc5 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8a.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8a.cs	
+@@ -58,6 +58,7 @@ private void GetTextBoxes()
+         catch { GB_Map.Enabled = false; }
+ 
+         // Load Play Time
++        TopesFormulario.AcotarAlSalir(MT_Hours, (uint)AutoLegalidad.Desafios.TopesJuego.Horas(SAV)); // Pokekeep 1.1.5
+         MT_Hours.Text = SAV.PlayedHours.ToString();
+         MT_Minutes.Text = SAV.PlayedMinutes.ToString();
+         MT_Seconds.Text = SAV.PlayedSeconds.ToString();
+@@ -108,7 +109,7 @@ private void SaveTrainerInfo()
+         }
+ 
+         // Save PlayTime
+-        SAV.PlayedHours = ushort.Parse(MT_Hours.Text);
++        SAV.PlayedHours = (int)TopesFormulario.Acotar(MT_Hours.Text, (uint)AutoLegalidad.Desafios.TopesJuego.Horas(SAV)); // Pokekeep 1.1.5: la máscara deja 99999 y ushort.Parse rompía al guardar; tope del juego o del dato
+         SAV.PlayedMinutes = ushort.Parse(MT_Minutes.Text) % 60;
+         SAV.PlayedSeconds = ushort.Parse(MT_Seconds.Text) % 60;
+ 
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8b.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8b.cs
+index d4f93f6da..e9eecad3d 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8b.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen8/SAV_Trainer8b.cs	
+@@ -64,6 +64,7 @@ private void GetTextBoxes()
+         NUD_R.Value = (decimal)SAV.MyStatus.Rotation;
+ 
+         // Load Play Time
++        TopesFormulario.AcotarAlSalir(MT_Hours, (uint)AutoLegalidad.Desafios.TopesJuego.Horas(SAV)); // Pokekeep 1.1.5
+         MT_Hours.Text = SAV.PlayedHours.ToString();
+         MT_Minutes.Text = SAV.PlayedMinutes.ToString();
+         MT_Seconds.Text = SAV.PlayedSeconds.ToString();
+@@ -128,7 +129,7 @@ private void SaveTrainerInfo()
+         }
+ 
+         // Save PlayTime
+-        SAV.PlayedHours = ushort.Parse(MT_Hours.Text);
++        SAV.PlayedHours = (int)TopesFormulario.Acotar(MT_Hours.Text, (uint)AutoLegalidad.Desafios.TopesJuego.Horas(SAV)); // Pokekeep 1.1.5: la máscara deja 99999 y ushort.Parse rompía al guardar; tope del juego o del dato
+         SAV.PlayedMinutes = ushort.Parse(MT_Minutes.Text) % 60;
+         SAV.PlayedSeconds = ushort.Parse(MT_Seconds.Text) % 60;
+ 
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen9/DonutEditor9a.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen9/DonutEditor9a.cs
+index 4f08d0392..8a2bd2511 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen9/DonutEditor9a.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen9/DonutEditor9a.cs	
+@@ -26,6 +26,8 @@ public sealed partial class DonutEditor9a : UserControl
+     public DonutEditor9a()
+     {
+         InitializeComponent();
++        // Pokekeep 1.1.5: el campo de milisegundos cuenta desde 1970 (Donut9a.Epoch) y un instante anterior daba un negativo que .NET convierte en 0: el selector enseñaba 1960 y se guardaba 1970.
++        CAL_Date.MinDate = TopesFormulario.FechaMinima1970;
+ 
+         Berry = [CB_Berry0, CB_Berry1, CB_Berry2, CB_Berry3, CB_Berry4, CB_Berry5, CB_Berry6, CB_Berry7, CB_Berry8];
+         BerryIcons = [PB_Berry0, PB_Berry1, PB_Berry2, PB_Berry3, PB_Berry4, PB_Berry5, PB_Berry6, PB_Berry7, PB_Berry8];
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen9/SAV_Trainer9.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen9/SAV_Trainer9.cs
+index 9fb2976e5..f97d9c9b5 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen9/SAV_Trainer9.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen9/SAV_Trainer9.cs	
+@@ -20,6 +20,7 @@ public SAV_Trainer9(SAV9SV sav)
+         InitializeComponent();
+         WinFormsUtil.TranslateInterface(this, Main.CurrentLanguage);
+         SAV = (SAV9SV)(Origin = sav).Clone();
++        CAL_LastSavedDate.MinDate = TopesFormulario.FechaMinima1900; // Pokekeep 1.1.5: el selector dejaba años anteriores a 1900, que no caben en el campo de 12 bits
+ 
+         Loading = true;
+         if (!Main.Unicode)
+@@ -115,6 +116,7 @@ private void GetTextBoxes()
+         CB_Language.SelectedValue = SAV.Language;
+ 
+         // Load Play Time
++        TopesFormulario.AcotarAlSalir(MT_Hours, (uint)AutoLegalidad.Desafios.TopesJuego.Horas(SAV)); // Pokekeep 1.1.5
+         MT_Hours.Text = SAV.PlayedHours.ToString();
+         MT_Minutes.Text = SAV.PlayedMinutes.ToString();
+         MT_Seconds.Text = SAV.PlayedSeconds.ToString();
+@@ -163,7 +165,7 @@ private void SaveTrainerInfo()
+             SAV.OT = TB_OTName.Text;
+ 
+         // Save PlayTime
+-        SAV.PlayedHours = ushort.Parse(MT_Hours.Text);
++        SAV.PlayedHours = (int)TopesFormulario.Acotar(MT_Hours.Text, (uint)AutoLegalidad.Desafios.TopesJuego.Horas(SAV)); // Pokekeep 1.1.5: la máscara deja 99999 y ushort.Parse rompía al guardar; tope del juego o del dato
+         SAV.PlayedMinutes = ushort.Parse(MT_Minutes.Text) % 60;
+         SAV.PlayedSeconds = ushort.Parse(MT_Seconds.Text) % 60;
+ 
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/Gen9/SAV_Trainer9a.cs b/PKHeX.WinForms/Subforms/Save Editors/Gen9/SAV_Trainer9a.cs
+index 471d82834..d183783f7 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/Gen9/SAV_Trainer9a.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/Gen9/SAV_Trainer9a.cs	
+@@ -19,6 +19,7 @@ public SAV_Trainer9a(SAV9ZA sav)
+         InitializeComponent();
+         WinFormsUtil.TranslateInterface(this, Main.CurrentLanguage);
+         SAV = (SAV9ZA)(Origin = sav).Clone();
++        CAL_LastSavedDate.MinDate = TopesFormulario.FechaMinima1900; // Pokekeep 1.1.5: el selector dejaba años anteriores a 1900, que no caben en el campo de 12 bits
+ 
+         Loading = true;
+         if (!Main.Unicode)
+@@ -113,6 +114,7 @@ private void GetTextBoxes()
+         CB_Language.SelectedValue = SAV.Language;
+ 
+         // Load Play Time
++        TopesFormulario.AcotarAlSalir(MT_Hours, (uint)AutoLegalidad.Desafios.TopesJuego.Horas(SAV)); // Pokekeep 1.1.5
+         MT_Hours.Text = SAV.PlayedHours.ToString();
+         MT_Minutes.Text = SAV.PlayedMinutes.ToString();
+         MT_Seconds.Text = SAV.PlayedSeconds.ToString();
+@@ -176,7 +178,7 @@ private void SaveTrainerInfo()
+             SAV.OT = TB_OTName.Text;
+ 
+         // Save PlayTime
+-        SAV.PlayedHours = ushort.Parse(MT_Hours.Text);
++        SAV.PlayedHours = (int)TopesFormulario.Acotar(MT_Hours.Text, (uint)AutoLegalidad.Desafios.TopesJuego.Horas(SAV)); // Pokekeep 1.1.5: la máscara deja 99999 y ushort.Parse rompía al guardar; tope del juego o del dato
+         SAV.PlayedMinutes = ushort.Parse(MT_Minutes.Text) % 60;
+         SAV.PlayedSeconds = ushort.Parse(MT_Seconds.Text) % 60;
+ 
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/SAV_EventFlags.cs b/PKHeX.WinForms/Subforms/Save Editors/SAV_EventFlags.cs
+index d68080f00..f66a4cc4e 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/SAV_EventFlags.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/SAV_EventFlags.cs	
+@@ -424,7 +424,10 @@ private void ChangeCustomConst(object sender, EventArgs e)
+             return;
+         editing = true;
+         var index = CB_Stats.SelectedIndex;
+-        var parse = ushort.TryParse(MT_Stat.Text, out var value) ? value : (ushort)0;
++        // Pokekeep 1.1.5: la máscara de 5 cifras deja 99999 y el valor es un ushort: lo que pasa de 65535 se queda en 65535 en vez de perderse en silencio como 0.
++        var parse = (ushort)TopesFormulario.Acotar(MT_Stat.Text, ushort.MaxValue);
++        if (uint.TryParse(MT_Stat.Text.Trim(), out var escrito) && escrito > parse)
++            MT_Stat.Text = parse.ToString(); // el cuadro enseña lo que se guarda
+         Editor.Values[index] = parse;
+         if (WorkDict.TryGetValue(index, out var mtb))
+             mtb.Value = parse;
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/SAV_EventFlags2.cs b/PKHeX.WinForms/Subforms/Save Editors/SAV_EventFlags2.cs
+index 730e40176..fba47f9f7 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/SAV_EventFlags2.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/SAV_EventFlags2.cs	
+@@ -426,7 +426,10 @@ private void ChangeCustomConst(object sender, EventArgs e)
+             return;
+         editing = true;
+         var index = CB_Stats.SelectedIndex;
+-        var parse = byte.TryParse(MT_Stat.Text, out var value) ? value : (byte)0;
++        // Pokekeep 1.1.5: la máscara de 5 cifras deja 99999 y el valor es un byte (constantes de Gen 2): lo que pasa de 255 se queda en 255 en vez de perderse en silencio como 0.
++        var parse = (byte)TopesFormulario.Acotar(MT_Stat.Text, byte.MaxValue);
++        if (uint.TryParse(MT_Stat.Text.Trim(), out var escrito) && escrito > parse)
++            MT_Stat.Text = parse.ToString(); // el cuadro enseña lo que se guarda
+         Editor.Values[index] = parse;
+         if (WorkDict.TryGetValue(index, out var mtb))
+             mtb.Value = parse;
+diff --git a/PKHeX.WinForms/Subforms/Save Editors/SAV_Inventory.cs b/PKHeX.WinForms/Subforms/Save Editors/SAV_Inventory.cs
+index 900550973..ea6af921e 100644
+--- a/PKHeX.WinForms/Subforms/Save Editors/SAV_Inventory.cs	
++++ b/PKHeX.WinForms/Subforms/Save Editors/SAV_Inventory.cs	
+@@ -309,7 +309,9 @@ private void Dgv_CellValueChanged(object? sender, DataGridViewCellEventArgs e)
+         var text = cell.Value?.ToString();
+         var count = Util.ToInt32(text);
+         var original = count;
+-        if (Bag.IsQuantitySane(pouch.Type, itemID, ref count, HasNew, Main.HaX) && count == original && text == count.ToString())
++        var sane = Bag.IsQuantitySane(pouch.Type, itemID, ref count, HasNew, Main.HaX);
++        count = TopeHaX(count);
++        if (sane && count == original && text == count.ToString())
+             return;
+ 
+         IsCountValidationSuppressed = true;
+@@ -317,6 +319,12 @@ private void Dgv_CellValueChanged(object? sender, DataGridViewCellEventArgs e)
+         IsCountValidationSuppressed = false;
+     }
+ 
++    /// <summary>
++    /// Pokekeep 1.1.5: en modo HaX el Core solo recorta a <c>PlayerBag.MaxQuantityHaX</c> (65.535), pero el dato de Gen 7, Let's Go y Espada y Escudo guarda 10 bits y el de
++    /// Leyendas Arceus es un Int16: 5.000 se guardaba como 904. El tope que cabe vive en <c>TopesJuego.MochilaCantidadHaX</c> (el Core va sellado).
++    /// </summary>
++    private int TopeHaX(int count) => Main.HaX ? Math.Min(count, AutoLegalidad.Desafios.TopesJuego.MochilaCantidadHaX(Bag)) : count;
++
+     private void Dgv_CellMouseDown(object? sender, DataGridViewCellMouseEventArgs e)
+     {
+         DropDownNextComboEdit = sender is DataGridView dgv &&
+@@ -362,6 +370,7 @@ private void SetBag(DataGridView dgv, InventoryPouch pouch)
+                 continue;
+             if (!Bag.IsQuantitySane(pouch.Type, itemID, ref count, HasNew, Main.HaX))
+                 continue; // ignore item
++            count = TopeHaX(count);
+ 
+             // create clean item data when saving
+             var item = pouch.GetEmpty(itemID, count);
+-- 
+2.55.0.windows.5
+

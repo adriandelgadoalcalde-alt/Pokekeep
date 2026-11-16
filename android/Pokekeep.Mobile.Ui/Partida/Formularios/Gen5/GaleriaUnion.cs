@@ -56,8 +56,8 @@ internal static partial class GaleriaUnion
         [
             P.Texto("nombre", L("L_Name"), c => Ajustes(c).Name, (c, v) => Ajustes(c).Name = v, 20),
             P.Texto("titulo", L("L_Title"), c => Ajustes(c).PlayerTitle, (c, v) => Ajustes(c).PlayerTitle = v, 20),
-            P.Entero("experiencia", L("L_Experience").TrimEnd(':'), c => Ajustes(c).Experience, (c, v) => Ajustes(c).Experience = (uint)v, 0, uint.MaxValue),
-            P.Entero("rango", L("L_Rank"), c => Ajustes(c).Rank, (c, v) => Ajustes(c).Rank = (ushort)v, 0, JoinAvenueSettings5.MaxAvenueRank),
+            P.Entero("experiencia", L("L_Experience").TrimEnd(':'), c => Ajustes(c).Experience, (c, v) => Ajustes(c).Experience = (uint)v, 0, AutoLegalidad.Desafios.TopesJuego.AvenidaExperiencia),
+            P.Entero("rango", L("L_Rank"), c => Ajustes(c).Rank, (c, v) => Ajustes(c).Rank = (ushort)v, 0, AutoLegalidad.Desafios.TopesJuego.AvenidaRango),
             P.Opcion("techo", L("L_CeilingColor"), c => (long)Ajustes(c).CeilingColor, (c, v) => Ajustes(c).CeilingColor = (JoinAvenueCeilingColor5)(int)v, _ => ColoresDelTecho(), titulo: L("L_CeilingColor")),
             P.Entero("marcas", L("L_Flags"), c => Ajustes(c).Flags, (c, v) => Ajustes(c).Flags = (uint)v, 0, uint.MaxValue, hex: true),
             P.Entero("semilla", L("L_Seed"), c => Ajustes(c).Seed, (c, v) => Ajustes(c).Seed = (uint)v, 0, uint.MaxValue),

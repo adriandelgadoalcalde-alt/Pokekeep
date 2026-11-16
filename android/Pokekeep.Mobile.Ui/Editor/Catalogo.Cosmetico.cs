@@ -79,7 +79,7 @@ internal static partial class Catalogo
                 F.Entero("PK-ED-074", IdiomaInterfaz.T("Catalogo.Espiritu"), c => ((PB7)c.Pk).Spirit, (c, v) => ((PB7)c.Pk).Spirit = (byte)v, 0, 255, visible: c => c.Pk is PB7),
                 F.Entero("PK-ED-074", IdiomaInterfaz.T("CatalogoCosmetico.Humor"), c => ((PB7)c.Pk).Mood, (c, v) => ((PB7)c.Pk).Mood = (byte)v, 0, 255, visible: c => c.Pk is PB7) with { Indice = 1 },
                 F.Entero("PK-ED-075", IdiomaInterfaz.T("CatalogoCosmetico.HumorAlCaminar"), c => ((G4PKM)c.Pk).WalkingMood, (c, v) => ((G4PKM)c.Pk).WalkingMood = (sbyte)v, -128, 127, visible: c => c.Formato == 4 && c.Pk is G4PKM),
-                F.Entero("PK-ED-076", IdiomaInterfaz.T("Catalogo.FamaPokeStar"), c => ((PK5)c.Pk).PokeStarFame, (c, v) => ((PK5)c.Pk).PokeStarFame = (byte)v, 0, 100, visible: c => c.Pk is PK5),
+                F.Entero("PK-ED-076", IdiomaInterfaz.T("Catalogo.FamaPokeStar"), c => ((PK5)c.Pk).PokeStarFame, (c, v) => ((PK5)c.Pk).PokeStarFame = (byte)v, 0, AutoLegalidad.Desafios.TopesJuego.FamaPokestar, visible: c => c.Pk is PK5),
             ], c => c.Pk is PB7 || c.Formato is 4 or 5),
             new(IdiomaInterfaz.T("Catalogo.InsigniasPokeathlon"),
             [

@@ -10,8 +10,8 @@ namespace Pokekeep.Mobile.Ui.Partida.Formularios.Gen4;
 /// PK-SAV-038 (TAB_BF): el Frente Batalla de <c>SAV_Misc4</c>. Es el calco de <c>ReadBattleFrontier</c>, <c>ChangeStat1</c>, <c>StatAddrControl</c>, <c>ChangeStatVal</c> y el Hall y el Castillo: cada instalación (la Torre en Diamante/Perla; Torre, Fábrica, Sala,
 /// Castillo y Ruleta en Platino/HG/SS) guarda sus valores en la misma tabla de direcciones del formulario (<c>BFF</c>: orden de los valores, tipo de combate, dirección, separación e indicador de «continuar») y los guarda al momento de cambiarlos.
 /// <para>En el móvil las fotos son una pestaña (cinco desplegables, uno por instalación, en vez de cinco botones que dan la vuelta por los cinco estados) y las rachas una lista con un elemento por instalación y una sección por tipo de combate
-/// (y por modo, Nv. 50 o Abierto, en la Fábrica). Quirks de PKHeX conservados a propósito para que los bytes sean idénticos: (1) en la Torre, «Actual» y «Continuar» van ligados (continuar = actual / 7, y al revés), (2) los rangos del Castillo
-/// se escriben como enteros de 32 bits y pisan el rango siguiente, (3) los contadores por tipo de la Sala usan la dirección <c>+6 + ((i >> 1) &lt;&lt; 1)</c> con dos tipos por byte. Declarado en el ADR 0065.</para>
+/// (y por modo, Nv. 50 o Abierto, en la Fábrica). Quirks de PKHeX conservados a propósito para que los bytes sean idénticos: (1) en la Torre, «Actual» y «Continuar» van ligados (continuar = actual / 7, y al revés), (2) [quitado en la 1.1.5: los rangos del Castillo se escribían como enteros de 32 bits y pisaban el rango siguiente; ahora llevan sus 2 bytes, como se leen],
+/// (3) los contadores por tipo de la Sala usan la dirección <c>+6 + ((i >> 1) &lt;&lt; 1)</c> con dos tipos por byte. Declarado en el ADR 0065.</para>
 /// </summary>
 internal static partial class VariosGen4
 {
@@ -229,10 +229,10 @@ internal static partial class VariosGen4
         {
             var (id, nombre, min, max) = rangos[i];
             var ofs = DireccionDeSala(info, t) + 0x0A + (i << 1);
-            // GetCastleStat recorta el i16 al rango del cuadro; NUD_CastleRank_ValueChanged escribe un ENTERO DE 32 BITS (WriteInt32LittleEndian) en la direccion del rango, asi que pisa tambien los dos bytes del rango siguiente.
+            // GetCastleStat recorta el i16 al rango del cuadro. 1.1.5: cada rango es un i16 (se lee con ReadInt16LittleEndian) y se escribe con sus 2 bytes; PKHeX lo escribia con
+            // WriteInt32LittleEndian (SAV_Misc4.cs:628) y pisaba los dos bytes del rango siguiente (o del registro de al lado), dejandolo a 0.
             yield return P.Entero(col.IdCampo(f, $"castillo.t{t}.{id}"), $"{L("GB_Castle")} · {nombre}", c => Math.Clamp((int)ReadInt16LittleEndian(S(c).General[ofs..]), min, max),
-                (c, v) => WriteInt32LittleEndian(S(c).General[ofs..], (int)v), min, max, prioridad: 40 + i,
-                ayuda: i < 2 ? IdiomaInterfaz.T("VariosGen4Frente.PKHeXEscribeRangoBits") : null);
+                (c, v) => WriteInt16LittleEndian(S(c).General[ofs..], (short)v), min, max, prioridad: 40 + i);
         }
     }
 }

@@ -217,7 +217,7 @@ internal static class FestiPlaza
             },
             (c, v) => { var f = Inst(c.Sav, i); var lucky = (int)v - 1; f.UsedLuckyRank = lucky < 0 ? 0 : (lucky % 3) + 1; f.UsedLuckyPlace = lucky < 0 ? 0 : (lucky / 3) + 1; },
             _ => P.Lista(Resultados), visible: c => Tipo(c) == 5, titulo: L("L_LuckyResult"));
-        yield return P.Entero(Id("intercambios"), L("L_Exchangable"), c => Inst(c.Sav, i).ExchangeLeftCount, (c, v) => Inst(c.Sav, i).ExchangeLeftCount = (int)v, 0, byte.MaxValue, visible: c => Tipo(c) == 7);
+        yield return P.Entero(Id("intercambios"), L("L_Exchangable"), c => Inst(c.Sav, i).ExchangeLeftCount, (c, v) => Inst(c.Sav, i).ExchangeLeftCount = (int)v, 0, AutoLegalidad.Desafios.TopesJuego.FestiPlazaIntercambios, visible: c => Tipo(c) == 7);
         yield return P.Entero(Id("banderas"), L("L_UsedFlags"), c => Inst(c.Sav, i).UsedFlags, (c, v) => Inst(c.Sav, i).UsedFlags = (uint)v, 0, uint.MaxValue, hex: true);
         yield return P.Entero(Id("estadisticas"), L("L_UsedStats"), c => Inst(c.Sav, i).UsedRandStat, (c, v) => Inst(c.Sav, i).UsedRandStat = (uint)v, 0, uint.MaxValue, hex: true);
         yield return P.Texto(Id("id"), L("L_FestaID"), c => Convert.ToHexString(Inst(c.Sav, i).TrainerFesID),

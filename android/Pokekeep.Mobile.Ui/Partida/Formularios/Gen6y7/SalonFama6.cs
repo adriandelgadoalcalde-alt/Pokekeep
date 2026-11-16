@@ -124,8 +124,8 @@ internal static class SalonFama6
                 {
                     new(string.Empty,
                     [
-                        P.Entero(col!.IdCampo(i, "victorias"), L("L_Victory").TrimEnd(':'), c => Indice(c.Sav, i).ClearIndex, (c, v) => { var x = Indice(c.Sav, i); x.ClearIndex = (uint)v; }, 0, byte.MaxValue,
-                            maxFn: c => Math.Max(byte.MaxValue, Indice(c.Sav, i).ClearIndex), motivo: c => SinDatos(c, i), ayuda: IdiomaInterfaz.T("SalonFama6.CuantasVecesSuperadoLiga")),
+                        P.Entero(col!.IdCampo(i, "victorias"), L("L_Victory").TrimEnd(':'), c => Indice(c.Sav, i).ClearIndex, (c, v) => { var x = Indice(c.Sav, i); x.ClearIndex = (uint)v; }, 0, AutoLegalidad.Desafios.TopesJuego.SalonFamaVictorias6,
+                            maxFn: c => Math.Max(AutoLegalidad.Desafios.TopesJuego.SalonFamaVictorias6, Indice(c.Sav, i).ClearIndex), motivo: c => SinDatos(c, i), ayuda: IdiomaInterfaz.T("SalonFama6.CuantasVecesSuperadoLiga")),
                         new CampoP
                         {
                             Id = col.IdCampo(i, "fecha"), Etiqueta = L("Label_MetDate").TrimEnd(':'), Tipo = TipoP.FechaHora, SoloFecha = true, Motivo = c => SinDatos(c, i),

@@ -125,9 +125,11 @@ public sealed class Frente4 : InstalacionDesafio
                 {
                     // Contador de rondas (ofs +1 en Platino y HGSS, +3 en DP): racha / 7, como hace PKHeX (SAV_Misc4.cs:493,516,561-579).
                     var ofsContador = _d.Bandera + (_juego == typeof(SAV4DP) ? 3 : 1) + (tt << 1);
+                    // 1.1.5: «Máximo» no lo toca (lo deja en racha / 7), pero admite hasta lo que sube el juego, 65.534 (TopesJuego.FrenteTorreRondas).
                     campos.Add(Campo("rondas", "campo.rondas", RolCampo.Contador, null,
                         s => ReadUInt16LittleEndian(((SAV4)s).General[ofsContador..]),
-                        (s, v) => WriteUInt16LittleEndian(((SAV4)s).General[ofsContador..], (ushort)Math.Clamp(v, 0, ushort.MaxValue))));
+                        (s, v) => WriteUInt16LittleEndian(((SAV4)s).General[ofsContador..], (ushort)Math.Clamp(v, 0, TopesJuego.FrenteTorreRondas)),
+                        TopesJuego.FrenteTorreRondas));
                 }
                 var nombresModo = _d.Tipo == Tipo.Torre ? tiposTorre : tiposResto;
                 var nombre = Textos.Doble("modo." + nombresModo[tt]);

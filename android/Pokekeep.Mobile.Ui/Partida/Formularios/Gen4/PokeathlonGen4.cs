@@ -161,7 +161,7 @@ internal static partial class PokeathlonGen4
     // 1.1.4: el juego recorta cada puntuación a 999 al llevarla al curso (pokeheartgold asm/overlay_96.s:3204-3224); PKHeX deja escribir hasta 65535.
     private static PestanaP Records()
     {
-        var campos = Enumerable.Range(0, Pruebas.Length).Select(i => (CampoP)P.Entero($"mejor{i}", NombreDePrueba(i), c => At(c).GetBestScore((PokeathlonEvent4)i), (c, v) => At(c).SetBestScore((PokeathlonEvent4)i, (ushort)v), 0, AutoLegalidad.Desafios.TopesJuego.PokeathlonPuntuacion, prioridad: i)).ToList();
+        var campos = Enumerable.Range(0, Pruebas.Length).Select(i => (CampoP)P.Entero($"mejor{i}", NombreDePrueba(i), c => At(c).GetBestScore((PokeathlonEvent4)i), (c, v) => At(c).SetBestScore((PokeathlonEvent4)i, (ushort)v), 0, AutoLegalidad.Desafios.TopesJuego.PokeathlonMejorPrueba((PokeathlonEvent4)i), prioridad: i)).ToList();
         return new PestanaP("mejores", L("Tab_Best"), [new SeccionP(string.Empty, campos)]);
     }
 }

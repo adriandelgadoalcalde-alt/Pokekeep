@@ -36,7 +36,7 @@ internal static class Entrenador6
                 P.Texto("ot", IdiomaInterfaz.T("Form.NombreEntrenador"), c => S(c).OT, (c, v) => { if (S(c).OT != v) S(c).OT = v; }, maxFn: c => c.Sav.MaxStringLengthTrainer),
                 .. IdsP.Campos(sav),
                 P.Entero("dinero", IdiomaInterfaz.T("Form.Dinero"), c => S(c).Money, (c, v) => S(c).Money = (uint)v, 0, sav.MaxMoney, ayuda: IdiomaInterfaz.T("Form.Trainer6.MaxDinero")),
-                P.Entero("bp", T("L_BP"), c => S(c).BP, (c, v) => S(c).BP = (ushort)v, 0, 65535),
+                P.Entero("bp", T("L_BP"), c => S(c).BP, (c, v) => S(c).BP = (ushort)v, 0, AutoLegalidad.Desafios.TopesJuego.PuntosBatalla3DS),
                 P.Entero("pm", T("L_PM"), c => S(c).GetRecord(63), (c, v) => { S(c).SetRecord(63, (int)v); S(c).SetRecord(64, (int)v); }, 0, int.MaxValue, maxFn: c => Math.Max(S(c).GetRecordMax(63), S(c).GetRecord(63)), ayuda: IdiomaInterfaz.T("Form.Trainer6.PokemillasAyuda")),
             ]),
             new(IdiomaInterfaz.T("Form.RegionLengua"),
@@ -102,7 +102,7 @@ internal static class Entrenador6
 
     private static IEnumerable<CampoP> Aventura()
     {
-        yield return P.Entero("horas", IdiomaInterfaz.T("Form.HorasJugadas"), c => S(c).PlayedHours, (c, v) => S(c).PlayedHours = (ushort)v, 0, 65535);
+        yield return P.Entero("horas", IdiomaInterfaz.T("Form.HorasJugadas"), c => S(c).PlayedHours, (c, v) => S(c).PlayedHours = (ushort)v, 0, ushort.MaxValue, maxFn: c => AutoLegalidad.Desafios.TopesJuego.Horas(c.Sav));
         yield return P.Entero("minutos", IdiomaInterfaz.T("Form.Minutos"), c => S(c).PlayedMinutes, (c, v) => S(c).PlayedMinutes = (ushort)v % 60, 0, 59);
         yield return P.Entero("segundos", IdiomaInterfaz.T("Form.Segundos"), c => S(c).PlayedSeconds, (c, v) => S(c).PlayedSeconds = (ushort)v % 60, 0, 59);
         yield return P.FechaHora("inicio", T("L_Started"), c => EntrenadorSimple.Fecha(S(c).SecondsToStart), (c, v) => S(c).SecondsToStart = (uint)EntrenadorSimple.Segundos(v));

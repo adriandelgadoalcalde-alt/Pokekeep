@@ -7,7 +7,7 @@ namespace AutoLegalidad.Desafios;
 
 /// <summary>
 /// Copa Mundial Pokémon de Negro 2 y Blanco 2 (<see cref="PWTBlock5"/>): 29 registros u16 desde 0x5C (<c>PWTBlock5.GetRecordOffset</c>), uno por <see cref="PWTRecordID"/>.
-/// PKHeX no los expone en ningún formulario. Tope «Máximo» = el del Core (u16, 65535). Qué cuenta exactamente cada registro NO está comprobado en el juego (investigación §4, «PWT»):
+/// PKHeX no los expone en ningún formulario. Tope «Máximo» (1.1.5): <see cref="TopesJuego.PwtRegistro"/> (9.999, el del juego; el dato del Core es un u16 de 65535). Qué cuenta exactamente cada registro NO está comprobado en el juego (investigación §4, «PWT»):
 /// son torneos con final y no una racha continua, así que «Ir al jefe» no existe aquí.
 /// </summary>
 public sealed class Pwt5 : InstalacionDesafio
@@ -22,7 +22,7 @@ public sealed class Pwt5 : InstalacionDesafio
     public override IReadOnlyList<ModoDesafio> Modos(SaveFile sav) => _modos ??= [.. Enum.GetValues<PWTRecordID>().Select(id =>
         new ModoDesafio("pwt." + id.ToString().ToLowerInvariant(), Textos.Doble("pwt." + id.ToString().ToLowerInvariant()), NivelDesafio.NoAplica,
         [
-            Campo("registro", "campo.registro", RolCampo.Otro, ushort.MaxValue, s => ((SAV5B2W2)s).PWT.GetPWTRecord(id), (s, v) => ((SAV5B2W2)s).PWT.SetPWTRecord(id, (ushort)Math.Clamp(v, 0, ushort.MaxValue))),
+            Campo("registro", "campo.registro", RolCampo.Otro, TopesJuego.PwtRegistro, s => ((SAV5B2W2)s).PWT.GetPWTRecord(id), (s, v) => ((SAV5B2W2)s).PWT.SetPWTRecord(id, (ushort)Math.Clamp(v, 0, TopesJuego.PwtRegistro))),
         ]))];
 }
 
@@ -168,15 +168,15 @@ public sealed class Torre8 : InstalacionDesafio
         Crear("dobles", SaveBlockAccessor8SWSH.KBattleTowerDoublesStreak, SaveBlockAccessor8SWSH.KBattleTowerDoublesVictory, RecordLists.G8BattleTowerDoubleWin, 0xEE7B2ABD, 0x29E026C7, 0xE2950DA8),
     ];
 
-    private static CampoDesafio Byte(string clave, string claveTexto, long? tope, uint bloque) =>
-        Campo(clave, claveTexto, RolCampo.Otro, tope, s => ((SAV8SWSH)s).GetValue<byte>(bloque), (s, v) => ((SAV8SWSH)s).SetValue(bloque, (byte)Math.Clamp(v, 0, tope ?? byte.MaxValue)));
+    private static CampoDesafio Byte(string clave, string claveTexto, long? tope, uint bloque, long? topeAparte = null) =>
+        Campo(clave, claveTexto, RolCampo.Otro, tope, s => ((SAV8SWSH)s).GetValue<byte>(bloque), (s, v) => ((SAV8SWSH)s).SetValue(bloque, (byte)Math.Clamp(v, 0, tope ?? topeAparte ?? byte.MaxValue)), topeAparte);
 
     private static ModoDesafio Crear(string clave, uint claveRacha, uint claveVictorias, int registro, uint clavePuntos, uint claveMaximo, uint claveContador) =>
         new(clave, Textos.Doble("modo." + clave), NivelDesafio.NoAplica,
         [
             Byte("puntos", "campo.puntos_torre", PuntosTope, clavePuntos),
             Byte("puntos_max", "campo.puntos_torre_max", PuntosTope, claveMaximo),
-            Byte("contador_master", "campo.contador_master", null, claveContador),
+            Byte("contador_master", "campo.contador_master", null, claveContador, TopesJuego.TorreSwShContadorMaster),   // 1.1.5: «Máximo» no lo toca; admite lo que cabe en el byte
             Campo("actual", "campo.racha_actual", RolCampo.RachaActual, RachaTope, s => ((SAV8SWSH)s).GetValue<ushort>(claveRacha), (s, v) => ((SAV8SWSH)s).SetValue(claveRacha, (ushort)Math.Clamp(v, 0, ushort.MaxValue))),
             Campo("victorias", "campo.victorias", RolCampo.Otro, VictoriasTope, s => ((SAV8SWSH)s).GetValue<uint>(claveVictorias),
                 (s, v) =>
@@ -263,15 +263,16 @@ public sealed class Torre8b : InstalacionDesafio
                 Campo("record", "campo.racha_anterior", RolCampo.Record, Tope, s => Cl(s, c).RenshouCountOld, (s, v) => Cl(s, c).RenshouCountOld = (uint)Math.Clamp(v, 0, uint.MaxValue)),
                 Campo("victorias", "campo.victorias", RolCampo.Otro, Tope, s => Cl(s, c).TotalWins, (s, v) => Cl(s, c).TotalWins = (uint)Math.Clamp(v, 0, uint.MaxValue)),
                 Campo("rango", "campo.rango", RolCampo.Otro, null, s => Cl(s, c).Rank, (s, v) => Cl(s, c).Rank = (uint)Math.Clamp(v, 0, uint.MaxValue)),
+                // 1.1.5: «Máximo» no toca la ronda ni la suspensión (una partida suspendida es un estado, no un récord), pero cada uno declara lo que admite.
                 Campo("ronda", "campo.ronda", RolCampo.Otro, null, s => BinaryPrimitives.ReadUInt32LittleEndian(Bruto(s, c)[0x18..]),
-                    (s, v) => BinaryPrimitives.WriteUInt32LittleEndian(Bruto(s, c)[0x18..], (uint)Math.Clamp(v, 0, 10))),
+                    (s, v) => BinaryPrimitives.WriteUInt32LittleEndian(Bruto(s, c)[0x18..], (uint)Math.Clamp(v, 0, TopesJuego.TorreBdspRonda)), TopesJuego.TorreBdspRonda),
                 Campo("suspendida", "campo.suspendida", RolCampo.Bandera, null, s => Bruto(s, c)[0x01],
                     (s, v) =>
                     {
                         Bruto(s, c)[0x01] = v != 0 ? (byte)1 : (byte)0;
                         if (c == 0)
                             ((SAV8BS)s).FlagWork.SetFlag(BanderaSuspensionIndividual, v != 0);
-                    }),
+                    }, TopesJuego.TorreBdspSuspendida),
             ]));
         }
         lista.Add(new ModoDesafio("general", Textos.Doble("modo.general"), NivelDesafio.NoAplica,

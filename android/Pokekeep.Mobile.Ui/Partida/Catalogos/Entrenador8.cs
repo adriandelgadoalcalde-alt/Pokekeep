@@ -60,7 +60,7 @@ internal static class Entrenador8
                 ]),
                 new(IdiomaInterfaz.T("Form.Trainer7.Aventura"),
                 [
-                    P.Entero("horas", IdiomaInterfaz.T("Form.HorasJugadas"), c => S(c).PlayedHours, (c, v) => S(c).PlayedHours = (ushort)v, 0, 99_999, grupo: "tiempo"),
+                    P.Entero("horas", IdiomaInterfaz.T("Form.HorasJugadas"), c => S(c).PlayedHours, (c, v) => S(c).PlayedHours = (ushort)v, 0, ushort.MaxValue, maxFn: c => AutoLegalidad.Desafios.TopesJuego.Horas(c.Sav), grupo: "tiempo"),
                     P.Entero("minutos", IdiomaInterfaz.T("Form.Minutos"), c => S(c).PlayedMinutes, (c, v) => S(c).PlayedMinutes = (ushort)v % 60, 0, 59, grupo: "tiempo"),
                     P.Entero("segundos", IdiomaInterfaz.T("Form.Segundos"), c => S(c).PlayedSeconds, (c, v) => S(c).PlayedSeconds = (ushort)v % 60, 0, 59, grupo: "tiempo"),
                     new CampoP { Id = "inicio", Etiqueta = T("L_Started", IdiomaInterfaz.T("Form.Trainer7b.Inicio")), Tipo = TipoP.FechaHora, SoloFecha = true, Leer = c => Inicio(S(c)), Escribir = (c, v) => { var d = (DateTime)v!; var t = S(c).TrainerCard; t.StartedYear = (ushort)d.Year; t.StartedMonth = (byte)d.Month; t.StartedDay = (byte)d.Day; } },

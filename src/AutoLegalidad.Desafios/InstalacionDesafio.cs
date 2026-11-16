@@ -115,11 +115,11 @@ public abstract class InstalacionDesafio(string clave, TextoDoble nombre, TextoD
         return new ResultadoDesafio(Clave, modo.Clave, cambios.Count == 0 ? EstadoResultado.SinCambios : EstadoResultado.Aplicado, null, explicacion, jefe, cambios);
     }
 
-    protected static CampoDesafio Campo(string clave, TextoDoble nombre, RolCampo rol, long? max, Func<SaveFile, long> leer, Action<SaveFile, long> escribir)
-        => new(clave, nombre, rol, max, leer, escribir);
+    protected static CampoDesafio Campo(string clave, TextoDoble nombre, RolCampo rol, long? max, Func<SaveFile, long> leer, Action<SaveFile, long> escribir, long? tope = null)
+        => new(clave, nombre, rol, max, leer, escribir, tope);
 
-    protected static CampoDesafio Campo(string clave, string claveTexto, RolCampo rol, long? max, Func<SaveFile, long> leer, Action<SaveFile, long> escribir)
-        => new(clave, Textos.Doble(claveTexto), rol, max, leer, escribir);
+    protected static CampoDesafio Campo(string clave, string claveTexto, RolCampo rol, long? max, Func<SaveFile, long> leer, Action<SaveFile, long> escribir, long? tope = null)
+        => new(clave, Textos.Doble(claveTexto), rol, max, leer, escribir, tope);
 
     public override string ToString() => $"{Clave}: {Nombre.Es}";
 }

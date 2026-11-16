@@ -54,9 +54,9 @@ internal static partial class Varios5
             yield return new SeccionP(m.Titulo,
             [
                 // El pasado, el récord y la marca se guardan juntos: lo que se ve como «Actual» sale de pasado / 7 + 1, y el formulario recalcula esa cifra al guardar con el pasado nuevo.
-                P.Entero(idPasado, m.EtiquetaPasado, c => m.Pasado(Metro(c)), (c, v) => m.PonerPasado(Metro(c), (int)v), 0, 9999, grupo: grupo,
+                P.Entero(idPasado, m.EtiquetaPasado, c => m.Pasado(Metro(c)), (c, v) => m.PonerPasado(Metro(c), (int)v), 0, AutoLegalidad.Desafios.TopesJuego.MetroRacha, grupo: grupo,
                     etiquetaFn: c => c.Marca(idActiva) ? L("L_Current") : m.EtiquetaPasado),
-                P.Entero(idRecord, m.EtiquetaRecord, c => m.Record(Metro(c)), (c, v) => m.PonerRecord(Metro(c), (int)v), 0, 9999, grupo: grupo),
+                P.Entero(idRecord, m.EtiquetaRecord, c => m.Record(Metro(c)), (c, v) => m.PonerRecord(Metro(c), (int)v), 0, AutoLegalidad.Desafios.TopesJuego.MetroRacha, grupo: grupo),
                 P.Marca(idActiva, $"{L("L_RunActive")} · {m.Titulo}", c => m.Activa(Metro(c)) == (m.Pasado(Metro(c)) / 7) + 1,
                     (c, v) => m.PonerActiva(Metro(c), v ? ((int)c.Entero(idPasado) / 7) + 1 : 0), prioridad: 1, grupo: grupo),
             ]);

@@ -12,9 +12,6 @@ namespace Pokekeep.Mobile.Ui.Partida.Formularios.Gen4;
 /// </summary>
 internal static partial class PokeathlonGen4
 {
-    /// <summary>Mayor récord de prueba que se puede escribir: 0xFFFF significa «sin récord» (pokeathlon_save.c:10-14).</summary>
-    internal const int TopeRecordPrueba = ushort.MaxValue - 1;
-
     // Estática, pero por idioma de la interfaz: antes se fijaba al primero y seguía en él tras cambiarlo (auditoría uso10, A7).
     private static (string Idioma, IReadOnlyList<OpcionP> Lista)? _generos;
     private static IReadOnlyList<OpcionP> Generos
@@ -52,9 +49,9 @@ internal static partial class PokeathlonGen4
                 PokeathlonCourseRecord4 Curso(ContextoP c) => At(c).GetCourseRecord((PokeathlonStat4)i);
                 var puntos = new List<CampoP>
                 {
-                    P.Entero(col!.IdCampo(i, "p0"), L("L_CourseScore0").TrimEnd(':'), c => Curso(c).Score0, (c, v) => { var r = Curso(c); r.Score0 = (ushort)v; }, 0, AutoLegalidad.Desafios.TopesJuego.PokeathlonPuntuacion, prioridad: 0),
-                    P.Entero(col.IdCampo(i, "p1"), L("L_CourseScore1").TrimEnd(':'), c => Curso(c).Score1, (c, v) => { var r = Curso(c); r.Score1 = (ushort)v; }, 0, AutoLegalidad.Desafios.TopesJuego.PokeathlonPuntuacion, prioridad: 1),
-                    P.Entero(col.IdCampo(i, "p2"), L("L_CourseScore2").TrimEnd(':'), c => Curso(c).Score2, (c, v) => { var r = Curso(c); r.Score2 = (ushort)v; }, 0, AutoLegalidad.Desafios.TopesJuego.PokeathlonPuntuacion, prioridad: 2),
+                    P.Entero(col!.IdCampo(i, "p0"), L("L_CourseScore0").TrimEnd(':'), c => Curso(c).Score0, (c, v) => { var r = Curso(c); r.Score0 = (ushort)v; }, 0, AutoLegalidad.Desafios.TopesJuego.PokeathlonPuntosPrueba, prioridad: 0),
+                    P.Entero(col.IdCampo(i, "p1"), L("L_CourseScore1").TrimEnd(':'), c => Curso(c).Score1, (c, v) => { var r = Curso(c); r.Score1 = (ushort)v; }, 0, AutoLegalidad.Desafios.TopesJuego.PokeathlonPuntosPrueba, prioridad: 1),
+                    P.Entero(col.IdCampo(i, "p2"), L("L_CourseScore2").TrimEnd(':'), c => Curso(c).Score2, (c, v) => { var r = Curso(c); r.Score2 = (ushort)v; }, 0, AutoLegalidad.Desafios.TopesJuego.PokeathlonPuntosPrueba, prioridad: 2),
                     P.Entero(col.IdCampo(i, "pmax"), L("L_CourseScoreMax").TrimEnd(':'), c => Curso(c).ScoreMax, (c, v) => { var r = Curso(c); r.ScoreMax = (ushort)v; }, 0, AutoLegalidad.Desafios.TopesJuego.PokeathlonPuntuacion, prioridad: 3),
                 };
                 var secciones = new List<SeccionP> { new(string.Empty, puntos) };
@@ -90,7 +87,8 @@ internal static partial class PokeathlonGen4
         string Id(string campo) => col.IdCampo(i, $"{prefijo}.{campo}");
         // 1.1.3: 65535 (0xFFFF) no es un récord, es «sin récord»: PokeathlonSave_Init deja así las 50 entradas propias y las 50 de conexión
         // (pokeheartgold src/pokeathlon/pokeathlon_save.c:10-14). El mayor récord que se puede escribir es 65534.
-        yield return P.Entero(Id("record"), $"{titulo} · {L("L_Record").TrimEnd(':')}", c => de(c).Record, (c, v) => { var r = de(c); r.Record = (ushort)v; }, 0, TopeRecordPrueba, prioridad: prioridad);
+        // 1.1.5: cuatro pruebas recortan el récord en bruto en el juego (999, 999, 1.023 y 4.095): el tope sale de TopesJuego.PokeathlonRecordBruto.
+        yield return P.Entero(Id("record"), $"{titulo} · {L("L_Record").TrimEnd(':')}", c => de(c).Record, (c, v) => { var r = de(c); r.Record = (ushort)v; }, 0, AutoLegalidad.Desafios.TopesJuego.PokeathlonRecordBruto((PokeathlonEvent4)i), prioridad: prioridad);
         for (var e = 0; e < 3; e++)
         {
             var entrada = e;

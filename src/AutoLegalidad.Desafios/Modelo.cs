@@ -31,13 +31,19 @@ public readonly record struct TextoDoble(string Es, string En)
     public override string ToString() => Es;
 }
 
-/// <summary>Un dato guardado de un modo. <see cref="Maximo"/> es el valor que escribe «Máximo»; <c>null</c> = «Máximo» no lo toca (sin tope conocido).</summary>
-public sealed class CampoDesafio(string clave, TextoDoble nombre, RolCampo rol, long? maximo, Func<SaveFile, long> leer, Action<SaveFile, long> escribir)
+/// <summary>
+/// Un dato guardado de un modo. <see cref="Maximo"/> es el valor que escribe «Máximo»; <c>null</c> = «Máximo» no lo toca. <see cref="Tope"/> es lo más alto que admite el campo
+/// (1.1.5): el propio <c>Maximo</c> si lo tiene y, si no, el <c>tope</c> declarado aparte (campos que «Máximo» no toca porque los deriva de otro, como las rondas de la Torre de
+/// Gen 4, o porque llevarlos al tope rompería la partida, como la suspensión de la Torre de BDSP). Un campo sin ninguno de los dos recortaría en silencio lo que se le pide.
+/// </summary>
+public sealed class CampoDesafio(string clave, TextoDoble nombre, RolCampo rol, long? maximo, Func<SaveFile, long> leer, Action<SaveFile, long> escribir, long? tope = null)
 {
     public string Clave { get; } = clave;
     public TextoDoble Nombre { get; } = nombre;
     public RolCampo Rol { get; } = rol;
     public long? Maximo { get; } = maximo;
+    /// <summary>Lo más alto que admite el campo: su <see cref="Maximo"/> o, si «Máximo» no lo toca, el tope declarado aparte. <c>null</c> = sin tope conocido.</summary>
+    public long? Tope { get; } = maximo ?? tope;
     public long Leer(SaveFile sav) => leer(sav);
     public void Escribir(SaveFile sav, long valor) => escribir(sav, valor);
 }

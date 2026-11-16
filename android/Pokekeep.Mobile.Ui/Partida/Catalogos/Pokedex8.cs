@@ -106,7 +106,7 @@ internal static class Pokedex8
                 for (var k = 0; k < es.Count; k++)
                 {
                     var e = es[k].Entry;
-                    l.Add(new FilaTablaP { Id = Clave(es[k]) * 4, Nombre = IdiomaInterfaz.F("Pokedex8.Encuentros", Nombre(c, es[k])), Min = 0, Max = int.MaxValue, Leer = x => (long)Z(x).GetBattledCount(e), Escribir = (x, v) => Z(x).SetBattledCount(e, (uint)(long)v) });
+                    l.Add(new FilaTablaP { Id = Clave(es[k]) * 4, Nombre = IdiomaInterfaz.F("Pokedex8.Encuentros", Nombre(c, es[k])), Min = 0, Max = AutoLegalidad.Desafios.TopesJuego.PokedexCombates8, Leer = x => (long)Z(x).GetBattledCount(e), Escribir = (x, v) => Z(x).SetBattledCount(e, (uint)(long)v) });
                     l.Add(new FilaTablaP { Id = Clave(es[k]) * 4 + 1, Nombre = IdiomaInterfaz.F("Pokedex8.FormaMostrada", Nombre(c, es[k])), Min = 0, Max = 0x1FFF, Leer = x => (long)Z(x).GetFormDisplayed(e), Escribir = (x, v) => Z(x).SetFormDisplayed(e, (uint)(long)v) });
                     l.Add(new FilaTablaP { Id = Clave(es[k]) * 4 + 2, Nombre = IdiomaInterfaz.F("Pokedex8.GeneroMostrado", Nombre(c, es[k])), Min = 0, Max = 2, Leer = x => (long)Z(x).GetGenderDisplayed(e), Escribir = (x, v) => Z(x).SetGenderDisplayed(e, (uint)(long)v) });
                 }

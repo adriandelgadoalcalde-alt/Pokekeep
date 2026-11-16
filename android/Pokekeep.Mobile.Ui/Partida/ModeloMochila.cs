@@ -210,8 +210,8 @@ public sealed class ModeloMochila
         for (var i = 0; i < _nombres.Length; i++) if (string.IsNullOrEmpty(_nombres[i])) _nombres[i] = IdiomaInterfaz.F("Mochila.ObjetoSinNombre", i);
     }
 
-    /// <summary>Maximo de ESTE objeto en este bolsillo (<c>PlayerBag.GetMaxCount</c>: el limite del bolsillo salvo objetos con uno propio).</summary>
-    public int MaximoDe(BolsilloModelo b, int objeto) => HaX ? Bag.MaxQuantityHaX : Bag.GetMaxCount(b.Tipo, objeto);
+    /// <summary>Maximo de ESTE objeto en este bolsillo (<c>PlayerBag.GetMaxCount</c>: el limite del bolsillo salvo objetos con uno propio). En HaX, el que cabe en el dato (1.1.5, <c>TopesJuego.MochilaCantidadHaX</c>).</summary>
+    public int MaximoDe(BolsilloModelo b, int objeto) => HaX ? AutoLegalidad.Desafios.TopesJuego.MochilaCantidadHaX(Bag) : Bag.GetMaxCount(b.Tipo, objeto);
 
     /// <summary>Texto con el que se rechaza una cantidad fuera de limite; null si vale.</summary>
     public string? RechazoCantidad(BolsilloModelo b, int objeto, string texto)

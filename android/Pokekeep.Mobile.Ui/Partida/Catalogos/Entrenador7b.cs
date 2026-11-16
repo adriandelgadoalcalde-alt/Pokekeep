@@ -35,7 +35,7 @@ internal static class Entrenador7b
                 ]),
                 new(IdiomaInterfaz.T("Form.Trainer7.Aventura"),
                 [
-                    P.Entero("horas", IdiomaInterfaz.T("Form.HorasJugadas"), c => S(c).PlayedHours, (c, v) => S(c).PlayedHours = (ushort)v, 0, 65535, grupo: "tiempo"),
+                    P.Entero("horas", IdiomaInterfaz.T("Form.HorasJugadas"), c => S(c).PlayedHours, (c, v) => S(c).PlayedHours = (ushort)v, 0, ushort.MaxValue, maxFn: c => AutoLegalidad.Desafios.TopesJuego.Horas(c.Sav), grupo: "tiempo"),
                     P.Entero("minutos", IdiomaInterfaz.T("Form.Minutos"), c => S(c).PlayedMinutes, (c, v) => S(c).PlayedMinutes = (ushort)v % 60, 0, 59, grupo: "tiempo"),
                     P.Entero("segundos", IdiomaInterfaz.T("Form.Segundos"), c => S(c).PlayedSeconds, (c, v) => S(c).PlayedSeconds = (ushort)v % 60, 0, 59, grupo: "tiempo"),
                     P.FechaHora("inicio", T("L_AdventureBegin", IdiomaInterfaz.T("Form.Trainer7b.Inicio")), c => S(c).PlayerGeoLocation.AdventureBegin.Timestamp, (c, v) => S(c).PlayerGeoLocation.AdventureBegin.Timestamp = v.Date.AddSeconds(v.TimeOfDay.TotalSeconds)),

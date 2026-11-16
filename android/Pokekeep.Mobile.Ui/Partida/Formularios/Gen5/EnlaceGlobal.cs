@@ -94,7 +94,7 @@ internal static class EnlaceGlobal
         }
         yield return new SeccionP(string.Empty,
         [
-            P.Entero("mueble-elegido", L("L_FurnitureSelected"), c => Bloque(c).SelectedFurnitureIndex, (c, v) => Bloque(c).SelectedFurnitureIndex = (byte)v, 0, byte.MaxValue, ayuda: IdiomaInterfaz.T("EnlaceGlobal.SoloCuentanBitsNinguno")),
+            P.Entero("mueble-elegido", L("L_FurnitureSelected"), c => Bloque(c).SelectedFurnitureIndex, (c, v) => Bloque(c).SelectedFurnitureIndex = (byte)v, 0, AutoLegalidad.Desafios.TopesJuego.EnlaceGlobalMuebleElegido, ayuda: IdiomaInterfaz.T("EnlaceGlobal.SoloCuentanBitsNinguno")),
             P.Marca("mueble-sincronizado", L("CHK_FurnitureSynchronized"), c => Bloque(c).IsFurnitureSynchronized, (c, v) => Bloque(c).IsFurnitureSynchronized = v),
         ]);
     }

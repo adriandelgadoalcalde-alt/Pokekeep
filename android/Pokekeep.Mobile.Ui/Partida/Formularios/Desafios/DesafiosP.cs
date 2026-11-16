@@ -141,8 +141,8 @@ internal static class DesafiosP
     private static CampoP Campo(InstalacionDesafio inst, ModoDesafio modo, CampoDesafio campo, string id, int k)
     {
         var colina = inst is ColinaEntrenador3;
-        // El tope de lo que se puede escribir a mano: el «Máximo» de la biblioteca cuando lo tiene (es el del juego o el del Core); la Colina admite hasta el valor de «sin récord» del juego; sin tope conocido, el de un entero.
-        long max = colina ? ColinaEntrenador3.SinRecord : campo.Maximo ?? uint.MaxValue;
+        // El tope de lo que se puede escribir a mano: el tope de la biblioteca cuando lo tiene (su «Máximo» o, en los campos que «Máximo» no toca, el declarado aparte: es el del juego o el del dato); la Colina admite hasta el valor de «sin récord» del juego; sin tope conocido, el de un entero.
+        long max = colina ? ColinaEntrenador3.SinRecord : campo.Tope ?? uint.MaxValue;
         return P.Entero(id, T(campo.Nombre), c => campo.Leer(c.Sav), (c, v) => campo.Escribir(c.Sav, v), 0, max, prioridad: k,
             detalle: colina ? c => TiempoDeColina(campo.Leer(c.Sav)) : null,
             ayuda: colina ? Tx("Desafios.AyudaTiempoColina") : null);
